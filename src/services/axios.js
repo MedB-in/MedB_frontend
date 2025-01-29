@@ -68,14 +68,12 @@ axiosInstance.interceptors.response.use(
             // Try to refresh token and retry the original request
             try {
                 const { data } = await axios.post(`${environment === "dev" ? development : environment === "test" ? test : production}/api/auth/refreshToken`, {}, { withCredentials: true });
-                // Save the new access token
+
                 localStorage.setItem('accessToken', JSON.stringify(data.accessToken));
-                // Update the request configuration with the new access token
                 originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
-                // Retry the original request
+
                 return axiosInstance(originalRequest);
             } catch (refreshError) {
-                // Session expired, Logout user
                 sessionExpired();
                 return Promise.reject(refreshError);
             }

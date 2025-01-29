@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setAuthenticated } from "../../redux/slices/authSlice";
+import { setAuthenticated, setUserDetails } from "../../redux/slices/authSlice";
+import { setUserAccess } from "../../redux/slices/userAccessSlice";
 import { doLogin } from "../../services/auth";
 import useToken from "../../hooks/useToken";
 import Frame from "../../assets/images/frame.png";
@@ -36,6 +37,8 @@ const LoginPage = () => {
     try {
       const { data } = await doLogin({ email: email, password });
       setToken(data.accessToken);
+      dispatch(setUserDetails(data.userDetails));
+      dispatch(setUserAccess(data.menuData));
       dispatch(setAuthenticated(true));
       navigate("/");
     } catch (error) {
@@ -58,24 +61,24 @@ const LoginPage = () => {
   return (
     <>
       <Toaster />
-      <div className="relative h-screen flex px-11 py-5 bg-white max-md:px-5">
-        <div className="flex flex-grow gap-5 max-md:flex-col">
+      <div className="relative h-screen flex px-11 py-5 bg-white">
+        <div className="flex flex-grow gap-5">
           {/* Left Section: Illustration */}
-          <div className="flex flex-col w-[62%] max-md:w-full">
+          <div className="flex h-screen flex-col w-[62%]">
             <img
               loading="lazy"
               src={Frame}
               alt="Login illustration"
-              className="object-contain h-full rounded-[49px] max-md:mt-5 max-md:max-w-full"
+              className="object-contain h-full rounded-[49px]"
             />
           </div>
           {/* Right Section: Form */}
-          <div className="absolute top-[20%] right-[18%] flex flex-col w-[30%] justify-center max-md:w-full">
+          <div className="absolute top-[20%] right-[18%] flex flex-col w-[30%] justify-center">
             <img
               loading="lazy"
               src={Logo}
               alt="Company logo"
-              className="self-center object-contain w-[154px] mb-5 max-md:w-[120px]"
+              className="self-center object-contain w-[154px] mb-5"
             />
             <form className="flex flex-col items-center bg-white rounded-3xl border border-indigo-500 border-solid p-5">
               <div className="w-full text-center mb-5">

@@ -5,5 +5,5 @@ export const doLogin = (credentials) =>
   axios.post("/api/auth/login", credentials);
 
 // Function to handle logout.
-export const doLogout = () =>
-  axios.post('/api/auth/logout');
+export const doLogout = (credentials) =>
+  axios.post('/api/auth/logout', credentials);
