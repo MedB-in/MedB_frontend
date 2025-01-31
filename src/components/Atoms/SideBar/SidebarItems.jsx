@@ -1,8 +1,18 @@
-import React from 'react';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-function SidebarItem({ icon, label }) {
+const SidebarItem = ({ icon, label, rights, actionName, actionUrl }) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/${actionUrl}`, { state: { rights, actionName } }); 
+    };
+
     return (
-        <div className="flex relative gap-2.5 text-neutral-800 text-opacity-70 cursor-pointer hover:text-indigo-500">
+        <div
+            onClick={handleClick}
+            className="flex relative gap-2.5 text-neutral-800 text-opacity-70 cursor-pointer hover:text-indigo-500"
+        >
             <img
                 loading="lazy"
                 src={icon}
@@ -12,6 +22,6 @@ function SidebarItem({ icon, label }) {
             <div className="basis-auto">{label}</div>
         </div>
     );
-}
+};
 
 export default SidebarItem;

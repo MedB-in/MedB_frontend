@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticated } from '../../redux/slices/authSlice';
 import useAuth from '../../hooks/useAuth';
 import Logo from '../../assets/images/medb-logo-2.svg';
-function Navbar() {
+const Header = () => {
     const { logout } = useAuth();
     const { authenticated } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
@@ -20,7 +20,8 @@ function Navbar() {
     };
 
     return (
-        <header className="fixed top-0 z-50 w-full px-4 py-5 flex border border-b-2 border-slate-200  bg-white ">
+        <header className="fixed top-0 z-50 w-full px-4 py-5 flex border border-b-2 border-slate-200 bg-white ">
+            <Toaster />
             <div className="flex flex-1 gap-6 items-center">
                 <div className="flex items-center gap-2">
                     <img src={Logo} alt="Logo" width={80} />
@@ -40,4 +41,4 @@ function Navbar() {
     );
 }
 
-export default Navbar;
+export default Header;
