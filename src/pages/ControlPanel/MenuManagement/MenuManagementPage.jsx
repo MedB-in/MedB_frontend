@@ -1,212 +1,159 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import axios from "axios";
+import { getMenu } from "../../../services/controlPanel";
+import ModuleModal from "../../../components/Organs/MenuManagement/ModuleModal";
+import MenuModal from "../../../components/Organs/MenuManagement/MenuModal";
+import toast, { Toaster } from "react-hot-toast";
 
 const MenuManagementPage = () => {
-    const location = useLocation();
-    const { rights = {}, actionName } = location.state || {}; 
+    const [menus, setMenus] = useState([]);
+    const [selectedModule, setSelectedModule] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [isModuleModalOpen, setIsModuleModalOpen] = useState(false);
+    const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
+    const [moduleData, setModuleData] = useState(null);
+    const [menuData, setMenuData] = useState(null);
 
-    const [menuList, setMenuList] = useState([]);
-    const [selectedMenu, setSelectedMenu] = useState(''); 
-    const [moduleId, setModuleId] = useState('');
-    const [menuName, setMenuName] = useState('');
-    const [actionUrl, setActionUrl] = useState('');
-    const [controllerName, setControllerName] = useState('');
-    const [isActive, setIsActive] = useState(true);
-    const [sortOrder, setSortOrder] = useState('');
-    const [menuIcon, setMenuIcon] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    // Fetch all menus for the dropdown
     const fetchMenus = async () => {
-        try {
-            const response = await axios.get("/api/menu"); 
-            setMenuList(response.data.data);
-        } catch (error) {
-            console.error("Error fetching menus:", error);
-        }
-    };
-
-    // Fetch menu details if editing or deleting
-    const fetchMenuData = async (menuId) => {
-        try {
-            const response = await axios.get(`/api/menu/${menuId}`);
-            const data = response.data.data;
-            setModuleId(data.moduleId || '');
-            setMenuName(data.menuName || '');
-            setActionUrl(data.actionName || '');
-            setControllerName(data.controllerName || '');
-            setIsActive(data.isActive);
-            setSortOrder(data.sortOrder || '');
-            setMenuIcon(data.menuIcon || '');
-        } catch (error) {
-            console.error("Error fetching menu data:", error);
-        }
-    };
-
-    // Handle delete action
-    const handleDelete = async () => {
-        if (!window.confirm("Are you sure you want to delete this menu?")) return;
-        
         setLoading(true);
+        setError(null);
         try {
-            await axios.delete(`/api/menu/${selectedMenu}`);
-            alert("Menu deleted successfully.");
-            setSelectedMenu(''); 
-            clearForm();
-        } catch (error) {
-            console.error("Error deleting menu:", error);
-            alert("Failed to delete menu.");
+            const menuData = await getMenu();
+            setMenus(menuData.data.menuData || []);
+        } catch (err) {
+            setError("Failed to fetch menus");
+            toast.error("Failed to fetch menus");
         } finally {
             setLoading(false);
         }
-    };
-
-    // Handle submit for Add or Edit
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-
-        const menuData = {
-            moduleId,
-            menuName,
-            actionName: actionUrl,
-            controllerName,
-            isActive,
-            sortOrder,
-            menuIcon,
-        };
-
-        try {
-            if (actionName === "Add Menu") {
-                await axios.post("/api/menu", menuData); 
-                alert("Menu added successfully.");
-            } else {
-                await axios.put(`/api/menu/${selectedMenu}`, menuData); 
-                alert("Menu updated successfully.");
-            }
-        } catch (error) {
-            console.error("Error submitting menu:", error);
-            alert("Failed to submit menu.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Clear form fields
-    const clearForm = () => {
-        setModuleId('');
-        setMenuName('');
-        setActionUrl('');
-        setControllerName('');
-        setIsActive(true);
-        setSortOrder('');
-        setMenuIcon('');
     };
 
     useEffect(() => {
         fetchMenus();
     }, []);
 
-    useEffect(() => {
-        if (actionName === "Edit Menu" && selectedMenu) {
-            fetchMenuData(selectedMenu);
+    const handleAddModule = () => {
+        setModuleData(null);
+        setIsModuleModalOpen(true);
+    };
+
+    const handleAddMenu = () => {
+        setMenuData(null);
+        setIsMenuModalOpen(true);
+    };
+
+    const handleEditModule = (moduleId) => {
+        const moduleToEdit = menus.find((module) => module.moduleId === moduleId);
+        setModuleData(moduleToEdit);
+        setIsModuleModalOpen(true);
+    };
+
+    const handleEditMenu = (menuId, moduleId) => {
+        const menuToEdit = menus.flatMap(m => m.menus || []).find(menu => menu.menuId === menuId);
+
+        if (menuToEdit) {
+            setMenuData({ ...menuToEdit, moduleId });
         }
-    }, [actionName, selectedMenu]);
+
+        setIsMenuModalOpen(true);
+    };
+
+
+    const handleStatus = (menuId) => {
+        console.log(`Status change of menu with ID: ${menuId}`);
+    };
+
+    const handleModuleClick = (moduleId) => {
+        setSelectedModule((prevModule) => prevModule === moduleId ? null : moduleId);
+    };
+
+    const handleSubmit = async () => {
+        await fetchMenus();
+    };
 
     return (
-        <section className="flex flex-col items-center justify-center h-screen p-4 text-center">
-            <h1 className="text-2xl font-bold mb-4">{actionName || "Menu Management"}</h1>
-
-            {/* Dropdown for menu selection */}
-            {rights.editAllowed || rights.deleteAllowed ? (
-                <div className="mb-4 w-full max-w-md">
-                    <select
-                        value={selectedMenu}
-                        onChange={(e) => setSelectedMenu(e.target.value)}
-                        className="border p-2 rounded w-full"
-                    >
-                        <option value="">Select a Menu</option>
-                        {menuList?.map((menu) => (
-                            <option key={menu.id} value={menu.id}>
-                                {menu.menuName}
-                            </option>
-                        ))}
-                    </select>
+        <section className="p-4">
+            <Toaster />
+            <div className="overflow-x-auto">
+                <div className="flex justify-center gap-5 items-center py-4 px-4">
+                    <button className="py-2 px-4 border rounded hover:bg-blue-500 hover:text-white" onClick={handleAddModule}>
+                        Add Module
+                    </button>
+                    <button className="py-2 px-4 border rounded hover:bg-blue-500 hover:text-white" onClick={handleAddMenu}>
+                        Add Menu
+                    </button>
                 </div>
-            ) : null}
-
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-md">
-                <input
-                    type="text"
-                    placeholder="Module ID"
-                    value={moduleId}
-                    onChange={(e) => setModuleId(e.target.value)}
-                    className="border p-2 rounded w-full"
-                />
-                <input
-                    type="text"
-                    placeholder="Menu Name"
-                    value={menuName}
-                    onChange={(e) => setMenuName(e.target.value)}
-                    className="border p-2 rounded w-full"
-                />
-                <input
-                    type="text"
-                    placeholder="Action URL"
-                    value={actionUrl}
-                    onChange={(e) => setActionUrl(e.target.value)}
-                    className="border p-2 rounded w-full"
-                />
-                <input
-                    type="text"
-                    placeholder="Controller Name"
-                    value={controllerName}
-                    onChange={(e) => setControllerName(e.target.value)}
-                    className="border p-2 rounded w-full"
-                />
-                <input
-                    type="text"
-                    placeholder="Sort Order"
-                    value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value)}
-                    className="border p-2 rounded w-full"
-                />
-                <input
-                    type="text"
-                    placeholder="Menu Icon"
-                    value={menuIcon}
-                    onChange={(e) => setMenuIcon(e.target.value)}
-                    className="border p-2 rounded w-full"
-                />
-                <label className="flex items-center gap-2">
-                    <input
-                        type="checkbox"
-                        checked={isActive}
-                        onChange={(e) => setIsActive(e.target.checked)}
-                    />
-                    Active
-                </label>
-
-                <button
-                    type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                    disabled={loading || !selectedMenu}
-                >
-                    {actionName === "Add Menu" ? (loading ? "Adding..." : "Add") : (loading ? "Editing..." : "Edit")}
-                </button>
-            </form>
-
-            {/* Delete button */}
-            {rights.deleteAllowed && selectedMenu && (
-                <button
-                    onClick={handleDelete}
-                    className="bg-red-500 text-white px-4 py-2 rounded mt-4"
-                    disabled={loading}
-                >
-                    {loading ? "Deleting..." : "Delete"}
-                </button>
-            )}
+                {loading && <p className="text-center">Loading menus...</p>}
+                {error && <p className="text-red-500 text-center">{error}</p>}
+                <table className="min-w-full">
+                    <tbody>
+                        {menus.map((module) => (
+                            <React.Fragment key={module?.moduleId}>
+                                <tr className="flex items-center justify-between cursor-pointer py-2 px-4 border-b" onClick={() => handleModuleClick(module?.moduleId)}>
+                                    <td className="flex items-center gap-4">
+                                        <img className="w-6 h-6" src={module?.moduleIcon} alt={module?.moduleName} />
+                                        <span>{module?.moduleName}</span>
+                                    </td>
+                                    <td>
+                                        <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={(e) => { e.stopPropagation(); handleEditModule(module?.moduleId); }}>
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                {selectedModule === module.moduleId && (
+                                    <tr>
+                                        <td colSpan={4}>
+                                            <div className="pl-8">
+                                                <table className="min-w-full">
+                                                    <thead>
+                                                        <tr className="text-left">
+                                                            <th className="py-2 px-4">Menu ID</th>
+                                                            <th className="py-2 px-4">Menu Icon</th>
+                                                            <th className="py-2 px-4">Menu Name</th>
+                                                            <th className="py-2 px-4">Menu Route</th>
+                                                            <th className="py-2 px-4">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {Array.isArray(module.menus) && module.menus.length > 0 ? (
+                                                            module.menus.map((menu) => (
+                                                                <tr key={menu.menuId} className="border-b">
+                                                                    <td className="py-2 px-4">{menu.menuId}</td>
+                                                                    <td className="py-2 px-4">
+                                                                        <img className="w-6 h-6" src={menu.menuIcon} alt={menu.menuName} />
+                                                                    </td>
+                                                                    <td className="py-2 px-4">{menu.menuName}</td>
+                                                                    <td className="py-2 px-4">{menu.controllerName}</td>
+                                                                    <td className="py-2 px-4 flex gap-2">
+                                                                        <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => handleEditMenu(menu.menuId, module.moduleId)}>
+                                                                            Edit
+                                                                        </button>
+                                                                        {/* <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={() => handleStatus(menu.menuId)}>
+                                                                            Active
+                                                                        </button> */}
+                                                                    </td>
+                                                                </tr>
+                                                            ))
+                                                        ) : (
+                                                            <tr>
+                                                                <td colSpan={5} className="text-center py-2">
+                                                                    No menus available for this module.
+                                                                </td>
+                                                            </tr>
+                                                        )}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <ModuleModal isOpen={isModuleModalOpen} closeModal={() => setIsModuleModalOpen(false)} moduleData={moduleData} onSubmit={handleSubmit} />
+            <MenuModal isOpen={isMenuModalOpen} closeModal={() => setIsMenuModalOpen(false)} menuData={menuData} onSubmit={handleSubmit} />
         </section>
     );
 };

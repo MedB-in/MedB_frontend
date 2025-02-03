@@ -1,6 +1,5 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import getToken from "../hooks/useToken";
 
 const environment = import.meta.env.VITE_REACT_APP_ENVIRONMENT;
 const development = import.meta.env.VITE_REACT_APP_DEVELOPMENT_URL;
@@ -15,6 +14,9 @@ const axiosInstance = axios.create({
     withCredentials: true,
 });
 
+const getToken = () => {
+    return JSON.parse(localStorage.getItem("accessToken"));
+};
 
 //For JSON requests
 const getHeaders = (url = '') => {

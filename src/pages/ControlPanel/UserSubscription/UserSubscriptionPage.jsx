@@ -2,9 +2,10 @@ import React from 'react'
 
 function UserSubscription() {
   return (
-    <div>
-      subscription
-    </div>
+    <section className="flex flex-col items-center pt-20 justify-center h-screen text-center">
+      <h1 className="text-2xl font-bold">User Subscription</h1>
+      <p className="text-lg">User Subscription Page</p>
+    </section>
   )
 }
 

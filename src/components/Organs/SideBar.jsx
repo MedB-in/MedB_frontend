@@ -1,15 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom'; 
 import SidebarItem from '../Atoms/SideBar/SidebarItems';
 
 const SideBar = () => {
     const userAccess = useSelector((state) => state.userAccess.userAccess);
     const modules = userAccess?.get_user_menu || [];
+    const location = useLocation();
 
     const [openModuleIndex, setOpenModuleIndex] = useState(null);
+    const [selectedMenu, setSelectedMenu] = useState(null);
+
+    useEffect(() => {
+        const storedOpenModuleIndex = localStorage.getItem('openModuleIndex');
+        const storedSelectedMenu = localStorage.getItem('selectedMenu');
+
+        if (storedOpenModuleIndex !== null) {
+            setOpenModuleIndex(Number(storedOpenModuleIndex));
+        }
+
+        if (storedSelectedMenu) {
+            setSelectedMenu(storedSelectedMenu);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (openModuleIndex !== null) {
+            localStorage.setItem('openModuleIndex', openModuleIndex);
+        }
+
+        if (selectedMenu) {
+            localStorage.setItem('selectedMenu', selectedMenu);
+        }
+    }, [openModuleIndex, selectedMenu]);
 
     const toggleModule = (index) => {
         setOpenModuleIndex((prevIndex) => (prevIndex === index ? null : index));
+    };
+
+    const handleMenuClick = (menu) => {
+        setSelectedMenu(menu.actionUrl);
     };
 
     return (
@@ -38,6 +68,8 @@ const SideBar = () => {
                                                 rights={menu.rights}
                                                 actionName={menu.actionName}
                                                 actionUrl={menu.controllerName}
+                                                isSelected={selectedMenu === menu.controllerName || location.pathname.split("/")[1] === menu.controllerName}
+                                                onClick={() => handleMenuClick(menu)}
                                             />
                                         </div>
                                     ))}
@@ -51,6 +83,6 @@ const SideBar = () => {
             </div>
         </div>
     );
-}
+};
 
 export default SideBar;
