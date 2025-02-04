@@ -3,7 +3,7 @@ import { addProduct, editProduct } from "../../../services/products";
 import toast from "react-hot-toast";
 
 const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
-    const [productId, setProductId] = useState(null); 
+    const [productId, setProductId] = useState(null);
     const [productName, setProductName] = useState("");
     const [productType, setProductType] = useState("");
     const [description, setDescription] = useState("");
@@ -20,7 +20,7 @@ const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
 
     useEffect(() => {
         if (productData) {
-            setProductId(productData.productId || null); 
+            setProductId(productData.productId || null);
             setProductName(productData.productName || "");
             setProductType(productData.productType || "");
             setDescription(productData.description || "");
@@ -41,7 +41,7 @@ const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
         e.preventDefault();
 
         const data = {
-            productId, 
+            productId,
             productName,
             productType,
             description,
@@ -60,10 +60,10 @@ const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
         if (data.productName && data.productType && data.description) {
             try {
                 if (productData?.productId) {
-                    await editProduct(productData.productId, data); 
+                    await editProduct(productData.productId, data);
                     toast.success("Product updated successfully");
                 } else {
-                    await addProduct(data); 
+                    await addProduct(data);
                     toast.success("Product added successfully");
                 }
 
@@ -78,6 +78,7 @@ const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
     };
 
     const handleCancel = () => {
+        setProductId(null);
         setProductName("");
         setProductType("");
         setDescription("");
@@ -91,14 +92,13 @@ const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
         setTaxAmount("");
         setNetAmount("");
         setTrialDays("");
-        setProductId(null); 
         closeModal();
     };
 
     return (
         isOpen && (
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50 overflow-auto pt-56">
-                <div className="bg-white p-6 rounded-md shadow-lg w-96">
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+                <div className="bg-white p-6 rounded-md shadow-lg w-96 max-h-[90vh] overflow-y-auto">
                     <h3 className="text-xl font-semibold mb-4">
                         {productData ? "Edit Product" : "Add New Product"}
                     </h3>
@@ -245,9 +245,8 @@ const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
                         </div>
                     </form>
                 </div>
-            </div>
-        )
-    );
+            </div>)
+    )
 };
 
 export default ProductModal;

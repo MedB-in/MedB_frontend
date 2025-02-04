@@ -5,7 +5,7 @@ import SidebarItem from '../Atoms/SideBar/SidebarItems';
 
 const SideBar = () => {
     const userAccess = useSelector((state) => state.userAccess.userAccess);
-    const modules = userAccess?.get_user_menu || [];
+    const modules = userAccess || [];
     const location = useLocation();
 
     const [openModuleIndex, setOpenModuleIndex] = useState(null);
