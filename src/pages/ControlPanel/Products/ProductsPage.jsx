@@ -51,12 +51,11 @@ const ProductPage = () => {
   const handleSubmit = async (data) => {
 
     try {
-      let response;
       if (data?.productId) {
-        response = await editProduct(data.productId, data);
+        await editProduct(data.productId, data);
         toast.success("Product updated successfully");
       } else {
-        response = await addProduct(data);
+        await addProduct(data);
         toast.success("Product added successfully");
       }
 
