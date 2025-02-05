@@ -19,7 +19,7 @@ const getToken = () => {
 };
 
 //For JSON requests
-const getHeaders = (url = '') => {
+const getHeaders = () => {
 
     const token = getToken();
     return {
