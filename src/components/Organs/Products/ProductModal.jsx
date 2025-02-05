@@ -19,25 +19,20 @@ const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (productData) {
-            console.log("Product Data:", productData);
-            setProductId(productData?.productId || "");
-            setProductName(productData?.productName || "");
-            setProductType(productData?.productType || "");
-            setDescription(productData?.description || "");
-            setNotes(productData?.notes || "");
-            setValues(productData?.values || "");
-            setIsPublic(productData?.isPublic !== undefined ? productData.isPublic : true);
-            setIsActive(productData?.isActive !== undefined ? productData.isActive : true);
-            setIsFree(productData?.isFree !== undefined ? productData.isFree : true);
-            setIsTrial(productData?.isTrial !== undefined ? productData.isTrial : true);
-            setAmount(productData?.amount || "");
-            setTaxAmount(productData?.taxAmount || "");
-            setNetAmount(productData?.netAmount || "");
-            setTrialDays(productData?.trialDays || "");
-        } else {
-            console.log("No product data available.");
-        }
+        setProductId(productData?.productId || "");
+        setProductName(productData?.productName || "");
+        setProductType(productData?.productType || "");
+        setDescription(productData?.description || "");
+        setNotes(productData?.notes || "");
+        setValues(productData?.values || "");
+        setIsPublic(productData?.isPublic !== undefined ? productData.isPublic : true);
+        setIsActive(productData?.isActive !== undefined ? productData.isActive : true);
+        setIsFree(productData?.isFree !== undefined ? productData.isFree : true);
+        setIsTrial(productData?.isTrial !== undefined ? productData.isTrial : true);
+        setAmount(productData?.amount || "");
+        setTaxAmount(productData?.taxAmount || "");
+        setNetAmount(productData?.netAmount || "");
+        setTrialDays(productData?.trialDays || "");
     }, [productData]);
 
     const handleFormSubmit = async (e) => {
