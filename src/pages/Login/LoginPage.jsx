@@ -82,7 +82,7 @@ const LoginPage = () => {
             />
             <form className="flex flex-col items-center bg-white rounded-3xl border border-indigo-500 border-solid p-5">
               <div className="w-full text-center mb-5">
-                <h1 className="text-2xl font-semibold text-black">Welcome Back!</h1>
+                <h1 className="text-2xl font-semibold text-black">Welcome Back! MedB</h1>
                 <p className="text-base text-black text-opacity-50 mt-2">
                   Please enter your details
                 </p>
