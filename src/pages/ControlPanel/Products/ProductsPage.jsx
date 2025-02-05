@@ -49,9 +49,10 @@ const ProductPage = () => {
   };
 
   const handleSubmit = async (data) => {
+
     try {
       let response;
-      if (data.productId) {
+      if (data?.productId) {
         response = await editProduct(data.productId, data);
         toast.success("Product updated successfully");
       } else {
@@ -59,20 +60,18 @@ const ProductPage = () => {
         toast.success("Product added successfully");
       }
 
-      useEffect(() => {
-        fetchProducts();
-      }, []);
-
+      await fetchProducts();
       setIsProductModalOpen(false);
     } catch (error) {
-      // console.error("Error updating or adding product:", error);
-      // toast.error("Failed to update/add product");
+      console.error("Error in handleSubmit:", error);
+      toast.error(error.message || "Something went wrong");
     }
   };
 
   const toggleProductModules = (productId) => {
     setExpandedProductId((prevId) => (prevId === productId ? null : productId));
   };
+
 
   return (
     <section className="p-4">
@@ -96,31 +95,31 @@ const ProductPage = () => {
           </thead>
           <tbody>
             {products.map((product) => (
-              <React.Fragment key={product.productId}>
+              <React.Fragment key={product?.productId}>
                 <tr className="border-b">
-                  <td className="py-2 px-4">{product.productId}</td>
+                  <td className="py-2 px-4">{product?.productId}</td>
                   <td className="py-2 px-4">{product.productName}</td>
                   <td className="py-2 px-4">{product.amount || "Free"}</td>
                   <td className="py-2 px-4 flex gap-2">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => handleEditProduct(product.productId)}>
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => handleEditProduct(product?.productId)}>
                       Edit
                     </button>
                     <button
                       className="py-2 px-4 border rounded hover:bg-blue-500 hover:text-white"
-                      onClick={() => handleAddProductMenu(product.productId)}
+                      onClick={() => handleAddProductMenu(product?.productId)}
                     >
                       Add Menu to Product
                     </button>
                     <button
                       className="font-bold text-blue-500 px-4 py-2 rounded"
-                      onClick={() => toggleProductModules(product.productId)}
+                      onClick={() => toggleProductModules(product?.productId)}
                     >
-                      {expandedProductId === product.productId ? "Hide Modules" : "Show Modules"}
+                      {expandedProductId === product?.productId ? "Hide Modules" : "Show Modules"}
                     </button>
                   </td>
                 </tr>
 
-                {expandedProductId === product.productId && product.modules && product.modules.length > 0 && (
+                {expandedProductId === product?.productId && product.modules && product.modules.length > 0 && (
                   <tr>
                     <td colSpan="4" className="px-4 py-2 bg-gray-100">
                       <ul>
@@ -164,6 +163,7 @@ const ProductPage = () => {
         isOpen={isMenuModalOpen}
         closeModal={() => setIsMenuModalOpen(false)}
         productId={selectedProductId}
+        fetchProducts={fetchProducts}
       />
     </section>
   );

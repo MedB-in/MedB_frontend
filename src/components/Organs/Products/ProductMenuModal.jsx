@@ -2,27 +2,33 @@ import React, { useState, useEffect } from "react";
 import { getMenuList, addMenuToProduct } from "../../../services/products";
 import toast from "react-hot-toast";
 
-const ProductMenuModal = ({ isOpen, closeModal, productId }) => {
-  const [menuList, setMenuList] = useState(['']);
-  const [selectedMenuId, setSelectedMenuId] = useState(null);
-
-  const fetchMenuList = async () => {
-    try {
-      const response = await getMenuList();
-
-      if (response.data) {
-        setMenuList(response.data.productMenu);
-      } else {
-        toast.error("No menus found.");
-      }
-    } catch (error) {
-      toast.error("Failed to fetch menu list.");
-    }
-  };
+const ProductMenuModal = ({ isOpen, closeModal, productId, fetchProducts }) => {
+  const [menuList, setMenuList] = useState([]);
+  const [selectedMenuId, setSelectedMenuId] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchMenuList();
-  }, [productId]);
+    if (isOpen) {
+      const fetchMenuList = async () => {
+        setLoading(true);
+        try {
+          const response = await getMenuList();
+
+          if (response.data) {
+            setMenuList(response.data.productMenu || []);
+          } else {
+            toast.error("No menus found.");
+          }
+        } catch (error) {
+          toast.error("Failed to fetch menu list.");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchMenuList();
+    }
+  }, [isOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,6 +46,7 @@ const ProductMenuModal = ({ isOpen, closeModal, productId }) => {
     try {
       await addMenuToProduct(data);
       toast.success("Menu added to product successfully.");
+      fetchProducts();
       closeModal();
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
@@ -54,7 +61,9 @@ const ProductMenuModal = ({ isOpen, closeModal, productId }) => {
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-sm font-medium">Select Menu</label>
-              {menuList.length === 0 ? (
+              {loading ? (
+                <div className="text-gray-500">Loading menus...</div>
+              ) : menuList.length === 0 ? (
                 <div className="text-red-500">No menus available.</div>
               ) : (
                 <select

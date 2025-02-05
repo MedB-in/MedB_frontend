@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { addProduct, editProduct } from "../../../services/products";
 import toast from "react-hot-toast";
 
 const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
-    const [productId, setProductId] = useState(null);
+    const [productId, setProductId] = useState("");
     const [productName, setProductName] = useState("");
     const [productType, setProductType] = useState("");
     const [description, setDescription] = useState("");
@@ -17,28 +16,37 @@ const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
     const [taxAmount, setTaxAmount] = useState("");
     const [netAmount, setNetAmount] = useState("");
     const [trialDays, setTrialDays] = useState("");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (productData) {
-            setProductId(productData.productId || null);
-            setProductName(productData.productName || "");
-            setProductType(productData.productType || "");
-            setDescription(productData.description || "");
-            setNotes(productData.notes || "");
-            setValues(productData.values || "");
-            setIsPublic(productData.isPublic !== undefined ? productData.isPublic : true);
-            setIsActive(productData.isActive !== undefined ? productData.isActive : true);
-            setIsFree(productData.isFree !== undefined ? productData.isFree : true);
-            setIsTrial(productData.isTrial !== undefined ? productData.isTrial : true);
-            setAmount(productData.amount || "");
-            setTaxAmount(productData.taxAmount || "");
-            setNetAmount(productData.netAmount || "");
-            setTrialDays(productData.trialDays || "");
+            console.log("Product Data:", productData);
+            setProductId(productData?.productId || "");
+            setProductName(productData?.productName || "");
+            setProductType(productData?.productType || "");
+            setDescription(productData?.description || "");
+            setNotes(productData?.notes || "");
+            setValues(productData?.values || "");
+            setIsPublic(productData?.isPublic !== undefined ? productData.isPublic : true);
+            setIsActive(productData?.isActive !== undefined ? productData.isActive : true);
+            setIsFree(productData?.isFree !== undefined ? productData.isFree : true);
+            setIsTrial(productData?.isTrial !== undefined ? productData.isTrial : true);
+            setAmount(productData?.amount || "");
+            setTaxAmount(productData?.taxAmount || "");
+            setNetAmount(productData?.netAmount || "");
+            setTrialDays(productData?.trialDays || "");
+        } else {
+            console.log("No product data available.");
         }
     }, [productData]);
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+
+        if (isNaN(amount) || isNaN(taxAmount) || isNaN(netAmount) || isNaN(trialDays)) {
+            toast.error("Please enter valid numeric values for amount, tax, net amount, and trial days.");
+            return;
+        }
 
         const data = {
             productId,
@@ -57,20 +65,16 @@ const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
             trialDays: parseInt(trialDays),
         };
 
-        if (data.productName && data.productType && data.description) {
-            try {
-                if (productData?.productId) {
-                    await editProduct(productData.productId, data);
-                    toast.success("Product updated successfully");
-                } else {
-                    await addProduct(data);
-                    toast.success("Product added successfully");
-                }
 
-                onSubmit();
+        if (data.productName && data.productType && data.description) {
+            setLoading(true);
+            try {
+                await onSubmit(data);
                 handleCancel();
             } catch (error) {
                 toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
+            } finally {
+                setLoading(false);
             }
         } else {
             toast.error("Please fill out all required fields.");
@@ -78,7 +82,7 @@ const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
     };
 
     const handleCancel = () => {
-        setProductId(null);
+        setProductId("");
         setProductName("");
         setProductType("");
         setDescription("");
@@ -239,14 +243,16 @@ const ProductModal = ({ isOpen, closeModal, productData, onSubmit }) => {
                             <button
                                 type="submit"
                                 className="px-4 py-2 bg-indigo-500 text-white rounded-md"
+                                disabled={loading}
                             >
-                                {productData ? "Update" : "Add Product"}
+                                {loading ? "Processing..." : productData ? "Update" : "Add Product"}
                             </button>
                         </div>
                     </form>
                 </div>
-            </div>)
-    )
+            </div>
+        )
+    );
 };
 
 export default ProductModal;
