@@ -14,10 +14,10 @@ import InputField from "../../components/Atoms/Login/InputField";
 import Button from "../../components/Atoms/Button";
 import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
 
-
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const { authenticated } = useSelector((state) => state.auth);
   const { setToken } = useToken();
   const navigate = useNavigate();
@@ -33,6 +33,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const { data } = await doLogin({ email: email, password });
@@ -44,18 +45,12 @@ const LoginPage = () => {
     } catch (error) {
       if (error.response && error.response.data) {
         toast.error(error.response.data.message || "An error occurred on the server.");
-      } else if (error.message) {
+      } else {
         toast.error("Something went wrong. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleSignUp = () => {
-    navigate("/register");
-  };
-
-  const handleForgotPassword = () => {
-    navigate("/forgotPassword");
   };
 
   return (
@@ -63,7 +58,6 @@ const LoginPage = () => {
       <Toaster />
       <div className="relative h-screen flex px-11 py-5 bg-white">
         <div className="flex flex-grow gap-5">
-          {/* Left Section: Illustration */}
           <div className="flex h-screen flex-col w-[62%]">
             <img
               loading="lazy"
@@ -72,7 +66,6 @@ const LoginPage = () => {
               className="object-contain h-full rounded-[49px]"
             />
           </div>
-          {/* Right Section: Form */}
           <div className="absolute top-[20%] right-[18%] flex flex-col w-[30%] justify-center">
             <img
               loading="lazy"
@@ -111,7 +104,7 @@ const LoginPage = () => {
                 />
               </div>
               <button
-                onClick={handleSignUp}
+                onClick={() => navigate("/forgotPassword")}
                 type="button"
                 className="flex gap-1.5 self-end text-indigo-500 text-opacity-60 text-sm"
               >
@@ -123,8 +116,18 @@ const LoginPage = () => {
                 />
                 Forgot Password
               </button>
-              <Button onClick={handleSubmit} variant="primary" type="submit" className="mt-5 w-full">
-                Login
+              <Button
+                onClick={handleSubmit}
+                variant="primary"
+                type="submit"
+                className="mt-5 w-full flex justify-center items-center"
+                disabled={loading}
+              >
+                {loading ? (
+                  "Logging in..."
+                ) : (
+                  "Login"
+                )}
               </Button>
               <Button variant="secondary" className="mt-2 w-full">
                 Login with Google
@@ -132,7 +135,7 @@ const LoginPage = () => {
               <div className="flex gap-1 mt-5 text-sm">
                 <p className="text-black text-opacity-70">Don't have an account?</p>
                 <button
-                  onClick={handleForgotPassword}
+                  onClick={() => navigate("/register")}
                   type="button"
                   className="text-indigo-500"
                 >
