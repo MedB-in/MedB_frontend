@@ -88,17 +88,40 @@ const ProductPage = () => {
             <tr className="text-left">
               <th className="py-2 px-4">Product ID</th>
               <th className="py-2 px-4">Product Name</th>
+              <th className="py-2 px-4">Product Type</th>
+              <th className="py-2 px-4">Status</th>
               <th className="py-2 px-4">Price</th>
+              <th className="py-2 px-4">Tax</th>
+              <th className="py-2 px-4">Net Amount</th>
+              <th className="py-2 px-4">Trial Days</th>
               <th className="py-2 px-4">Actions</th>
             </tr>
           </thead>
           <tbody>
             {products.map((product) => (
               <React.Fragment key={product?.productId}>
-                <tr className="border-b">
+                <tr className="border-y">
                   <td className="py-2 px-4">{product?.productId}</td>
                   <td className="py-2 px-4">{product.productName}</td>
-                  <td className="py-2 px-4">{product.amount || "Free"}</td>
+                  <td className="py-2 px-4">{product.productType}</td>
+                  <td className="py-2 px-4">
+                    <div className={product.isPublic ? "text-green-600" : "text-red-600"}>
+                      {product.isPublic ? "Public" : "Private"}
+                    </div>
+                    <div className={product.isFree ? "text-blue-600" : "text-yellow-500"}>
+                      {product.isFree ? " Free" : "Paid"}
+                    </div>
+                    <div className={product.isActive ? "text-indigo-700" : "text-red-300"}>
+                      {product.isActive ? " Active" : "Inactive"}
+                    </div>
+                    <div className={product.isTrial ? "text-green-600" : "text-red-600"}>
+                      {product.isTrial ? "Trial" : "Not Trial"}
+                    </div>
+                  </td>
+                  <td className="py-2 px-4">{product.amount || "-"}</td>
+                  <td className="py-2 px-4">{product.taxAmount || "-"}</td>
+                  <td className="py-2 px-4">{product.netAmount || "-"}</td>
+                  <td className="py-2 px-4">{product.trialDays || "-"}</td>
                   <td className="py-2 px-4 flex gap-2">
                     <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => handleEditProduct(product?.productId)}>
                       Edit
@@ -120,12 +143,12 @@ const ProductPage = () => {
 
                 {expandedProductId === product?.productId && product.modules && product.modules.length > 0 && (
                   <tr>
-                    <td colSpan="4" className="px-4 py-2 bg-gray-100">
+                    <td colSpan="4" className="px-4 py-2">
                       <ul>
                         {product.modules.map((module) => (
-                          <li key={module.moduleId} className="mb-2">
+                          <li key={module.moduleId} className="mb-2 py-2">
                             <strong>{module.moduleName}</strong>
-                            <ul className="ml-4">
+                            <ul className="ml-4 mt-2">
                               {module.menus.map((menu) => (
                                 <li key={menu.menuId}>
                                   <img

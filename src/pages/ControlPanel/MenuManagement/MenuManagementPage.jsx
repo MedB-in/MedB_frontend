@@ -111,6 +111,7 @@ const MenuManagementPage = () => {
                                                             <th className="py-2 px-4">Menu Icon</th>
                                                             <th className="py-2 px-4">Menu Name</th>
                                                             <th className="py-2 px-4">Menu Route</th>
+                                                            <th className="py-2 px-4">Menu Status</th>
                                                             <th className="py-2 px-4">Actions</th>
                                                         </tr>
                                                     </thead>
@@ -124,12 +125,16 @@ const MenuManagementPage = () => {
                                                                     </td>
                                                                     <td className="py-2 px-4">{menu.menuName}</td>
                                                                     <td className="py-2 px-4">{menu.controllerName}</td>
+                                                                    <td className={`py-2 px-4 ${menu.isActive ? 'text-green-500' : 'text-red-500'}`}>{menu.isActive ? 'Active' : 'Inactive'}</td>
                                                                     <td className="py-2 px-4 flex gap-2">
                                                                         <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => handleEditMenu(menu.menuId, module.moduleId)}>
                                                                             Edit
                                                                         </button>
-                                                                        {/* <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={() => handleStatus(menu.menuId)}>
-                                                                            Active
+                                                                        {/* <button
+                                                                            className={`px-4 py-2 rounded text-white ${menu.isActive ? 'bg-green-500' : 'bg-red-500'}`}
+                                                                            onClick={() => handleStatus(menu.menuId)}
+                                                                        >
+                                                                            {menu.isActive ? "Active" : "Inactive"}
                                                                         </button> */}
                                                                     </td>
                                                                 </tr>
@@ -153,7 +158,7 @@ const MenuManagementPage = () => {
                 </table>
             </div>
             <ModuleModal isOpen={isModuleModalOpen} closeModal={() => setIsModuleModalOpen(false)} moduleData={moduleData} onSubmit={handleSubmit} />
-            <MenuModal isOpen={isMenuModalOpen} closeModal={() => setIsMenuModalOpen(false)} menuData={menuData} onSubmit={handleSubmit} />
+            <MenuModal isOpen={isMenuModalOpen} closeModal={() => setIsMenuModalOpen(false)} menuData={menuData} modules={menus} onSubmit={handleSubmit} />
         </section>
     );
 };
