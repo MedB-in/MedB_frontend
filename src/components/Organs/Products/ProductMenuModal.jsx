@@ -49,7 +49,7 @@ const ProductMenuModal = ({ isOpen, closeModal, productId, fetchProducts }) => {
       fetchProducts();
       closeModal();
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+      toast.error(error.response.data.message || "Something went wrong.");
     }
   };
 

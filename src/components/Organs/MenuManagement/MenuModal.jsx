@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { addMenu, editMenu } from "../../../services/controlPanel";
 import toast from "react-hot-toast";
 
-const MenuModal = ({ isOpen, closeModal, menuData, onSubmit }) => {
+const MenuModal = ({ isOpen, closeModal, menuData, onSubmit, modules }) => {
     const [menuName, setMenuName] = useState("");
     const [actionName, setActionName] = useState("");
     const [controllerName, setControllerName] = useState("");
@@ -77,14 +77,20 @@ const MenuModal = ({ isOpen, closeModal, menuData, onSubmit }) => {
                     </h3>
                     <form onSubmit={handleFormSubmit}>
                         <div className="mb-4">
-                            <label className="block text-sm font-medium">Module ID</label>
-                            <input
-                                type="text"
+                            <label className="block text-sm font-medium">Module</label>
+                            <select
                                 value={moduleId}
                                 onChange={(e) => setModuleId(e.target.value)}
                                 className="w-full p-2 border rounded-md"
                                 required
-                            />
+                            >
+                                <option value="" disabled>Select a module</option>
+                                {modules && modules.map((module) => (
+                                    <option key={module.moduleId} value={module.moduleId}>
+                                        {module.moduleName}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div className="mb-4">
                             <label className="block text-sm font-medium">Menu Name</label>
