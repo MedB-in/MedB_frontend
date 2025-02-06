@@ -13,7 +13,7 @@ const ModuleModal = ({ isOpen, closeModal, moduleData, onSubmit }) => {
             setModuleIcon(moduleData.moduleIcon);
             setSortOrder(moduleData.sortOrder);
         }
-    }, [moduleData]);
+    }, [moduleData, isOpen]);
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -58,7 +58,7 @@ const ModuleModal = ({ isOpen, closeModal, moduleData, onSubmit }) => {
     return (
         isOpen && (
             <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-                <div className="bg-white p-6 rounded-md shadow-lg w-96">
+                <div className="bg-white p-6 rounded-md shadow-lg w-96" key={moduleData ? moduleData.moduleId : 'add-new'}>
                     <h3 className="text-xl font-semibold mb-4">
                         {moduleData ? "Edit Module" : "Add New Module"}
                     </h3>
