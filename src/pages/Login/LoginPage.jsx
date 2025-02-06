@@ -56,9 +56,9 @@ const LoginPage = () => {
   return (
     <>
       <Toaster />
-      <div className="relative h-screen flex px-11 py-5 bg-white">
+      <div className="relative justify-center items-center h-screen flex px-11  bg-white">
         <div className="flex flex-grow gap-5">
-          <div className="flex h-screen flex-col w-[62%]">
+          <div className="hidden p-10 h-screen flex-col w-[75%] lg:flex">
             <img
               loading="lazy"
               src={Frame}
@@ -66,82 +66,93 @@ const LoginPage = () => {
               className="object-contain h-full rounded-[49px]"
             />
           </div>
-          <div className="absolute top-[20%] right-[18%] flex flex-col w-[30%] justify-center">
-            <img
-              loading="lazy"
-              src={Logo}
-              alt="Company logo"
-              className="self-center object-contain w-[154px] mb-5"
-            />
-            <form className="flex flex-col items-center bg-white rounded-3xl border border-indigo-500 border-solid p-5">
-              <div className="w-full text-center mb-5">
-                <h1 className="text-2xl font-semibold text-black">Welcome Back!</h1>
-                <p className="text-base text-black text-opacity-50 mt-2">
-                  Please enter your details
-                </p>
+          <div className="lg:absolute lg:right-1/4 lg:top-1/4 lg:-mx-28 lg lg:-my-20 flex flex-col justify-center w-full max-w-md px-4 py-8 lg:w-1/3 lg:px-12 space-y-6 bg-white shadow-lg rounded-3xl">
+            <div className="">
+              <div className="mb-12 flex justify-center">
+                <img src={Logo} alt="Medb Logo" className="h-10 w-auto" />
               </div>
-              <div className="w-full mb-5">
+              <h1 className="mb-2 text-2xl font-semibold text-gray-900 text-center">
+                Welcome Back!
+              </h1>
+              <p className="text-sm text-gray-500 text-center">
+                Please enter your details
+              </p>
+            </div>
+
+            <form className="space-y-6">
+              {/* Email Input */}
+              <InputField
+                type="email"
+                placeholder="Email/Phone Number"
+                icon={EmailLogo}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              {/* Password Input */}
+              <div className="relative">
                 <InputField
-                  id="email"
-                  type="email"
-                  placeholder="Email/Phone Number"
-                  icon={EmailLogo}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  ariaLabel="Email/Phone Number"
-                />
-              </div>
-              <div className="w-full mb-5">
-                <InputField
-                  id="password"
                   type="password"
                   placeholder="Password"
                   icon={PasswordLogo}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  toggleable={true}
-                  ariaLabel="Password"
                 />
               </div>
-              <button
-                onClick={() => navigate("/forgotPassword")}
-                type="button"
-                className="flex gap-1.5 self-end text-indigo-500 text-opacity-60 text-sm"
-              >
-                <img
-                  loading="lazy"
-                  src={ForgotPasswordIcon}
-                  alt=""
-                  className="w-4 aspect-square"
-                />
-                Forgot Password
-              </button>
+
+              {/* Forgot Password */}
+              <div className="flex justify-end">
+                <button
+                  onClick={() => navigate("/forgot-password")}
+                  type="button"
+                  className="flex gap-1.5 self-end text-indigo-500 text-opacity-60 text-sm"
+                >
+                  <img
+                    src={ForgotPasswordIcon}
+                    alt="Forgot Password"
+                    className="w-4 aspect-square"
+                  />
+                  Forgot Password
+                </button>
+              </div>
+
+              {/* Login Button */}
               <Button
                 onClick={handleSubmit}
-                variant="primary"
                 type="submit"
-                className="mt-5 w-full flex justify-center items-center"
+                className="h-12 w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800"
                 disabled={loading}
               >
-                {loading ? (
-                  "Logging in..."
-                ) : (
-                  "Login"
-                )}
+                {loading ? "Logging in..." : "Login"}
               </Button>
-              <Button variant="secondary" className="mt-2 w-full">
-                Login with Google
+
+              {/* Google Login Button */}
+              <Button
+                onClick={() => navigate("/googleLogin")}
+                variant="outline"
+                className="h-12 w-full hover:bg-gray-50 active:bg-gray-100"
+              >
+                <span className="flex items-center justify-center">
+                  <img
+                    src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
+                    alt="Google Logo"
+                    className="w-8 aspect-square mr-2"
+                  />
+                  Login with Google
+                </span>
               </Button>
-              <div className="flex gap-1 mt-5 text-sm">
-                <p className="text-black text-opacity-70">Don't have an account?</p>
+
+              {/* Sign Up */}
+              <p className="text-center text-sm text-gray-600">
+                Don't have an account?{" "}
                 <button
-                  onClick={() => navigate("/register")}
+                  onClick={() => navigate("/signup")}
                   type="button"
-                  className="text-indigo-500"
+                  className="text-violet-600 hover:text-violet-700 hover:underline"
                 >
                   Sign Up
                 </button>
-              </div>
+              </p>
             </form>
           </div>
         </div>
