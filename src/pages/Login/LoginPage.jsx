@@ -66,7 +66,7 @@ const LoginPage = () => {
               className="object-contain h-full rounded-[49px]"
             />
           </div>
-          <div className="lg:absolute lg:right-1/4 lg:top-1/4 lg:-mx-28 lg lg:-my-20 flex flex-col justify-center w-full max-w-md px-4 py-8 lg:w-1/3 lg:px-12 space-y-6 bg-white shadow-lg rounded-3xl">
+          <div className="flex flex-col justify-center w-full max-w-md sm:w-4/5 sm:mx-auto md:w-2/3 md:mx-auto px-4 py-8 space-y-6 bg-white shadow-lg rounded-3xl lg:absolute lg:right-1/4 lg:top-1/4 lg:-mx-28 lg:-my-20 lg:w-1/3 lg:px-12">
             <div className="">
               <div className="mb-12 flex justify-center">
                 <img src={Logo} alt="Medb Logo" className="h-10 w-auto" />
