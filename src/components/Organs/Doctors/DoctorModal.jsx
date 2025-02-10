@@ -1,0 +1,180 @@
+import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+import LocationSelector from "../../LocationSelector";
+
+const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
+  const [loading, setLoading] = useState(false);
+
+  const defaultFormData = {
+    doctorId: null,
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    speciality: "",
+    email: "",
+    phone: "",
+    profilePicture: "",
+    gender: "",
+    qualifications: "",
+    experience: "",
+    location: { type: "Point", coordinates: [null, null] },
+    address: "",
+    city: "",
+    state: "",
+    country: "",
+    postalCode: "",
+    isActive: true,
+  };
+
+  const [formData, setFormData] = useState(defaultFormData);
+
+  useEffect(() => {
+    if (doctorData) {
+      setFormData({ ...defaultFormData, ...doctorData });
+    } else {
+      setFormData(defaultFormData);
+    }
+  }, [doctorData]);
+
+  const handleChange = (e) => {
+    const { name, type, value, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await onSubmit(formData);
+      closeModal();
+      toast.success(doctorData ? "Doctor updated successfully" : "Doctor added successfully");
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLocationSelect = (lat, lng, address, city, state, country, postalCode) => {
+    setFormData((prev) => ({
+      ...prev,
+      location: {
+        type: "Point",
+        coordinates: [lng, lat],
+      },
+      address,
+      city,
+      state,
+      country,
+      postalCode,
+    }));
+  };
+
+  const handleCloseModal = () => {
+    setFormData(defaultFormData);
+    closeModal();
+  };
+
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded-md shadow-lg w-[400px] max-h-[90vh] overflow-auto">
+        <h3 className="text-xl font-semibold mb-4">
+          {doctorData ? "Edit Doctor" : "Add New Doctor"}
+        </h3>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4 grid grid-cols-3 gap-2">
+            <div>
+              <label className="block text-sm font-medium">First Name</label>
+              <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Middle Name</label>
+              <input type="text" name="middleName" value={formData.middleName} onChange={handleChange} className="w-full p-2 border rounded-md" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Last Name</label>
+              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Profile Picture</label>
+            <input type="text" name="profilePicture" value={formData.profilePicture} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Specialization</label>
+            <input type="text" name="speciality" value={formData.speciality} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Qualifications</label>
+            <input type="text" name="qualifications" value={formData.qualifications} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Experience (Years)</label>
+            <input type="text" name="experience" value={formData.experience} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Gender</label>
+            <select name="gender" value={formData.gender} onChange={handleChange} className="w-full p-2 border rounded-md">
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Email</label>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Phone</label>
+            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Location</label>
+            <LocationSelector onSelect={handleLocationSelect} />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Address</label>
+            <input type="text" name="address" value={formData.address} className="w-full p-2 border rounded-md" readOnly />
+          </div>
+          <div className="mb-4 grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-sm font-medium">City</label>
+              <input type="text" name="city" value={formData.city} className="w-full p-2 border rounded-md" readOnly />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">State</label>
+              <input type="text" name="state" value={formData.state} className="w-full p-2 border rounded-md" readOnly />
+            </div>
+          </div>
+          <div className="mb-4 grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-sm font-medium">Country</label>
+              <input type="text" name="country" value={formData.country} className="w-full p-2 border rounded-md" readOnly />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Postal Code</label>
+              <input type="text" name="postalCode" value={formData.postalCode} className="w-full p-2 border rounded-md" readOnly />
+            </div>
+            <div className="mb-4 flex items-center space-x-2">
+              <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleChange} className="form-checkbox" />
+              <span>Active</span>
+            </div>
+          </div>
+          <div className="flex justify-end gap-4">
+            <button type="button" className="px-4 py-2 bg-gray-300 rounded-md" onClick={handleCloseModal} disabled={loading}>Cancel</button>
+            <button type="submit" className="px-4 py-2 bg-indigo-500 text-white rounded-md" disabled={loading}>{loading ? "Saving..." : doctorData ? "Update" : "Add Doctor"}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default DoctorModal;
