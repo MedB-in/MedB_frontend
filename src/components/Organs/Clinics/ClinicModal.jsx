@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import LocationSelector from "./LocationSelector";
+import LocationSelector from "../../LocationSelector";
 
 const timeSlots = [
   "Closed",
