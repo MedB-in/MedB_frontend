@@ -20,17 +20,17 @@ const LocationSelector = ({ onSelect }) => {
             const [lng, lat] = place.center;
 
             let addressParts = place.place_name.split(",");
-            let address = "", city = "", state = "", country = "", postalCode = "";
+            let address = "", city = "", district = "", state = "", country = "", postalCode = "";
 
             place.context?.forEach((context) => {
                 if (context.id.includes("place")) city = context.text;
+                if (context.id.includes("district") || context.id.includes("locality")) district = context.text;
                 if (context.id.includes("region")) state = context.text;
                 if (context.id.includes("country")) country = context.text;
                 if (context.id.includes("postcode")) postalCode = context.text;
             });
 
             let cityIndex = addressParts.findIndex(part => part.trim() === city);
-
             if (cityIndex !== -1) {
                 address = addressParts.slice(0, cityIndex).join(", ").trim();
             } else {
@@ -41,7 +41,7 @@ const LocationSelector = ({ onSelect }) => {
 
             setInputValue(address);
 
-            onSelect(lat, lng, address, city, state, country, postalCode);
+            onSelect(lat, lng, address, city, district, state, country, postalCode);
         });
 
         const geocoderContainer = document.getElementById("geocoder");

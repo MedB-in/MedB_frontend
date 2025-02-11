@@ -10,7 +10,7 @@ import Dashboard from "./pages/ControlPanel/DashBoard/DashBoardPage";
 import ErrorPage from "./pages/404Page/ErrorPage";
 import MenuManagementPage from "./pages/ControlPanel/MenuManagement/MenuManagementPage";
 import ProductsPage from "./pages/ControlPanel/Products/ProductsPage";
-import ClinicsPage from "./pages/ControlPanel/Clinics/ClinicsPage";
+import * as Clinics from "./pages/ControlPanel/Clinics";
 import DoctorsPage from "./pages/ControlPanel/Doctors/DoctorsPage";
 import UserSubscriptionPage from "./pages/ControlPanel/UserSubscription/UserSubscriptionPage";
 
@@ -34,9 +34,20 @@ const App = () => {
           <Route index element={<Dashboard />} />
           {/* Menu details */}
           <Route path="menu-management" element={<MenuManagementPage />} />
+
+          {/* Products */}
           <Route path="products" element={< ProductsPage />} />
-          <Route path="clinics" element={< ClinicsPage />} />
+
+          {/* Clinics */}
+          <Route path="clinics">
+            <Route index element={<Clinics.ClinicsPage />} />
+            <Route path=":clinicId" element={<Clinics.ClinicDetails />} />
+          </Route>
+
+          {/* Doctors */}
           <Route path="doctors" element={< DoctorsPage />} />
+
+          {/* Subscriptions */}
           <Route path="subscriptions" element={< UserSubscriptionPage />} />
         </Route>
       </Route>
