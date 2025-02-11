@@ -52,17 +52,16 @@ const ProductPage = () => {
 
     try {
       if (data?.productId) {
-        await editProduct(data.productId, data);
-        toast.success("Product updated successfully");
+        const response = await editProduct(data.productId, data);
+        toast.success(response.data.message);
       } else {
-        await addProduct(data);
-        toast.success("Product added successfully");
+        const response = await addProduct(data);
+        toast.success(response.data.message);
       }
 
       await fetchProducts();
       setIsProductModalOpen(false);
     } catch (error) {
-      console.error("Error in handleSubmit:", error);
       toast.error(error.message || "Something went wrong");
     }
   };

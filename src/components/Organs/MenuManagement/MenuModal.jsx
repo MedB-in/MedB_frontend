@@ -40,13 +40,12 @@ const MenuModal = ({ isOpen, closeModal, menuData, onSubmit, modules }) => {
         if (data.menuName && data.actionName && data.controllerName && data.moduleId) {
             try {
                 if (data.menuId) {
-                    await editMenu(data.menuId, data);
-                    toast.success("Menu updated successfully");
+                    const response = await editMenu(data.menuId, data);
+                    toast.success(response.data.message);
                 } else {
-                    await addMenu(data);
-                    toast.success("Menu added successfully");
+                    const response = await addMenu(data);
+                    toast.success(response.data.message);
                 }
-
                 onSubmit();
                 handleCancel();
             } catch (error) {

@@ -2,8 +2,10 @@ import axios from "./axios";
 import { getHeaders } from "./axios";
 
 //API to handle get Clinics.
-export const getClinic = () =>
-    axios.get("/api/clinic/", getHeaders());
+export const getClinic = (id = null) => {
+    const url = id ? `/api/clinic/${id}` : "/api/clinic/";
+    return axios.get(url, getHeaders());
+};
 
 //API to handle add Clinics.
 export const addClinic = (data) =>

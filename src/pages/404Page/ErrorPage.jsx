@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import React from 'react';
 import { Heart as Heartbeat, Stethoscope, ArrowLeft, Pill, Syringe, ChevronFirst as FirstAid, Activity, Clipboard, Thermometer, Battery as Bacteria } from 'lucide-react';
 
 const ErrorPage = () => {
+  const navigate = useNavigate();
   return (
     <>
       <div className="min-h-screen h-vh bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4 overflow-hidden">
@@ -121,16 +122,17 @@ const ErrorPage = () => {
             </div>
 
             {/* Enhanced Back to Home Button */}
-            <Link to={'/'}
+            <button
+              onClick={() => navigate(-1)}
               className="inline-flex items-center px-8 py-4 text-lg font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-all duration-300 group relative overflow-hidden shadow-lg hover:shadow-blue-500/25 transform hover:-translate-y-1"
             >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-blue-700 animate-gradient"></span>
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-400 to-blue-600 animate-shimmer"></span>
               <span className="relative flex items-center">
                 <ArrowLeft className="mr-2 h-5 w-5 group-hover:-translate-x-1 transition-transform duration-200" />
-                Return back to MedB Home
+                Return to Previous Page
               </span>
-            </Link>
+            </button>
           </div>
         </div>
 

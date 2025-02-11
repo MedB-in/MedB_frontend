@@ -29,6 +29,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     name: "",
     address: "",
     city: "",
+    district: "",
     state: "",
     country: "",
     postalCode: "",
@@ -79,16 +80,16 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     setLoading(true);
     try {
       await onSubmit(formData);
+      setFormData(defaultFormData);
       closeModal();
-      toast.success(clinicData ? "Clinic updated successfully" : "Clinic added successfully");
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error(error.response.data.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLocationSelect = (lat, lng, address, city, state, country, postalCode) => {
+  const handleLocationSelect = (lat, lng, address, city, district, state, country, postalCode) => {
     setFormData((prev) => ({
       ...prev,
       location: {
@@ -97,6 +98,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
       },
       address,
       city,
+      district,
       state,
       country,
       postalCode,
@@ -130,6 +132,34 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
           <div className="mb-4">
             <label className="block text-sm font-medium">Address</label>
             <input type="text" name="address" value={formData.address} className="w-full p-2 border rounded-md" readOnly />
+          </div>
+          <div className="mb-4 grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-sm font-medium">City</label>
+              <input type="text" name="city" value={formData.city} className="w-full p-2 border rounded-md" readOnly />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">District</label>
+              <input type="text" name="district" value={formData.district} className="w-full p-2 border rounded-md" readOnly />
+            </div>
+          </div>
+          <div className="mb-4 grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-sm font-medium">State</label>
+              <input type="text" name="state" value={formData.state} className="w-full p-2 border rounded-md" readOnly />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Country</label>
+              <input type="text" name="country" value={formData.country} className="w-full p-2 border rounded-md" readOnly />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Postal Code</label>
+              <input type="text" name="postalCode" value={formData.postalCode} className="w-full p-2 border rounded-md" readOnly />
+            </div>
+            <div>
+              <label className="block text-sm font-medium"></label>
+              <input type="text" name="" value="" className="" readOnly />
+            </div>
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Phone</label>

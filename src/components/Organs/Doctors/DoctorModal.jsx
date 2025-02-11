@@ -10,6 +10,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
     firstName: "",
     middleName: "",
     lastName: "",
+    registration: "",
     speciality: "",
     email: "",
     phone: "",
@@ -20,6 +21,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
     location: { type: "Point", coordinates: [null, null] },
     address: "",
     city: "",
+    district: "",
     state: "",
     country: "",
     postalCode: "",
@@ -50,15 +52,14 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
     try {
       await onSubmit(formData);
       closeModal();
-      toast.success(doctorData ? "Doctor updated successfully" : "Doctor added successfully");
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error(error.response.data.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLocationSelect = (lat, lng, address, city, state, country, postalCode) => {
+  const handleLocationSelect = (lat, lng, address, city, district, state, country, postalCode) => {
     setFormData((prev) => ({
       ...prev,
       location: {
@@ -67,6 +68,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
       },
       address,
       city,
+      district,
       state,
       country,
       postalCode,
@@ -99,8 +101,12 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
             </div>
             <div>
               <label className="block text-sm font-medium">Last Name</label>
-              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full p-2 border rounded-md" />
             </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Registration</label>
+            <input type="text" name="registration" value={formData.registration} onChange={handleChange} className="w-full p-2 border rounded-md" required />
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Profile Picture</label>
@@ -120,7 +126,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Gender</label>
-            <select name="gender" value={formData.gender} onChange={handleChange} className="w-full p-2 border rounded-md">
+            <select name="gender" value={formData.gender} onChange={handleChange} className="w-full p-2 border rounded-md" required>
               <option value="">Select Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -149,11 +155,15 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
               <input type="text" name="city" value={formData.city} className="w-full p-2 border rounded-md" readOnly />
             </div>
             <div>
-              <label className="block text-sm font-medium">State</label>
-              <input type="text" name="state" value={formData.state} className="w-full p-2 border rounded-md" readOnly />
+              <label className="block text-sm font-medium">District</label>
+              <input type="text" name="district" value={formData.district} className="w-full p-2 border rounded-md" readOnly />
             </div>
           </div>
           <div className="mb-4 grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-sm font-medium">State</label>
+              <input type="text" name="state" value={formData.state} className="w-full p-2 border rounded-md" readOnly />
+            </div>
             <div>
               <label className="block text-sm font-medium">Country</label>
               <input type="text" name="country" value={formData.country} className="w-full p-2 border rounded-md" readOnly />
@@ -161,6 +171,10 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
             <div>
               <label className="block text-sm font-medium">Postal Code</label>
               <input type="text" name="postalCode" value={formData.postalCode} className="w-full p-2 border rounded-md" readOnly />
+            </div>
+            <div>
+              <label className="block text-sm font-medium"></label>
+              <input type="text" name="" value="" className="" readOnly />
             </div>
             <div className="mb-4 flex items-center space-x-2">
               <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleChange} className="form-checkbox" />

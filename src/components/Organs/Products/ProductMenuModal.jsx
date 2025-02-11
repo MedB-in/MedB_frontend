@@ -44,8 +44,8 @@ const ProductMenuModal = ({ isOpen, closeModal, productId, fetchProducts }) => {
     };
 
     try {
-      await addMenuToProduct(data);
-      toast.success("Menu added to product successfully.");
+      const response = await addMenuToProduct(data);
+      toast.success(response.data.message);
       fetchProducts();
       closeModal();
     } catch (error) {
