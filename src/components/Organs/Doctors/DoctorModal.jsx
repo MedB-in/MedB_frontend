@@ -1,12 +1,30 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { getClinicList } from "../../../services/clinics";
 import LocationSelector from "../../LocationSelector";
 
-const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
+const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onSubmit }) => {
   const [loading, setLoading] = useState(false);
+  const [clinics, setClinics] = useState([]);
+
+  useEffect(() => {
+    if (!fromClinic) {
+      const fetchClinics = async () => {
+        try {
+          const data = await getClinicList();
+          setClinics(data.data.clinics || []);
+        } catch (error) {
+          toast.error(error.response?.data?.message || "Failed to fetch clinics");
+        }
+      };
+
+      fetchClinics();
+    }
+  }, [isOpen]);
 
   const defaultFormData = {
     doctorId: null,
+    clinicId: clinicId || "",
     firstName: "",
     middleName: "",
     lastName: "",
@@ -32,11 +50,15 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
 
   useEffect(() => {
     if (doctorData) {
-      setFormData({ ...defaultFormData, ...doctorData });
+      setFormData({
+        ...defaultFormData,
+        ...doctorData,
+        clinicId: doctorData.clinic?.clinicId || clinicId || "",
+      });
     } else {
       setFormData(defaultFormData);
     }
-  }, [doctorData]);
+  }, [doctorData, clinicId]);
 
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
@@ -53,7 +75,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
       await onSubmit(formData);
       closeModal();
     } catch (error) {
-      toast.error(error.response.data.message || "Something went wrong");
+      toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -80,7 +102,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
     closeModal();
   };
 
-
   if (!isOpen) return null;
 
   return (
@@ -90,6 +111,25 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
           {doctorData ? "Edit Doctor" : "Add New Doctor"}
         </h3>
         <form onSubmit={handleSubmit}>
+          {!clinicId && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Clinic</label>
+              <select
+                name="clinicId"
+                value={formData.clinicId}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-md"
+                required
+              >
+                <option value="">Select Clinic</option>
+                {clinics.map((clinic) => (
+                  <option key={clinic.clinicId} value={clinic.clinicId}>
+                    {clinic.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <div className="mb-4 grid grid-cols-3 gap-2">
             <div>
               <label className="block text-sm font-medium">First Name</label>
@@ -147,30 +187,30 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, onSubmit }) => {
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Address</label>
-            <input type="text" name="address" value={formData.address} className="w-full p-2 border rounded-md" readOnly />
+            <input type="text" name="address" value={formData.address} onChange={handleChange} className="w-full p-2 border rounded-md" /> {/*address can be edited */}
           </div>
           <div className="mb-4 grid grid-cols-2 gap-2">
             <div>
               <label className="block text-sm font-medium">City</label>
-              <input type="text" name="city" value={formData.city} className="w-full p-2 border rounded-md" readOnly />
+              <input type="text" name="city" value={formData.city} className="w-full p-2 border rounded-md cursor-default" readOnly />
             </div>
             <div>
               <label className="block text-sm font-medium">District</label>
-              <input type="text" name="district" value={formData.district} className="w-full p-2 border rounded-md" readOnly />
+              <input type="text" name="district" value={formData.district} className="w-full p-2 border rounded-md cursor-default" readOnly />
             </div>
           </div>
           <div className="mb-4 grid grid-cols-2 gap-2">
             <div>
               <label className="block text-sm font-medium">State</label>
-              <input type="text" name="state" value={formData.state} className="w-full p-2 border rounded-md" readOnly />
+              <input type="text" name="state" value={formData.state} className="w-full p-2 border rounded-md cursor-default" readOnly />
             </div>
             <div>
               <label className="block text-sm font-medium">Country</label>
-              <input type="text" name="country" value={formData.country} className="w-full p-2 border rounded-md" readOnly />
+              <input type="text" name="country" value={formData.country} className="w-full p-2 border rounded-md cursor-default" readOnly />
             </div>
             <div>
               <label className="block text-sm font-medium">Postal Code</label>
-              <input type="text" name="postalCode" value={formData.postalCode} className="w-full p-2 border rounded-md" readOnly />
+              <input type="text" name="postalCode" value={formData.postalCode} className="w-full p-2 border rounded-md cursor-default" readOnly />
             </div>
             <div>
               <label className="block text-sm font-medium"></label>

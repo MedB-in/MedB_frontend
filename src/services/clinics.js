@@ -7,6 +7,10 @@ export const getClinic = (id = null) => {
     return axios.get(url, getHeaders());
 };
 
+//API to handle get Clinics list.
+export const getClinicList = () => 
+    axios.get("/api/clinic/list", getHeaders()); 
+
 //API to handle add Clinics.
 export const addClinic = (data) =>
     axios.post("/api/clinic/", data, getHeaders());
