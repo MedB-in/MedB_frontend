@@ -5,6 +5,14 @@ import { getHeaders } from "./axios";
 export const getDoctors = () =>
     axios.get("/api/doctor/", getHeaders());
 
+//API to handle get Doctors list.
+export const getDoctorList = () =>
+    axios.get("/api/doctor/list", getHeaders());
+
+//API to handle Add Doctors to Clinics.
+export const addDoctorClinic = (id, data) =>
+    axios.post(`/api/doctor/doctorClinic/${id}`, data, getHeaders());
+
 //API to handle add Doctors.
 export const addDoctor = (data) =>
     axios.post("/api/doctor/", data, getHeaders());

@@ -79,62 +79,64 @@ const DoctorsPage = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
             {doctors.map((doctor) => (
-              <div key={doctor?.doctorId} className="bg-white shadow-lg rounded-lg overflow-hidden p-5 border hover:shadow-xl transition cursor-pointer">
+              <div
+                key={doctor?.doctorId}
+                className="bg-white shadow-lg rounded-lg overflow-hidden p-5 border hover:shadow-xl transition flex flex-col h-full"
+              >
                 <div className="flex items-center gap-4">
                   <img
-                    className="w-16 h-16 rounded-full object-cover"
+                    className="w-16 h-16 rounded-full object-cover border border-gray-300"
                     src={doctor?.profilePicture || "/default-avatar.png"}
-                    alt={doctor?.firstName}
+                    alt={doctor?.doctorName}
                   />
                   <div>
-                    <h3 className="text-lg font-semibold">
-                      {doctor.firstName} {doctor.middleName} {doctor.lastName}
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}
                     </h3>
-                    <p className="text-gray-600">{doctor.speciality}</p>
-                    <p className="text-sm text-gray-500">{doctor.qualifications}</p>
+                    <p className="text-gray-600 text-sm">{doctor.speciality}</p>
+                    <p className="text-gray-500 text-sm">{doctor.qualifications}</p>
                   </div>
                 </div>
-
-                <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-gray-700">
+                <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-gray-700 text-sm flex-grow">
                   <p className="font-medium">Reg No:</p> <p>{doctor.registration}</p>
-                  <p className="font-medium">Experience:</p> <p>{doctor.experience}</p>
+                  <p className="font-medium">Experience:</p> <p>{doctor.experience} years</p>
                   <p className="font-medium">Gender:</p> <p>{doctor.gender}</p>
                   <p className="font-medium">Contact No:</p> <p>{doctor.phone}</p>
                   <p className="font-medium">Email:</p> <p>{doctor.email}</p>
                   <p className="font-medium">Address:</p>
-                  <p>{doctor.address}, {doctor.district}, {doctor.state}, {doctor.country}, {doctor.postalCode}</p>
+                  <p className="text-gray-600 my-5">
+                    {doctor.address}, {doctor.district}, {doctor.state}, {doctor.country} - {doctor.postalCode}
+                  </p>
                 </div>
-
-                <div className="mt-4 flex justify-between items-center">
-                  <p
-                    className={`font-semibold ${doctor.isActive ? "text-green-600" : "text-red-600"
-                      }`}
-                  >
+                <div className="mt-auto pt-4 flex justify-between items-center border-t border-gray-200">
+                  <p className={`font-semibold ${doctor.isActive ? "text-green-600" : "text-red-600"}`}>
                     {doctor.isActive ? "Active" : "Inactive"}
                   </p>
                   <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
                     onClick={() => handleEditDoctor(doctor?.doctorId)}
                   >
                     Edit
                   </button>
                 </div>
               </div>
-
             ))}
           </div>
         )}
-
       {/* Doctor Modal */}
-      <DoctorModal
-        isOpen={isDoctorModalOpen}
-        closeModal={() => {
-          setIsDoctorModalOpen(false);
-          setDoctorData(null);
-        }}
-        doctorData={doctorData}
-        onSubmit={handleSubmit}
-      />
+      {isDoctorModalOpen && (
+        <DoctorModal
+          isOpen={isDoctorModalOpen}
+          closeModal={() => {
+            setIsDoctorModalOpen(false);
+            setDoctorData(null);
+          }}
+          doctorData={doctorData}
+          clinicId={null}
+          fromClinic={false}
+          onSubmit={handleSubmit}
+        />
+      )}
     </section>
   );
 };
