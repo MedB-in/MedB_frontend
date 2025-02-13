@@ -85,7 +85,7 @@ const ClinicsPage = () => {
         {!loading &&
           clinics.length > 0 &&
           clinics.map((clinic) => (
-            <div key={clinic?.clinicId} className="bg-white shadow-lg rounded-lg overflow-hidden p-5 border hover:shadow-xl transition cursor-pointer"
+            <div key={clinic?.clinicId} className="bg-white shadow-lg rounded-lg overflow-hidden p-5 border hover:shadow-xl hover:bg-blue-200 transition cursor-pointer"
               onClick={() => handleCardClick(clinic?.clinicId)}
             >
               <div className="flex items-center gap-4">

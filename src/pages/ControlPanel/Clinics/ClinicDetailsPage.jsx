@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { editClinic, getClinic } from "../../../services/clinics";
-import { addDoctor, editDoctor } from "../../../services/doctors";
-import DoctorModal from "../../../components/Organs/Doctors/DoctorModal";
 import { Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
 import ClinicModal from "../../../components/Organs/Clinics/ClinicModal";
 import DoctorToClinicModal from "../../../components/Organs/Clinics/DoctorToClinicModal";
+import DoctorModal from "../../../components/Organs/Doctors/DoctorModal";
+import days from "../../../lib/slotDays";
+import { editClinic, getClinic } from "../../../services/clinics";
+import { addDoctor, editDoctor } from "../../../services/doctors";
 
 
 const ClinicDetailsPage = () => {
@@ -19,6 +20,7 @@ const ClinicDetailsPage = () => {
     const [isClinicModalOpen, setIsClinicModalOpen] = useState(false);
     const [isDoctorToClinicModalOpen, setIsDoctorToClinicModalOpen] = useState(false);
     const [clinicData, setClinicData] = useState(null);
+    const [selectedDays, setSelectedDays] = useState({});
 
     const fetchClinicDetails = async () => {
         try {
@@ -55,8 +57,8 @@ const ClinicDetailsPage = () => {
         setIsClinicModalOpen(true);
     };
 
-    const openSlotModal = () => {
-        console.log('openSlotModal');
+    const handleSlots = (clinicId, doctorId) => {
+        navigate(`/clinics/slots/${clinicId}/${doctorId}`);
     };
 
     const handleSubmit = async (data) => {
@@ -91,11 +93,19 @@ const ClinicDetailsPage = () => {
         setIsDoctorToClinicModalOpen(true);
     };
 
+    const toggleSelectedDay = (doctorId, dayId) => {
+        setSelectedDays((prev) => ({
+            ...prev,
+            [doctorId]: prev[doctorId] === dayId ? undefined : dayId,
+        }));
+    };
+
+
     return (
         <div className="p-4">
             <button
                 className="bg-gray-200 text-gray-700 px-4 py-2 my-5 rounded-md hover:bg-gray-300"
-                onClick={() => navigate('/clinics')}
+                onClick={() => navigate(-1)}
             >
                 ← Back
             </button>
@@ -204,30 +214,52 @@ const ClinicDetailsPage = () => {
                             <p>✉️ <span className="font-medium">Email:</span> {doctor.email}</p>
                             <p>📝 <span className="font-medium">Registration:</span> {doctor.registration}</p>
 
-                            {doctor.slots.length > 0 ? (
-                                <div className="mt-4">
-                                    <h4 className="text-md font-semibold">🕒 Available Slots:</h4>
-                                    <ul className="text-gray-600 text-sm mt-2 space-y-1">
-                                        {doctor.slots.map((slot) => (
-                                            <li key={slot.slotId} className="bg-gray-100 px-3 py-1 rounded-md text-md">
-                                                {slot.timingFrom} - {slot.timingTo} ({slot.slotGap} min gap)
-                                            </li>
-                                        ))}
-                                    </ul>
+                            <div className="mt-4">
+                                <h4 className="text-md font-semibold">🕒 Available Slots:</h4>
+                                <div className="flex flex-wrap gap-2 mt-3">
+                                    {days.map((day) => {
+                                        const hasSlots = doctor.slots.some((slot) => slot.day === day.id);
+                                        return (
+                                            <button
+                                                key={day.id}
+                                                className={`px-4 py-2 rounded-md text-sm font-semibold transition-all hover:scale-105 ${hasSlots ? "text-green-500" : "text-red-500"} ${selectedDays[doctor.doctorId] === day.id ? "scale-105 bg-slate-200 shadow-lg" : ""}`}
+                                                title="Select Day"
+                                                onClick={() => toggleSelectedDay(doctor.doctorId, day.id)}
+                                            >
+                                                {day.label}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
-                            ) : (
-                                <p className="text-gray-500 text-sm mt-6">No slots available</p>
-                            )}
-                        </div>
+                                {selectedDays[doctor.doctorId] !== undefined && (
+                                    <div className="mt-4">
+                                        <h5 className="text-md font-semibold text-gray-700">
+                                            {days.find((d) => d.id === selectedDays[doctor.doctorId])?.label}
+                                        </h5>
+                                        <ul className="text-gray-600 text-sm mt-2 space-y-1">
+                                            {doctor.slots
+                                                .filter((slot) => slot.day === selectedDays[doctor.doctorId])
+                                                .map((slot) => (
+                                                    <li key={slot.slotId} className="bg-gray-100 px-3 py-1 rounded-md text-md">
+                                                        {slot.timingFrom} - {slot.timingTo} ({slot.slotGap} min gap)
+                                                    </li>
+                                                ))}
+                                        </ul>
+                                        {doctor.slots.filter((slot) => slot.day === selectedDays[doctor.doctorId]).length === 0 && (
+                                            <p className="text-gray-500 text-sm mt-2">No slots available for this day.</p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
 
+                        </div>
                         <button
                             className="w-full bg-blue-500 mt-5 text-white py-2 rounded-md hover:bg-blue-600 transition"
-                            onClick={() => openSlotModal(doctor)}
+                            onClick={() => handleSlots(clinicId, doctor.doctorId)}
                         >
                             Edit Slots
                         </button>
                     </div>
-
                 ))}
             </div>
             {/* Doctor Modal */}
