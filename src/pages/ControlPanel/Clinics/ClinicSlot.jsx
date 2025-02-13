@@ -37,10 +37,10 @@ const ClinicSlot = () => {
   const fetchSlots = async () => {
     try {
       const data = await getSlots(clinicId, doctorId);
-      setSlots(data.data.data || []);
+      setSlots(data?.data?.data || []);
     } catch (error) {
-      toast.error("Error fetching slots");
       setSlots([]);
+      toast.error("Error fetching slots");
     }
   };
 
@@ -94,17 +94,18 @@ const ClinicSlot = () => {
     try {
       const response = await addSlots(newSlot);
 
-      if (response.success) {
-        setSlots([...slots, { ...newSlot, doctorSlotId: response.data.doctorSlotId }]);
-        setLoading(false);
-        toast.success(response.data.message || "Slot added successfully");
-
+      if (response.data.status === "success") {
+        setSlots([...slots, { ...newSlot, doctorSlotId: response?.data?.data?.doctorSlotId }]);
+        
         setTimingFrom("");
         setTimingTo("");
         setSlotGap("");
         setSelectedDay("");
         setOverlappingSlots([]);
         setOverlappingSlotsRes([]);
+        setLoading(false);
+        fetchSlots();
+        toast.success(response.data.message || "Slot added successfully");
       } else {
         setLoading(false);
         toast.error(response.message || "Failed to add slot.");
@@ -227,13 +228,13 @@ const ClinicSlot = () => {
               {errorMessage}
             </div>
           )}
-          {overlappingSlotsRes.length > 0 && (
+          {overlappingSlotsRes?.length > 0 && (
             <div className="mt-3 p-3 bg-red-100 text-red-600 rounded-lg text-sm">
               <p>Overlapping slots found:</p>
               <ul className="mt-2">
-                {overlappingSlotsRes.map(slot => (
-                  <li key={slot.doctorSlotId} className="text-gray-700">
-                    🕒 {slot.timingFrom} - {slot.timingTo} (Gap: {slot.slotGap} mins)
+                {overlappingSlotsRes?.map(slot => (
+                  <li key={slot?.doctorSlotId} className="text-gray-700">
+                    🕒 {slot?.timingFrom} - {slot?.timingTo} (Gap: {slot.slotGap} mins)
                   </li>
                 ))}
               </ul>
