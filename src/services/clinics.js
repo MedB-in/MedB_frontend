@@ -18,3 +18,15 @@ export const addClinic = (data) =>
 //API to handle edit Clinics.
 export const editClinic = (id, data) =>
     axios.put(`/api/clinic/${id}`, data, getHeaders());
+
+//API to get a specific Doctor with a specific Clinic details.
+export const getDoctorClinic = (clinicId, doctorId) =>
+    axios.get(`/api/clinic/doctorClinic/${clinicId}/${doctorId}`, getHeaders());
+
+//API to get slots of a specific Doctor with a specific Clinic details.
+export const getSlots = (clinicId, doctorId) =>
+    axios.get(`/api/clinic/slots/${clinicId}/${doctorId}`, getHeaders());
+
+//API to add slots of a specific Doctor with a specific Clinic details.
+export const addSlots = (data) =>
+    axios.post("/api/clinic/slots", data, getHeaders());

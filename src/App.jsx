@@ -1,18 +1,18 @@
+import { setAuthenticated } from "./redux/slices/authSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Routes, Route } from "react-router-dom";
-import useAuth from "./hooks/useAuth";
-import { setAuthenticated } from "./redux/slices/authSlice";
+import { Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./components/Atoms/ProtectedRoutes";
-import LoginPage from "./pages/Login/LoginPage";
-import ControlPanel from "./pages/ControlPanel/Index";
-import Dashboard from "./pages/ControlPanel/DashBoard/DashBoardPage";
+import useAuth from "./hooks/useAuth";
 import ErrorPage from "./pages/404Page/ErrorPage";
+import * as Clinics from "./pages/ControlPanel/Clinics";
+import Dashboard from "./pages/ControlPanel/DashBoard/DashBoardPage";
+import DoctorsPage from "./pages/ControlPanel/Doctors/DoctorsPage";
+import ControlPanel from "./pages/ControlPanel/Index";
 import MenuManagementPage from "./pages/ControlPanel/MenuManagement/MenuManagementPage";
 import ProductsPage from "./pages/ControlPanel/Products/ProductsPage";
-import * as Clinics from "./pages/ControlPanel/Clinics";
-import DoctorsPage from "./pages/ControlPanel/Doctors/DoctorsPage";
 import UserSubscriptionPage from "./pages/ControlPanel/UserSubscription/UserSubscriptionPage";
+import LoginPage from "./pages/Login/LoginPage";
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -42,6 +42,7 @@ const App = () => {
           <Route path="clinics">
             <Route index element={<Clinics.ClinicsPage />} />
             <Route path=":clinicId" element={<Clinics.ClinicDetails />} />
+            <Route path="slots/:clinicId/:doctorId" element={<Clinics.ClinicSlot />} />
           </Route>
 
           {/* Doctors */}

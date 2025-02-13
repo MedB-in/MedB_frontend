@@ -55,7 +55,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     } else {
       setFormData(defaultFormData);
     }
-  }, [clinicData]);
+  }, [clinicData, isOpen]);
 
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
@@ -105,6 +105,11 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     }));
   };
 
+  const handleCloseModal = () => {
+    setFormData(defaultFormData);
+    closeModal();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -131,30 +136,30 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Address</label>
-            <input type="text" name="address" value={formData.address} onChange={handleChange} className="w-full p-2 border rounded-md" />
+            <input type="text" name="address" value={formData.address} onChange={handleChange} className="w-full p-2 border rounded-md" required />
           </div>
           <div className="mb-4 grid grid-cols-2 gap-2">
             <div>
               <label className="block text-sm font-medium">City</label>
-              <input type="text" name="city" value={formData.city} className="w-full p-2 border rounded-md cursor-default" readOnly />
+              <input type="text" name="city" value={formData.city} onChange={handleChange} className="w-full p-2 border rounded-md" />
             </div>
             <div>
               <label className="block text-sm font-medium">District</label>
-              <input type="text" name="district" value={formData.district} className="w-full p-2 border rounded-md cursor-default" readOnly />
+              <input type="text" name="district" value={formData.district} onChange={handleChange} className="w-full p-2 border rounded-md" />
             </div>
           </div>
           <div className="mb-4 grid grid-cols-2 gap-2">
             <div>
               <label className="block text-sm font-medium">State</label>
-              <input type="text" name="state" value={formData.state} className="w-full p-2 border rounded-md cursor-default" readOnly />
+              <input type="text" name="state" value={formData.state} onChange={handleChange} className="w-full p-2 border rounded-md" required />
             </div>
             <div>
               <label className="block text-sm font-medium">Country</label>
-              <input type="text" name="country" value={formData.country} className="w-full p-2 border rounded-md cursor-default" readOnly />
+              <input type="text" name="country" value={formData.country} onChange={handleChange} className="w-full p-2 border rounded-md cursor-default" readOnly />
             </div>
             <div>
               <label className="block text-sm font-medium">Postal Code</label>
-              <input type="text" name="postalCode" value={formData.postalCode} className="w-full p-2 border rounded-md cursor-default" readOnly />
+              <input type="text" name="postalCode" value={formData.postalCode} onChange={handleChange} className="w-full p-2 border rounded-md cursor-default" readOnly />
             </div>
             <div>
               <label className="block text-sm font-medium"></label>
@@ -163,11 +168,11 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Phone</label>
-            <input type="text" name="contact" value={formData.contact} onChange={handleChange} className="w-full p-2 border rounded-md" />
+            <input type="text" name="contact" value={formData.contact} onChange={handleChange} className="w-full p-2 border rounded-md" required />
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Email</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-2 border rounded-md" />
+            <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-2 border rounded-md" required />
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Website</label>
@@ -206,7 +211,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
             <button
               type="button"
               className="px-4 py-2 bg-gray-300 rounded-md"
-              onClick={closeModal}
+              onClick={handleCloseModal}
               disabled={loading}
             >
               Cancel
