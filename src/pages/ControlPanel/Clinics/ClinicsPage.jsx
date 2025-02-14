@@ -50,16 +50,32 @@ const ClinicsPage = () => {
     try {
       if (data?.clinicId) {
         const response = await editClinic(data.clinicId, data);
+        setClinics(prevClinics =>
+          prevClinics.map(clinic =>
+            clinic.clinicId === data.clinicId ? { ...data } : clinic
+          )
+        );
+        setIsClinicModalOpen(false);
         toast.success(response.data.message);
       } else {
         const response = await addClinic(data);
+        const newClinic = {
+          ...data,
+          clinicId: response.data.clinicId
+        };
+        setClinics(prevClinics => [...prevClinics, newClinic])
+        setIsClinicModalOpen(false);
         toast.success(response.data.message);
       }
-      await fetchClinics();
-      setIsClinicModalOpen(false);
+      return { success: true };
     } catch (error) {
-      toast.error(error.response.data.message || "Something went wrong");
+      throw error;
     }
+  };
+
+  const handleCloseModal = () => {
+    setIsClinicModalOpen(false);
+    setClinicData(null);
   };
 
   return (
@@ -131,7 +147,7 @@ const ClinicsPage = () => {
       {/* Clinic Modal */}
       <ClinicModal
         isOpen={isClinicModalOpen}
-        closeModal={() => setIsClinicModalOpen(false)}
+        closeModal={handleCloseModal}
         clinicData={clinicData}
         onSubmit={handleSubmit}
       />
