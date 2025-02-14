@@ -11,7 +11,7 @@ import Logo from "../../assets/images/logo.svg";
 import EmailLogo from "../../assets/images/email-icon.svg";
 import PasswordLogo from "../../assets/images/password-icon.svg";
 import InputField from "../../components/Atoms/Login/InputField";
-import Button from "../../components/Atoms/Button";
+import Button from "../../components/Atoms/Login/Button";
 import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
 
 const LoginPage = () => {

@@ -1,15 +1,17 @@
-const Input = ({ type = "text", placeholder, value, onChange, className = "", ...props }) => {
-    return (
+const InputField = ({ label, name, type, value, onChange, readOnly, required }) => {
+  return (
+    <div>
+      <label className="block text-sm font-medium">{label}</label>
       <input
         type={type}
-        placeholder={placeholder}
+        name={name}
         value={value}
-        onChange={onChange}
-        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
-        {...props}
+        onChange={!onChange ? undefined : onChange}
+        className={`w-full p-2 border rounded-md ${readOnly ? "cursor-default bg-gray-100" : ""}`}
+        readOnly={readOnly}
+        required={required}
       />
-    );
-  };
-  
-  export default Input;
-  
+    </div>
+  );
+};
+export default InputField;
