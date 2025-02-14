@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import days from "../../../lib/slotDays";
-import { addSlots, getDoctorClinic, getSlots } from "../../../services/clinics";
+import { addSlots, getDoctorClinic, getSlots, editSlot } from "../../../services/clinics";
 
 const ClinicSlot = () => {
   const { clinicId, doctorId } = useParams();
@@ -17,6 +17,10 @@ const ClinicSlot = () => {
   const [loading, setLoading] = useState(false);
   const [doctorClinic, setDoctorClinic] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [editingSlot, setEditingSlot] = useState(null);
+  const [fromPeriod, setFromPeriod] = useState("AM");
+  const [toPeriod, setToPeriod] = useState("AM");
+
 
   useEffect(() => {
     if (clinicId && doctorId) {
@@ -44,12 +48,72 @@ const ClinicSlot = () => {
     }
   };
 
-  const isOverlapping = (newFrom, newTo, existingSlots) => {
-    return existingSlots.some(slot =>
-      (newFrom >= slot.timingFrom && newFrom < slot.timingTo) ||
-      (newTo > slot.timingFrom && newTo <= slot.timingTo) ||
-      (newFrom <= slot.timingFrom && newTo >= slot.timingTo)
-    );
+  const isOverlapping = (newFrom, newTo, existingSlots, editingSlot) => {
+    return existingSlots.some((slot) => {
+      const slotFrom = convertTo24Hour(slot.timingFrom, slot.fromPeriod);
+      const slotTo = convertTo24Hour(slot.timingTo, slot.toPeriod);
+
+      return (
+        slot.doctorSlotId !== editingSlot?.doctorSlotId &&
+        (
+          (newFrom >= slotFrom && newFrom < slotTo) ||
+          (newTo > slotFrom && newTo <= slotTo) ||
+          (newFrom <= slotFrom && newTo >= slotTo)
+        )
+      );
+    });
+  };
+
+  const handleEdit = (slot) => {
+    setEditingSlot(slot);
+    setSelectedDay(slot.day.toString());
+
+    const { formattedTime: fromTime, period: fromPeriodValue } = convertTo12Hour(slot.timingFrom);
+    const { formattedTime: toTime, period: toPeriodValue } = convertTo12Hour(slot.timingTo);
+
+    setTimingFrom(fromTime);
+    setTimingTo(toTime);
+    setFromPeriod(fromPeriodValue);
+    setToPeriod(toPeriodValue);
+
+    setSlotGap(slot.slotGap.toString());
+  };
+
+  const convertTo12Hour = (time) => {
+    let [hours, minutes] = time.split(":").map(Number);
+    const period = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    return { formattedTime: `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`, period };
+  };
+
+  const convertTo24Hour = (time, period) => {
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (period === "PM" && hours !== 12) {
+      hours += 12;
+    } else if (period === "AM" && hours === 12) {
+      hours = 0;
+    }
+
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+  };
+
+  const resetForm = () => {
+    setSelectedDay("");
+    setTimingFrom("");
+    setTimingTo("");
+    setSlotGap("");
+    setEditingSlot(null);
+  };
+
+  const formatTime = (time) => {
+    if (!time) return "";
+
+    const [hour, minute] = time.split(":").map(Number);
+    const period = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+
+    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
   };
 
 
@@ -61,7 +125,10 @@ const ClinicSlot = () => {
       return;
     }
 
-    if (timingFrom >= timingTo) {
+    const timingFrom24 = convertTo24Hour(timingFrom, fromPeriod);
+    const timingTo24 = convertTo24Hour(timingTo, toPeriod);
+
+    if (timingFrom24 >= timingTo24) {
       setErrorMessage("End time must be greater than start time.");
       setTimeout(() => setErrorMessage(null), 5000);
       setLoading(false);
@@ -70,9 +137,12 @@ const ClinicSlot = () => {
 
     const parsedDay = parseInt(selectedDay);
 
-    const existingSlots = slots.filter(slot => slot.day === parsedDay);
-    if (isOverlapping(timingFrom, timingTo, existingSlots)) {
-      setOverlappingSlots(existingSlots.filter(slot => isOverlapping(timingFrom, timingTo, [slot])));
+    const existingSlots = slots.filter(slot =>
+      slot.day === parsedDay && slot.doctorSlotId !== editingSlot?.doctorSlotId
+    );
+
+    if (isOverlapping(timingFrom, timingTo, existingSlots, editingSlot)) {
+      setOverlappingSlots(existingSlots.filter(slot => isOverlapping(timingFrom, timingTo, [slot], editingSlot)));
       setErrorMessage("Overlapping slots detected within the clinic. Please adjust the time.");
       setLoading(false);
       setTimeout(() => {
@@ -92,11 +162,26 @@ const ClinicSlot = () => {
     };
 
     try {
-      const response = await addSlots(newSlot);
+      let response;
+
+      if (editingSlot) {
+        response = await editSlot(editingSlot.doctorSlotId, newSlot);
+      } else {
+        response = await addSlots(newSlot);
+      }
 
       if (response.data.status === "success") {
-        setSlots([...slots, { ...newSlot, doctorSlotId: response?.data?.data?.doctorSlotId }]);
-        
+        setSlots(prevSlots => {
+          if (editingSlot) {
+            return prevSlots.map(slot =>
+              slot.doctorSlotId === editingSlot.doctorSlotId ? { ...newSlot, doctorSlotId: editingSlot.doctorSlotId } : slot
+            );
+          } else {
+            return [...prevSlots, { ...newSlot, doctorSlotId: response?.data?.data?.doctorSlotId }];
+          }
+        });
+
+        resetForm();
         setTimingFrom("");
         setTimingTo("");
         setSlotGap("");
@@ -104,7 +189,6 @@ const ClinicSlot = () => {
         setOverlappingSlots([]);
         setOverlappingSlotsRes([]);
         setLoading(false);
-        fetchSlots();
         toast.success(response.data.message || "Slot added successfully");
       } else {
         setLoading(false);
@@ -117,8 +201,6 @@ const ClinicSlot = () => {
       toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
     }
   };
-
-
 
   const groupedSlots = useMemo(() => {
     return days.map(day => ({
@@ -191,25 +273,56 @@ const ClinicSlot = () => {
           <select
             className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
             value={selectedDay}
-            onChange={(e) => setSelectedDay(e.target.value)}
+            onChange={(e) => setSelectedDay(e.target.value)} disabled={editingSlot}
           >
             <option value="">Select from the List</option>
             {days.map(day => <option key={day.id} value={day.id}>{day.label}</option>)}
           </select>
           <div className="flex gap-4 mt-4">
-            <input
-              type="time"
-              className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
-              value={timingFrom}
-              onChange={(e) => setTimingFrom(e.target.value)}
-            />
-            <input
-              type="time"
-              className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
-              value={timingTo}
-              onChange={(e) => setTimingTo(e.target.value)}
-            />
+            {/* From Time Selection */}
+            <div className="flex flex-col w-full">
+              <label className="text-gray-700 font-medium mb-1">From</label>
+              <div className="flex gap-2">
+                <input
+                  type="time"
+                  className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={timingFrom}
+                  onChange={(e) => setTimingFrom(e.target.value)}
+                />
+                <select
+                  className="p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={fromPeriod}
+                  onChange={(e) => setFromPeriod(e.target.value)}
+                >
+                  <option value="AM">AM</option>
+                  <option value="PM">PM</option>
+                </select>
+              </div>
+            </div>
+
+            {/* To Time Selection */}
+            <div className="flex flex-col w-full">
+              <label className="text-gray-700 font-medium mb-1">To</label>
+              <div className="flex gap-2">
+                <input
+                  type="time"
+                  className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={timingTo}
+                  onChange={(e) => setTimingTo(e.target.value)}
+                />
+                <select
+                  className="p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={toPeriod}
+                  onChange={(e) => setToPeriod(e.target.value)}
+                >
+                  <option value="AM">AM</option>
+                  <option value="PM">PM</option>
+                </select>
+              </div>
+            </div>
           </div>
+
+
           <input
             type="number"
             className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none mt-4"
@@ -221,8 +334,16 @@ const ClinicSlot = () => {
             className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-all duration-300"
             onClick={handleSubmit}
           >
-            {loading ? "Saving..." : "Save"}
+            {loading ? "Saving..." : editingSlot ? "Update Slot" : "Save"}
           </button>
+          {editingSlot && (
+            <button
+              className="mt-2 w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-lg font-semibold transition-all duration-300"
+              onClick={resetForm}
+            >
+              Cancel Edit
+            </button>
+          )}
           {errorMessage && (
             <div className="mt-3 p-3 bg-red-100 text-red-600 rounded-lg text-sm">
               {errorMessage}
@@ -241,27 +362,36 @@ const ClinicSlot = () => {
             </div>
           )}
         </div>
+
         <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
           <h3 className="text-xl font-semibold text-gray-900">Scheduled Slots</h3>
-          {groupedSlots.map(day => (
+          {groupedSlots.map((day, dayIndex) => (
             day.slots.length > 0 && (
-              <div key={day.id} className="mt-5 p-4 border-l-4 rounded-lg"
+              <div key={`day-${day.id || dayIndex}`} className="mt-5 p-4 border-l-4 rounded-lg"
                 style={{ borderColor: overlappingSlots.some(slot => slot.day === day.id) ? 'red' : '#3b82f6' }}>
                 <h4 className={`font-semibold ${overlappingSlots.some(slot => slot.day === day.id) ? 'text-red-700' : 'text-blue-700'}`}>
                   {day.label}
                 </h4>
-                {day.slots.map(slot => (
-                  <p key={slot.doctorSlotId}
-                    className={`text-sm ${overlappingSlots.some(overlap => overlap.doctorSlotId === slot.doctorSlotId) ? 'text-red-700' : 'text-gray-700'}`}>
-                    🕒 {slot.timingFrom} - {slot.timingTo} <span className="text-gray-500">(Gap: {slot.slotGap} mins)</span>
-                  </p>
+                {day.slots.map((slot, slotIndex) => (
+                  <div key={`slot-${slot.doctorSlotId || slotIndex}`} className="flex justify-between items-center">
+                    <p className={`text-sm ${overlappingSlots.some(overlap => overlap.doctorSlotId === slot.doctorSlotId) ? 'text-red-700' : 'text-gray-700'}`}>
+                      🕒  {formatTime(slot.timingFrom)} - {formatTime(slot.timingTo)} <span className="text-gray-500">(Gap: {slot.slotGap} mins)</span>
+                    </p>
+                    <button
+                      className="text-yellow-500 px-3 py-1 rounded-md text-xs hover:text-yellow-600"
+                      onClick={() => handleEdit(slot)}
+                    >
+                      Edit
+                    </button>
+                  </div>
                 ))}
               </div>
             )
           ))}
         </div>
-      </div>
 
+
+      </div>
     </div>
   );
 };
