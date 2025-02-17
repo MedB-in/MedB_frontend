@@ -8,8 +8,8 @@ import { doLogin } from "../../services/auth";
 import useToken from "../../hooks/useToken";
 import Frame from "../../assets/images/frame.png";
 import Logo from "../../assets/images/logo.svg";
-import EmailLogo from "../../assets/images/email-icon.svg";
-import PasswordLogo from "../../assets/images/password-icon.svg";
+import EmailIcon from "../../assets/images/email-icon.svg";
+import PasswordIcon from "../../assets/images/password-icon.svg";
 import InputField from "../../components/Atoms/Login/InputField";
 import Button from "../../components/Atoms/Login/Button";
 import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
@@ -84,7 +84,7 @@ const LoginPage = () => {
               <InputField
                 type="email"
                 placeholder="Email/Phone Number"
-                icon={EmailLogo}
+                icon={EmailIcon}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -94,8 +94,9 @@ const LoginPage = () => {
                 <InputField
                   type="password"
                   placeholder="Password"
-                  icon={PasswordLogo}
+                  icon={PasswordIcon}
                   value={password}
+                  toggleable={true}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
@@ -146,7 +147,7 @@ const LoginPage = () => {
               <p className="text-center text-sm text-gray-600">
                 Don't have an account?{" "}
                 <button
-                  onClick={() => navigate("/signup")}
+                  onClick={() => navigate("/register")}
                   type="button"
                   className="text-violet-600 hover:text-violet-700 hover:underline"
                 >
