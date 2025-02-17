@@ -23,6 +23,10 @@ export const editClinic = (id, data) =>
 export const getDoctorClinic = (clinicId, doctorId) =>
     axios.get(`/api/clinic/doctorClinic/${clinicId}/${doctorId}`, getHeaders());
 
+//API to set a Doctor Clinic status.
+export const setIsDoctorClinicStatus = (doctorId, clinicId, isActive) =>
+    axios.put(`/api/clinic/doctorClinic/${clinicId}/${doctorId}`, { isActive }, getHeaders());
+
 //API to get slots of a specific Doctor with a specific Clinic details.
 export const getSlots = (clinicId, doctorId) =>
     axios.get(`/api/clinic/slots/${clinicId}/${doctorId}`, getHeaders());

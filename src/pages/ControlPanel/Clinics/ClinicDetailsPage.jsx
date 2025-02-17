@@ -6,7 +6,7 @@ import ClinicModal from "../../../components/Organs/Clinics/ClinicModal";
 import DoctorToClinicModal from "../../../components/Organs/Clinics/DoctorToClinicModal";
 import DoctorModal from "../../../components/Organs/Doctors/DoctorModal";
 import days from "../../../lib/slotDays";
-import { editClinic, getClinic } from "../../../services/clinics";
+import { editClinic, getClinic, setIsDoctorClinicStatus } from "../../../services/clinics";
 import { addDoctor, editDoctor } from "../../../services/doctors";
 
 
@@ -100,6 +100,21 @@ const ClinicDetailsPage = () => {
         }));
     };
 
+    const handleDoctorClinicStatus = async (doctorId, isChecked) => {
+        try {
+            const response = await setIsDoctorClinicStatus(doctorId, clinicId, isChecked);
+            setDoctors((prevDoctors) =>
+                prevDoctors.map((doctor) =>
+                    doctor.doctorId === doctorId
+                        ? { ...doctor, isActiveDoctorClinic: isChecked }
+                        : doctor
+                )
+            );
+            toast.success(response.data.message);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong");
+        }
+    };
 
     return (
         <div className="p-4">
@@ -253,8 +268,19 @@ const ClinicDetailsPage = () => {
                             </div>
 
                         </div>
+                        <div className="flex items-center mt-5 space-x-2">
+                            <input
+                                type="checkbox"
+                                name="isActive"
+                                checked={doctor.isActiveDoctorClinic}
+                                onChange={(e) => handleDoctorClinicStatus(doctor.doctorId, e.target.checked)}
+                                className="form-checkbox"
+                            />
+                            <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
+                        </div>
+
                         <button
-                            className="w-full bg-blue-500 mt-5 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                            className="w-full bg-blue-500 mt-2 text-white py-2 rounded-md hover:bg-blue-600 transition"
                             onClick={() => handleSlots(clinicId, doctor.doctorId)}
                         >
                             Edit Slots
