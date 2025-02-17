@@ -13,6 +13,8 @@ import MenuManagementPage from "./pages/ControlPanel/MenuManagement/MenuManageme
 import ProductsPage from "./pages/ControlPanel/Products/ProductsPage";
 import UserSubscriptionPage from "./pages/ControlPanel/UserSubscription/UserSubscriptionPage";
 import LoginPage from "./pages/Login/LoginPage";
+import RegisterPage from "./pages/Register/RegisterPage";
+import VerificationPage from "./pages/Verification/VerificationPage";
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -24,8 +26,15 @@ const App = () => {
 
   return (
     <Routes>
+
+      {/* Public routes */}
       {/* Login page */}
       <Route path="/login" element={<LoginPage />} />
+      {/* Register page */}
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/verify-email" element={<VerificationPage />} />
+      {/* Public routes */}
+
 
       {/* Protected routes */}
       <Route element={<ProtectedRoutes />}>

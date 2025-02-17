@@ -8,6 +8,7 @@ import DoctorModal from "../../../components/Organs/Doctors/DoctorModal";
 import days from "../../../lib/slotDays";
 import { editClinic, getClinic, setIsDoctorClinicStatus } from "../../../services/clinics";
 import { addDoctor, editDoctor } from "../../../services/doctors";
+import DefaultImage from "../../../assets/images/default-doctor.png";
 
 
 const ClinicDetailsPage = () => {
@@ -191,7 +192,7 @@ const ClinicDetailsPage = () => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <img
-                                    src={doctor.profilePicture || "/default-doctor.png"} // Fallback image
+                                    src={doctor.profilePicture || DefaultImage} // Fallback image
                                     alt={doctor.doctorName}
                                     className="w-16 h-16 rounded-full object-cover border"
                                 />

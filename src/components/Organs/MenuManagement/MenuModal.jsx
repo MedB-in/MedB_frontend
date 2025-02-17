@@ -112,7 +112,7 @@ const MenuModal = ({ isOpen, closeModal, menuData, onSubmit, modules }) => {
                             />
                         </div>
                         <div className="mb-4">
-                            <label className="block text-sm font-medium">Controller Name</label>
+                            <label className="block text-sm font-medium">Menu Route</label>
                             <input
                                 type="text"
                                 value={controllerName}

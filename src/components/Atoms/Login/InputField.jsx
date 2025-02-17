@@ -5,11 +5,12 @@ import ShowPasswordIcon from "../../../assets/images/show-password-icon.svg";
 const InputField = ({
   id,
   type,
+  name,
   placeholder,
   icon,
   value,
   onChange,
-  toggleable = false,
+  toggleable,
   ariaLabel,
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -20,18 +21,21 @@ const InputField = ({
 
   return (
     <div className="flex overflow-hidden gap-1 px-3 py-3.5 bg-white rounded-lg border border-solid border-zinc-300 text-stone-900 text-opacity-50">
-      <img
-        loading="lazy"
-        src={icon}
-        alt=""
-        className="object-contain shrink-0 my-auto aspect-square w-[19px]"
-      />
+      {icon && (
+        <img
+          loading="lazy"
+          src={icon}
+          alt=""
+          className="object-contain shrink-0 my-auto aspect-square w-[19px]"
+        />
+      )}
       <label htmlFor={id} className="sr-only">
         {ariaLabel || placeholder}
       </label>
       <input
         type={toggleable && isPasswordVisible ? "text" : type}
         id={id}
+        name={name}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
