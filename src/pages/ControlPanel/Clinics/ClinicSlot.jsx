@@ -116,6 +116,29 @@ const ClinicSlot = () => {
     return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
   };
 
+  const handleTimeChange = (e, setter) => {
+    let value = e.target.value.replace(/[^0-9]/g, "");
+    if (value.length > 4) {
+      value = value.slice(0, 4);
+    }
+    let hours = value.slice(0, 2);
+    let minutes = value.slice(2, 4);
+    if (hours && (parseInt(hours) < 1 || parseInt(hours) > 12)) {
+      hours = "";
+    }
+    if (minutes && (parseInt(minutes) < 0 || parseInt(minutes) > 59)) {
+      minutes = "";
+    }
+    if (hours && minutes) {
+      value = `${hours}:${minutes}`;
+    } else if (hours) {
+      value = `${hours}`;
+    } else if (minutes) {
+      value = `:${minutes}`;
+    }
+    setter(value);
+  };
+
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -278,16 +301,18 @@ const ClinicSlot = () => {
             <option value="">Select from the List</option>
             {days.map(day => <option key={day.id} value={day.id}>{day.label}</option>)}
           </select>
+          
           <div className="flex gap-4 mt-4">
             {/* From Time Selection */}
             <div className="flex flex-col w-full">
               <label className="text-gray-700 font-medium mb-1">From</label>
               <div className="flex gap-2">
                 <input
-                  type="time"
+                  type="text"
                   className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
                   value={timingFrom}
-                  onChange={(e) => setTimingFrom(e.target.value)}
+                  onChange={(e) => handleTimeChange(e, setTimingFrom)}
+                  placeholder="HH:MM"
                 />
                 <select
                   className="p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
@@ -305,10 +330,11 @@ const ClinicSlot = () => {
               <label className="text-gray-700 font-medium mb-1">To</label>
               <div className="flex gap-2">
                 <input
-                  type="time"
+                  type="text"
                   className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
                   value={timingTo}
-                  onChange={(e) => setTimingTo(e.target.value)}
+                  onChange={(e) => handleTimeChange(e, setTimingTo)}
+                  placeholder="HH:MM"
                 />
                 <select
                   className="p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
@@ -321,8 +347,7 @@ const ClinicSlot = () => {
               </div>
             </div>
           </div>
-
-
+          
           <input
             type="number"
             className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none mt-4"
