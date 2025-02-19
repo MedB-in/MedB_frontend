@@ -8,7 +8,7 @@ const ControlPanel = () => {
         <>
             <Header />
             <SideBar />
-            <main className="bg-white ml-[270px] pt-24 overflow-auto">
+            <main className="bg-white ml-[270px] pt-[85px] overflow-auto">
                 <section>
                     <Outlet />
                 </section>
