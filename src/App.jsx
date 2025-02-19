@@ -15,6 +15,7 @@ import UserSubscriptionPage from "./pages/ControlPanel/UserSubscription/UserSubs
 import LoginPage from "./pages/Login/LoginPage";
 import RegisterPage from "./pages/Register/RegisterPage";
 import VerificationPage from "./pages/Verification/VerificationPage";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -33,6 +34,7 @@ const App = () => {
       {/* Register page */}
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/verify-email" element={<VerificationPage />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       {/* Public routes */}
 
 
