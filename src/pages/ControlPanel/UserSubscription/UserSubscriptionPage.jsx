@@ -39,6 +39,7 @@ function UserSubscription() {
   };
 
   const handleSearch = (e) => {
+    setLoading(true);
     setSearchQuery(e.target.value);
     setCurrentPage(1);
   };
@@ -55,23 +56,23 @@ function UserSubscription() {
           className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
         />
       </div>
-      {loading ? (
-        <p className="text-gray-600 text-lg mt-28">Loading...</p>
-      ) : (
-        <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
-          <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-4 py-3 border border-gray-200 text-left">Name</th>
-                <th className="px-4 py-3 border border-gray-200 text-left">Product</th>
-                <th className="px-4 py-3 border border-gray-200 text-left">Start Date</th>
-                <th className="px-4 py-3 border border-gray-200 text-left">Expiry Date</th>
-                <th className="px-4 py-3 border border-gray-200 text-left">Payment</th>
-                <th className="px-4 py-3 border border-gray-200 text-left">Amount</th>
-              </tr>
-            </thead>
+      <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
+        <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
+          <thead>
+            <tr className="bg-gray-100 text-center">
+              <th className="px-4 py-3 border border-gray-200">Name</th>
+              <th className="px-4 py-3 border border-gray-200">Product</th>
+              <th className="px-4 py-3 border border-gray-200">Start Date</th>
+              <th className="px-4 py-3 border border-gray-200">Expiry Date</th>
+              <th className="px-4 py-3 border border-gray-200">Payment</th>
+              <th className="px-4 py-3 border border-gray-200">Amount</th>
+            </tr>
+          </thead>
+          {loading ? (
+            <p className="text-gray-600 text-lg mt-28">Loading...</p>
+          ) : (
             <tbody>
-              {subscriptions.map((sub, index) => (
+              {subscriptions && subscriptions.map((sub, index) => (
                 <tr key={index} className="odd:bg-white even:bg-gray-50">
                   <td className="px-4 py-3 border border-gray-200">{sub.userName}</td>
                   <td className="px-4 py-3 border border-gray-200">{sub.productName}</td>
@@ -83,41 +84,48 @@ function UserSubscription() {
                   <td className="px-4 py-3 border border-gray-200">Rs. {sub.netAmount ?? 0}</td>
                 </tr>
               ))}
+              {!subscriptions.length && (
+                <tr>
+                  <td colSpan="6" className="px-4 py-3 border border-gray-200 text-center">
+                    No subscriptions found
+                  </td>
+                </tr>
+              )}
             </tbody>
-          </table>
+          )}
+        </table>
 
-          {/* Pagination */}
-          <div className="mt-6 flex justify-center items-center space-x-2">
+        {/* Pagination */}
+        <div className="mt-6 flex justify-center items-center space-x-2">
+          <button
+            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+          {generatePagination().map((page, index) => (
             <button
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
+              key={index}
+              className={`${page === "..." ? "text-gray-400 cursor-default"
+                : page === currentPage
+                  ? "bg-gray-300 text-gray-800 font-bold"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-4 py-2 rounded-lg`}
+              onClick={() => page !== "..." && setCurrentPage(page)}
+              disabled={page === "..."}
             >
-              Prev
+              {page}
             </button>
-            {generatePagination().map((page, index) => (
-              <button
-                key={index}
-                className={`${page === "..." ? "text-gray-400 cursor-default"
-                  : page === currentPage
-                    ? "bg-gray-300 text-gray-800 font-bold"
-                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-4 py-2 rounded-lg`}
-                onClick={() => page !== "..." && setCurrentPage(page)}
-                disabled={page === "..."}
-              >
-                {page}
-              </button>
-            ))}
-            <button
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </button>
-          </div>
+          ))}
+          <button
+            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
         </div>
-      )}
+      </div>
     </section>
   );
 }
