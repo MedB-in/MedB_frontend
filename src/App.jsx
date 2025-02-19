@@ -16,6 +16,7 @@ import LoginPage from "./pages/Login/LoginPage";
 import RegisterPage from "./pages/Register/RegisterPage";
 import VerificationPage from "./pages/Verification/VerificationPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import UserProfilePage from "./pages/ControlPanel/UserProfile/UserProfilePage";
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -43,6 +44,10 @@ const App = () => {
         <Route path="/" element={<ControlPanel />} >
           {/* Dashboard */}
           <Route index element={<Dashboard />} />
+
+          {/* User profile */}
+          <Route path="user-profile" element={<UserProfilePage />} />
+
           {/* Menu details */}
           <Route path="menu-management" element={<MenuManagementPage />} />
 
