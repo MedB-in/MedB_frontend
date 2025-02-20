@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,14 +9,28 @@ import Logo from '../../assets/images/medb-logo-2.svg';
 const Header = () => {
     const { logout } = useAuth();
     const { authenticated } = useSelector((state) => state.auth);
-    const { userDetails } = useSelector((state) => state.auth);
-    if (userDetails) {
-        localStorage.setItem('userDetails', JSON.stringify(userDetails));
-    }
-    const user = JSON.parse(localStorage.getItem('userDetails'));
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('userDetails')) || {});
+
+    const updateUserDetails = () => {
+        setUser(JSON.parse(localStorage.getItem('userDetails')) || {});
+    };
+
+    useEffect(() => {
+        window.addEventListener("storage", updateUserDetails);
+        window.addEventListener("userDetailsUpdated", updateUserDetails);
+
+        return () => {
+            window.removeEventListener("storage", updateUserDetails);
+            window.removeEventListener("userDetailsUpdated", updateUserDetails);
+        };
+    }, []);
+
+    useEffect(() => {
+        updateUserDetails();
+    }, [authenticated]);
 
     const doLogout = async () => {
         const confirmation = confirm("Are you sure you want to logout?");
@@ -43,19 +57,11 @@ const Header = () => {
                         </p>
                     )}
                 </div>
-                {user?.profilePicture ? (
-                    <img
-                        src={user?.profilePicture}
-                        alt={user?.firstName}
-                        className="w-12 h-12 rounded-full object-cover ml-4"
-                    />
-                ) : (
-                    <img
-                        src="https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"
-                        alt="Profile Picture"
-                        className="w-12 h-12 rounded-full object-cover ml-4"
-                    />
-                )}
+                <img
+                    src={user?.profilePicture || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
+                    alt="Profile"
+                    className="w-12 h-12 rounded-full object-cover ml-4"
+                />
             </div>
         </header>
     );

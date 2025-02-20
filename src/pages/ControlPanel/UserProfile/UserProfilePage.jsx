@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import toast from "react-hot-toast";
-import { updateProfile } from "../../../services/user";
+import { updateProfile, uploadProfilePicture } from "../../../services/user";
 import InputField from "../../../components/Atoms/Login/InputField";
 import Button from "../../../components/Atoms/Login/Button";
 
@@ -23,21 +23,44 @@ const UserProfilePage = () => {
     });
 
     const [loading, setLoading] = useState(false);
-    const [profilePicture, setProfilePicture] = useState(null);
-    const [profilePicturePreview, setProfilePicturePreview] = useState(null);
+    const [imageUploading, setImageUploading] = useState(false);
+    const [profilePicturePreview, setProfilePicturePreview] = useState(storedUser.profilePicture || null);
+    const [lastSavedProfilePicture, setLastSavedProfilePicture] = useState(storedUser.profilePicture || null);
+    const fileInputRef = useRef(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    const handleProfilePictureChange = (e) => {
+    const handleProfilePictureChange = async (e) => {
         const selectedImage = e.target.files[0];
-        if (selectedImage && ["image/jpeg", "image/png", "image/gif"].includes(selectedImage.type)) {
-            setProfilePicture(selectedImage);
-            setProfilePicturePreview(URL.createObjectURL(selectedImage));
-        } else {
+        if (!selectedImage || !["image/jpeg", "image/png", "image/jpg"].includes(selectedImage.type)) {
             toast.error("Please select a valid image file.");
+            return;
+        }
+
+        setProfilePicturePreview(URL.createObjectURL(selectedImage));
+        setImageUploading(true);
+
+        const formData = new FormData();
+        formData.append("image", selectedImage);
+
+        try {
+            const response = await uploadProfilePicture(formData);
+            const newProfilePictureUrl = response.data.data;
+            toast.success(response.data.message || "Profile picture updated successfully");
+
+            setLastSavedProfilePicture(newProfilePictureUrl);
+            setProfilePicturePreview(newProfilePictureUrl);
+            localStorage.setItem("userDetails", JSON.stringify({ ...storedUser, profilePicture: newProfilePictureUrl }));
+            window.dispatchEvent(new Event("userDetailsUpdated"))
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to update profile picture.");
+            setProfilePicturePreview(lastSavedProfilePicture);
+        } finally {
+            setImageUploading(false);
+            e.target.value = "";
         }
     };
 
@@ -45,55 +68,68 @@ const UserProfilePage = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const formDataWithProfilePicture = new FormData();
-            formDataWithProfilePicture.append("formData", JSON.stringify(formData));
-            if (profilePicture) formDataWithProfilePicture.append("profilePicture", profilePicture);
-            const response = await updateProfile(formDataWithProfilePicture);
+            const response = await updateProfile(formData);
             toast.success(response.data.message || "Profile updated successfully");
-            localStorage.setItem("userDetails", JSON.stringify(formData));
+            localStorage.setItem("userDetails", JSON.stringify({ ...formData, profilePicture: lastSavedProfilePicture }));
+            window.dispatchEvent(new Event("userDetailsUpdated"))
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong.");
+            setProfilePicturePreview(lastSavedProfilePicture);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <>
-            <div className="flex justify-center items-center p-4 bg-white">
-                <div className="w-full max-w-3xl px-6 py-8 bg-white shadow-lg rounded-3xl">
-                    <h1 className="text-2xl font-semibold text-gray-900 text-center mb-8">User Profile</h1>
-                    <form className="space-y-4" onSubmit={handleSubmit}>
-                        <div className="flex flex-col items-center mb-4">
-                            {profilePicturePreview ? (
-                                <img src={profilePicturePreview} alt="Profile Picture" className="w-40 h-40 rounded-full object-cover" />
-                            ) : (
-                                <img src="https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png" alt="Profile Picture" className="w-40 h-40 rounded-full object-cover" />
-                            )}
-                            {/* <p className="text-gray-600 text-sm mt-2 cursor-pointer" onClick={() => document.getElementsByName("profilePicture")[0].click()}>Edit Profile Picture</p> */}
-                            <input type="file" name="profilePicture" onChange={handleProfilePictureChange} className="hidden" />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <InputField type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
-                            <InputField type="text" name="middleName" placeholder="Middle Name" value={formData.middleName} onChange={handleChange} />
-                            <InputField type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
-                            <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required disabled />
-                            <InputField type="phone" name="contactNo" placeholder="Contact Number" value={formData.contactNo} onChange={handleChange} required />
-                            <InputField type="text" name="designation" placeholder="Designation" value={formData.designation} onChange={handleChange} />
-                            <InputField type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
-                            <InputField type="text" name="city" placeholder="City" value={formData.city} onChange={handleChange} />
-                            <InputField type="text" name="district" placeholder="District" value={formData.district} onChange={handleChange} />
-                            <InputField type="text" name="state" placeholder="State" value={formData.state} onChange={handleChange} />
-                            <InputField type="text" name="country" placeholder="Country" value={formData.country} onChange={handleChange} />
-                            <InputField type="text" name="postalCode" placeholder="Postal Code" value={formData.postalCode} onChange={handleChange} />
-                        </div>
-                        <Button type="submit" className="w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800" disabled={loading}>
-                            {loading ? "Updating..." : "Update Profile"}
-                        </Button>
-                    </form>
-                </div>
+        <div className="flex justify-center items-center p-4 bg-white">
+            <div className="w-full max-w-3xl px-6 py-8 bg-white shadow-lg rounded-3xl">
+                <h1 className="text-2xl font-semibold text-gray-900 text-center mb-8">User Profile</h1>
+                <form className="space-y-4" onSubmit={handleSubmit}>
+                    <div className="flex flex-col items-center mb-4 relative">
+                        {imageUploading && (
+                            <div className="absolute flex items-center justify-center w-40 h-40 rounded-full bg-black bg-opacity-50">
+                                <div className="border-4 border-white border-t-transparent rounded-full w-10 h-10 animate-spin"></div>
+                            </div>
+                        )}
+                        <img
+                            src={profilePicturePreview || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
+                            alt="Profile"
+                            className="w-40 h-40 rounded-full object-cover"
+                        />
+                        <p
+                            className="text-gray-600 text-sm mt-2 cursor-pointer"
+                            onClick={() => fileInputRef.current.click()}
+                        >
+                            Update Profile Picture
+                        </p>
+                        <input
+                            type="file"
+                            name="profilePicture"
+                            onChange={handleProfilePictureChange}
+                            ref={fileInputRef}
+                            className="hidden"
+                        />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <InputField type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
+                        <InputField type="text" name="middleName" placeholder="Middle Name" value={formData.middleName} onChange={handleChange} />
+                        <InputField type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
+                        <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required disabled />
+                        <InputField type="phone" name="contactNo" placeholder="Contact Number" value={formData.contactNo} onChange={handleChange} required />
+                        <InputField type="text" name="designation" placeholder="Designation" value={formData.designation} onChange={handleChange} />
+                        <InputField type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
+                        <InputField type="text" name="city" placeholder="City" value={formData.city} onChange={handleChange} />
+                        <InputField type="text" name="district" placeholder="District" value={formData.district} onChange={handleChange} />
+                        <InputField type="text" name="state" placeholder="State" value={formData.state} onChange={handleChange} />
+                        <InputField type="text" name="country" placeholder="Country" value={formData.country} onChange={handleChange} />
+                        <InputField type="text" name="postalCode" placeholder="Postal Code" value={formData.postalCode} onChange={handleChange} />
+                    </div>
+                    <Button type="submit" className="w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800" disabled={loading}>
+                        {loading ? "Updating..." : "Update Profile"}
+                    </Button>
+                </form>
             </div>
-        </>
+        </div>
     );
 };
 
