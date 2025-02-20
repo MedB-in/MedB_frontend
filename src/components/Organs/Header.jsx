@@ -12,6 +12,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { userDetails } = useSelector((state) => state.auth);
+    
     if (userDetails) {
         localStorage.setItem('userDetails', JSON.stringify(userDetails));
     }
