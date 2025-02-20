@@ -11,8 +11,12 @@ const Header = () => {
     const { authenticated } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('userDetails')) || {});
+    const { userDetails } = useSelector((state) => state.auth);
+    
+    if (userDetails) {
+        localStorage.setItem('userDetails', JSON.stringify(userDetails));
+    }
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('userDetails')));
 
     const updateUserDetails = () => {
         setUser(JSON.parse(localStorage.getItem('userDetails')) || {});

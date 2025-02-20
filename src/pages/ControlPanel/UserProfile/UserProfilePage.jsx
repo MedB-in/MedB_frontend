@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { updateProfile, uploadProfilePicture } from "../../../services/user";
 import InputField from "../../../components/Atoms/Login/InputField";
 import Button from "../../../components/Atoms/Login/Button";
+import { setUserDetails } from "../../../redux/slices/authSlice";
 
 const UserProfilePage = () => {
     const storedUser = JSON.parse(localStorage.getItem("userDetails")) || {};
@@ -53,6 +54,7 @@ const UserProfilePage = () => {
 
             setLastSavedProfilePicture(newProfilePictureUrl);
             setProfilePicturePreview(newProfilePictureUrl);
+            setUserDetails({ ...storedUser, profilePicture: newProfilePictureUrl });
             localStorage.setItem("userDetails", JSON.stringify({ ...storedUser, profilePicture: newProfilePictureUrl }));
             window.dispatchEvent(new Event("userDetailsUpdated"))
         } catch (error) {
@@ -70,6 +72,7 @@ const UserProfilePage = () => {
         try {
             const response = await updateProfile(formData);
             toast.success(response.data.message || "Profile updated successfully");
+            setUserDetails({ ...formData, profilePicture: lastSavedProfilePicture });
             localStorage.setItem("userDetails", JSON.stringify({ ...formData, profilePicture: lastSavedProfilePicture }));
             window.dispatchEvent(new Event("userDetailsUpdated"))
         } catch (error) {
