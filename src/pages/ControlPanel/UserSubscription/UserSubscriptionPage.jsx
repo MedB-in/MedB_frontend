@@ -60,6 +60,7 @@ function UserSubscription() {
         <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-gray-100 text-center">
+              <th className="px-4 py-3 border border-gray-200">No.</th>
               <th className="px-4 py-3 border border-gray-200">Name</th>
               <th className="px-4 py-3 border border-gray-200">Product</th>
               <th className="px-4 py-3 border border-gray-200">Start Date</th>
@@ -74,10 +75,11 @@ function UserSubscription() {
             <tbody>
               {subscriptions && subscriptions.map((sub, index) => (
                 <tr key={index} className="odd:bg-white even:bg-gray-50">
+                  <td className="px-4 py-3 border border-gray-200">{index + 1}</td>
                   <td className="px-4 py-3 border border-gray-200">{sub.userName}</td>
                   <td className="px-4 py-3 border border-gray-200">{sub.productName}</td>
-                  <td className="px-4 py-3 border border-gray-200">{sub.startDate}</td>
-                  <td className="px-4 py-3 border border-gray-200">{sub.expiryDate}</td>
+                  <td className="px-4 py-3 border border-gray-200">{new Date(sub.startDate).toLocaleDateString("en-GB")}</td>
+                  <td className="px-4 py-3 border border-gray-200">{new Date(sub.expiryDate).toLocaleDateString("en-GB")}</td>
                   <td className={`px-4 py-3 border border-gray-200 font-semibold ${sub.isPaid ? "text-green-600" : "text-red-500"}`}>
                     {sub.isPaid ? "Paid" : "Unpaid"}
                   </td>

@@ -17,6 +17,9 @@ import RegisterPage from "./pages/Register/RegisterPage";
 import VerificationPage from "./pages/Verification/VerificationPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import UserProfilePage from "./pages/ControlPanel/UserProfile/UserProfilePage";
+import PatientAppointmentsPage from "./pages/ControlPanel/Appointments/PatientAppointmentsPage";
+import BookFromClinic from "./pages/ControlPanel/Appointments/BookFromClinic";
+import BookAppointment from "./pages/ControlPanel/Appointments/BookAppointment";
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -47,6 +50,9 @@ const App = () => {
 
           {/* User profile */}
           <Route path="user-profile" element={<UserProfilePage />} />
+          <Route path="appointments" element={<PatientAppointmentsPage />} />
+          <Route path="book-appointment" element={<BookFromClinic />} />
+          <Route path="book-appointment/:clinicId" element={<BookAppointment />} />
 
           {/* Menu details */}
           <Route path="menu-management" element={<MenuManagementPage />} />
