@@ -83,12 +83,12 @@ const BookSlots = () => {
                         className="w-24 h-24 rounded-full object-cover border"
                     />
                     <div>
-                        <h2 className="text-xl font-semibold text-white">
+                        <h2 className="text-xl font-semibold">
                             Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}
                         </h2>
-                        <p className="text-gray-300">{doctor.speciality}</p>
-                        <p className="text-gray-300">{doctor.qualifications}</p>
-                        <p className="text-gray-300">Experience: {doctor.experience} years</p>
+                        <p className="">{doctor.speciality}</p>
+                        <p className="text-gray-500">{doctor.qualifications}</p>
+                        <p className="text-gray-500">Experience: {doctor.experience} years</p>
                     </div>
                 </div>
             ) : (
@@ -96,7 +96,7 @@ const BookSlots = () => {
             )}
 
             <div className="mb-4">
-                <label className="block text-gray-300 font-semibold mb-2">Select Date:</label>
+                <label className="block text-gray-500 font-semibold mb-2">Select Date:</label>
                 <DatePicker
                     selected={selectedDate}
                     onChange={(date) => setSelectedDate(date)}
