@@ -5,6 +5,18 @@ import { getHeaders } from "./axios";
 export const getDoctors = () =>
     axios.get("/api/doctor/", getHeaders());
 
+//API to handle get Active Doctors.
+export const getActiveDoctors = (clinicId, page, search) =>
+    axios.get(`/api/doctor/active/${clinicId}/${page}?searchQuery=${search}`, getHeaders());
+
+//API to handle Doctor slots.
+export const getDoctorSlots = (clinicId, doctorId, date, day) =>
+    axios.get(`/api/doctor/slots/${clinicId}/${doctorId}/${date}/${day}`, getHeaders());
+
+//API to Book a slot.
+export const bookSlot = (data) =>
+    axios.post("/api/doctor/slots", data, getHeaders());
+
 //API to handle get Doctors list.
 export const getDoctorList = () =>
     axios.get("/api/doctor/list", getHeaders());

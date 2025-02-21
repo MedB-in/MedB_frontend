@@ -7,6 +7,10 @@ export const getClinic = (id = null) => {
     return axios.get(url, getHeaders());
 };
 
+//API to get active cliniics.
+export const getActiveClinics = (page, search) => 
+    axios.get(`/api/clinic/active/${page}?searchQuery=${search}`, getHeaders());  
+
 //API to handle get Clinics list.
 export const getClinicList = () => 
     axios.get("/api/clinic/list", getHeaders()); 
