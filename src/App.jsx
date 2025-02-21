@@ -19,7 +19,8 @@ import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import UserProfilePage from "./pages/ControlPanel/UserProfile/UserProfilePage";
 import PatientAppointmentsPage from "./pages/ControlPanel/Appointments/PatientAppointmentsPage";
 import BookFromClinic from "./pages/ControlPanel/Appointments/BookFromClinic";
-import BookAppointment from "./pages/ControlPanel/Appointments/BookAppointment";
+import BookAppointment from "./pages/ControlPanel/Appointments/DoctorSelectionList";
+import BookSlots from "./pages/ControlPanel/Appointments/BookSlots";
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -31,7 +32,6 @@ const App = () => {
 
   return (
     <Routes>
-
       {/* Public routes */}
       {/* Login page */}
       <Route path="/login" element={<LoginPage />} />
@@ -53,6 +53,7 @@ const App = () => {
           <Route path="appointments" element={<PatientAppointmentsPage />} />
           <Route path="book-appointment" element={<BookFromClinic />} />
           <Route path="book-appointment/:clinicId" element={<BookAppointment />} />
+          <Route path="book-slots/:clinicId/:doctorId" element={<BookSlots />} />
 
           {/* Menu details */}
           <Route path="menu-management" element={<MenuManagementPage />} />
