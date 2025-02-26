@@ -29,7 +29,7 @@ const ClinicDetailsPage = () => {
             setClinic(data.data.data);
             setDoctors(data.data.data.doctors || []);
         } catch (error) {
-            toast.error("Failed to fetch clinic details.");
+            toast.error(error.response?.data?.message || "Failed to fetch clinic details.");
         }
     };
 
@@ -92,6 +92,10 @@ const ClinicDetailsPage = () => {
 
     const handleAddDoctorToClinic = async () => {
         setIsDoctorToClinicModalOpen(true);
+    };
+
+    const handleClinicUsers = () => {
+        navigate(`/clinics/users/${clinicId}`);
     };
 
     const toggleSelectedDay = (doctorId, dayId) => {
@@ -168,6 +172,12 @@ const ClinicDetailsPage = () => {
                 </div>
             )}
 
+            <button
+                title="Add New Doctor"
+                className="bg-blue-500 my-5 mr-5 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                onClick={() => handleClinicUsers()}
+            >Manage Clinic Users
+            </button>
             <button
                 title="Add New Doctor"
                 className="bg-blue-500 my-5 mr-5 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"

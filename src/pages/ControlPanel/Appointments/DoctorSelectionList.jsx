@@ -49,7 +49,7 @@ const DoctorSelectionList = () => {
     };
 
     const onSelect = (doctorId) => {
-        navigate(`/book-slots/${clinicId}/${doctorId}`);
+        navigate(`/appointments/book-slots/${clinicId}/${doctorId}`);
     };
 
     return (

@@ -9,7 +9,7 @@ export const getClinic = (id = null) => {
 
 //API to get active cliniics.
 export const getActiveClinics = (page, search) => 
-    axios.get(`/api/clinic/active/${page}?searchQuery=${search}`, getHeaders());  
+    axios.get(`/api/clinic/list/${page}?searchQuery=${search}`, getHeaders());  
 
 //API to handle get Clinics list.
 export const getClinicList = () => 
@@ -42,3 +42,11 @@ export const addSlots = (data) =>
 //API to edit slots of a specific Doctor with a specific Clinic details.
 export const editSlot = (id, data) =>
     axios.put(`/api/clinic/slots/${id}`, data, getHeaders());
+
+//API to fetch Users of a specific Clinic.
+export const getClinicUsers = (clinicId) =>
+    axios.get(`/api/clinic/users/${clinicId}`, getHeaders());
+
+//API to add Users to a specific Clinic.
+export const addClinicUser = (clinicId, data) =>
+    axios.post(`/api/clinic/users/${clinicId}`, data, getHeaders());

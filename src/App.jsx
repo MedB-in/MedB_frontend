@@ -6,6 +6,7 @@ import ProtectedRoutes from "./components/Atoms/ProtectedRoutes";
 import useAuth from "./hooks/useAuth";
 import ErrorPage from "./pages/404Page/ErrorPage";
 import * as Clinics from "./pages/ControlPanel/Clinics";
+import * as Appointments from "./pages/ControlPanel/Appointments";
 import Dashboard from "./pages/ControlPanel/DashBoard/DashBoardPage";
 import DoctorsPage from "./pages/ControlPanel/Doctors/DoctorsPage";
 import ControlPanel from "./pages/ControlPanel/Index";
@@ -17,10 +18,7 @@ import RegisterPage from "./pages/Register/RegisterPage";
 import VerificationPage from "./pages/Verification/VerificationPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import UserProfilePage from "./pages/ControlPanel/UserProfile/UserProfilePage";
-import PatientAppointmentsPage from "./pages/ControlPanel/Appointments/PatientAppointmentsPage";
-import BookFromClinic from "./pages/ControlPanel/Appointments/BookFromClinic";
-import BookAppointment from "./pages/ControlPanel/Appointments/DoctorSelectionList";
-import BookSlots from "./pages/ControlPanel/Appointments/BookSlots";
+
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -48,25 +46,30 @@ const App = () => {
           {/* Dashboard */}
           <Route index element={<Dashboard />} />
 
+          {/* Clinics */}
+          <Route path="clinics">
+            <Route index element={<Clinics.ClinicsPage />} />
+            <Route path=":clinicId" element={<Clinics.ClinicDetails />} />
+            <Route path="slots/:clinicId/:doctorId" element={<Clinics.ClinicSlot />} />
+            <Route path="users/:clinicId" element={<Clinics.ClinicUsers />} />
+          </Route>
+
+          {/* Appointments */}
+          <Route path="appointments">
+            <Route index element={<Appointments.PatientAppointmentsPage />} />
+            <Route path="book-appointment" element={<Appointments.BookFromClinic />} />
+            <Route path="book-appointment/:clinicId" element={<Appointments.DoctorSelection />} />
+            <Route path="book-slots/:clinicId/:doctorId" element={<Appointments.BookSlots />} />
+          </Route>
+
           {/* User profile */}
           <Route path="user-profile" element={<UserProfilePage />} />
-          <Route path="appointments" element={<PatientAppointmentsPage />} />
-          <Route path="book-appointment" element={<BookFromClinic />} />
-          <Route path="book-appointment/:clinicId" element={<BookAppointment />} />
-          <Route path="book-slots/:clinicId/:doctorId" element={<BookSlots />} />
 
           {/* Menu details */}
           <Route path="menu-management" element={<MenuManagementPage />} />
 
           {/* Products */}
           <Route path="products" element={< ProductsPage />} />
-
-          {/* Clinics */}
-          <Route path="clinics">
-            <Route index element={<Clinics.ClinicsPage />} />
-            <Route path=":clinicId" element={<Clinics.ClinicDetails />} />
-            <Route path="slots/:clinicId/:doctorId" element={<Clinics.ClinicSlot />} />
-          </Route>
 
           {/* Doctors */}
           <Route path="doctors" element={< DoctorsPage />} />

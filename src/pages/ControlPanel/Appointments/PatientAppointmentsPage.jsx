@@ -58,7 +58,7 @@ function PatientAppointmentsPage() {
           className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
         />
       </div>
-      <Button variant="primary" onClick={() => navigate("/book-appointment")}>
+      <Button variant="primary" onClick={() => navigate("/appointments/book-appointment")}>
       Book Appointment
     </Button>
       <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
