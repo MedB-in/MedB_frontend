@@ -49,7 +49,7 @@ const BookFromClinic = () => {
   };
 
   const handleClinicSelect = (clinicId) => {
-    navigate(`/book-appointment/${clinicId}`);
+    navigate(`/appointments/book-appointment/${clinicId}`);
   };
 
   return (

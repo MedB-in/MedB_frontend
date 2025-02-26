@@ -7,7 +7,7 @@ export const getDoctors = () =>
 
 //API to handle get Active Doctors.
 export const getActiveDoctors = (clinicId, page, search) =>
-    axios.get(`/api/doctor/active/${clinicId}/${page}?searchQuery=${search}`, getHeaders());
+    axios.get(`/api/doctor/list/${clinicId}/${page}?searchQuery=${search}`, getHeaders());
 
 //API to handle Doctor slots.
 export const getDoctorSlots = (clinicId, doctorId, date, day) =>
