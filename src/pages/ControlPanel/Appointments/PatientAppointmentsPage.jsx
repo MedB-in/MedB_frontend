@@ -52,15 +52,15 @@ function PatientAppointmentsPage() {
       <div className="mb-4 w-full max-w-md mt-5 flex justify-between items-center">
         <input
           type="text"
-          placeholder="Search by doctor name..."
+          placeholder="Search by Doctor name or date..."
           value={searchQuery}
           onChange={handleSearch}
           className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
         />
       </div>
       <Button variant="primary" onClick={() => navigate("/appointments/book-appointment")}>
-      Book Appointment
-    </Button>
+        Book Appointment
+      </Button>
       <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
         <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
           <thead>
@@ -133,7 +133,7 @@ function PatientAppointmentsPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-4 py-3 border border-gray-200 text-center">
+                    <td colSpan="6" className="px-4 py-3 border border-gray-200 text-center">
                       No appointments found
                     </td>
                   </tr>

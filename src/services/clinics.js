@@ -8,12 +8,12 @@ export const getClinic = (id = null) => {
 };
 
 //API to get active cliniics.
-export const getActiveClinics = (page, search) => 
-    axios.get(`/api/clinic/list/${page}?searchQuery=${search}`, getHeaders());  
+export const getActiveClinics = (page, search) =>
+    axios.get(`/api/clinic/list/${page}?searchQuery=${search}`, getHeaders());
 
 //API to handle get Clinics list.
-export const getClinicList = () => 
-    axios.get("/api/clinic/list", getHeaders()); 
+export const getClinicList = () =>
+    axios.get("/api/clinic/list", getHeaders());
 
 //API to handle add Clinics.
 export const addClinic = (data) =>
@@ -50,3 +50,15 @@ export const getClinicUsers = (clinicId) =>
 //API to add Users to a specific Clinic.
 export const addClinicUser = (clinicId, data) =>
     axios.post(`/api/clinic/users/${clinicId}`, data, getHeaders());
+
+//API to fetch Patient Appointments of a specific Clinic.
+export const getClinicAppointments = (clinicId, page, search) =>
+    axios.get(`/api/clinic/appointments/${clinicId}/${page}?search=${search}`, getHeaders());
+
+//API to book a slot from a specific Clinic.
+export const bookFromClinic = (data) =>
+    axios.post("/api/clinic/bookFromClinic/slots", data, getHeaders());
+
+//API to fetch Patient details
+export const getPatients = (search) =>
+    axios.get(`/api/clinic/patient/list?search=${search}`, getHeaders());
