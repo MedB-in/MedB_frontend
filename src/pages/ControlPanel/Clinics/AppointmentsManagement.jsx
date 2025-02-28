@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { getClinicAppointments } from "../../../services/clinics";
 import { getActiveDoctorsList } from "../../../services/doctors";
 import Button from "../../../components/Atoms/Login/Button";
-import AppointmentStatusModal from "../../../components/Organs/Clinics/AppointmentStatusModal";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
+import AppointmentStatusModal from "../../../components/Organs/Clinics/AppointmentStatusModal";
 
 function AppointmentsManagement() {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -350,14 +350,12 @@ function AppointmentsManagement() {
                     </button>
                 </div>
             </div>
-            {statusModalOpen && selectedAppt &&
-                <AppointmentStatusModal
-                    isOpen={statusModalOpen}
-                    onClose={closeStatusModal}
-                    appointment={selectedAppt}
-                    updateAppointment={updateAppointment}
-                />
-            }
+            <AppointmentStatusModal
+                isOpen={statusModalOpen}
+                onClose={closeStatusModal}
+                appointment={selectedAppt}
+                updateAppointment={updateAppointment}
+            />
         </section>
     );
 }
