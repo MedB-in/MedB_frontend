@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointment }) => {
     const [status, setStatus] = useState('');
     const [loading, setLoading] = useState(false);
-console.log(appointment.appointmentStatus);
 
     const handleSubmit = async () => {
         if (!status) return;

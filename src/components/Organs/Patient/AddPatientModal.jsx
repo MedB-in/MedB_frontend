@@ -30,7 +30,6 @@ const AddPatientModal = ({ onClose, onPatientAdded, clinicId }) => {
         try {
             const response = await addPatient(formData);
             toast.success(response.data.message);
-            console.log(response.data.data);
             onPatientAdded(response.data.data);
             onClose();
         } catch (error) {
