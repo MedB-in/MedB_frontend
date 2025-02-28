@@ -66,6 +66,10 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
                     <div className="min-h-[1.5rem]">
                         {!passwordMatch && <p className="text-red-500 text-sm">Passwords do not match</p>}
                     </div>
+                    <div className="mb-4 flex items-center space-x-2">
+                        <input type="checkbox" name="isActive" checked={formData.isVerified} onChange={handleChange} className="form-checkbox" />
+                        <span>Verified</span>
+                    </div>
                     <div className="flex justify-end space-x-4">
                         <Button type="button" className="bg-gray-500 text-white" onClick={onClose}>Cancel</Button>
                         <Button type="submit" className="bg-violet-600 text-white" disabled={loading}>

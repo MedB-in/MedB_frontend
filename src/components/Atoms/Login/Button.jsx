@@ -1,12 +1,12 @@
 import * as React from "react";
 
 const Button = ({ children, variant = "primary", onClick, className = "" }) => {
-  const baseStyles = "flex overflow-hidden flex-col justify-center mt-6 max-w-full text-sm font-medium tracking-normal leading-5 text-center min-h-[48px] rounded-[100px] w-[418px]";
+  const baseStyles = `flex overflow-hidden ${variant === 'primary' ? 'hover:bg-indigo-600' : 'hover:bg-grey-400'} flex-col justify-center mt-6 max-w-full text-sm font-medium tracking-normal leading-5 text-center min-h-[48px] rounded-[100px] w-[418px]`;
 
   const variants = {
     primary: "text-white bg-indigo-500",
     secondary: "text-indigo-500 text-opacity-70 border border-indigo-500 border-solid",
-    outline: "text-gray-700 bg-white border border-gray-700" 
+    outline: "text-gray-700 bg-white border border-gray-700"
   };
 
   return (

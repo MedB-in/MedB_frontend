@@ -6,7 +6,7 @@ import ClinicModal from "../../../components/Organs/Clinics/ClinicModal";
 import DoctorToClinicModal from "../../../components/Organs/Clinics/DoctorToClinicModal";
 import DoctorModal from "../../../components/Organs/Doctors/DoctorModal";
 import days from "../../../lib/slotDays";
-import { editClinic, getClinic, setIsDoctorClinicStatus } from "../../../services/clinics";
+import { editClinic, getClinicById, setIsDoctorClinicStatus } from "../../../services/clinics";
 import { addDoctor, editDoctor } from "../../../services/doctors";
 import DefaultImage from "../../../assets/images/default-doctor.png";
 
@@ -25,7 +25,7 @@ const ClinicDetailsPage = () => {
 
     const fetchClinicDetails = async () => {
         try {
-            const data = await getClinic(clinicId);
+            const data = await getClinicById(clinicId);
             setClinic(data.data.data);
             setDoctors(data.data.data.doctors || []);
         } catch (error) {
