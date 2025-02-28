@@ -5,7 +5,7 @@ import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
-import AppointmentStatusModal from "../../../components/Organs/Clinics/AppointmentStatusModal";
+import AppointMentStatusModal from "../../../components/Organs/Clinics/AppointMentStatusModal";
 
 function AppointmentsManagement() {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -350,7 +350,7 @@ function AppointmentsManagement() {
                     </button>
                 </div>
             </div>
-            <AppointmentStatusModal
+            <AppointMentStatusModal
                 isOpen={statusModalOpen}
                 onClose={closeStatusModal}
                 appointment={selectedAppt}
