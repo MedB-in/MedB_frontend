@@ -1,10 +1,14 @@
 import axios from "./axios";
 import { getHeaders } from "./axios";
 
-//API to handle get Clinics.
-export const getClinic = (id = null) => {
-    const url = id ? `/api/clinic/${id}` : "/api/clinic/";
-    return axios.get(url, getHeaders());
+// API to get all clinics
+export const getAllClinics = () => {
+    return axios.get("/api/clinic", getHeaders());
+};
+
+// API to get a specific clinic by ID
+export const getClinicById = (id) => {
+    return axios.get(`/api/clinic/byId/${id}`, getHeaders());
 };
 
 //API to get active cliniics.
@@ -13,15 +17,15 @@ export const getActiveClinics = (page, search) =>
 
 //API to handle get Clinics list.
 export const getClinicList = () =>
-    axios.get("/api/clinic/list", getHeaders());
+    axios.get("/api/clinic/clinicList", getHeaders());
 
 //API to handle add Clinics.
 export const addClinic = (data) =>
-    axios.post("/api/clinic/", data, getHeaders());
+    axios.post("/api/clinic", data, getHeaders());
 
 //API to handle edit Clinics.
 export const editClinic = (id, data) =>
-    axios.put(`/api/clinic/${id}`, data, getHeaders());
+    axios.put(`/api/clinic/byId/${id}`, data, getHeaders());
 
 //API to get a specific Doctor with a specific Clinic details.
 export const getDoctorClinic = (clinicId, doctorId) =>
@@ -52,8 +56,8 @@ export const addClinicUser = (clinicId, data) =>
     axios.post(`/api/clinic/users/${clinicId}`, data, getHeaders());
 
 //API to fetch Patient Appointments of a specific Clinic.
-export const getClinicAppointments = (clinicId, page, search) =>
-    axios.get(`/api/clinic/appointments/${clinicId}/${page}?search=${search}`, getHeaders());
+export const getClinicAppointments = (clinicId, page, search, doctorId, startDate, endDate) =>
+    axios.get(`/api/clinic/appointments/${clinicId}/${page}?search=${search}&doctorId=${doctorId}&startDate=${startDate}&endDate=${endDate}`, getHeaders());
 
 //API to book a slot from a specific Clinic.
 export const bookFromClinic = (data) =>
@@ -62,3 +66,7 @@ export const bookFromClinic = (data) =>
 //API to fetch Patient details
 export const getPatients = (search) =>
     axios.get(`/api/clinic/patient/list?search=${search}`, getHeaders());
+
+//API to update appointment status  
+export const updateAppointmentStatus = (appointmentId, status) =>
+    axios.put(`/api/clinic/appointment/status/${appointmentId}`, { status }, getHeaders());

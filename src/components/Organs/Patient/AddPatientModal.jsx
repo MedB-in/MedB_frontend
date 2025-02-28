@@ -22,7 +22,7 @@ const AddPatientModal = ({ onClose, onPatientAdded, clinicId }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.firstName || !formData.lastName || !formData.email || !formData.contactNo) {
+        if (!formData.firstName || !formData.email || !formData.contactNo) {
             toast.error("All fields are required.");
             return;
         }

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { getClinic, addClinic, editClinic } from "../../../services/clinics";
+import { getAllClinics, addClinic, editClinic } from "../../../services/clinics";
 import toast, { Toaster } from "react-hot-toast";
 import ClinicModal from "../../../components/Organs/Clinics/ClinicModal";
 
@@ -16,7 +16,7 @@ const ClinicsPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const clinicData = await getClinic();
+      const clinicData = await getAllClinics();
       setClinics(clinicData.data.clinics || []);
     } catch (err) {
       setError("Failed to fetch clinics");

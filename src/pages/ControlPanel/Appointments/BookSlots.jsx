@@ -27,6 +27,7 @@ const BookSlots = () => {
     const [patientQuery, setPatientQuery] = useState("");
     const [patients, setPatients] = useState([]);
     const [selectedPatient, setSelectedPatient] = useState(null);
+    const [isEmergency, setIsEmergency] = useState(false);
 
     useEffect(() => {
         const fetchDoctorDetails = async () => {
@@ -96,13 +97,13 @@ const BookSlots = () => {
         try {
             const formattedDate = format(selectedDate, "yyyy-MM-dd");
             if (isClinicBooking) {
-                
-                await bookFromClinic({ clinicId, doctorId, date: formattedDate, time: selectedSlot, reason, patientId: selectedPatient.userId });
+                await bookFromClinic({ clinicId, doctorId, date: formattedDate, time: selectedSlot, reason, patientId: selectedPatient.userId, isEmergency });
             } else {
                 await bookSlot({ clinicId, doctorId, date: formattedDate, time: selectedSlot, reason });
             }
             toast.success("Slot booked successfully!");
             setSlots(prevSlots => prevSlots.map(slot => slot.time === selectedSlot ? { ...slot, booked: true } : slot));
+            setIsEmergency(false);
             setSelectedSlot(null);
             setReason("");
             setSelectedPatient(null);
@@ -117,6 +118,14 @@ const BookSlots = () => {
         setPatients((prevPatients) => [...prevPatients, newPatient]);
         setShowModal(false);
     }
+
+    const handleEmergencyChange = (event) => {
+        if (format(selectedDate, "yyyy-MM-dd") !== format(new Date(), "yyyy-MM-dd")) {
+            toast.error("Emergency appointments can only be booked for today.");
+            return;
+        }
+        setIsEmergency(event.target.checked);
+    };
 
     return (
         <div className="p-6 relative bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-md">
@@ -151,6 +160,19 @@ const BookSlots = () => {
             </div>
             {isClinicBooking && (
                 <div className="mb-4">
+                    <div className="mb-4 flex items-center space-x-3 p-3 border rounded-md bg-gray-100">
+                        <input
+                            type="checkbox"
+                            name="isActive"
+                            checked={isEmergency}
+                            onChange={handleEmergencyChange}
+                            disabled={format(selectedDate, "yyyy-MM-dd") !== format(new Date(), "yyyy-MM-dd")}
+                            className="form-checkbox w-6 h-6 text-red-500 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                        <span className={`font-semibold text-lg ${isEmergency ? "text-red-600" : "text-gray-800"}`}>
+                            🚨 Emergency Appointment
+                        </span>
+                    </div>
                     <label className="block text-gray-500 font-semibold mb-2">Enter Patient Details:</label>
                     <div className="flex gap-2">
                         <input
@@ -180,12 +202,12 @@ const BookSlots = () => {
                     ) : (
                         patientQuery && patients.length === null && <p className="mt-2 text-gray-500">No patients found.</p>
                     )}
-
                     <button onClick={() => setShowModal(true)} className="bg-blue-500 text-white px-4 py-2 rounded-md mt-10 w-40">
                         Add new Patient
                     </button>
                 </div>
             )}
+
             <div>
                 <h3 className="text-lg font-semibold text-white mb-2">Available Slots</h3>
                 {loading ? (

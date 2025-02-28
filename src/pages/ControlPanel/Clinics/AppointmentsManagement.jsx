@@ -1,34 +1,71 @@
 import React, { useEffect, useState } from "react";
 import { getClinicAppointments } from "../../../services/clinics";
+import { getActiveDoctorsList } from "../../../services/doctors";
 import Button from "../../../components/Atoms/Login/Button";
+import AppointmentStatusModal from "../../../components/Organs/Clinics/AppointmentStatusModal";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { format } from "date-fns";
 
 function AppointmentsManagement() {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
     const clinicId = userDetails?.clinicId;
+    const today = format(new Date(), "yyyy-MM-dd");
 
     const [appointments, setAppointments] = useState([]);
+    const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
+    const [selectedDoctor, setSelectedDoctor] = useState("");
+    const [startDate, setStartDate] = useState(today);
+    const [endDate, setEndDate] = useState(today);
+    const [statusModalOpen, setStatusModalOpen] = useState(false);
+    const [selectedAppt, setSelectedAppt] = useState(null);
+    const [filters, setFilters] = useState({
+        query: "",
+        doctorId: "",
+        startDate: today,
+        endDate: today
+    });
     const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await getClinicAppointments(clinicId, currentPage, searchQuery);
+                setLoading(true);
+                const response = await getClinicAppointments(
+                    clinicId,
+                    currentPage,
+                    filters.query,
+                    filters.doctorId,
+                    filters.startDate,
+                    filters.endDate
+                );
                 setAppointments(response.data.appointments.appointments);
                 setTotalPages(response.data.appointments.totalPages);
                 setCurrentPage(response.data.appointments.currentPage);
             } catch (error) {
-                console.error("Error fetching appointments:", error);
+                toast.error(error.response?.data?.message || "Failed to fetch appointments.");
             } finally {
                 setLoading(false);
             }
         }
         fetchData();
-    }, [currentPage, searchQuery]);
+    }, [currentPage, filters]);
+
+    useEffect(() => {
+        async function fetchDoctors() {
+            try {
+                const response = await getActiveDoctorsList(clinicId);
+                setDoctors(response.data.doctors);
+            } catch (error) {
+                toast.error(error.response?.data?.message || "Failed to fetch doctors.");
+            }
+        }
+        fetchDoctors();
+    }, []);
 
     const generatePagination = () => {
         if (totalPages <= 7) {
@@ -45,26 +82,134 @@ function AppointmentsManagement() {
     };
 
     const handleSearch = (e) => {
-        setLoading(true);
         setSearchQuery(e.target.value);
+    };
+
+    const handleDoctorChange = (e) => {
+        setSelectedDoctor(e.target.value);
+    };
+
+    const handleStartDateChange = (e) => {
+        setStartDate(e.target.value);
+    };
+
+    const handleEndDateChange = (e) => {
+        setEndDate(e.target.value);
+    };
+
+    const applyFilters = () => {
+        if (new Date(startDate) > new Date(endDate)) {
+            toast.error("Start date cannot be after end date.");
+            return;
+        }
+        setFilters({
+            query: searchQuery,
+            doctorId: selectedDoctor,
+            startDate: startDate,
+            endDate: endDate
+        });
         setCurrentPage(1);
+    };
+
+    useEffect(() => {
+        setStartDate(today);
+        setEndDate(today);
+
+        setFilters(prev => ({
+            ...prev,
+            startDate: today,
+            endDate: today
+        }));
+    }, []);
+
+    const resetFilters = () => {
+        setSearchQuery("");
+        setSelectedDoctor("");
+        setStartDate(today);
+        setEndDate(today);
+
+        setFilters({
+            query: "",
+            doctorId: "",
+            startDate: today,
+            endDate: today
+        });
+        setCurrentPage(1);
+    };
+
+    const handleStatus = (appointment) => {
+        setSelectedAppt(appointment);
+        setStatusModalOpen(true);
+    };
+
+    const closeStatusModal = () => {
+        setSelectedAppt(null);
+        setStatusModalOpen(false);
+    };
+
+    const updateAppointment = (updatedAppointment) => {
+        const updatedAppointments = appointments.map(appt => {
+            if (appt.appointmentId === updatedAppointment.appointmentId) {
+                return updatedAppointment;
+            }
+            return appt;
+        });
+        setAppointments(updatedAppointments);
     };
 
     return (
         <section className="flex flex-col items-center justify-center text-center bg-white">
-            <div className="mb-4 w-full max-w-md mt-5 flex justify-between items-center">
+            <div className="w-full max-w-lg mt-5 flex flex-col sm:flex-row sm:items-center gap-4">
                 <input
                     type="text"
-                    placeholder="Search by doctor name, patient name, or appointment date..."
+                    placeholder="Search by doctor, patient, or date..."
                     value={searchQuery}
                     onChange={handleSearch}
-                    className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-gray-400"
                 />
             </div>
-            <Button variant="primary" onClick={() => navigate(`/appointments/book-appointment/${clinicId}`)}>
+
+            <div className="w-full max-w-lg mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="relative">
+                    <select
+                        value={selectedDoctor}
+                        onChange={handleDoctorChange}
+                        className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-gray-400"
+                    >
+                        <option value="">All Doctors</option>
+                        {doctors.map((doc) => (
+                            <option key={doc.doctorId} value={doc.doctorId}>
+                                {`Dr. ${doc.firstName} ${doc.middleName ? doc.middleName + ' ' : ''}${doc.lastName || ''}`}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <input
+                    type="date"
+                    value={startDate}
+                    onChange={handleStartDateChange}
+                    className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-gray-400"
+                />
+                <input
+                    type="date"
+                    value={endDate}
+                    onChange={handleEndDateChange}
+                    className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-gray-400"
+                />
+            </div>
+
+            <div className="flex gap-2 mt-4">
+                <Button variant="primary" onClick={applyFilters}>Search</Button>
+                <Button variant="secondary" onClick={resetFilters}>Reset</Button>
+            </div>
+
+
+
+            <Button variant="primary" className="mt-4" onClick={() => navigate(`/appointments/book-appointment/${clinicId}`)}>
                 Walk-In Appointment
             </Button>
-            <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
+            <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6 mt-4">
                 <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
                     <thead>
                         <tr className="bg-gray-100 text-center">
@@ -75,12 +220,13 @@ function AppointmentsManagement() {
                             <th className="px-4 py-3 border border-gray-200">Patient</th>
                             <th className="px-4 py-3 border border-gray-200">Status</th>
                             <th className="px-4 py-3 border border-gray-200">Reason</th>
+                            <th className="px-4 py-3 border border-gray-200">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan="5" className="px-4 py-6 border border-gray-200 text-center text-gray-600 text-lg">
+                                <td colSpan="8" className="px-4 py-6 border border-gray-200 text-center text-gray-600 text-lg">
                                     Loading...
                                 </td>
                             </tr>
@@ -139,14 +285,33 @@ function AppointmentsManagement() {
                                             >
                                                 {appt.appointmentStatus}
                                             </td>
-                                            <td className="px-4 py-3 border border-gray-200 text-center capitalize">
-                                                {appt.reasonForVisit || "N/A"}
+                                            <td
+                                                className={`px-4 py-3 border border-gray-200 text-center capitalize ${(appt.isEmergency && today === appt.appointmentDate.split('-').reverse().join('-')) ? "bg-red-500 text-white animate-pulse font-bold" : ""
+                                                    }`}
+                                            >
+                                                {appt.reasonForVisit || "N/A"}<br />
+                                                {appt.isEmergency && " (Emergency)"}
                                             </td>
+                                            <td className="flex flex-col gap-2 p-2 items-center">
+                                                <button
+                                                    onClick={() => handleStatus(appt)}
+                                                    className="px-4 py-2 bg-blue-500/80 backdrop-blur-md border border-blue-500 shadow-lg shadow-blue-500/20 hover:bg-blue-500/50 text-white rounded-lg transition-all duration-300"
+                                                >
+                                                    Update Status
+                                                </button>
+                                                <button
+                                                    onClick={() => handleToken(appt)}
+                                                    className="px-4 py-2 bg-red-500/80 backdrop-blur-md border border-red-500 shadow-lg shadow-red-500/20 hover:bg-red-500/50 text-white rounded-lg transition-all duration-300"
+                                                >
+                                                    Assign Token
+                                                </button>
+                                            </td>
+
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="6" className="px-4 py-3 border border-gray-200 text-center">
+                                        <td colSpan="8" className="px-4 py-3 border border-gray-200 text-center">
                                             No appointments found
                                         </td>
                                     </tr>
@@ -185,6 +350,14 @@ function AppointmentsManagement() {
                     </button>
                 </div>
             </div>
+            {statusModalOpen && selectedAppt &&
+                <AppointmentStatusModal
+                    isOpen={statusModalOpen}
+                    onClose={closeStatusModal}
+                    appointment={selectedAppt}
+                    updateAppointment={updateAppointment}
+                />
+            }
         </section>
     );
 }

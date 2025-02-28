@@ -9,6 +9,10 @@ export const getDoctors = () =>
 export const getActiveDoctors = (clinicId, page, search) =>
     axios.get(`/api/doctor/list/${clinicId}/${page}?searchQuery=${search}`, getHeaders());
 
+//API to fetch doctor list with minimal doctor details of a specific Clinic.
+export const getActiveDoctorsList = (clinicId) =>
+    axios.get(`/api/doctor/clinicDoctorsList/${clinicId}`, getHeaders());
+
 //API to handle Doctor slots.
 export const getDoctorSlots = (clinicId, doctorId, date, day) =>
     axios.get(`/api/doctor/slots/${clinicId}/${doctorId}/${date}/${day}`, getHeaders());
