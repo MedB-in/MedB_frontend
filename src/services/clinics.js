@@ -33,7 +33,7 @@ export const getDoctorClinic = (clinicId, doctorId) =>
 
 //API to set a Doctor Clinic status.
 export const setIsDoctorClinicStatus = (doctorId, clinicId, isActive) =>
-    axios.put(`/api/clinic/doctorClinic/${clinicId}/${doctorId}`, { isActive }, getHeaders());
+    axios.put(`/api/clinic/doctorClinicStatus/${clinicId}/${doctorId}`, { isActive }, getHeaders());
 
 //API to get slots of a specific Doctor with a specific Clinic details.
 export const getSlots = (clinicId, doctorId) =>

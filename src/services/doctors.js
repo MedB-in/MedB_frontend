@@ -7,7 +7,7 @@ export const getDoctors = () =>
 
 //API to handle get Active Doctors.
 export const getActiveDoctors = (clinicId, page, search) =>
-    axios.get(`/api/doctor/list/${clinicId}/${page}?searchQuery=${search}`, getHeaders());
+    axios.get(`/api/doctor/list/active/${clinicId}/${page}?searchQuery=${search}`, getHeaders());
 
 //API to fetch doctor list with minimal doctor details of a specific Clinic.
 export const getActiveDoctorsList = (clinicId) =>
@@ -35,4 +35,4 @@ export const addDoctor = (data) =>
 
 //API to handle edit Doctors.
 export const editDoctor = (id, data) =>
-    axios.put(`/api/doctor/${id}`, data, getHeaders());
+    axios.put(`/api/doctor/edit/${id}`, data, getHeaders());
