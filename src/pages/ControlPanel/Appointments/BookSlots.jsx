@@ -223,7 +223,14 @@ const BookSlots = () => {
                                     }`}
                                 onClick={() => !slot.booked && setSelectedSlot(slot.time)}
                             >
-                                <span className="text-lg font-medium">{slot.time}</span>
+                                <span className="text-lg font-medium">
+  {new Date(`1970-01-01T${slot.time}`).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  })}
+</span>
+
                             </li>
                         ))}
                     </ul>
