@@ -61,7 +61,7 @@ const ClinicsPage = () => {
         const response = await addClinic(data);
         const newClinic = {
           ...data,
-          clinicId: response.data.clinicId
+          clinicId: response.data.data.clinicId
         };
         setClinics(prevClinics => [...prevClinics, newClinic])
         setIsClinicModalOpen(false);
