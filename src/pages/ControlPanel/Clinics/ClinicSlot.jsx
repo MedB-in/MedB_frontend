@@ -181,8 +181,8 @@ const ClinicSlot = () => {
       clinicId,
       doctorId,
       day: parsedDay,
-      timingFrom,
-      timingTo,
+      timingFrom: timingFrom24,
+      timingTo: timingTo24,
       slotGap: parseInt(slotGap),
     };
 

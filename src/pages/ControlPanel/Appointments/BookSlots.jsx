@@ -53,7 +53,7 @@ const BookSlots = () => {
                     toast.error("Invalid day selection.");
                     return;
                 }
-                const response = await getDoctorSlots(doctorId, clinicId, formattedDate, selectedDay.id);
+                const response = await getDoctorSlots(clinicId, doctorId, formattedDate, selectedDay.id);
                 setSlots(response.data.slots || []);
                 setSelectedSlot(null);
                 setReason("");
