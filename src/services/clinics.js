@@ -70,3 +70,7 @@ export const getPatients = (search) =>
 //API to update appointment status  
 export const updateAppointmentStatus = (appointmentId, status) =>
     axios.put(`/api/clinic/appointment/status/${appointmentId}`, { status }, getHeaders());
+
+//API to assign a token to a patient
+export const assignPatientToken = (appointmentId, tokenNo) =>
+    axios.post(`/api/clinic/appointmentToken/${appointmentId}`, { tokenNo }, getHeaders());

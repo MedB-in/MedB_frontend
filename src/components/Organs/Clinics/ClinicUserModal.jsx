@@ -13,20 +13,25 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
         email: "",
         password: "",
         confirmPassword: "",
+        isVerified: false
     });
     const [loading, setLoading] = useState(false);
     const [passwordMatch, setPasswordMatch] = useState(true);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
         setFormData((prevData) => {
-            const updatedData = { ...prevData, [name]: value };
+            const updatedData = {
+                ...prevData,
+                [name]: type === "checkbox" ? checked : value
+            };
             if (name === "password" || name === "confirmPassword") {
                 setPasswordMatch(updatedData.password === updatedData.confirmPassword);
             }
             return updatedData;
         });
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -50,6 +55,7 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
             setLoading(false);
         }
     };
+    console.log(formData.isVerified);
 
 
     return (
@@ -67,7 +73,7 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
                         {!passwordMatch && <p className="text-red-500 text-sm">Passwords do not match</p>}
                     </div>
                     <div className="mb-4 flex items-center space-x-2">
-                        <input type="checkbox" name="isActive" checked={formData.isVerified} onChange={handleChange} className="form-checkbox" />
+                        <input type="checkbox" name="isVerified" checked={formData.isVerified} onChange={handleChange} className="form-checkbox" />
                         <span>Verified</span>
                     </div>
                     <div className="flex justify-end space-x-4">
