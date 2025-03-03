@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
 import AppointMentStatusModal from "../../../components/Organs/Clinics/AppointMentStatusModal";
+import AssignTokenModal from "../../../components/Organs/Clinics/AssignTokenModal";
 
 function AppointmentsManagement() {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -22,6 +23,7 @@ function AppointmentsManagement() {
     const [startDate, setStartDate] = useState(today);
     const [endDate, setEndDate] = useState(today);
     const [statusModalOpen, setStatusModalOpen] = useState(false);
+    const [tokenModalOpen, setTokenModalOpen] = useState(false);
     const [selectedAppt, setSelectedAppt] = useState(null);
     const [filters, setFilters] = useState({
         query: "",
@@ -155,6 +157,16 @@ function AppointmentsManagement() {
             return appt;
         });
         setAppointments(updatedAppointments);
+    };
+
+    const handleToken = (appointment) => {
+        setSelectedAppt(appointment);
+        setTokenModalOpen(true);
+    };
+
+    const closeTokenModal = () => {
+        setSelectedAppt(null);
+        setTokenModalOpen(false);
     };
 
     return (
@@ -300,7 +312,7 @@ function AppointmentsManagement() {
                                                     Update Status
                                                 </button>
                                                 <button
-                                                    // onClick={() => handleToken(appt)}
+                                                    onClick={() => handleToken(appt)}
                                                     className="px-4 py-2 bg-red-500/80 backdrop-blur-md border border-red-500 shadow-lg shadow-red-500/20 hover:bg-red-500/50 text-white rounded-lg transition-all duration-300"
                                                 >
                                                     Assign Token
@@ -353,6 +365,12 @@ function AppointmentsManagement() {
             <AppointMentStatusModal
                 isOpen={statusModalOpen}
                 onClose={closeStatusModal}
+                appointment={selectedAppt}
+                updateAppointment={updateAppointment}
+            />
+            <AssignTokenModal
+                isOpen={tokenModalOpen}
+                onClose={closeTokenModal}
                 appointment={selectedAppt}
                 updateAppointment={updateAppointment}
             />
