@@ -8,7 +8,7 @@ import DefaultImage from "../../../assets/images/default-doctor.png";
 import days from "../../../lib/slotDays";
 import { getDoctorClinic, bookFromClinic, getPatients } from "../../../services/clinics";
 import { getDoctorSlots, bookSlot } from "../../../services/doctors";
-import AddPatientModal from "../../../components/Organs/Patient/AddPatientModal";
+import AddPatientModal from "../../../components/Organs/Patient/PatientModal";
 
 const BookSlots = () => {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -224,13 +224,12 @@ const BookSlots = () => {
                                 onClick={() => !slot.booked && setSelectedSlot(slot.time)}
                             >
                                 <span className="text-lg font-medium">
-  {new Date(`1970-01-01T${slot.time}`).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  })}
-</span>
-
+                                    {new Date(`1970-01-01T${slot.time}`).toLocaleTimeString("en-US", {
+                                        hour: "numeric",
+                                        minute: "numeric",
+                                        hour12: true,
+                                    })}
+                                </span>
                             </li>
                         ))}
                     </ul>
