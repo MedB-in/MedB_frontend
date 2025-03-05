@@ -7,6 +7,7 @@ import useAuth from "./hooks/useAuth";
 import ErrorPage from "./pages/404Page/ErrorPage";
 import * as Clinics from "./pages/ControlPanel/Clinics";
 import * as Appointments from "./pages/ControlPanel/Appointments";
+import * as Patients from "./pages/ControlPanel/Patients";
 import Dashboard from "./pages/ControlPanel/DashBoard/DashBoardPage";
 import DoctorsPage from "./pages/ControlPanel/Doctors/DoctorsPage";
 import ControlPanel from "./pages/ControlPanel/Index";
@@ -37,8 +38,6 @@ const App = () => {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/verify-email" element={<VerificationPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      {/* Public routes */}
-
 
       {/* Protected routes */}
       <Route element={<ProtectedRoutes />}>
@@ -61,6 +60,11 @@ const App = () => {
             <Route path="book-appointment" element={<Appointments.BookFromClinic />} />
             <Route path="book-appointment/:clinicId" element={<Appointments.DoctorSelection />} />
             <Route path="book-slots/:clinicId/:doctorId" element={<Appointments.BookSlots />} />
+          </Route>
+
+          {/* Patients */}
+          <Route path="patients">
+            <Route index element={<Patients.PatientManagementPage />} />
           </Route>
 
           {/* User profile */}
