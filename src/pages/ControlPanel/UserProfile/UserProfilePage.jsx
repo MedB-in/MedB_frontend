@@ -86,7 +86,7 @@ const UserProfilePage = () => {
     return (
         <div className="flex justify-center items-center p-4 bg-white">
             <div className="w-full max-w-3xl px-6 py-8 bg-white shadow-lg rounded-3xl">
-                <h1 className="text-2xl font-semibold text-gray-900 text-center mb-8">User Profile</h1>
+                <h1 className="text-2xl font-semibold text-gray-900 text-center mb-8 capitalize">{formData.firstName} {formData.middleName ? ` ${formData.middleName}` : ''} {formData.lastName ? ` ${formData.lastName}` : ''}'s Profile</h1>
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <div className="flex flex-col items-center mb-4 relative">
                         {imageUploading && (
@@ -114,17 +114,17 @@ const UserProfilePage = () => {
                         />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                        <InputField type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
-                        <InputField type="text" name="middleName" placeholder="Middle Name" value={formData.middleName} onChange={handleChange} />
-                        <InputField type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
+                        <InputField type="text" name="firstName" placeholder="First Name" className="capitalize" value={formData.firstName} onChange={handleChange} required />
+                        <InputField type="text" name="middleName" placeholder="Middle Name" className="capitalize" value={formData.middleName} onChange={handleChange} />
+                        <InputField type="text" name="lastName" placeholder="Last Name" className="capitalize" value={formData.lastName} onChange={handleChange} required />
                         <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required disabled />
                         <InputField type="phone" name="contactNo" placeholder="Contact Number" value={formData.contactNo} onChange={handleChange} required />
-                        <InputField type="text" name="designation" placeholder="Designation" value={formData.designation} onChange={handleChange} />
-                        <InputField type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
-                        <InputField type="text" name="city" placeholder="City" value={formData.city} onChange={handleChange} />
-                        <InputField type="text" name="district" placeholder="District" value={formData.district} onChange={handleChange} />
-                        <InputField type="text" name="state" placeholder="State" value={formData.state} onChange={handleChange} />
-                        <InputField type="text" name="country" placeholder="Country" value={formData.country} onChange={handleChange} />
+                        <InputField type="text" name="designation" placeholder="Designation" className="capitalize" value={formData.designation} onChange={handleChange} />
+                        <InputField type="text" name="address" placeholder="Address" className="capitalize" value={formData.address} onChange={handleChange} />
+                        <InputField type="text" name="city" placeholder="City" className="capitalize" value={formData.city} onChange={handleChange} />
+                        <InputField type="text" name="district" placeholder="District" className="capitalize" value={formData.district} onChange={handleChange} />
+                        <InputField type="text" name="state" placeholder="State" className="capitalize" value={formData.state} onChange={handleChange} />
+                        <InputField type="text" name="country" placeholder="Country" className="capitalize" value={formData.country} onChange={handleChange} />
                         <InputField type="text" name="postalCode" placeholder="Postal Code" value={formData.postalCode} onChange={handleChange} />
                     </div>
                     <Button type="submit" className="w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800" disabled={loading}>

@@ -4,6 +4,10 @@ import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";
 
 function PatientAppointmentsPage() {
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const doctor = userDetails?.doctorId ?? null;
+  const isDoctor = !!doctor;
+
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,7 +18,7 @@ function PatientAppointmentsPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await getAppointments(currentPage, searchQuery);
+        const response = await getAppointments(doctor, currentPage, searchQuery);
         setAppointments(response.data.appointments.appointments);
         setTotalPages(response.data.appointments.totalPages);
         setCurrentPage(response.data.appointments.currentPage);
@@ -52,20 +56,23 @@ function PatientAppointmentsPage() {
       <div className="mb-4 w-full max-w-md mt-5 flex justify-between items-center">
         <input
           type="text"
-          placeholder="Search by Doctor name or date..."
+          placeholder={isDoctor ? "Search by Patient name" : "Search by Doctor name, clinic or date"}
           value={searchQuery}
           onChange={handleSearch}
           className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
         />
       </div>
-      <Button variant="primary" onClick={() => navigate("/appointments/book-appointment")}>
-        Book Appointment
-      </Button>
+      {!isDoctor && (
+        <Button variant="primary" onClick={() => navigate("/appointments/book-appointment")}>
+          Book Appointment
+        </Button>
+      )}
       <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
         <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-gray-100 text-center">
-              <th className="px-4 py-3 border border-gray-200">Doctor</th>
+              {!isDoctor ? <th className="px-4 py-3 border border-gray-200">Doctor</th> :
+                <th className="px-4 py-3 border border-gray-200">Patient</th>}
               <th className="px-4 py-3 border border-gray-200">Appointment Date</th>
               <th className="px-4 py-3 border border-gray-200">Appointment Time</th>
               <th className="px-4 py-3 border border-gray-200">Clinic</th>
@@ -85,25 +92,43 @@ function PatientAppointmentsPage() {
                 {appointments.length ? (
                   appointments.map((appt, index) => (
                     <tr key={index} className="odd:bg-white even:bg-gray-50">
-                      <td className="px-4 py-3 border border-gray-200">
-                        <div className="flex justify-center">
-                          <div className="flex items-center gap-4">
-                            <img
-                              src={appt.profilePicture}
-                              alt={appt.firstName}
-                              className="w-12 h-12 rounded-full object-cover"
-                            />
-                            <div className="flex-1">
-                              <p className="text-lg font-semibold">
-                                {appt.firstName} {appt.middleName ? appt.middleName : ""} {appt.lastName ? appt.lastName : ""}
-                              </p>
-                              <p className="text-sm text-gray-600">{appt.speciality}</p>
-                              <p className="text-sm text-gray-600">{appt.experience} years of experience</p>
-                              <p className="text-sm text-gray-600">{appt.qualifications}</p>
+                      {!isDoctor ? (
+                        <td className="px-4 py-3 border border-gray-200">
+                          <div className="flex justify-center">
+                            <div className="flex items-center gap-4">
+                              <img
+                                src={appt.profilePicture}
+                                alt={appt.firstName}
+                                className="w-12 h-12 rounded-full object-cover"
+                              />
+                              <div className="flex-1">
+                                <p className="text-lg font-semibold">
+                                  {appt.firstName} {appt.middleName ? appt.middleName : ""} {appt.lastName ? appt.lastName : ""}
+                                </p>
+                                <p className="text-sm text-gray-600">{appt.speciality}</p>
+                                <p className="text-sm text-gray-600">{appt.experience} years of experience</p>
+                                <p className="text-sm text-gray-600">{appt.qualifications}</p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
+                        </td>) :
+                        (<td className="px-4 py-3 border border-gray-200">
+                          <div className="flex justify-center">
+                            <div className="flex items-center gap-4">
+                              <img
+                                src={appt.patientDetails.profilePicture}
+                                alt={appt.patientDetails.firstName}
+                                className="w-12 h-12 rounded-full object-cover"
+                              />
+                              <div className="flex-1">
+                                <p className="text-lg font-semibold">
+                                  {appt.patientDetails.firstName} {appt.patientDetails.middleName ? appt.patientDetails.middleName : ""} {appt.patientDetails.lastName ? appt.patientDetails.lastName : ""}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </td>)
+                      }
                       <td className="px-4 py-3 border border-gray-200 text-center">{appt.appointmentDate}</td>
                       <td className="px-4 py-3 border border-gray-200 text-center">{appt.appointmentTime}</td>
                       <td className="px-4 py-3 border border-gray-200">
@@ -126,8 +151,12 @@ function PatientAppointmentsPage() {
                       >
                         {appt.appointmentStatus}
                       </td>
-                      <td className="px-4 py-3 border border-gray-200 text-center capitalize">
-                        {appt.reasonForVisit || "N/A"}
+                      <td
+                        className={`px-4 py-3 border border-gray-200 text-center capitalize ${appt.isEmergency && isDoctor ? "bg-red-500 text-white animate-pulse font-bold" : ""
+                          }`}
+                      >
+                        {appt.reasonForVisit || "N/A"}<br />
+                        {appt.isEmergency && " (Emergency)"}
                       </td>
                     </tr>
                   ))

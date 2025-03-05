@@ -25,6 +25,7 @@ const BookSlots = () => {
     const [booking, setBooking] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [patientQuery, setPatientQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState(false);
     const [patients, setPatients] = useState([]);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [isEmergency, setIsEmergency] = useState(false);
@@ -72,8 +73,12 @@ const BookSlots = () => {
             return;
         }
         try {
+            setSearchQuery(true);
             const response = await getPatients(patientQuery);
             setPatients(response.data.patients || []);
+            if (response.data.patients.length !== 0) {
+                setSearchQuery(false);
+            }
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to fetch patient details.");
         }
@@ -200,7 +205,7 @@ const BookSlots = () => {
                             ))}
                         </div>
                     ) : (
-                        patientQuery && patients.length === null && <p className="mt-2 text-gray-500">No patients found.</p>
+                        searchQuery && patients.length === 0 && <p className="mt-2 text-gray-500">No patients found.</p>
                     )}
                     <button onClick={() => setShowModal(true)} className="bg-blue-500 text-white px-4 py-2 rounded-md mt-10 w-40">
                         Add new Patient

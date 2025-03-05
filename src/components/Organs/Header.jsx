@@ -52,7 +52,7 @@ const Header = () => {
             </div>
             <div className="flex items-center gap-4 ml-auto">
                 <div className="text-right">
-                    <p className="text-lg font-bold">
+                    <p className="text-lg font-bold capitalize">
                         {user?.firstName} {user?.middleName} {user?.lastName}
                     </p>
                     {authenticated && (
