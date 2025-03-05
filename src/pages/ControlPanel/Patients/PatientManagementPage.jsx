@@ -44,8 +44,6 @@ const PatientManagement = () => {
   };
 
   const handleUpdatePatientData = (updatedPatient) => {
-    console.log(updatedPatient);
-    
     setPatients((prevPatients) =>
       prevPatients.map((patient) => (patient.userId === updatedPatient.userId ? updatedPatient : patient))
     );

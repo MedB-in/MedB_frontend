@@ -20,7 +20,6 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
         postalCode: "",
     });
     const [loading, setLoading] = useState(false);
-console.log(patient);
 
     useEffect(() => {
         if (isUpdate && patient) {
