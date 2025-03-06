@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react'; 
+import { ChevronDown } from 'lucide-react';
 import SidebarItem from '../Atoms/SideBar/SidebarItems';
 
 const SideBar = () => {
@@ -76,7 +76,7 @@ const SideBar = () => {
                                                 rights={menu.rights}
                                                 actionName={menu.actionName}
                                                 actionUrl={menu.controllerName}
-                                                isSelected={selectedMenu === menu.controllerName || location.pathname.split("/")[1] === menu.controllerName}
+                                                isSelected={selectedMenu === menu.controllerName || location.pathname.endsWith(menu.controllerName)}
                                                 onClick={() => handleMenuClick(menu)}
                                             />
                                         </div>

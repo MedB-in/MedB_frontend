@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { getClinicAppointments } from "../../../services/clinics";
 import { getActiveDoctorsList } from "../../../services/doctors";
 import Button from "../../../components/Atoms/Login/Button";
@@ -33,43 +33,45 @@ function AppointmentsManagement() {
     });
     const navigate = useNavigate();
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                setLoading(true);
-                const response = await getClinicAppointments(
-                    clinicId,
-                    currentPage,
-                    filters.query,
-                    filters.doctorId,
-                    filters.startDate,
-                    filters.endDate
-                );
-                setAppointments(response.data.appointments.appointments);
-                setTotalPages(response.data.appointments.totalPages);
-                setCurrentPage(response.data.appointments.currentPage);
-            } catch (error) {
-                toast.error(error.response?.data?.message || "Failed to fetch appointments.");
-            } finally {
-                setLoading(false);
-            }
+    const fetchData = useCallback(async () => {
+        try {
+            setLoading(true);
+            const response = await getClinicAppointments(
+                clinicId,
+                currentPage,
+                filters.query,
+                filters.doctorId,
+                filters.startDate,
+                filters.endDate
+            );
+            setAppointments(response.data.appointments.appointments);
+            setTotalPages(response.data.appointments.totalPages);
+            setCurrentPage(response.data.appointments.currentPage);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to fetch appointments.");
+        } finally {
+            setLoading(false);
         }
+    }, [clinicId, currentPage, filters]);
+
+    const fetchDoctors = useCallback(async () => {
+        try {
+            const response = await getActiveDoctorsList(clinicId);
+            setDoctors(response.data.doctors);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to fetch doctors.");
+        }
+    }, [clinicId]);
+
+    useEffect(() => {
         fetchData();
-    }, [currentPage, filters]);
+    }, [fetchData]);
 
     useEffect(() => {
-        async function fetchDoctors() {
-            try {
-                const response = await getActiveDoctorsList(clinicId);
-                setDoctors(response.data.doctors);
-            } catch (error) {
-                toast.error(error.response?.data?.message || "Failed to fetch doctors.");
-            }
-        }
         fetchDoctors();
-    }, []);
+    }, [fetchDoctors]);
 
-    const generatePagination = () => {
+    const generatePagination = useMemo(() => {
         if (totalPages <= 7) {
             return Array.from({ length: totalPages }, (_, i) => i + 1);
         }
@@ -81,7 +83,7 @@ function AppointmentsManagement() {
         } else {
             return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages];
         }
-    };
+    }, [totalPages, currentPage]);
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
@@ -298,7 +300,7 @@ function AppointmentsManagement() {
                                                 {appt.appointmentStatus}
                                             </td>
                                             <td
-                                                className={`px-4 py-3 border border-gray-200 text-center capitalize ${(appt.isEmergency && today === appt.appointmentDate.split('-').reverse().join('-')) ? "bg-red-500 text-white animate-pulse font-bold" : ""
+                                                className={`px-4 py-3 border border-gray-200 text-center capitalize ${(appt.isEmergency && appt.appointmentStatus === "Scheduled" && today === appt.appointmentDate.split('-').reverse().join('-')) ? "bg-red-500 text-white animate-pulse font-bold" : ""
                                                     }`}
                                             >
                                                 {appt.reasonForVisit || "N/A"}<br />
@@ -340,7 +342,7 @@ function AppointmentsManagement() {
                     >
                         Prev
                     </button>
-                    {generatePagination().map((page, index) => (
+                    {generatePagination.map((page, index) => (
                         <button
                             key={index}
                             className={`${page === "..." ? "text-gray-400 cursor-default"
