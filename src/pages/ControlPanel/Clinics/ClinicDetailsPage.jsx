@@ -74,10 +74,10 @@ const ClinicDetailsPage = () => {
             await fetchClinicDetails();
             setIsModalOpen(false);
         } catch (error) {
-            console.error("Error in handleSubmit:", error);
-            toast.error(error.response.data.message || "Something went wrong");
+            toast.error(error.response?.data?.message || "Something went wrong");
         }
     };
+
 
     const handleClinicEditSubmit = async (data) => {
         try {

@@ -109,9 +109,14 @@ const DoctorsPage = () => {
                   </p>
                 </div>
                 <div className="mt-auto pt-4 flex justify-between items-center border-t border-gray-200">
+                  <div>
                   <p className={`font-semibold ${doctor.isActive ? "text-green-600" : "text-red-600"}`}>
                     {doctor.isActive ? "Active" : "Inactive"}
                   </p>
+                  <p className={`font-semibold ${doctor.isVerified ? "text-blue-600" : "text-red-600"}`}> 
+                    {doctor.isVerified ? "Verified" : "Not Verified"}
+                  </p>
+                  </div>
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
                     onClick={() => handleEditDoctor(doctor?.doctorId)}

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { getClinicList } from "../../../services/clinics";
 import LocationSelector from "../../LocationSelector";
 
 const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onSubmit }) => {
   const [loading, setLoading] = useState(false);
   const [clinics, setClinics] = useState([]);
+  const [error, setError] = useState(null);
+  const [selfClinic, setSelfClinic] = useState(false);
 
   useEffect(() => {
     if (!fromClinic) {
@@ -43,7 +45,10 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     state: "",
     country: "",
     postalCode: "",
-    isActive: true,
+    isActive: false,
+    isVerified: false,
+    isOwnClinic: false,
+    website: "",
   };
 
   const [formData, setFormData] = useState(defaultFormData);
@@ -58,7 +63,18 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     } else {
       setFormData(defaultFormData);
     }
+    setError(null);
   }, [doctorData, clinicId]);
+
+  const handleSelfClinicChange = (e) => {
+    const { checked } = e.target;
+    setSelfClinic(checked);
+    setFormData((prev) => ({
+      ...prev,
+      isOwnClinic: checked,
+    }));
+    setError(null);
+  };
 
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
@@ -66,20 +82,23 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    setError(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     try {
       await onSubmit(formData);
-      closeModal();
     } catch (error) {
+      setError(error.response?.data?.message || "Something went wrong");
       toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleLocationSelect = (lat, lng, address, city, district, state, country, postalCode) => {
     setFormData((prev) => ({
@@ -95,23 +114,34 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
       country,
       postalCode,
     }));
+    setError(null);
   };
 
   const handleCloseModal = () => {
-    setFormData(defaultFormData);
-    closeModal();
+    if (!error && JSON.stringify(formData) !== JSON.stringify(defaultFormData)) {
+      if (window.confirm("Are you sure you want to close? Any unsaved changes will be lost.")) {
+        setError(null);
+        setFormData(defaultFormData);
+        closeModal();
+      }
+    } else {
+      setError(null);
+      setFormData(defaultFormData);
+      closeModal();
+    }
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+      <Toaster />
       <div className="bg-white p-6 rounded-md shadow-lg w-[400px] max-h-[90vh] overflow-auto">
         <h3 className="text-xl font-semibold mb-4">
           {doctorData ? "Edit Doctor" : "Add New Doctor"}
         </h3>
         <form onSubmit={handleSubmit}>
-          {!clinicId && (
+          {!clinicId && !doctorData && !selfClinic && (
             <div className="mb-4">
               <label className="block text-sm font-medium">Clinic</label>
               <select
@@ -130,6 +160,18 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
               </select>
             </div>
           )}
+          {!doctorData && (
+            <div className="mb-4 flex items-center space-x-2">
+              <input type="checkbox" name="isOwnClinic" checked={formData.isOwnClinic} onChange={handleSelfClinicChange} className="form-checkbox" />
+              <span>Clinic By Doctor (Own Clinic)</span>
+            </div>
+          )}
+          {selfClinic && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Website for Clinic</label>
+              <input type="text" name="website" value={formData.website} onChange={handleChange} className="w-full p-2 border rounded-md" />
+            </div>
+          )}
           <div className="mb-4 grid grid-cols-3 gap-2">
             <div>
               <label className="block text-sm font-medium">First Name</label>
@@ -141,7 +183,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
             </div>
             <div>
               <label className="block text-sm font-medium">Last Name</label>
-              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full p-2 border rounded-md" />
+              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full p-2 border rounded-md" required />
             </div>
           </div>
           <div className="mb-4">
@@ -187,7 +229,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Address</label>
-            <input type="text" name="address" value={formData.address} onChange={handleChange} className="w-full p-2 border rounded-md" /> {/*address can be edited */}
+            <input type="text" name="address" value={formData.address} onChange={handleChange} className="w-full p-2 border rounded-md" />
           </div>
           <div className="mb-4 grid grid-cols-2 gap-2">
             <div>
@@ -220,6 +262,12 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
               <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleChange} className="form-checkbox" />
               <span>Active</span>
             </div>
+            {!clinicId && (
+              <div className="mb-4 flex items-center space-x-2">
+                <input type="checkbox" name="isVerified" checked={formData.isVerified} onChange={handleChange} className="form-checkbox" />
+                <span>Verified</span>
+              </div>
+            )}
           </div>
           <div className="flex justify-end gap-4">
             <button type="button" className="px-4 py-2 bg-gray-300 rounded-md" onClick={handleCloseModal} disabled={loading}>Cancel</button>
