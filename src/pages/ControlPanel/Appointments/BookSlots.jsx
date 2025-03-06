@@ -205,7 +205,7 @@ const BookSlots = () => {
                             ))}
                         </div>
                     ) : (
-                        searchQuery && patients.length === 0 && <p className="mt-2 text-gray-500">No patients found.</p>
+                        searchQuery && patients.length === 0 && !loading && <p className="mt-2 text-gray-500">No patients found.</p>
                     )}
                     <button onClick={() => setShowModal(true)} className="bg-blue-500 text-white px-4 py-2 rounded-md mt-10 w-40">
                         Add new Patient
