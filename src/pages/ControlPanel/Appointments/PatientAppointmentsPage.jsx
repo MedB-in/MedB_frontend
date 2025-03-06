@@ -152,7 +152,7 @@ function PatientAppointmentsPage() {
                         {appt.appointmentStatus}
                       </td>
                       <td
-                        className={`px-4 py-3 border border-gray-200 text-center capitalize ${appt.isEmergency && isDoctor ? "bg-red-500 text-white animate-pulse font-bold" : ""
+                        className={`px-4 py-3 border border-gray-200 text-center capitalize ${appt.isEmergency && appt.appointmentStatus === "Scheduled" && isDoctor ? "bg-red-500 text-white animate-pulse font-bold" : ""
                           }`}
                       >
                         {appt.reasonForVisit || "N/A"}<br />

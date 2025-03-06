@@ -300,7 +300,7 @@ function AppointmentsManagement() {
                                                 {appt.appointmentStatus}
                                             </td>
                                             <td
-                                                className={`px-4 py-3 border border-gray-200 text-center capitalize ${(appt.isEmergency && today === appt.appointmentDate.split('-').reverse().join('-')) ? "bg-red-500 text-white animate-pulse font-bold" : ""
+                                                className={`px-4 py-3 border border-gray-200 text-center capitalize ${(appt.isEmergency && appt.appointmentStatus === "Scheduled" && today === appt.appointmentDate.split('-').reverse().join('-')) ? "bg-red-500 text-white animate-pulse font-bold" : ""
                                                     }`}
                                             >
                                                 {appt.reasonForVisit || "N/A"}<br />
