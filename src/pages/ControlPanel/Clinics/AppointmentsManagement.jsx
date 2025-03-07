@@ -334,35 +334,36 @@ function AppointmentsManagement() {
                         )}
                     </tbody>
                 </table>
-                <div className="mt-6 flex justify-center items-center space-x-2">
-                    <button
-                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
-                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
-                    >
-                        Prev
-                    </button>
-                    {generatePagination.map((page, index) => (
+                {totalPages > 1 && (
+                    <div className="mt-6 flex justify-center items-center space-x-2">
                         <button
-                            key={index}
-                            className={`${page === "..." ? "text-gray-400 cursor-default"
-                                : page === currentPage
-                                    ? "bg-gray-300 text-gray-800 font-bold"
-                                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-4 py-2 rounded-lg`}
-                            onClick={() => page !== "..." && setCurrentPage(page)}
-                            disabled={page === "..."}
+                            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
                         >
-                            {page}
+                            Prev
                         </button>
-                    ))}
-                    <button
-                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
-                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                    >
-                        Next
-                    </button>
-                </div>
+                        {generatePagination.map((page, index) => (
+                            <button
+                                key={index}
+                                className={`${page === "..." ? "text-gray-400 cursor-default"
+                                    : page === currentPage
+                                        ? "bg-gray-300 text-gray-800 font-bold"
+                                        : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-4 py-2 rounded-lg`}
+                                onClick={() => page !== "..." && setCurrentPage(page)}
+                                disabled={page === "..."}>
+                                {page}
+                            </button>
+                        ))}
+                        <button
+                            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
             <AppointMentStatusModal
                 isOpen={statusModalOpen}

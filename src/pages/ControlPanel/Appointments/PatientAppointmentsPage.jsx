@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { getAppointments } from "../../../services/patient";
 import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import DoctorRemarksModal from "../../../components/Organs/Doctors/DoctorRemarksModal";
 
 function PatientAppointmentsPage() {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -13,25 +15,27 @@ function PatientAppointmentsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedAppt, setSelectedAppt] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await getAppointments(doctor, currentPage, searchQuery);
-        setAppointments(response.data.appointments.appointments);
-        setTotalPages(response.data.appointments.totalPages);
-        setCurrentPage(response.data.appointments.currentPage);
-      } catch (error) {
-        console.error("Error fetching appointments:", error);
-      } finally {
-        setLoading(false);
-      }
+  const fetchData = async () => {
+    try {
+      const response = await getAppointments(doctor, currentPage, searchQuery);
+      setAppointments(response.data.appointments.appointments);
+      setTotalPages(response.data.appointments.totalPages);
+      setCurrentPage(response.data.appointments.currentPage);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to fetch appointments.");
+    } finally {
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
     fetchData();
   }, [currentPage, searchQuery]);
 
-  const generatePagination = () => {
+  const generatePagination = useMemo(() => {
     if (totalPages <= 7) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
@@ -43,13 +47,22 @@ function PatientAppointmentsPage() {
     } else {
       return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages];
     }
-  };
+  }, [totalPages, currentPage]);
 
   const handleSearch = (e) => {
     setLoading(true);
     setSearchQuery(e.target.value);
     setCurrentPage(1);
   };
+
+  const handleOpenModal = (appt) => {
+    setSelectedAppt(appt);
+  };
+
+  const handleClose = useCallback(() => {
+    setSelectedAppt(null);
+    fetchData();
+  }, []);
 
   return (
     <section className="flex flex-col items-center justify-center text-center bg-white">
@@ -91,7 +104,12 @@ function PatientAppointmentsPage() {
               <>
                 {appointments.length ? (
                   appointments.map((appt, index) => (
-                    <tr key={index} className="odd:bg-white even:bg-gray-50">
+                    <tr
+                      key={index}
+                      className={`odd:bg-white even:bg-gray-50 ${isDoctor ? 'cursor-pointer hover:bg-gray-100' : ''}`}
+                      onClick={isDoctor ? () => handleOpenModal(appt) : undefined}
+                    >
+
                       {!isDoctor ? (
                         <td className="px-4 py-3 border border-gray-200">
                           <div className="flex justify-center">
@@ -171,36 +189,40 @@ function PatientAppointmentsPage() {
             )}
           </tbody>
         </table>
-        <div className="mt-6 flex justify-center items-center space-x-2">
-          <button
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            Prev
-          </button>
-          {generatePagination().map((page, index) => (
+        {totalPages > 1 && (
+          <div className="mt-6 flex justify-center items-center space-x-2">
             <button
-              key={index}
-              className={`${page === "..." ? "text-gray-400 cursor-default"
-                : page === currentPage
-                  ? "bg-gray-300 text-gray-800 font-bold"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-4 py-2 rounded-lg`}
-              onClick={() => page !== "..." && setCurrentPage(page)}
-              disabled={page === "..."}
+              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
             >
-              {page}
+              Prev
             </button>
-          ))}
-          <button
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
-        </div>
+            {generatePagination.map((page, index) => (
+              <button
+                key={index}
+                className={`${page === "..." ? "text-gray-400 cursor-default"
+                  : page === currentPage
+                    ? "bg-gray-300 text-gray-800 font-bold"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-4 py-2 rounded-lg`}
+                onClick={() => page !== "..." && setCurrentPage(page)}
+                disabled={page === "..."}>
+                {page}
+              </button>
+            ))}
+            <button
+              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
+      {selectedAppt && (
+        <DoctorRemarksModal appt={selectedAppt} onClose={handleClose} />
+      )}
     </section>
   );
 }
