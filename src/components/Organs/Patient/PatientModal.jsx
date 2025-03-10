@@ -74,13 +74,13 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-auto ">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mt-48">
+            <div className={`bg-white p-6 rounded-lg shadow-lg w-full max-w-md ${isUpdate ? "mt-48" : ""}`}>
                 <h2 className="text-xl font-semibold text-center mb-4">{isUpdate ? "Update Patient" : "Add Patient"}</h2>
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <InputField type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
                     <InputField type="text" name="middleName" placeholder="Middle Name" value={formData.middleName} onChange={handleChange} />
                     <InputField type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
-                    <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} disabled />
+                    <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange}  {...(isUpdate ? { disabled: true } : { required: true })} />
                     <InputField type="text" name="contactNo" placeholder="Contact No" value={formData.contactNo} onChange={handleChange} required />
                     {isUpdate && (
                         <>
