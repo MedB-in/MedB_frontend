@@ -183,7 +183,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
             </div>
             <div>
               <label className="block text-sm font-medium">Last Name</label>
-              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full p-2 border rounded-md" />
             </div>
           </div>
           <div className="mb-4">

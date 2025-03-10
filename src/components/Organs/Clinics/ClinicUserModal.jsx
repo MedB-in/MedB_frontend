@@ -41,7 +41,7 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
         }
         setLoading(true);
         try {
-            if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.confirmPassword) {
+            if (!formData.firstName || !formData.email || !formData.password || !formData.confirmPassword) {
                 toast.error("All fields are required.");
                 return;
             }
@@ -65,7 +65,7 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <InputField type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
                     <InputField type="text" name="middleName" placeholder="Middle Name" value={formData.middleName} onChange={handleChange} />
-                    <InputField type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
+                    <InputField type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
                     <InputField type="email" name="email" placeholder="Email (Username)" value={formData.email} onChange={handleChange} required />
                     <InputField type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} toggleable required />
                     <InputField type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} toggleable required />

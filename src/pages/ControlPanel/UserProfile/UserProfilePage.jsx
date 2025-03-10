@@ -116,7 +116,7 @@ const UserProfilePage = () => {
                     <div className="grid grid-cols-2 gap-4">
                         <InputField type="text" name="firstName" placeholder="First Name" className="capitalize" value={formData.firstName} onChange={handleChange} required />
                         <InputField type="text" name="middleName" placeholder="Middle Name" className="capitalize" value={formData.middleName} onChange={handleChange} />
-                        <InputField type="text" name="lastName" placeholder="Last Name" className="capitalize" value={formData.lastName} onChange={handleChange} required />
+                        <InputField type="text" name="lastName" placeholder="Last Name" className="capitalize" value={formData.lastName} onChange={handleChange} />
                         <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required disabled />
                         <InputField type="phone" name="contactNo" placeholder="Contact Number" value={formData.contactNo} onChange={handleChange} required />
                         <InputField type="text" name="designation" placeholder="Designation" className="capitalize" value={formData.designation} onChange={handleChange} />
