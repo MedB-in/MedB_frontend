@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./components/Atoms/ProtectedRoutes";
 import useAuth from "./hooks/useAuth";
+import LandingPage from "./pages/LandingPage/LandingPage";
 import ErrorPage from "./pages/404Page/ErrorPage";
 import * as Clinics from "./pages/ControlPanel/Clinics";
 import * as Appointments from "./pages/ControlPanel/Appointments";
@@ -32,6 +33,8 @@ const App = () => {
   return (
     <Routes>
       {/* Public routes */}
+      {/* Landing page */}
+      <Route path="/home" element={<LandingPage />} />
       {/* Login page */}
       <Route path="/login" element={<LoginPage />} />
       {/* Register page */}

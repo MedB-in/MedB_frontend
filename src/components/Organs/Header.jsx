@@ -47,7 +47,7 @@ const Header = () => {
     return (
         <header className="fixed top-0 z-50 w-full px-4 py-3 flex justify-between border border-b-2 border-slate-200 bg-white bg-opacity-50 backdrop-filter backdrop-blur-md">
             <Toaster />
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 cursor-pointer" onClick={() => navigate("/home")}>
                 <img src={Logo} alt="Logo" width={80} />
             </div>
             <div className="flex items-center gap-4 ml-auto">

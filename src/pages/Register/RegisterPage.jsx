@@ -51,7 +51,7 @@ const RegisterPage = () => {
         }
         setLoading(true);
         try {
-            if (!formData.firstName || !formData.lastName || !formData.email || !formData.contactNo || !formData.password || !formData.confirmPassword) {
+            if (!formData.firstName || !formData.email || !formData.contactNo || !formData.password || !formData.confirmPassword) {
                 toast.error("All fields are required.");
                 return;
             }
