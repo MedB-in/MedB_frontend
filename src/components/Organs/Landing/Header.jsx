@@ -96,9 +96,7 @@ const Header = () => {
                     </>
                 )}
             </AnimatePresence>
-            <motion.button
-                className="border border-[#6F64E7] text-[#573bff] px-6 py-3 rounded-md cursor-pointer ml-10 
-        transition hover:bg-[#6F64E7] hover:text-white hidden lg:block"
+            <motion.button className="border border-[#6F64E7] text-[#573bff] px-6 py-3 rounded-md cursor-pointer ml-10 transition hover:bg-[#6F64E7] hover:text-white hidden lg:block"
                 onClick={() => navigate("/login")}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
