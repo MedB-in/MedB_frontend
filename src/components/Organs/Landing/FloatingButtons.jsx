@@ -3,7 +3,7 @@ import whatsapp from "../../../assets/images/whatsapp-icon.png";
 
 const FloatingActionButtons = () => {
     return (
-        <div>
+        <>
             <div
                 className="fixed right-0 top-[40dvh] flex items-center bg-[#6F64E7] text-white rounded-l-lg p-2 z-50 cursor-pointer hover:opacity-90"
                 title="Send us a message"
@@ -19,7 +19,7 @@ const FloatingActionButtons = () => {
             >
                 <img src={whatsapp} alt="WhatsApp" className="w-8 h-8 object-contain" />
             </a>
-        </div>
+        </>
     );
 };
 

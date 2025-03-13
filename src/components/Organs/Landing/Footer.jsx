@@ -28,6 +28,7 @@ const Footer = () => {
             <motion.div
                 className="py-6 border-t border-b"
                 initial={{ opacity: 0, scale: 0.9 }}
+                viewport={{ once: true, amount: 0.3 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
             >
@@ -37,6 +38,7 @@ const Footer = () => {
                 <motion.div
                     className="w-full md:w-1/3 text-left"
                     initial={{ opacity: 0, y: 30 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                 >
@@ -52,6 +54,7 @@ const Footer = () => {
                 <motion.div
                     className="w-full md:w-1/3 md:border-l md:pl-6 text-left"
                     initial={{ opacity: 0, y: 30 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
                 >
@@ -78,21 +81,22 @@ const Footer = () => {
                 </motion.div>
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.5 }}
                     className="w-full md:w-1/3 text-left"
                 >
                     <h3 className="text-xl font-semibold text-[#6F64E7] mb-4">Newsletter</h3>
-                    <div className="flex items-center bg-white border border-gray-300 rounded-full px-3 py-2 mt-2">
+                    <div className="flex items-center bg-white border border-gray-300 rounded-full px-3 py-2 mt-2 w-full max-w-md mx-auto">
                         <input
                             type="email"
                             placeholder="Your email"
-                            className="flex-1 outline-none px-2 text-gray-600"
+                            className="flex-1 outline-none px-2 text-gray-600 text-sm sm:text-base"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
                         <motion.button
-                            className="bg-[#6F64E7] text-white px-4 py-2 rounded-full hover:bg-[#554cd4] transition"
+                            className="bg-[#6F64E7] text-white px-4 py-2 rounded-full hover:bg-[#554cd4] transition text-sm sm:text-base ml-2"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
@@ -101,6 +105,7 @@ const Footer = () => {
                     </div>
                     <motion.form
                         initial={{ opacity: 0, y: 30 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.5 }}
                         className="bg-white shadow-md p-4 mt-6 rounded-md space-y-4">
@@ -119,6 +124,7 @@ const Footer = () => {
             <motion.div
                 className="border-t pt-4 mt-6 px-6 text-sm md:text-base"
                 initial={{ opacity: 0, y: 20 }}
+                viewport={{ once: true, amount: 0.3 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
             >

@@ -7,14 +7,14 @@ const MedicalCompanion = () => {
             className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-12 lg:px-20 py-12 gap-8"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
         >
             <motion.div
                 className="text-center md:text-left space-y-4 md:max-w-[50%]"
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
             >
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">
@@ -31,9 +31,9 @@ const MedicalCompanion = () => {
             </motion.div>
             <motion.div
                 className="w-full md:w-auto text-center md:text-right"
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
             >
                 <img

@@ -86,35 +86,34 @@ const TestimonialSection = () => {
         <motion.section
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.8, ease: "easeOut" }} className="py-12 px-6 md:px-12 text-center bg-[#D2ECEA] relative">
-            <motion.h2
-                initial={{ opacity: 0, y: -20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.2 }}
-                transition={{ duration: 0.6 }} className="text-3xl md:text-4xl font-bold tracking-wide">
-                <span className="text-[#573bff]">Doctor's</span>{" "}
-                <span className="text-[#28c76f]">Testimonials</span>
-            </motion.h2>
+            <div className="flex justify-center">
+                <motion.h2
+                    initial={{ opacity: 0, y: -20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.6 }}
+                    className="text-3xl md:text-4xl font-bold tracking-wide 
+                               bg-gradient-to-r from-[#573bff] to-[#86CFC3] 
+                               bg-clip-text text-transparent w-fit"
+                >
+                    Doctor's Testimonials
+                </motion.h2>
+            </div>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.2 }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
                 ref={scrollRef}
-                className="mt-8 flex gap-6 overflow-x-auto p-4 scrollbar-hide snap-x snap-mandatory 
-                    cursor-grab active:cursor-grabbing scroll-smooth"
+                className="mt-8 flex gap-6 overflow-x-auto p-4 scrollbar-hide snap-x snap-mandatory cursor-grab active:cursor-grabbing scroll-smooth"
                 onMouseDown={handleMouseDown}
             >
                 {testimonials.map(({ quote, doctorName, credentials }, index) => (
-                    <motion.article
+                    <article
                         key={index}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: false, amount: 0.3 }}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
-                        className="relative flex flex-col items-center bg-white rounded-3xl p-8 shadow-md 
-                           min-w-[320px] max-w-[400px] snap-start"
+                        className="relative flex flex-col items-center bg-white rounded-3xl p-8 shadow-md min-w-[320px] max-w-[400px] snap-start"
                     >
                         <QuoteImage
                             src={topLeft}
@@ -126,12 +125,12 @@ const TestimonialSection = () => {
                             className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg relative z-10"
                             alt={`${doctorName} profile`}
                         />
-                        <QuoteImage src={quotesTop} className="w-6 mt-3" alt="Top quotes" />
-                        <blockquote className="mt-4 text-gray-700 text-lg italic">
+                        <QuoteImage src={quotesTop} className="w-6 mt-3 self-start" alt="Top quotes" />
+                        <blockquote className="mt-4 text-gray-700 text-lg italic text-center">
                             "{quote}"
                         </blockquote>
-                        <QuoteImage src={quotesBottom} className="w-6 mt-3" alt="Bottom quotes" />
-                        <div className="mt-4">
+                        <QuoteImage src={quotesBottom} className="w-6 mt-3 self-end" alt="Bottom quotes" />
+                        <div className="mt-4 text-center">
                             <h3 className="text-xl font-bold">{doctorName}</h3>
                             <p className="text-gray-500">{credentials}</p>
                         </div>
@@ -140,9 +139,10 @@ const TestimonialSection = () => {
                             className="absolute bottom-0 right-0 w-[100px] md:w-[134px] z-0"
                             alt="Bottom right decoration"
                         />
-                    </motion.article>
+                    </article>
                 ))}
             </motion.div>
+
         </motion.section>
     );
 };
