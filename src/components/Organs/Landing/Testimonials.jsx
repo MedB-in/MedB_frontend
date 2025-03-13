@@ -75,22 +75,27 @@ const Testimonials = () => {
 
     return (
         <motion.section
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.2 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="bg-[#eef1ff] py-12 px-6 md:px-12 text-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="bg-[#eef1ff] py-12 px-6 md:px-12 text-center"
         >
-            <motion.h2
-                initial={{ opacity: 0, y: -20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.2 }}
-                transition={{ duration: 0.6 }}
-                className="text-3xl md:text-4xl font-bold tracking-wide"
-            >
-                <span className="text-[#573bff]">User</span>{" "}
-                <span className="text-[#28c76f]">Testimonials</span>
-            </motion.h2>
+            <div className="flex justify-center">
+                <motion.h2
+                    initial={{ opacity: 0, y: -20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.6 }}
+                    className="text-3xl md:text-4xl font-bold tracking-wide 
+                   bg-gradient-to-r from-[#573bff] to-[#86CFC3] 
+                   bg-clip-text text-transparent w-fit"
+                >
+                    User Testimonials
+                </motion.h2>
+            </div>
+
+
             <motion.div
                 ref={scrollRef}
                 className="mt-8 flex gap-6 overflow-x-auto snap-x snap-mandatory 
@@ -98,19 +103,15 @@ const Testimonials = () => {
                 onMouseDown={handleMouseDown}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.2 }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
             >
                 {testimonials.map((testimonial, index) => (
-                    <motion.div
+                    <div
                         key={index}
                         className="min-w-[80%] sm:min-w-[60%] md:min-w-[40%] lg:min-w-[30%] max-w-xs h-[70vh] 
                            bg-gradient-to-b from-[#D2ECEA] via-white to-[#6F64E7] p-6 rounded-2xl 
                            flex flex-col justify-between items-center text-white snap-start"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: false, amount: 0.3 }}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
                     >
                         <p className="text-black mt-14 md:text-lg font-light leading-relaxed">
                             "{testimonial.text}"
@@ -124,7 +125,7 @@ const Testimonials = () => {
                             <h3 className="text-lg font-semibold">{testimonial.name}</h3>
                             <span className="text-sm opacity-80">{testimonial.role}</span>
                         </div>
-                    </motion.div>
+                    </div>
                 ))}
             </motion.div>
         </motion.section>

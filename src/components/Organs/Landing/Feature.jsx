@@ -32,19 +32,27 @@ const features = [
 
 const FeatureSection = () => {
     return (
-        <section className="py-12 px-6 md:px-16 cursor-default">
+        <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.8, ease: "easeOut" }} className="py-12 px-6 md:px-16 cursor-default">
             <div className="flex justify-center text-center mb-8">
-                <h2 className="text-2xl md:text-4xl font-medium tracking-wider">
+                <motion.h2
+                    initial={{ opacity: 0, y: -20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.6 }} className="text-2xl md:text-4xl font-medium tracking-wider">
                     "Bringing <span className="text-[#573bff] font-semibold">Healthcare</span> To Your Fingertips"
-                </h2>
+                </motion.h2>
             </div>
             <div className="flex flex-col md:flex-row justify-center gap-6">
                 {features.map((feature, index) => (
                     <motion.div
                         key={index}
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.2 }}
                         transition={{ duration: 0.8, delay: index * 0.2 }}
                         className={`w-full md:w-1/3 h-[550px] md:h-[600px] p-8 ${feature.bgColor} ${feature.borderRadius} flex flex-col justify-between items-center text-center shadow-lg transition-all duration-500 ease-in-out transform hover:scale-105`}
                     >
@@ -54,7 +62,7 @@ const FeatureSection = () => {
                                     <h3 className={`text-xl md:text-2xl font-semibold ${feature.textColor} mb-3`}>
                                         {feature.title}
                                     </h3>
-                                    <p className={`text-sm md:text-base ${feature.textColor} opacity-80 w-4/5 md:w-3/4`}>
+                                    <p className={`text-lg ${feature.textColor} opacity-80 w-4/5 md:w-3/4`}>
                                         {feature.description}
                                     </p>
                                 </div>
@@ -79,7 +87,7 @@ const FeatureSection = () => {
                                     <h3 className={`text-xl md:text-2xl font-semibold ${feature.textColor} mb-3`}>
                                         {feature.title}
                                     </h3>
-                                    <p className={`text-sm md:text-base ${feature.textColor} opacity-80 w-4/5 md:w-3/4`}>
+                                    <p className={`text-lg ${feature.textColor} opacity-80 w-4/5 md:w-3/4`}>
                                         {feature.description}
                                     </p>
                                 </div>
@@ -88,7 +96,7 @@ const FeatureSection = () => {
                     </motion.div>
                 ))}
             </div>
-        </section>
+        </motion.section>
     );
 };
 
