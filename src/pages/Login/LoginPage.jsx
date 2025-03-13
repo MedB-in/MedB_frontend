@@ -13,6 +13,7 @@ import PasswordIcon from "../../assets/images/password-icon.svg";
 import InputField from "../../components/Atoms/Login/InputField";
 import Button from "../../components/Atoms/Login/Button";
 import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
+import { motion } from "framer-motion";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -56,20 +57,30 @@ const LoginPage = () => {
   return (
     <>
       <Toaster />
-      <div className="relative justify-center items-center h-screen flex px-11  bg-white">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative flex justify-center items-center h-screen px-11 bg-white">
         <div className="flex flex-grow gap-5">
-          <div className="hidden p-10 h-screen flex-col w-[75%] lg:flex">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="hidden lg:flex flex-col w-[75%] p-10 h-screen">
             <img
               loading="lazy"
               src={Frame}
+
               alt="Login illustration"
-              className="object-contain h-full rounded-[49px]"
+              className="object-cover h-full w-full rounded-[49px]"
             />
-          </div>
-          <div className="flex flex-col justify-center w-full max-w-md sm:w-4/5 sm:mx-auto md:w-2/3 md:mx-auto px-4 py-8 space-y-6 bg-white shadow-lg rounded-3xl lg:absolute lg:right-1/4 lg:top-1/4 lg:-mx-28 lg:-my-20 lg:w-1/3 lg:px-12">
+          </motion.div>
+          <div
+            className="flex flex-col justify-center w-full max-w-md :w-2/3 mx-auto px-4 py-8 space-y-6 border bg-white shadow-lg rounded-3xl lg:absolute lg:right-[10%] lg:top-1/2 lg:-translate-y-1/2 lg:w-1/3 lg:px-12">
             <div className="">
               <div className="mb-12 flex justify-center">
-                <img src={Logo} alt="Medb Logo" className="h-10 w-auto" />
+                <img src={Logo} onClick={() => navigate("/home")} alt="Medb Logo" className="h-10 mt-5 w-auto cursor-pointer" />
               </div>
               <h1 className="mb-2 text-2xl font-semibold text-gray-900 text-center">
                 Welcome Back!
@@ -78,9 +89,7 @@ const LoginPage = () => {
                 Please enter your details
               </p>
             </div>
-
             <form className="space-y-6">
-              {/* Email Input */}
               <InputField
                 type="email"
                 placeholder="Email/Phone Number"
@@ -88,8 +97,6 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-
-              {/* Password Input */}
               <div className="relative">
                 <InputField
                   type="password"
@@ -100,8 +107,6 @@ const LoginPage = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-
-              {/* Forgot Password */}
               <div className="flex justify-end">
                 <button
                   onClick={() => navigate("/forgot-password")}
@@ -116,8 +121,6 @@ const LoginPage = () => {
                   Forgot Password
                 </button>
               </div>
-
-              {/* Login Button */}
               <Button
                 onClick={handleSubmit}
                 type="submit"
@@ -126,8 +129,6 @@ const LoginPage = () => {
               >
                 {loading ? "Logging in..." : "Login"}
               </Button>
-
-              {/* Google Login Button */}
               <Button
                 onClick={() => navigate("/googleLogin")}
                 variant="outline"
@@ -142,8 +143,6 @@ const LoginPage = () => {
                   Login with Google
                 </span>
               </Button>
-
-              {/* Sign Up */}
               <p className="text-center text-sm text-gray-600">
                 Don't have an account?{" "}
                 <button
@@ -157,7 +156,7 @@ const LoginPage = () => {
             </form>
           </div>
         </div>
-      </div>
+      </motion.div >
     </>
   );
 };
