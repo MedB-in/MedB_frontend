@@ -1,14 +1,14 @@
 import { Outlet } from 'react-router-dom';
 import React from 'react'
-import Header from '../../components/Organs/Header';
 import SideBar from '../../components/Organs/SideBar';
+import { Toaster } from 'react-hot-toast';
 
 const ControlPanel = () => {
     return (
         <>
-            <Header />
+            <Toaster />
             <SideBar />
-            <main className="bg-white ml-[270px] pt-[85px] overflow-auto">
+            <main className="bg-white ml-[280px] pt-[85px] overflow-auto">
                 <section>
                     <Outlet />
                 </section>

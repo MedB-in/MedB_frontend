@@ -57,45 +57,46 @@ function UserSubscription() {
         />
       </div>
       <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
-        <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
-          <thead>
-            <tr className="bg-gray-100 text-center">
-              <th className="px-4 py-3 border border-gray-200">No.</th>
-              <th className="px-4 py-3 border border-gray-200">Name</th>
-              <th className="px-4 py-3 border border-gray-200">Product</th>
-              <th className="px-4 py-3 border border-gray-200">Start Date</th>
-              <th className="px-4 py-3 border border-gray-200">Expiry Date</th>
-              <th className="px-4 py-3 border border-gray-200">Payment</th>
-              <th className="px-4 py-3 border border-gray-200">Amount</th>
-            </tr>
-          </thead>
-          {loading ? (
-            <p className="text-gray-600 text-lg mt-28">Loading...</p>
-          ) : (
+        {loading ? (
+          <div className="text-gray-600 text-lg mt-28 text-center">Loading...</div>
+        ) : (
+          <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
+            <thead>
+              <tr className="bg-gray-100 text-center">
+                <th className="px-4 py-3 border border-gray-200">No.</th>
+                <th className="px-4 py-3 border border-gray-200">Name</th>
+                <th className="px-4 py-3 border border-gray-200">Product</th>
+                <th className="px-4 py-3 border border-gray-200">Start Date</th>
+                <th className="px-4 py-3 border border-gray-200">Expiry Date</th>
+                <th className="px-4 py-3 border border-gray-200">Payment</th>
+                <th className="px-4 py-3 border border-gray-200">Amount</th>
+              </tr>
+            </thead>
             <tbody>
-              {subscriptions && subscriptions.map((sub, index) => (
-                <tr key={index} className="odd:bg-white even:bg-gray-50">
-                  <td className="px-4 py-3 border border-gray-200">{index + 1}</td>
-                  <td className="px-4 py-3 border border-gray-200">{sub.userName}</td>
-                  <td className="px-4 py-3 border border-gray-200">{sub.productName}</td>
-                  <td className="px-4 py-3 border border-gray-200">{new Date(sub.startDate).toLocaleDateString("en-GB")}</td>
-                  <td className="px-4 py-3 border border-gray-200">{new Date(sub.expiryDate).toLocaleDateString("en-GB")}</td>
-                  <td className={`px-4 py-3 border border-gray-200 font-semibold ${sub.isPaid ? "text-green-600" : "text-red-500"}`}>
-                    {sub.isPaid ? "Paid" : "Unpaid"}
-                  </td>
-                  <td className="px-4 py-3 border border-gray-200">Rs. {sub.netAmount ?? 0}</td>
-                </tr>
-              ))}
-              {!subscriptions.length && (
+              {subscriptions.length > 0 ? (
+                subscriptions.map((sub, index) => (
+                  <tr key={index} className="odd:bg-white even:bg-gray-50">
+                    <td className="px-4 py-3 border border-gray-200">{index + 1}</td>
+                    <td className="px-4 py-3 border border-gray-200">{sub.userName}</td>
+                    <td className="px-4 py-3 border border-gray-200">{sub.productName}</td>
+                    <td className="px-4 py-3 border border-gray-200">{new Date(sub.startDate).toLocaleDateString("en-GB")}</td>
+                    <td className="px-4 py-3 border border-gray-200">{new Date(sub.expiryDate).toLocaleDateString("en-GB")}</td>
+                    <td className={`px-4 py-3 border border-gray-200 font-semibold ${sub.isPaid ? "text-green-600" : "text-red-500"}`}>
+                      {sub.isPaid ? "Paid" : "Unpaid"}
+                    </td>
+                    <td className="px-4 py-3 border border-gray-200">Rs. {sub.netAmount ?? 0}</td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
-                  <td colSpan="6" className="px-4 py-3 border border-gray-200 text-center">
+                  <td colSpan="7" className="px-4 py-3 border border-gray-200 text-center">
                     No subscriptions found
                   </td>
                 </tr>
               )}
             </tbody>
-          )}
-        </table>
+          </table>
+        )}
 
         {/* Pagination */}
         <div className="mt-6 flex justify-center items-center space-x-2">
