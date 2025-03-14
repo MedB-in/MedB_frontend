@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import MedBLogo from "../../../assets/images/medb-logo.svg";
+import MedBLogo from "../../../assets/images/medb-logo-png.png";
 
 const Header = () => {
     const navigate = useNavigate();

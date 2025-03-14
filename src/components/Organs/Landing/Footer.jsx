@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import logo from "../../../assets/images/medb-logo.svg";
+import logo from "../../../assets/images/medb-logo-png.png";
 import emailIcon from "../../../assets/images/email-icon.png";
 import phoneIcon from "../../../assets/images/phone-icon2.png";
 import locationIcon from "../../../assets/images/location-06.png";
