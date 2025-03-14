@@ -5,7 +5,7 @@ import SidebarItem from '../Atoms/SideBar/SidebarItem';
 import { setAuthenticated } from '../../redux/slices/authSlice';
 import useAuth from '../../hooks/useAuth';
 import Logo from '../../assets/images/medb-logo-2.svg';
-import Logo1 from '../../assets/images/medb-logo.svg';
+import Logo1 from '../../assets/images/medb-logo-png.png';
 import AlertIcon from '../../assets/images/alert-icon.png';
 import LogoutIcon from '../../assets/images/logout-icon.png';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
