@@ -10,7 +10,7 @@ import AlertIcon from '../../assets/images/alert-icon.png';
 import LogoutIcon from '../../assets/images/logout-icon.png';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const SideBar = () => {
+const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
@@ -19,7 +19,6 @@ const SideBar = () => {
     const userAccess = useSelector((state) => state.userAccess.userAccess);
     const modules = userAccess || [];
 
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('userDetails')));
     const [openModuleIndex, setOpenModuleIndex] = useState(null);
     const [selectedMenu, setSelectedMenu] = useState(null);
@@ -75,7 +74,7 @@ const SideBar = () => {
 
     return (
         <div className="flex">
-            <div className={`fixed z-40 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center shadow-xl`}>
+            <div className={`fixed z-50 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
                 <div className="flex justify-center items-center w-full py-6 cursor-pointer"
                     onClick={() => navigate("/home")}>
                     <img
@@ -90,7 +89,7 @@ const SideBar = () => {
                             <div key={moduleIndex} className="mb-2">
                                 <div
                                     onClick={() => toggleModule(moduleIndex)}
-                                    className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-100"
+                                    className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
                                 >
                                     <img src={module.moduleIcon} alt={module.moduleName} className="w-6 h-6 transition-all duration-300 ease-in-out" />
                                     <span
@@ -113,10 +112,12 @@ const SideBar = () => {
                                                 actionUrl={menu.controllerName}
                                                 isSidebarOpen={isSidebarOpen}
                                                 isSelected={
-                                                    selectedMenu === menu.controllerName || location.pathname.endsWith(menu.controllerName)
+                                                    selectedMenu === menu.controllerName || location.pathname.split("/")[1] === menu.controllerName
                                                 }
                                                 onClick={() => handleMenuClick(menu)}
-                                                className="flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-100"
+                                                className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out 1
+                                                ${selectedMenu === menu.controllerName ? "bg-gray-200 font-semibold text-black shadow-md" : "hover:bg-gray-200 text-gray-600"}
+                                            `}
                                             />
                                         ))}
                                     </div>
@@ -131,12 +132,11 @@ const SideBar = () => {
                 </div>
             </div>
             <header
-                className={`header fixed top-0 right-0 h-16 px-4 py-3 flex justify-between items-center bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm transition-all ${isSidebarOpen ? "ml-[290px] w-[calc(100%-290px)]" : "ml-[100px] w-[calc(100%-100px)]"
-                    }`}
+                className={`header fixed top-0 right-0 z-50 h-16 px-4 py-3 flex justify-between items-center bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm transition-all ${isSidebarOpen ? "ml-[290px] w-[calc(100%-290px)]" : "ml-[100px] w-[calc(100%-100px)]"}`}
             >
                 <button
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="p-2 rounded-xl bg-gray-200 mt-5 hover:bg-gray-300 transition-all duration-300 ease-in-out transform shadow-md"
+                    className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition-all duration-300 ease-in-out transform shadow-md"
                 >
                     {isSidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
                 </button>

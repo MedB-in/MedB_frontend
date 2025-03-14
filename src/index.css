@@ -35,7 +35,7 @@ h3, h4, h5 {
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #d34949;
+  background: #8cd4e6;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
