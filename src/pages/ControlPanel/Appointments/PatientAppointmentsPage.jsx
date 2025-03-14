@@ -65,14 +65,14 @@ function PatientAppointmentsPage() {
   }, []);
 
   return (
-    <section className="flex flex-col items-center justify-center text-center bg-white">
-      <div className="mb-4 w-full max-w-md mt-5 flex justify-between items-center">
+    <section className="flex flex-col items-center justify-center text-center min-h-[calc(100vh-64px)] bg-[#f0f0ff] rounded-xl">
+      <div className="w-full max-w-md flex justify-between items-center">
         <input
           type="text"
           placeholder={isDoctor ? "Search by Patient name" : "Search by Doctor name, clinic or date"}
           value={searchQuery}
           onChange={handleSearch}
-          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+          className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
         />
       </div>
       {!isDoctor && (
@@ -80,38 +80,67 @@ function PatientAppointmentsPage() {
           Book Appointment
         </Button>
       )}
-      <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
+      <div className="w-full mx-auto rounded-2xl p-6">
         <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
           <thead>
-            <tr className="bg-gray-100 text-center">
-              {!isDoctor ? <th className="px-4 py-3 border border-gray-200">Doctor</th> :
-                <th className="px-4 py-3 border border-gray-200">Patient</th>}
-              <th className="px-4 py-3 border border-gray-200">Appointment Date</th>
-              <th className="px-4 py-3 border border-gray-200">Appointment Time</th>
-              <th className="px-4 py-3 border border-gray-200">Clinic</th>
-              <th className="px-4 py-3 border border-gray-200">Status</th>
-              <th className="px-4 py-3 border border-gray-200">Reason</th>
+            <tr className="bg-[#e0e0ff] text-center">
+              {!isDoctor ? <th className="px-4 py-3">Doctor</th> :
+                <th className="px-4 py-3">Patient</th>}
+              <th className="px-4 py-3">Appointment Date</th>
+              <th className="px-4 py-3">Appointment Time</th>
+              <th className="px-4 py-3">Clinic</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Reason</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr>
-                <td colSpan="5" className="px-4 py-6 border border-gray-200 text-center text-gray-600 text-lg">
-                  Loading...
-                </td>
-              </tr>
+              <>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <tr key={index} className={`${index % 2 === 0 ? 'bg-[#f0f0ff]' : 'bg-white'}`}>
+                    <td className="px-4 py-3 text-left rounded-l-lg">
+                      <div className="flex justify-center">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-full bg-gray-300 animate-pulse"></div>
+                          <div className="flex-1">
+                            <div className="h-5 w-32 bg-gray-300 rounded-md animate-pulse mb-1"></div>
+                            <div className="h-4 w-24 bg-gray-200 rounded-md animate-pulse"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <div className="h-5 w-24 bg-gray-300 rounded-md animate-pulse mx-auto"></div>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <div className="h-5 w-24 bg-gray-300 rounded-md animate-pulse mx-auto"></div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-4 justify-center">
+                        <div className="w-12 h-12 rounded-full bg-gray-300 animate-pulse"></div>
+                        <div className="h-5 w-32 bg-gray-300 rounded-md animate-pulse"></div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <div className="h-5 w-24 bg-gray-300 rounded-md animate-pulse mx-auto"></div>
+                    </td>
+                    <td className="px-4 py-3 text-center rounded-r-lg">
+                      <div className="h-5 w-24 bg-gray-300 rounded-md animate-pulse mx-auto"></div>
+                    </td>
+                  </tr>
+                ))}
+              </>
             ) : (
               <>
                 {appointments.length ? (
                   appointments.map((appt, index) => (
                     <tr
                       key={index}
-                      className={`odd:bg-white even:bg-gray-50 ${isDoctor ? 'cursor-pointer hover:bg-gray-100' : ''}`}
+                      className={`${index % 2 === 0 ? 'bg-[#f0f0ff]' : 'bg-white'} ${isDoctor ? 'cursor-pointer hover:bg-gray-100' : ''}`}
                       onClick={isDoctor ? () => handleOpenModal(appt) : undefined}
                     >
-
                       {!isDoctor ? (
-                        <td className="px-4 py-3 border border-gray-200">
+                        <td className="px-4 py-3 text-left rounded-l-lg">
                           <div className="flex justify-center">
                             <div className="flex items-center gap-4">
                               <img
@@ -121,16 +150,15 @@ function PatientAppointmentsPage() {
                               />
                               <div className="flex-1">
                                 <p className="text-lg font-semibold">
-                                  {appt.firstName} {appt.middleName ? appt.middleName : ""} {appt.lastName ? appt.lastName : ""}
+                                  {appt.firstName} {appt.middleName || ""} {appt.lastName || ""}
                                 </p>
                                 <p className="text-sm text-gray-600">{appt.speciality}</p>
-                                <p className="text-sm text-gray-600">{appt.experience} years of experience</p>
-                                <p className="text-sm text-gray-600">{appt.qualifications}</p>
                               </div>
                             </div>
                           </div>
-                        </td>) :
-                        (<td className="px-4 py-3 border border-gray-200">
+                        </td>
+                      ) : (
+                        <td className="px-4 py-3 text-left rounded-l-lg">
                           <div className="flex justify-center">
                             <div className="flex items-center gap-4">
                               <img
@@ -140,16 +168,16 @@ function PatientAppointmentsPage() {
                               />
                               <div className="flex-1">
                                 <p className="text-lg font-semibold">
-                                  {appt.patientDetails.firstName} {appt.patientDetails.middleName ? appt.patientDetails.middleName : ""} {appt.patientDetails.lastName ? appt.patientDetails.lastName : ""}
+                                  {appt.patientDetails.firstName} {appt.patientDetails.middleName || ""} {appt.patientDetails.lastName || ""}
                                 </p>
                               </div>
                             </div>
                           </div>
-                        </td>)
-                      }
-                      <td className="px-4 py-3 border border-gray-200 text-center">{appt.appointmentDate}</td>
-                      <td className="px-4 py-3 border border-gray-200 text-center">{appt.appointmentTime}</td>
-                      <td className="px-4 py-3 border border-gray-200">
+                        </td>
+                      )}
+                      <td className="px-4 py-3 text-center">{appt.appointmentDate}</td>
+                      <td className="px-4 py-3 text-center">{appt.appointmentTime}</td>
+                      <td className="px-4 py-3">
                         <div className="flex items-center gap-4 justify-center">
                           <img
                             src={appt.clinicPicture}
@@ -160,7 +188,7 @@ function PatientAppointmentsPage() {
                         </div>
                       </td>
                       <td
-                        className={`px-4 py-3 border border-gray-200 font-semibold text-center ${appt.appointmentStatus === "Scheduled"
+                        className={`px-4 py-3 font-semibold text-center ${appt.appointmentStatus === "Scheduled"
                           ? "text-blue-600"
                           : appt.appointmentStatus === "Completed"
                             ? "text-green-600"
@@ -170,17 +198,18 @@ function PatientAppointmentsPage() {
                         {appt.appointmentStatus}
                       </td>
                       <td
-                        className={`px-4 py-3 border border-gray-200 text-center capitalize ${appt.isEmergency && appt.appointmentStatus === "Scheduled" && isDoctor ? "bg-red-500 text-white animate-pulse font-bold" : ""
+                        className={`px-4 py-3 text-center capitalize rounded-r-lg ${appt.isEmergency && appt.appointmentStatus === "Scheduled" && isDoctor ? "bg-red-500 text-white animate-pulse font-bold" : ""
                           }`}
                       >
                         {appt.reasonForVisit || "N/A"}<br />
                         {appt.isEmergency && " (Emergency)"}
                       </td>
                     </tr>
+
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="px-4 py-3 border border-gray-200 text-center">
+                    <td colSpan="6" className="px-4 py-3 text-center rounded-lg">
                       No appointments found
                     </td>
                   </tr>
@@ -206,7 +235,8 @@ function PatientAppointmentsPage() {
                     ? "bg-gray-300 text-gray-800 font-bold"
                     : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-4 py-2 rounded-lg`}
                 onClick={() => page !== "..." && setCurrentPage(page)}
-                disabled={page === "..."}>
+                disabled={page === "..."}
+              >
                 {page}
               </button>
             ))}

@@ -53,44 +53,59 @@ const BookFromClinic = () => {
   };
 
   return (
-    <section className="p-4">
+    <section className="p-4 flex flex-col items-center bg-[#f0f0ff] rounded-xl">
       <Toaster />
       <h2 className="text-xl font-bold text-center mb-4">Select a Clinic</h2>
-      <div className="mb-4 w-full max-w-md mx-auto">
+      <div className="mb-4 w-full max-w-md">
         <input
           type="text"
           placeholder="Search clinics..."
           value={searchQuery}
           onChange={handleSearch}
-          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
         />
       </div>
-      {loading && <p className="text-center">Loading clinics...</p>}
-      {error && <p className="text-red-500 text-center">{error}</p>}
-      {!loading && clinics.length === 0 && !error && (
-        <p className="text-center text-gray-500">No clinics available.</p>
-      )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
-        {clinics.map((clinic) => (
-          <div
-            key={clinic?.clinicId}
-            className="bg-white shadow-lg rounded-lg overflow-hidden p-5 border hover:shadow-xl hover:bg-blue-200 transition cursor-pointer"
-            onClick={() => handleClinicSelect(clinic?.clinicId)}
-          >
-            <div className="flex items-center gap-4">
-              <img
-                className="w-16 h-16 rounded-full object-cover"
-                src={clinic?.clinicPicture}
-                alt={clinic?.name}
-              />
-              <div>
-                <h2 className="text-lg font-semibold">{clinic.name}</h2>sfgred
-                <p className="text-gray-600">{clinic.city}, {clinic.country}</p>
-              </div>
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6 mt-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={index}
+              className="w-[300px] h-[345px] border-2 border-[#d1c4e9] rounded-xl bg-gradient-to-b from-[#f3f4ff] to-[#e8f8f5] shadow-md p-6 text-center animate-pulse"
+            >
+              <div className="w-full h-[200px] bg-gray-300 rounded-lg"></div>
+              <div className="w-3/4 h-5 bg-gray-400 rounded-md mt-4 mx-auto"></div>
+              <div className="w-1/2 h-4 bg-gray-300 rounded-md mt-2 mx-auto"></div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : clinics.length === 0 && !error ? (
+        <p className="text-center text-gray-500">No clinics available.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6 mt-4">
+          {clinics.map((clinic) => (
+            <div
+              key={clinic?.clinicId}
+              className="w-[300px] h-[345px] border-2 border-[#d1c4e9] rounded-xl bg-gradient-to-b from-[#f3f4ff] to-[#e8f8f5] shadow-md p-6 text-center relative hover:shadow-lg transition cursor-pointer"
+              onClick={() => handleClinicSelect(clinic?.clinicId)}
+            >
+              <div className="w-full h-[200px] bg-gray-200 rounded-lg overflow-hidden">
+                <img
+                  className="w-full h-full object-cover"
+                  src={clinic?.clinicPicture || "https://atlas-content-cdn.pixelsquid.com/stock-images/hospital-3yL2QM6-600.jpg"}
+                  alt={clinic?.name}
+                />
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 mt-3">{clinic.name}</h2>
+              <p className="text-sm text-gray-600 mt-1">
+                {clinic.city ? `${clinic.city}, ` : ""}
+                {clinic.district ? `${clinic.district}, ` : ""}
+                {clinic.state ? `${clinic.state}, ` : ""}
+                {clinic.country}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
       <div className="mt-6 flex justify-center items-center space-x-2">
         <button
           className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
@@ -102,7 +117,10 @@ const BookFromClinic = () => {
         {generatePagination().map((page, index) => (
           <button
             key={index}
-            className={`${page === "..." ? "text-gray-400 cursor-default" : page === currentPage ? "bg-gray-300 text-gray-800 font-bold" : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-4 py-2 rounded-lg`}
+            className={`px-4 py-2 rounded-lg ${page === "..." ? "text-gray-400 cursor-default" :
+              page === currentPage ? "bg-gray-300 text-gray-800 font-bold" :
+                "bg-gray-100 hover:bg-gray-200 text-gray-700"
+              }`}
             onClick={() => page !== "..." && setCurrentPage(page)}
             disabled={page === "..."}
           >

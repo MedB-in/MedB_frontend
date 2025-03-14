@@ -84,11 +84,13 @@ const UserProfilePage = () => {
     };
 
     return (
-        <div className="flex justify-center items-center p-4 bg-white">
-            <div className="w-full max-w-3xl px-6 py-8 bg-white shadow-lg rounded-3xl">
-                <h1 className="text-2xl font-semibold text-gray-900 text-center mb-8 capitalize">{formData.firstName} {formData.middleName ? ` ${formData.middleName}` : ''} {formData.lastName ? ` ${formData.lastName}` : ''}'s Profile</h1>
-                <form className="space-y-4" onSubmit={handleSubmit}>
-                    <div className="flex flex-col items-center mb-4 relative">
+        <div className="flex justify-center items-center min-h-[calc(100vh-64px)] p-6">
+            <div className="relative bg-white shadow-lg border-2 border-[#3a6ff7] rounded-3xl w-full max-w-5xl p-8">
+                <h1 className="text-2xl font-semibold text-gray-900 text-center mb-6 capitalize">
+                    {formData.firstName} {formData.middleName ? ` ${formData.middleName}` : ''} {formData.lastName ? ` ${formData.lastName}` : ''}'s Profile
+                </h1>
+                <form onSubmit={handleSubmit}>
+                    <div className="flex flex-col items-center relative mb-6">
                         {imageUploading && (
                             <div className="absolute flex items-center justify-center w-40 h-40 rounded-full bg-black bg-opacity-50">
                                 <div className="border-4 border-white border-t-transparent rounded-full w-10 h-10 animate-spin"></div>
@@ -97,23 +99,16 @@ const UserProfilePage = () => {
                         <img
                             src={profilePicturePreview || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
                             alt="Profile"
-                            className="w-40 h-40 rounded-full object-cover"
+                            className="w-40 h-40 rounded-full object-cover border-2 border-gray-300"
                         />
-                        <p
-                            className="text-gray-600 text-sm mt-2 cursor-pointer"
-                            onClick={() => fileInputRef.current.click()}
-                        >
+                        <p className="text-blue-600 text-sm mt-2 cursor-pointer" onClick={() => fileInputRef.current.click()}>
                             Update Profile Picture
                         </p>
-                        <input
-                            type="file"
-                            name="profilePicture"
-                            onChange={handleProfilePictureChange}
-                            ref={fileInputRef}
-                            className="hidden"
-                        />
+                        <input type="file" name="profilePicture" onChange={handleProfilePictureChange} ref={fileInputRef} className="hidden" />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+
+                    {/* Responsive Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <InputField type="text" name="firstName" placeholder="First Name" className="capitalize" value={formData.firstName} onChange={handleChange} required />
                         <InputField type="text" name="middleName" placeholder="Middle Name" className="capitalize" value={formData.middleName} onChange={handleChange} />
                         <InputField type="text" name="lastName" placeholder="Last Name" className="capitalize" value={formData.lastName} onChange={handleChange} />
@@ -127,9 +122,13 @@ const UserProfilePage = () => {
                         <InputField type="text" name="country" placeholder="Country" className="capitalize" value={formData.country} onChange={handleChange} />
                         <InputField type="text" name="postalCode" placeholder="Postal Code" value={formData.postalCode} onChange={handleChange} />
                     </div>
-                    <Button type="submit" className="w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800" disabled={loading}>
-                        {loading ? "Updating..." : "Update Profile"}
-                    </Button>
+
+                    {/* Submit Button */}
+                    <div className="flex justify-center items-center mt-6">
+                        <button type="submit" className="bg-[#6a5acd] text-white px-6 py-3 rounded-full text-sm font-semibold hover:bg-[#5c4bcf] transition duration-300" disabled={loading}>
+                            {loading ? "Updating..." : "Update Profile"}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
