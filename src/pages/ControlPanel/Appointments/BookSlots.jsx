@@ -133,28 +133,28 @@ const BookSlots = () => {
     };
 
     return (
-        <div className="p-6 relative bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-md">
+        <div className="p-16 relative min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl md:mr-4">
             {doctor ? (
                 <div className="flex items-center gap-4 mb-6">
                     <img
                         src={doctor.profilePicture || DefaultImage}
                         alt={doctor.firstName}
-                        className="w-24 h-24 rounded-full object-cover border"
+                        className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
                     />
                     <div>
-                        <h2 className="text-xl font-semibold">
+                        <h2 className="text-xl font-semibold text-purple-900 bg-purple-100 px-4 py-2 rounded-lg inline-block">
                             Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}
                         </h2>
-                        <p>{doctor.speciality}</p>
-                        <p className="text-gray-500">{doctor.qualifications}</p>
-                        <p className="text-gray-500">Experience: {doctor.experience} years</p>
+                        <p className="text-gray-700 text-lg font-medium">{doctor.speciality}</p>
+                        <p className="text-gray-500 text-sm">{doctor.qualifications}</p>
+                        <p className="text-gray-500 text-sm">Experience: {doctor.experience} years</p>
                     </div>
                 </div>
             ) : (
-                <p className="text-gray-400">Loading doctor details...</p>
+                <p className="text-center text-gray-500 text-lg">Loading doctor details...</p>
             )}
             <div className="mb-4 relative">
-                <label className="block text-gray-500 font-semibold mb-2">Select Date:</label>
+                <label className="block text-gray-700 font-semibold mb-2">Select Date:</label>
                 <DatePicker
                     selected={selectedDate}
                     onChange={(date) => setSelectedDate(date)}
@@ -178,7 +178,7 @@ const BookSlots = () => {
                             🚨 Emergency Appointment
                         </span>
                     </div>
-                    <label className="block text-gray-500 font-semibold mb-2">Enter Patient Details:</label>
+                    <label className="block text-gray-700 font-semibold mb-2">Enter Patient Details:</label>
                     <div className="flex gap-2">
                         <input
                             type="text"
@@ -187,14 +187,14 @@ const BookSlots = () => {
                             placeholder="Enter First Name, Last Name, email or contact number"
                             className="w-full px-4 py-2 border rounded-md bg-white text-gray-800"
                         />
-                        <button onClick={handleSearchPatient} className="bg-blue-500 text-white px-4 py-2 rounded-md">Search</button>
+                        <button onClick={handleSearchPatient} className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">Search</button>
                     </div>
                     {patients.length > 0 ? (
                         <div className="mt-2 bg-white text-black">
                             {patients.map((patient, index) => (
                                 <div
                                     key={index}
-                                    className={`flex items-center p-3 cursor-pointer transition duration-300 m-2 hover:bg-gray-100 rounded-md ${selectedPatient?.userId === patient.userId ? "bg-blue-100 border-l-4 border-blue-500" : "border-l-4 bg-gray-100"}`}
+                                    className={`flex items-center p-3 cursor-pointer transition duration-300 m-2 hover:bg-gray-100 rounded-md ${selectedPatient?.userId === patient.userId ? "bg-purple-100 border-l-4 border-purple-500" : "border-l-4 bg-gray-100"}`}
                                     onClick={() => setSelectedPatient(patient)}
                                 >
                                     <div className="flex-1">
@@ -207,25 +207,29 @@ const BookSlots = () => {
                     ) : (
                         searchQuery && patients.length === 0 && !loading && <p className="mt-2 text-gray-500">No patients found.</p>
                     )}
-                    <button onClick={() => setShowModal(true)} className="bg-blue-500 text-white px-4 py-2 rounded-md mt-10 w-40">
+                    <button onClick={() => setShowModal(true)} className="bg-purple-600 text-white px-4 py-2 rounded-md mt-10 w-40 hover:bg-purple-700">
                         Add new Patient
                     </button>
                 </div>
             )}
-
             <div>
-                <h3 className="text-lg font-semibold text-white mb-2">Available Slots</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Available Slots</h3>
                 {loading ? (
-                    <p className="text-gray-400">Loading slots...</p>
+                    <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {[...Array(8)].map((_, index) => (
+                            <li key={index} className="p-4 rounded-lg bg-gray-200 animate-pulse"></li>
+                        ))}
+                    </ul>
                 ) : slots.length > 0 ? (
                     <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {slots.map((slot, index) => (
                             <li
                                 key={index}
                                 className={`p-4 rounded-lg text-center cursor-pointer transition-all duration-300 ${slot.booked
-                                    ? "text-gray-500 bg-gray-700 cursor-not-allowed"
-                                    : "text-white bg-blue-500 hover:bg-blue-600"
-                                    }`}
+                                    ? "text-gray-500 bg-gray-200 cursor-not-allowed"
+                                    : selectedSlot === slot.time
+                                        ? "bg-green-600 text-white"
+                                        : "text-white bg-purple-600 hover:bg-purple-700"}`}
                                 onClick={() => !slot.booked && setSelectedSlot(slot.time)}
                             >
                                 <span className="text-lg font-medium">
@@ -239,18 +243,18 @@ const BookSlots = () => {
                         ))}
                     </ul>
                 ) : (
-                    <p className="text-gray-400 mt-32">No slots available for this date.</p>
+                    <p className="text-gray-500 mt-32">No slots available for this date.</p>
                 )}
             </div>
             {selectedSlot && (
                 <div className="mt-6">
-                    <h3 className="text-lg font-semibold text-white mb-2">Reason for visit:</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Reason for visit:</h3>
                     <input
                         type="text"
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
                         placeholder="Reason for visit..."
-                        className="w-full px-4 py-2 border rounded-md bg-green-100 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2 border rounded-md bg-purple-100 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
                 </div>
             )}

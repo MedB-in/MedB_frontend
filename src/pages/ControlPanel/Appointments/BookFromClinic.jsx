@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { getActiveClinics } from "../../../services/clinics";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const BookFromClinic = () => {
   const [clinics, setClinics] = useState([]);
@@ -53,9 +53,12 @@ const BookFromClinic = () => {
   };
 
   return (
-    <section className="p-4 flex flex-col items-center bg-[#f0f0ff] rounded-xl">
-      <Toaster />
-      <h2 className="text-xl font-bold text-center mb-4">Select a Clinic</h2>
+    <section className="p-4 flex flex-col items-center min-h-[calc(100vh-80px)] mb-[18px] bg-[#f0f0ff] rounded-3xl md:mr-4">
+      <div className="flex flex-col w-full p-5">
+        <div className="text-center text-white bg-[#7a5fd3] py-3 rounded-lg text-lg font-semibold">
+          Clinics List
+        </div>
+      </div>
       <div className="mb-4 w-full max-w-md">
         <input
           type="text"
@@ -85,7 +88,7 @@ const BookFromClinic = () => {
           {clinics.map((clinic) => (
             <div
               key={clinic?.clinicId}
-              className="w-[300px] h-[345px] border-2 border-[#d1c4e9] rounded-xl bg-gradient-to-b from-[#f3f4ff] to-[#e8f8f5] shadow-md p-6 text-center relative hover:shadow-lg transition cursor-pointer"
+              className="w-[300px] h-[345px] border-2 border-[#d1c4e9] rounded-xl bg-gradient-to-b from-[#f3f4ff] to-[#e8f8f5] p-6 text-center relative shadow-lg transition-transform transform hover:scale-105 cursor-pointer"
               onClick={() => handleClinicSelect(clinic?.clinicId)}
             >
               <div className="w-full h-[200px] bg-gray-200 rounded-lg overflow-hidden">
@@ -95,7 +98,7 @@ const BookFromClinic = () => {
                   alt={clinic?.name}
                 />
               </div>
-              <h2 className="text-lg font-semibold text-gray-800 mt-3">{clinic.name}</h2>
+              <h2 className="text-lg font-semibold text-gray-800 mt-3 capitalize">{clinic.name}</h2>
               <p className="text-sm text-gray-600 mt-1">
                 {clinic.city ? `${clinic.city}, ` : ""}
                 {clinic.district ? `${clinic.district}, ` : ""}
