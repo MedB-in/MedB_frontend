@@ -10,7 +10,6 @@ const ControlPanel = () => {
         <div className="flex h-screen overflow-hidden">
             <Toaster />
             <SideBar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-
             <div
                 className={`flex-1 transition-all duration-300 ease-in-out overflow-auto pt-[64px] 
                 ${isSidebarOpen ? "ml-[300px]" : "ml-[100px]"}`}

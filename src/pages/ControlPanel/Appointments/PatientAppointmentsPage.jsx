@@ -65,7 +65,7 @@ function PatientAppointmentsPage() {
   }, []);
 
   return (
-    <section className="flex flex-col items-center justify-center text-center min-h-[calc(100vh-64px)] bg-[#f0f0ff] rounded-xl">
+    <section className="flex flex-col items-center justify-center text-center min-h-[calc(100vh-80px)] md:mr-4 bg-[#f0f0ff] rounded-3xl">
       <div className="w-full max-w-md flex justify-between items-center">
         <input
           type="text"
