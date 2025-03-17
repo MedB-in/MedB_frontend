@@ -133,9 +133,10 @@ const BookSlots = () => {
     };
 
     return (
-        <div className="p-16 relative min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl md:mr-4">
+        <section className="p-4 flex flex-col min-h-[calc(100vh-80px)] mb-[18px] bg-[#f0f0ff] rounded-3xl md:mr-4">
+            <p className="text-sm self-start pl-5 underline font-bold text-[#7a5fd3] cursor-pointer" onClick={() => navigate(-1)}> {'<'} Back</p>
             {doctor ? (
-                <div className="flex items-center gap-4 mb-6">
+                <div className="flex items-center gap-4 mb-6 p-5">
                     <img
                         src={doctor.profilePicture || DefaultImage}
                         alt={doctor.firstName}
@@ -153,7 +154,7 @@ const BookSlots = () => {
             ) : (
                 <p className="text-center text-gray-500 text-lg">Loading doctor details...</p>
             )}
-            <div className="mb-4 relative">
+            <div className="mb-4 relative px-5">
                 <label className="block text-gray-700 font-semibold mb-2">Select Date:</label>
                 <DatePicker
                     selected={selectedDate}
@@ -164,7 +165,7 @@ const BookSlots = () => {
                 />
             </div>
             {isClinicBooking && (
-                <div className="mb-4">
+                <div className="mb-4 px-5">
                     <div className="mb-4 flex items-center space-x-3 p-3 border rounded-md bg-gray-100">
                         <input
                             type="checkbox"
@@ -212,7 +213,7 @@ const BookSlots = () => {
                     </button>
                 </div>
             )}
-            <div>
+            <div className="px-5">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">Available Slots</h3>
                 {loading ? (
                     <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -247,7 +248,7 @@ const BookSlots = () => {
                 )}
             </div>
             {selectedSlot && (
-                <div className="mt-6">
+                <div className="mt-6 px-5">
                     <h3 className="text-lg font-semibold text-gray-800 mb-2">Reason for visit:</h3>
                     <input
                         type="text"
@@ -258,6 +259,7 @@ const BookSlots = () => {
                     />
                 </div>
             )}
+            <div className="px-5">
             <button
                 onClick={handleBooking}
                 disabled={!selectedSlot || !reason.trim() || booking}
@@ -268,8 +270,9 @@ const BookSlots = () => {
             >
                 {booking ? "Booking..." : selectedSlot ? `Book Slot (${selectedSlot})` : "Select a Slot to Book"}
             </button>
+            </div>
             {showModal && <AddPatientModal onClose={() => setShowModal(false)} onPatientAdded={handleAddPatient} clinicId={clinicId} />}
-        </div>
+        </section>
     );
 };
 
