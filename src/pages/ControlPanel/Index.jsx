@@ -11,8 +11,8 @@ const ControlPanel = () => {
             <Toaster />
             <SideBar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
             <div
-                className={`flex-1 transition-all duration-300 ease-in-out overflow-auto pt-[64px] 
-                ${isSidebarOpen ? "ml-[300px]" : "ml-[100px]"}`}
+                className={`flex-1 transition-all duration-300 ease-in-out overflow-auto pt-[64px] p-4 
+                ${isSidebarOpen ? "md:ml-[300px]" : "md:ml-[100px]"}`}
             >
                 <Outlet />
             </div>

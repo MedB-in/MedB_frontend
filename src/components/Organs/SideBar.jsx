@@ -8,7 +8,7 @@ import Logo from '../../assets/images/medb-logo-2.svg';
 import Logo1 from '../../assets/images/medb-logo-png.png';
 import AlertIcon from '../../assets/images/alert-icon.png';
 import LogoutIcon from '../../assets/images/logout-icon.png';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
 
 const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const dispatch = useDispatch();
@@ -73,90 +73,175 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     };
 
     return (
-        <div className="flex">
-            <div className={`fixed z-50 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
-                <div className="flex justify-center items-center w-full py-6 cursor-pointer"
-                    onClick={() => navigate("/home")}>
-                    <img
-                        src={isSidebarOpen ? Logo1 : Logo}
-                        alt="Logo"
-                        className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? "w-32 opacity-100" : "w-16 opacity-80"}`}
-                    />
-                </div>
-                <div className="py-6 w-full">
-                    {modules.length > 0 ? (
-                        modules.map((module, moduleIndex) => (
-                            <div key={moduleIndex} className="mb-2">
-                                <div
-                                    onClick={() => toggleModule(moduleIndex)}
-                                    className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
-                                >
-                                    <img src={module.moduleIcon} alt={module.moduleName} className="w-6 h-6 transition-all duration-300 ease-in-out" />
-                                    <span
-                                        className={`transition-all duration-300 ease-in-out delay-150 transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "opacity-0 -translate-x-2 absolute"
-                                            }`}
+        <>
+            <div className="md:flex hidden">
+                <div className={`fixed z-50 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
+                    <div className="flex justify-center items-center w-full py-6 cursor-pointer"
+                        onClick={() => navigate("/home")}>
+                        <img
+                            src={isSidebarOpen ? Logo1 : Logo}
+                            alt="Logo"
+                            className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? "w-32 opacity-100" : "w-16 opacity-80"}`}
+                        />
+                    </div>
+                    <div className="py-6 w-full">
+                        {modules.length > 0 ? (
+                            modules.map((module, moduleIndex) => (
+                                <div key={moduleIndex} className="mb-2">
+                                    <div
+                                        onClick={() => toggleModule(moduleIndex)}
+                                        className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
                                     >
-                                        {module.moduleName}
-                                    </span>
-                                </div>
+                                        <img src={module.moduleIcon} alt={module.moduleName} className="w-6 h-6 transition-all duration-300 ease-in-out" />
+                                        <span
+                                            className={`transition-all duration-300 ease-in-out delay-150 transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "opacity-0 -translate-x-2 absolute"
+                                                }`}
+                                        >
+                                            {module.moduleName}
+                                        </span>
+                                    </div>
 
-                                <div
-                                    className={`overflow-hidden transition-all duration-300 ease-in-out ${openModuleIndex === moduleIndex ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
-                                >
-                                    <div className="pl-4">
-                                        {module.menus.map((menu, menuIndex) => (
-                                            <SidebarItem
-                                                key={menuIndex}
-                                                icon={menu.menuIcon}
-                                                label={menu.menuName}
-                                                actionUrl={menu.controllerName}
-                                                isSidebarOpen={isSidebarOpen}
-                                                isSelected={
-                                                    selectedMenu === menu.controllerName || location.pathname.split("/")[1] === menu.controllerName
-                                                }
-                                                onClick={() => handleMenuClick(menu)}
-                                                className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out 1
+                                    <div
+                                        className={`overflow-hidden transition-all duration-300 ease-in-out ${openModuleIndex === moduleIndex ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
+                                    >
+                                        <div className="pl-4">
+                                            {module.menus.map((menu, menuIndex) => (
+                                                <SidebarItem
+                                                    key={menuIndex}
+                                                    icon={menu.menuIcon}
+                                                    label={menu.menuName}
+                                                    actionUrl={menu.controllerName}
+                                                    isSidebarOpen={isSidebarOpen}
+                                                    isSelected={
+                                                        selectedMenu === menu.controllerName || location.pathname.split("/")[1] === menu.controllerName
+                                                    }
+                                                    onClick={() => handleMenuClick(menu)}
+                                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out 1
                                                 ${selectedMenu === menu.controllerName ? "bg-gray-200 font-semibold text-black shadow-md" : "hover:bg-gray-200 text-gray-600"}
                                             `}
-                                            />
-                                        ))}
+                                                />
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div className="text-gray-500 text-sm text-center transition-all duration-300 ease-in-out">
+                                No modules available
                             </div>
-                        ))
-                    ) : (
-                        <div className="text-gray-500 text-sm text-center transition-all duration-300 ease-in-out">
-                            No modules available
-                        </div>
-                    )}
+                        )}
+                    </div>
+                </div>
+                <header
+                    className={`header fixed top-0 z-50 h-16 px-4 py-3 flex justify-between items-center bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm transition-all ${isSidebarOpen ? "ml-[290px] w-[calc(100%-290px)]" : "ml-[100px] w-[calc(100%-100px)]"}`}
+                >
+                    <button
+                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                        className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition-all duration-300 ease-in-out transform shadow-md"
+                    >
+                        {isSidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+                    </button>
+                    <div className="profile flex items-center">
+                        <img src={AlertIcon} alt="Alert" className="w-10 h-10 rounded-full object-cover mr-2 shadow-sm drop-shadow-md" />
+                        <img
+                            src={
+                                user?.profilePicture ||
+                                "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"
+                            }
+                            alt="Profile"
+                            onClick={() => navigate("/user-profile")}
+                            className="w-10 h-10 mr-5 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
+                        />
+                        <button className="logout flex items-center bg-transparent border-none" onClick={doLogout}>
+                            <img src={LogoutIcon} alt="Logout" className="" />
+                            <span className="ml-2 drop-shadow-md">Logout</span>
+                        </button>
+                    </div>
+                </header>
+            </div>
+
+            {/* Sidebar for sm screens */}
+            <div className="md:hidden">
+                <header className="fixed top-0 left-0 right-3 z-50 h-16 px-4 py-3 flex justify-between items-center bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm">
+                    <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition-all duration-300">
+                        <Menu size={24} />
+                    </button>
+                    <div className="profile flex items-center">
+                        <img src={AlertIcon} alt="Alert" className="w-10 h-10 rounded-full object-cover mr-2 shadow-sm drop-shadow-md" />
+                        <img
+                            src={user?.profilePicture || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
+                            alt="Profile"
+                            onClick={() => navigate("/user-profile")}
+                            className="w-10 h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
+                        />
+                        <button className="ml-3 flex items-center bg-transparent border-none" onClick={doLogout}>
+                            <span className="ml-2 drop-shadow-md">Logout</span>
+                        </button>
+                    </div>
+                </header>
+                <div className={`fixed inset-0 bg-black bg-opacity-50 z-40 ${isSidebarOpen ? "block" : "hidden"}`} onClick={() => setIsSidebarOpen(false)}></div>
+                <div className={`fixed top-0 left-0 h-full w-64 bg-[#EAF4F4] shadow-lg z-50 transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300`}>
+                    <div className="flex justify-center items-center w-full py-6">
+                        <img
+                            src={Logo}
+                            alt="Logo"
+                            className="w-24 transition-all duration-300 ease-in-out cursor-pointer"
+                            onClick={() => navigate("/home")}
+                        />
+                    </div>
+                    <button onClick={() => setIsSidebarOpen(false)} className="p-3 absolute top-2 right-1 rounded-full">
+                        <ChevronLeft size={24} />
+                    </button>
+                    <div className="py-6 w-full">
+                        {modules.length > 0 ? (
+                            modules.map((module, moduleIndex) => (
+                                <div key={moduleIndex} className="mb-2">
+                                    <div
+                                        onClick={() => toggleModule(moduleIndex)}
+                                        className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
+                                    >
+                                        <img src={module.moduleIcon} alt={module.moduleName} className="w-6 h-6 transition-all duration-300 ease-in-out" />
+                                        <span
+                                            className={`transition-all duration-300 ease-in-out delay-150 transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "opacity-0 -translate-x-2 absolute"
+                                                }`}
+                                        >
+                                            {module.moduleName}
+                                        </span>
+                                    </div>
+
+                                    <div
+                                        className={`overflow-hidden transition-all duration-300 ease-in-out ${openModuleIndex === moduleIndex ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
+                                    >
+                                        <div className="pl-4">
+                                            {module.menus.map((menu, menuIndex) => (
+                                                <SidebarItem
+                                                    key={menuIndex}
+                                                    icon={menu.menuIcon}
+                                                    label={menu.menuName}
+                                                    actionUrl={menu.controllerName}
+                                                    isSidebarOpen={isSidebarOpen}
+                                                    isSelected={
+                                                        selectedMenu === menu.controllerName || location.pathname.split("/")[1] === menu.controllerName
+                                                    }
+                                                    onClick={() => { handleMenuClick(menu); setIsSidebarOpen(false) }}
+                                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out 1
+                                                ${selectedMenu === menu.controllerName ? "bg-gray-200 font-semibold text-black shadow-md" : "hover:bg-gray-200 text-gray-600"}
+                                            `}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-gray-500 text-sm text-center transition-all duration-300 ease-in-out">
+                                No modules available
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-            <header
-                className={`header fixed top-0 right-0 z-50 h-16 px-4 py-3 flex justify-between items-center bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm transition-all ${isSidebarOpen ? "ml-[290px] w-[calc(100%-290px)]" : "ml-[100px] w-[calc(100%-100px)]"}`}
-            >
-                <button
-                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition-all duration-300 ease-in-out transform shadow-md"
-                >
-                    {isSidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-                </button>
-                <div className="profile flex items-center">
-                    <img src={AlertIcon} alt="Alert" className="w-10 h-10 rounded-full object-cover mr-2 shadow-sm drop-shadow-md" />
-                    <img
-                        src={
-                            user?.profilePicture ||
-                            "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"
-                        }
-                        alt="Profile"
-                        className="w-10 h-10 mr-5 rounded-full object-cover border-2 border-gray-300 shadow-sm"
-                    />
-                    <button className="logout flex items-center bg-transparent border-none" onClick={doLogout}>
-                        <img src={LogoutIcon} alt="Logout" className="" />
-                        <span className="ml-2 drop-shadow-md">Logout</span>
-                    </button>
-                </div>
-            </header>
-        </div>
+        </>
     );
 };
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import DefaultImage from "../../../assets/images/default-doctor.png";
 import days from "../../../lib/slotDays";
 import { getDoctorClinic, bookFromClinic, getPatients } from "../../../services/clinics";
@@ -14,6 +14,7 @@ const BookSlots = () => {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
     const clinic = userDetails?.clinicId;
     const isClinicBooking = !!clinic;
+    const navigate = useNavigate();
 
     const { doctorId, clinicId } = useParams();
     const [doctor, setDoctor] = useState(null);
@@ -133,7 +134,7 @@ const BookSlots = () => {
     };
 
     return (
-        <section className="p-4 flex flex-col min-h-[calc(100vh-80px)] mb-[18px] bg-[#f0f0ff] rounded-3xl md:mr-4">
+        <section className="p-4 flex flex-col min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl md:mr-4">
             <p className="text-sm self-start pl-5 underline font-bold text-[#7a5fd3] cursor-pointer" onClick={() => navigate(-1)}> {'<'} Back</p>
             {doctor ? (
                 <div className="flex items-center gap-4 mb-6 p-5">
@@ -143,7 +144,7 @@ const BookSlots = () => {
                         className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
                     />
                     <div>
-                        <h2 className="text-xl font-semibold text-purple-900 bg-purple-100 px-4 py-2 rounded-lg inline-block">
+                        <h2 className="text-xl font-semibold text-purple-900 bg-purple-100 px-4 py-2 rounded-lg inline-block capitalize">
                             Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}
                         </h2>
                         <p className="text-gray-700 text-lg font-medium">{doctor.speciality}</p>
@@ -216,7 +217,7 @@ const BookSlots = () => {
             <div className="px-5">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">Available Slots</h3>
                 {loading ? (
-                    <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <ul className="grid grid-cols-2 h-32 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {[...Array(8)].map((_, index) => (
                             <li key={index} className="p-4 rounded-lg bg-gray-200 animate-pulse"></li>
                         ))}
@@ -260,16 +261,16 @@ const BookSlots = () => {
                 </div>
             )}
             <div className="px-5">
-            <button
-                onClick={handleBooking}
-                disabled={!selectedSlot || !reason.trim() || booking}
-                className={`mt-6 w-full py-3 rounded-md text-white text-lg font-semibold transition-all duration-300 ${selectedSlot && reason.trim()
-                    ? "bg-green-500 hover:bg-green-600"
-                    : "bg-gray-500 cursor-not-allowed"
-                    }`}
-            >
-                {booking ? "Booking..." : selectedSlot ? `Book Slot (${selectedSlot})` : "Select a Slot to Book"}
-            </button>
+                <button
+                    onClick={handleBooking}
+                    disabled={!selectedSlot || !reason.trim() || booking}
+                    className={`mt-6 w-full py-3 rounded-md text-white text-lg font-semibold transition-all duration-300 ${selectedSlot && reason.trim()
+                        ? "bg-green-500 hover:bg-green-600"
+                        : "bg-gray-500 cursor-not-allowed"
+                        }`}
+                >
+                    {booking ? "Booking..." : selectedSlot ? `Book Slot (${selectedSlot})` : "Select a Slot to Book"}
+                </button>
             </div>
             {showModal && <AddPatientModal onClose={() => setShowModal(false)} onPatientAdded={handleAddPatient} clinicId={clinicId} />}
         </section>

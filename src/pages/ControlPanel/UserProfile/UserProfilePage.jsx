@@ -84,7 +84,7 @@ const UserProfilePage = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-[calc(100vh-64px)] p-6">
+        <div className="flex justify-center items-center min-h-[calc(100vh-80px)] p-6">
             <div className="relative bg-white shadow-lg border-2 border-[#3a6ff7] rounded-3xl w-full max-w-5xl p-8">
                 <h1 className="text-2xl font-semibold text-gray-900 text-center mb-6 capitalize">
                     {formData.firstName} {formData.middleName ? ` ${formData.middleName}` : ''} {formData.lastName ? ` ${formData.lastName}` : ''}'s Profile
@@ -106,8 +106,6 @@ const UserProfilePage = () => {
                         </p>
                         <input type="file" name="profilePicture" onChange={handleProfilePictureChange} ref={fileInputRef} className="hidden" />
                     </div>
-
-                    {/* Responsive Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <InputField type="text" name="firstName" placeholder="First Name" className="capitalize" value={formData.firstName} onChange={handleChange} required />
                         <InputField type="text" name="middleName" placeholder="Middle Name" className="capitalize" value={formData.middleName} onChange={handleChange} />
@@ -122,12 +120,10 @@ const UserProfilePage = () => {
                         <InputField type="text" name="country" placeholder="Country" className="capitalize" value={formData.country} onChange={handleChange} />
                         <InputField type="text" name="postalCode" placeholder="Postal Code" value={formData.postalCode} onChange={handleChange} />
                     </div>
-
-                    {/* Submit Button */}
                     <div className="flex justify-center items-center mt-6">
-                        <button type="submit" className="bg-[#6a5acd] text-white px-6 py-3 rounded-full text-sm font-semibold hover:bg-[#5c4bcf] transition duration-300" disabled={loading}>
+                        <Button variant="primary" disabled={loading}>
                             {loading ? "Updating..." : "Update Profile"}
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </div>
