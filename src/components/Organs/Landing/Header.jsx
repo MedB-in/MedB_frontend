@@ -12,12 +12,12 @@ const Header = () => {
     const navItems = [
         { name: "Home", path: "/home" },
         { name: "For Healthcare", path: "/healthcare" },
-        { name: "Find Doctor/Clinic", path: "/find" },
+        { name: "Find Doctor/Clinic", path: "/find-doctor" },
         { name: "Contact Us", path: "/contact" },
     ];
 
     return (
-        <header className="flex items-center justify-between p-4 lg:px-12 bg-white shadow-md fixed w-full top-0 z-50">
+        <header className="flex items-center justify-between p-4 lg:px-12 bg-transparent backdrop-blur fixed w-full top-0 z-50">
             <div className="h-[42px] w-[140px] cursor-pointer" onClick={() => navigate("/home")}>
                 <img src={MedBLogo} alt="Logo" className="h-full w-full object-contain" />
             </div>
