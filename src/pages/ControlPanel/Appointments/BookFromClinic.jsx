@@ -53,7 +53,7 @@ const BookFromClinic = () => {
   };
 
   return (
-    <section className="p-4 flex flex-col items-center min-h-[calc(100vh-80px)] mb-[18px] bg-[#f0f0ff] rounded-3xl md:mr-4">
+    <section className="p-4 flex flex-col items-center min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl md:mr-4">
       <p className="text-sm self-start pl-5 underline font-bold text-[#7a5fd3] cursor-pointer" onClick={() => navigate(-1)}> {'<'} Back</p>
       <div className="flex flex-col w-full p-5">
         <div className="text-center text-white bg-[#7a5fd3] py-3 rounded-lg text-lg font-semibold">
@@ -85,7 +85,7 @@ const BookFromClinic = () => {
       ) : clinics.length === 0 && !error ? (
         <p className="text-center text-gray-500">No clinics available.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6 my-4">
           {clinics.map((clinic) => (
             <div
               key={clinic?.clinicId}
@@ -110,35 +110,34 @@ const BookFromClinic = () => {
           ))}
         </div>
       )}
-      <div className="mt-6 flex justify-center items-center space-x-2">
-        <button
-          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          Prev
-        </button>
-        {generatePagination().map((page, index) => (
+      {totalPages !== 1 && (
+        <div className="mt-8 flex justify-center items-center space-x-3">
           <button
-            key={index}
-            className={`px-4 py-2 rounded-lg ${page === "..." ? "text-gray-400 cursor-default" :
-              page === currentPage ? "bg-gray-300 text-gray-800 font-bold" :
-                "bg-gray-100 hover:bg-gray-200 text-gray-700"
-              }`}
-            onClick={() => page !== "..." && setCurrentPage(page)}
-            disabled={page === "..."}
+            className="px-5 py-3 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
           >
-            {page}
+            Prev
           </button>
-        ))}
-        <button
-          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
+          {generatePagination().map((page, index) => (
+            <button
+              key={index}
+              className={`${page === "..." ? "text-gray-400 cursor-default" : page === currentPage ? "bg-purple-500 text-white font-bold" : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-5 py-3 rounded-lg`}
+              onClick={() => page !== "..." && setCurrentPage(page)}
+              disabled={page === "..."}
+            >
+              {page}
+            </button>
+          ))}
+          <button
+            className="px-5 py-3 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </section>
   );
 };

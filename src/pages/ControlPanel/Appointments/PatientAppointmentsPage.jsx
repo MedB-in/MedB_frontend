@@ -65,7 +65,7 @@ function PatientAppointmentsPage() {
   }, []);
 
   return (
-    <section className="flex flex-col items-center justify-center text-center min-h-[calc(100vh-80px)] md:mr-4 bg-[#f0f0ff] rounded-3xl">
+    <section className="p-4 flex flex-col items-center justify-center text-center min-h-[calc(100vh-80px)] md:mr-4 bg-[#f0f0ff] rounded-3xl">
       <div className="w-full max-w-md flex justify-between items-center">
         <input
           type="text"
@@ -76,12 +76,12 @@ function PatientAppointmentsPage() {
         />
       </div>
       {!isDoctor && (
-        <Button variant="primary" onClick={() => navigate("/appointments/book-appointment")}>
+        <Button variant="primary" className="w-[200px] sm:w-[300px]" onClick={() => navigate("/appointments/book-appointment")}>
           Book Appointment
         </Button>
       )}
       <div className="w-full mx-auto rounded-2xl p-6">
-        <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
+        <table className="hidden sm:table w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-[#e0e0ff] text-center">
               {!isDoctor ? <th className="px-4 py-3">Doctor</th> :
@@ -218,7 +218,67 @@ function PatientAppointmentsPage() {
             )}
           </tbody>
         </table>
-        {totalPages > 1 && (
+
+        {/*Cards for Small Screens */}
+        <div className="sm:hidden space-y-4">
+          {appointments.length ? (
+            appointments.map((appt, index) => (
+              <div
+                key={index}
+                className="bg-white shadow-lg rounded-2xl p-5 border border-gray-200 flex flex-col gap-4"
+              >
+                <div className="flex items-center gap-4 border-b pb-3">
+                  <img
+                    src={isDoctor ? appt.patientDetails.profilePicture : appt.profilePicture}
+                    alt={isDoctor ? appt.patientDetails.firstName : appt.firstName}
+                    className="w-14 h-14 rounded-full object-cover border border-gray-300"
+                  />
+                  <div>
+                    <p className="text-lg font-semibold">
+                      {isDoctor
+                        ? `${appt.patientDetails.firstName} ${appt.patientDetails.lastName || ''}`
+                        : `${appt.firstName} ${appt.lastName || ''}`}
+                    </p>
+                    <p className="text-sm text-gray-600">{appt.speciality || "Patient"}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-x-1 gap-y-3 text-sm text-left">
+                  <p className="font-medium text-gray-800">📅 Date:</p>
+                  <p className="text-gray-700">{appt.appointmentDate}</p>
+
+                  <p className="font-medium text-gray-800">⏰ Time:</p>
+                  <p className="text-gray-700">{appt.appointmentTime}</p>
+
+                  <p className="font-medium text-gray-800">🏥 Clinic:</p>
+                  <p className="text-gray-700">{appt.clinicName}</p>
+
+                  <p className="font-medium text-gray-800">📌 Status:</p>
+                  <p
+                    className={`font-semibold ${appt.appointmentStatus === "Scheduled"
+                      ? "text-blue-600"
+                      : appt.appointmentStatus === "Completed"
+                        ? "text-green-600"
+                        : "text-red-500"
+                      }`}
+                  >
+                    {appt.appointmentStatus}
+                  </p>
+                  <p className="font-medium text-gray-800">💬 Reason:</p>
+                  <p className="text-gray-700">
+                    {appt.reasonForVisit || "N/A"}
+                    {appt.isEmergency && appt.appointmentStatus !== "Scheduled" && (
+                      <span className="font-semibold text-red-500 animate-pulse"> (Emergency)</span>
+                    )}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500">No appointments found</p>
+          )}
+        </div>
+
+        {totalPages !== 1 && (
           <div className="mt-6 flex justify-center items-center space-x-2">
             <button
               className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
