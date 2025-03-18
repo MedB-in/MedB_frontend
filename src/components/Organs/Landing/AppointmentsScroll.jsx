@@ -68,12 +68,15 @@ const AppointmentsScroll = () => {
         window.addEventListener("touchend", stopDragging);
 
         return () => {
-            scrollRef.current.removeEventListener("scroll", handleScroll);
+            if (scrollRef.current) {
+                scrollRef.current.removeEventListener("scroll", handleScroll);
+            }
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", stopDragging);
             window.removeEventListener("touchmove", handleTouchMove);
             window.removeEventListener("touchend", stopDragging);
         };
+
     }, []);
 
     const handleStart = (clientX) => {

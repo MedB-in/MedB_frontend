@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./components/Atoms/ProtectedRoutes";
 import useAuth from "./hooks/useAuth";
-import LandingPage from "./pages/LandingPage/LandingPage";
+import * as PublicPages from "./pages/PublicPages/index";
 import ErrorPage from "./pages/404Page/ErrorPage";
 import * as Clinics from "./pages/ControlPanel/Clinics";
 import * as Appointments from "./pages/ControlPanel/Appointments";
@@ -34,7 +34,15 @@ const App = () => {
     <Routes>
       {/* Public routes */}
       {/* Landing page */}
-      <Route path="/home" element={<LandingPage />} />
+      <Route path="/home" element={<PublicPages.LandingPage />} />
+      <Route path="/find-doctor" element={<PublicPages.DoctorSearchPage />} />
+
+      {/* <Route path="/" element={<Layout />}>
+        <Route path="home" element={<PublicPages.LandingPage />} />
+        <Route path="find-doctor" element={<PublicPages.DoctorSearchPage />} />
+      </Route> */}
+
+      
       {/* Login page */}
       <Route path="/login" element={<LoginPage />} />
       {/* Register page */}
