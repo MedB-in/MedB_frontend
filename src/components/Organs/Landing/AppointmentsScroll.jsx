@@ -133,8 +133,6 @@ const AppointmentsScroll = () => {
                     </section>
                 ))}
             </motion.div>
-
-            {/* Slider Dots for Mobile View */}
             <div className="md:hidden flex justify-center mt-4 gap-2">
                 {appointments.map((_, index) => (
                     <button

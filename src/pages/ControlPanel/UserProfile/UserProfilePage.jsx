@@ -4,9 +4,11 @@ import { updateProfile, uploadProfilePicture } from "../../../services/user";
 import InputField from "../../../components/Atoms/Login/InputField";
 import Button from "../../../components/Atoms/Login/Button";
 import { setUserDetails } from "../../../redux/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const UserProfilePage = () => {
     const storedUser = JSON.parse(localStorage.getItem("userDetails")) || {};
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         firstName: storedUser.firstName || "",
@@ -75,6 +77,7 @@ const UserProfilePage = () => {
             setUserDetails({ ...formData, profilePicture: lastSavedProfilePicture });
             localStorage.setItem("userDetails", JSON.stringify({ ...formData, profilePicture: lastSavedProfilePicture }));
             window.dispatchEvent(new Event("userDetailsUpdated"))
+            navigate("/");
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong.");
             setProfilePicturePreview(lastSavedProfilePicture);

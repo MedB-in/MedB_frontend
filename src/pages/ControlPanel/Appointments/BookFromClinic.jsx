@@ -70,11 +70,11 @@ const BookFromClinic = () => {
         />
       </div>
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6 mt-4">
+        <div className="flex flex-wrap justify-center gap-6 my-4">
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="w-[300px] h-[345px] border-2 border-[#d1c4e9] rounded-xl bg-gradient-to-b from-[#f3f4ff] to-[#e8f8f5] shadow-md p-6 text-center animate-pulse"
+              className="w-[300px] h-[345px] border-2 border-[#d1c4e9] rounded-xl bg-gradient-to-b from-[#f3f4ff] to-[#e8f8f5] p-6 text-center relative shadow-lg animate-pulse"
             >
               <div className="w-full h-[200px] bg-gray-300 rounded-lg"></div>
               <div className="w-3/4 h-5 bg-gray-400 rounded-md mt-4 mx-auto"></div>
@@ -85,7 +85,7 @@ const BookFromClinic = () => {
       ) : clinics.length === 0 && !error ? (
         <p className="text-center text-gray-500">No clinics available.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6 my-4">
+        <div className="flex flex-wrap justify-center gap-6 my-4">
           {clinics.map((clinic) => (
             <div
               key={clinic?.clinicId}

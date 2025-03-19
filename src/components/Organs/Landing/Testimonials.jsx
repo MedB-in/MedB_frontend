@@ -94,8 +94,6 @@ const Testimonials = () => {
                     User Testimonials
                 </motion.h2>
             </div>
-
-
             <motion.div
                 ref={scrollRef}
                 className="mt-8 flex gap-6 overflow-x-auto snap-x snap-mandatory 
