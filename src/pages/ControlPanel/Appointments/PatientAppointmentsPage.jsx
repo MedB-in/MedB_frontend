@@ -81,7 +81,7 @@ function PatientAppointmentsPage() {
         </Button>
       )}
       <div className="w-full mx-auto rounded-2xl p-6">
-        <table className="hidden sm:table w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
+        <table className="hidden lg:table w-full border-collapse border border-gray-200 rounded-lg overflow-scroll">
           <thead>
             <tr className="bg-[#e0e0ff] text-center">
               {!isDoctor ? <th className="px-4 py-3">Doctor</th> :
@@ -220,7 +220,7 @@ function PatientAppointmentsPage() {
         </table>
 
         {/*Cards for Small Screens */}
-        <div className="sm:hidden space-y-4">
+        <div className="lg:hidden space-y-4">
           {appointments.length ? (
             appointments.map((appt, index) => (
               <div

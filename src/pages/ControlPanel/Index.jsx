@@ -12,7 +12,7 @@ const ControlPanel = () => {
             <SideBar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
             <div
                 className={`flex-1 transition-all duration-300 ease-in-out overflow-auto pt-[64px] p-4 
-                ${isSidebarOpen ? "md:ml-[300px]" : "md:ml-[100px]"}`}
+                ${isSidebarOpen ? "lg:ml-[300px]" : "lg:ml-[100px]"}`}
             >
                 <Outlet />
             </div>

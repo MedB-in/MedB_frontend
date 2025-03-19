@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -8,6 +8,14 @@ const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
+
+    useEffect(() => {
+        if (menuOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+    }, [menuOpen]);
 
     const navItems = [
         { name: "Home", path: "/home" },
@@ -32,19 +40,15 @@ const Header = () => {
                 <ul className="flex items-center gap-6">
                     {navItems.map((item) => (
                         <li key={item.name}>
-                            <motion.a
-                                href={item.path}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    navigate(item.path);
-                                }}
-                                className={`text-white font-medium px-3 py-2 relative ${location.pathname === item.path ? "underline underline-offset-8" : ""
+                            <motion.p
+                                onClick={() => navigate(item.path)}
+                                className={`text-white font-medium px-3 py-2 relative cursor-pointer ${location.pathname === item.path ? "underline underline-offset-8" : ""
                                     }`}
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                             >
                                 {item.name}
-                            </motion.a>
+                            </motion.p>
                         </li>
                     ))}
                 </ul>
@@ -53,14 +57,14 @@ const Header = () => {
                 {menuOpen && (
                     <>
                         <motion.div
-                            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+                            className="fixed inset-0 w-full h-screen bg-black bg-opacity-50 z-40"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setMenuOpen(false)}
                         />
                         <motion.nav
-                            className="fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 flex flex-col p-6"
+                            className="fixed top-0 right-0 min-h-screen w-64 bg-white shadow-lg z-[60] flex flex-col p-6"
                             initial={{ x: "100%" }}
                             animate={{ x: 0 }}
                             exit={{ x: "100%" }}
@@ -73,30 +77,37 @@ const Header = () => {
                             >
                                 <X className="h-6 w-6 text-[#6F64E7]" />
                             </button>
-
                             <ul className="mt-6 space-y-4">
                                 {navItems.map((item) => (
                                     <li key={item.name} onClick={() => setMenuOpen(false)}>
-                                        <motion.a
-                                            href={item.path}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                navigate(item.path);
-                                            }}
-                                            className={`block text-[#6F64E7] font-medium py-2 px-4 rounded-md text-lg ${location.pathname === item.path ? "bg-gray-100" : ""
+                                        <motion.p
+                                            onClick={() => navigate(item.path)}
+                                            className={`block text-[#6F64E7] font-medium py-2 px-4 rounded-md text-lg cursor-pointer ${location.pathname === item.path ? "bg-gray-100" : ""
                                                 }`}
                                             whileTap={{ scale: 0.95 }}
                                         >
                                             {item.name}
-                                        </motion.a>
+                                        </motion.p>
                                     </li>
                                 ))}
                             </ul>
+                            <motion.button
+                                className="mt-6 border border-[#6F64E7] text-[#573bff] px-6 py-3 rounded-md cursor-pointer transition hover:bg-[#6F64E7] hover:text-white w-full"
+                                onClick={() => {
+                                    navigate("/login");
+                                    setMenuOpen(false);
+                                }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                Sign In
+                            </motion.button>
                         </motion.nav>
                     </>
                 )}
             </AnimatePresence>
-            <motion.button className="border border-[#6F64E7] text-[#573bff] px-6 py-3 rounded-md cursor-pointer ml-10 transition hover:bg-[#6F64E7] hover:text-white hidden lg:block"
+            <motion.button
+                className="border border-[#6F64E7] text-[#573bff] px-6 py-3 rounded-md cursor-pointer ml-10 transition hover:bg-[#6F64E7] hover:text-white hidden lg:block"
                 onClick={() => navigate("/login")}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

@@ -142,7 +142,6 @@ const TestimonialSection = () => {
                     </article>
                 ))}
             </motion.div>
-
         </motion.section>
     );
 };

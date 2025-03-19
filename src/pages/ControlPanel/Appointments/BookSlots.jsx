@@ -113,6 +113,7 @@ const BookSlots = () => {
             setSelectedSlot(null);
             setReason("");
             setSelectedPatient(null);
+            navigate('/appointments');
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to book slot.");
         } finally {

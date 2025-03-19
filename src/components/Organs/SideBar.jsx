@@ -74,7 +74,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
     return (
         <>
-            <div className="md:flex hidden">
+            <div className="lg:flex hidden">
                 <div className={`fixed z-50 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
                     <div className="flex justify-center items-center w-full py-6 cursor-pointer"
                         onClick={() => navigate("/home")}>
@@ -94,9 +94,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                     >
                                         <img src={module.moduleIcon} alt={module.moduleName} className="w-6 h-6 transition-all duration-300 ease-in-out" />
                                         <span
-                                            className={`transition-all duration-300 ease-in-out delay-150 transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "opacity-0 -translate-x-2 absolute"
-                                                }`}
-                                        >
+                                            className={`transition-all duration-300 ease-in-out transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "hidden"}`}>
                                             {module.moduleName}
                                         </span>
                                     </div>
@@ -161,7 +159,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
             </div>
 
             {/* Sidebar for sm screens */}
-            <div className="md:hidden">
+            <div className="lg:hidden">
                 <header className="fixed top-0 left-0 right-3 z-50 h-16 px-4 py-3 flex justify-between items-center bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm">
                     <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition-all duration-300">
                         <Menu size={24} />
