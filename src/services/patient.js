@@ -14,7 +14,7 @@ export const updatePatient = (data) =>
     axios.put("/api/patient/", data, getHeaders());
 
 //API to fetch medical history of a patient.
-export const getPatientMedHistory = (patientId, doctorId, appointmentId) =>
+export const getPatientMedHistory = (patientId, doctorId) =>
     axios.get(`/api/patient/medicalHistory/${patientId}?doctorId=${doctorId}`, getHeaders());
 
 //API to add medical history of a patient.

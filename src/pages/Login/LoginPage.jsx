@@ -39,6 +39,7 @@ const LoginPage = () => {
     try {
       const { data } = await doLogin({ email: email, password });
       setToken(data.accessToken);
+      document.cookie = `refreshToken=${data.refreshToken}; path=/; secure; SameSite=None`;
       dispatch(setUserDetails(data.userDetails));
       dispatch(setUserAccess(data.menuData));
       dispatch(setAuthenticated(true));

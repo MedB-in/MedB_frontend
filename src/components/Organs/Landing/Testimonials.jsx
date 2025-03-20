@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import aliceImage from "../../../assets/images/alice-testimonials.png";
 import samuelImage from "../../../assets/images/samuel-testimonials.png";

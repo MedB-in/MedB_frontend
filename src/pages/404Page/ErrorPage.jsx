@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React from 'react';
 import { Heart as Heartbeat, Stethoscope, ArrowLeft, Pill, Syringe, ChevronFirst as FirstAid, Activity, Clipboard, Thermometer, Battery as Bacteria } from 'lucide-react';
 

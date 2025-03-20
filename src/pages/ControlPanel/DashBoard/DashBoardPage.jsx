@@ -1,5 +1,3 @@
-import React from 'react';
-
 const DashBoardPage = () => {
   return (
     <section className="flex flex-col items-center min-h-[calc(100vh-80px)] justify-center text-center">

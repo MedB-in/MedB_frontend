@@ -20,7 +20,7 @@ const Header = () => {
     const navItems = [
         { name: "Home", path: "/home" },
         { name: "For Healthcare", path: "/healthcare" },
-        { name: "Find Doctor/Clinic", path: "/find-doctor" },
+        { name: "Find Doctor/Clinic", path: "/find-clinic" },
         { name: "Contact Us", path: "/contact" },
     ];
 

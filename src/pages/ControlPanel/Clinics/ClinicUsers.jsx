@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getClinicUsers } from "../../../services/clinics";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -39,7 +39,7 @@ function ClinicUsers() {
         <div className="p-4">
             <button
                 className="bg-gray-200 text-gray-700 px-4 py-2 my-5 rounded-md hover:bg-gray-300"
-                onClick={() => navigate(-1)}
+                onClick={() => window.history.back()}
             >
                 ← Back
             </button>

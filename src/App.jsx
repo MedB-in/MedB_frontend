@@ -5,7 +5,6 @@ import { Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./components/Atoms/ProtectedRoutes";
 import useAuth from "./hooks/useAuth";
 import * as PublicPages from "./pages/PublicPages/index";
-import ErrorPage from "./pages/404Page/ErrorPage";
 import * as Clinics from "./pages/ControlPanel/Clinics";
 import * as Appointments from "./pages/ControlPanel/Appointments";
 import * as Patients from "./pages/ControlPanel/Patients";
@@ -20,6 +19,7 @@ import RegisterPage from "./pages/Register/RegisterPage";
 import VerificationPage from "./pages/Verification/VerificationPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import UserProfilePage from "./pages/ControlPanel/UserProfile/UserProfilePage";
+import ErrorPage from "./pages/404Page/ErrorPage";
 
 
 const App = () => {
@@ -33,21 +33,18 @@ const App = () => {
   return (
     <Routes>
       {/* Public routes */}
-      {/* Landing page */}
       <Route path="/home" element={<PublicPages.LandingPage />} />
+      <Route path="/find-clinic" element={<PublicPages.ClinicSearchPage />} />
       <Route path="/find-doctor" element={<PublicPages.DoctorSearchPage />} />
+      <Route path="/doctor-profile" element={<PublicPages.DoctorProfilePage />} />
 
-      {/* <Route path="/" element={<Layout />}>
-        <Route path="home" element={<PublicPages.LandingPage />} />
-        <Route path="find-doctor" element={<PublicPages.DoctorSearchPage />} />
-      </Route> */}
-
-      
       {/* Login page */}
       <Route path="/login" element={<LoginPage />} />
       {/* Register page */}
       <Route path="/register" element={<RegisterPage />} />
+      {/* Verification page */}
       <Route path="/verify-email" element={<VerificationPage />} />
+      {/* Forgot password page */}
       <Route path="/forgot-password" element={<ForgotPassword />} />
 
       {/* Protected routes */}

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { getAppointments } from "../../../services/patient";
 import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";

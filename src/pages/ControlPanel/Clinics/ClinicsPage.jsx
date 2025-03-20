@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getAllClinics, addClinic, editClinic } from "../../../services/clinics";
 import toast, { Toaster } from "react-hot-toast";
 import ClinicModal from "../../../components/Organs/Clinics/ClinicModal";
