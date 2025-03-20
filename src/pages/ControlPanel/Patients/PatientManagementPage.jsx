@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PatientModal from "../../../components/Organs/Patient/PatientModal";
 import toast from "react-hot-toast";
 import { getPatients } from "../../../services/clinics";

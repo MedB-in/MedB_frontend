@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import HealthRecordsIcon from "../../../assets/images/h-records-feature.png";
 import TokenBookingIcon from "../../../assets/images/token-feature.png";
 import NearbyDoctorsIcon from "../../../assets/images/location-feature.png";

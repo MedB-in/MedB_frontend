@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import days from "../../../lib/slotDays";
 import { addSlots, getDoctorClinic, getSlots, editSlot } from "../../../services/clinics";
 
@@ -8,7 +8,6 @@ const ClinicSlot = () => {
   const { clinicId, doctorId } = useParams();
   const [overlappingSlots, setOverlappingSlots] = useState([]);
   const [overlappingSlotsRes, setOverlappingSlotsRes] = useState([]);
-  const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState("");
   const [timingFrom, setTimingFrom] = useState("");
   const [timingTo, setTimingTo] = useState("");
@@ -238,7 +237,7 @@ const ClinicSlot = () => {
     <div className="p-5">
       <button
         className="bg-gray-200 text-gray-700 px-4 py-2 my-5 rounded-md hover:bg-gray-300"
-        onClick={() => navigate(-1)}
+        onClick={() => window.history.back()}
       >
         ← Back
       </button>
@@ -303,73 +302,73 @@ const ClinicSlot = () => {
             <option value="">Select from the List</option>
             {days.map(day => <option key={day.id} value={day.id}>{day.label}</option>)}
           </select>
-          
-          <div className="flex gap-4 mt-4">
-      {/* From Time Selection */}
-      <div className="flex flex-col w-full">
-        <label className="text-gray-700 font-medium mb-1">From</label>
-        <div className="flex gap-2">
-          <div className="relative w-full">
-            <input
-              type="text"
-              className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
-              value={timingFrom}
-              onChange={(e) => handleTimeChange(e, setTimingFrom)}
-              placeholder="HH:MM"
-              onFocus={() => setIsFromFocused(true)}
-              onBlur={() => setIsFromFocused(false)}
-            />
-            {isFromFocused && (
-              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
-                {timingFrom.length === 0 && "Type here"}
-              </div>
-            )}
-          </div>
-          <select
-            className="p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
-            value={fromPeriod}
-            onChange={(e) => setFromPeriod(e.target.value)}
-          >
-            <option value="AM">AM</option>
-            <option value="PM">PM</option>
-          </select>
-        </div>
-        <p className="text-xs text-gray-500 mt-1">Enter time in 12-hour format (e.g., 09:30)</p>
-      </div>
 
-      {/* To Time Selection */}
-      <div className="flex flex-col w-full">
-        <label className="text-gray-700 font-medium mb-1">To</label>
-        <div className="flex gap-2">
-          <div className="relative w-full">
-            <input
-              type="text"
-              className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
-              value={timingTo}
-              onChange={(e) => handleTimeChange(e, setTimingTo)}
-              placeholder="HH:MM"
-              onFocus={() => setIsToFocused(true)}
-              onBlur={() => setIsToFocused(false)}
-            />
-            {isToFocused && (
-              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
-                {timingTo.length === 0 && "Type here"}
+          <div className="flex gap-4 mt-4">
+            {/* From Time Selection */}
+            <div className="flex flex-col w-full">
+              <label className="text-gray-700 font-medium mb-1">From</label>
+              <div className="flex gap-2">
+                <div className="relative w-full">
+                  <input
+                    type="text"
+                    className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={timingFrom}
+                    onChange={(e) => handleTimeChange(e, setTimingFrom)}
+                    placeholder="HH:MM"
+                    onFocus={() => setIsFromFocused(true)}
+                    onBlur={() => setIsFromFocused(false)}
+                  />
+                  {isFromFocused && (
+                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
+                      {timingFrom.length === 0 && "Type here"}
+                    </div>
+                  )}
+                </div>
+                <select
+                  className="p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={fromPeriod}
+                  onChange={(e) => setFromPeriod(e.target.value)}
+                >
+                  <option value="AM">AM</option>
+                  <option value="PM">PM</option>
+                </select>
               </div>
-            )}
+              <p className="text-xs text-gray-500 mt-1">Enter time in 12-hour format (e.g., 09:30)</p>
+            </div>
+
+            {/* To Time Selection */}
+            <div className="flex flex-col w-full">
+              <label className="text-gray-700 font-medium mb-1">To</label>
+              <div className="flex gap-2">
+                <div className="relative w-full">
+                  <input
+                    type="text"
+                    className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={timingTo}
+                    onChange={(e) => handleTimeChange(e, setTimingTo)}
+                    placeholder="HH:MM"
+                    onFocus={() => setIsToFocused(true)}
+                    onBlur={() => setIsToFocused(false)}
+                  />
+                  {isToFocused && (
+                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
+                      {timingTo.length === 0 && "Type here"}
+                    </div>
+                  )}
+                </div>
+                <select
+                  className="p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={toPeriod}
+                  onChange={(e) => setToPeriod(e.target.value)}
+                >
+                  <option value="AM">AM</option>
+                  <option value="PM">PM</option>
+                </select>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">Enter time in 12-hour format (e.g., 05:30)</p>
+            </div>
           </div>
-          <select
-            className="p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
-            value={toPeriod}
-            onChange={(e) => setToPeriod(e.target.value)}
-          >
-            <option value="AM">AM</option>
-            <option value="PM">PM</option>
-          </select>
-        </div>
-        <p className="text-xs text-gray-500 mt-1">Enter time in 12-hour format (e.g., 05:30)</p>
-      </div>
-    </div>
-          
+
           <input
             type="number"
             className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none mt-4"

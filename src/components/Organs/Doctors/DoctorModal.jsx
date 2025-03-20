@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { getClinicList } from "../../../services/clinics";
 import LocationSelector from "../../LocationSelector";

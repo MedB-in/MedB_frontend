@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import topLeft from "../../../assets/images/doctor-testimonials/top-left.svg";
 import bottomRight from "../../../assets/images/doctor-testimonials/bottom-right.svg";

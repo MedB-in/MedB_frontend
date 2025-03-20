@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Group1 from "../../../assets/images/Group-1-scroll.png";
 import Group2 from "../../../assets/images/Group-2-scroll.png";

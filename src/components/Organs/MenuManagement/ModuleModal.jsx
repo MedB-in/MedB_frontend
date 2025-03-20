@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { addModule, editModule } from "../../../services/controlPanel";
 import toast from "react-hot-toast";
 

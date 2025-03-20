@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { getClinicAppointments } from "../../../services/clinics";
 import { getActiveDoctorsList } from "../../../services/doctors";
 import Button from "../../../components/Atoms/Login/Button";

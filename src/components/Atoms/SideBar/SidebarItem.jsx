@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const SidebarItem = ({ icon, label, actionUrl, isSelected, onClick, isSidebarOpen }) => {
