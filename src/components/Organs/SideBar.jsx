@@ -111,7 +111,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                                     actionUrl={menu.controllerName}
                                                     isSidebarOpen={isSidebarOpen}
                                                     isSelected={
-                                                        selectedMenu === menu.controllerName || location.pathname.split("/")[1] === menu.controllerName
+                                                        selectedMenu === menu.controllerName || location.pathname.startsWith(`/${menu.controllerName.split('/')[0]}`)
                                                     }
                                                     onClick={() => handleMenuClick(menu)}
                                                     className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out 1
