@@ -14,7 +14,6 @@ import InputField from "../../components/Atoms/Login/InputField";
 import Button from "../../components/Atoms/Login/Button";
 import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
 import { motion } from "framer-motion";
-import Cookies from 'universal-cookie';
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -26,7 +25,6 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { state } = location;
-  const cookies = new Cookies();
 
   useEffect(() => {
     if (authenticated) {
@@ -41,12 +39,6 @@ const LoginPage = () => {
     try {
       const { data } = await doLogin({ email: email, password });
       setToken(data.accessToken);
-      cookies.set('refreshToken', data.refreshToken, {
-        path: '/',
-        secure: true,
-        sameSite: 'None',
-        maxAge: data.maxAge
-      });
       dispatch(setUserDetails(data.userDetails));
       dispatch(setUserAccess(data.menuData));
       dispatch(setAuthenticated(true));
