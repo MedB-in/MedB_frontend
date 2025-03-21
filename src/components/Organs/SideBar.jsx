@@ -75,7 +75,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     return (
         <>
             <div className="lg:flex hidden">
-                <div className={`fixed z-50 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
+                <div className={`fixed z-30 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
                     <div className="flex justify-center items-center w-full py-6 cursor-pointer"
                         onClick={() => navigate("/home")}>
                         <img

@@ -22,7 +22,7 @@ const InputField = ({
   };
 
   return (
-    <div className="flex overflow-hidden gap-1 px-3 py-3.5 bg-white rounded-lg border border-solid border-zinc-300 text-stone-900 text-opacity-50">
+    <div className="flex overflow-hidden gap-1 px-3 py-3.5 bg-white rounded-lg border border-solid border-zinc-300 text-black text-opacity-70">
       {icon && (
         <img
           loading="lazy"
