@@ -90,7 +90,7 @@ const ClinicDetail = ({ clinicData, loading }) => {
                 <img src={back} alt="Back" className="cursor-pointer" onClick={() => window.history.back()} />
             </motion.div>
 
-            <section className="flex flex-col md:flex-row items-center md:items-start p-6 md:p-12 bg-white gap-8">
+            <section className="flex flex-col md:flex-row items-center md:items-start md:p-12 md:mt-9 mt-10 bg-white gap-8">
                 <motion.figure
                     className="w-full md:w-1/3 max-w-[411px]"
                     initial={{ opacity: 0, x: -50 }}

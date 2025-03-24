@@ -190,7 +190,7 @@ const BookSlots = () => {
                             placeholder="Enter First Name, Last Name, email or contact number"
                             className="w-full px-4 py-2 border rounded-md bg-white text-gray-800"
                         />
-                        <button onClick={handleSearchPatient} className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">Search</button>
+                        <button onClick={handleSearchPatient} className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-purple-700">Search</button>
                     </div>
                     {patients.length > 0 ? (
                         <div className="mt-2 bg-white text-black">
@@ -210,7 +210,7 @@ const BookSlots = () => {
                     ) : (
                         searchQuery && patients.length === 0 && !loading && <p className="mt-2 text-gray-500">No patients found.</p>
                     )}
-                    <button onClick={() => setShowModal(true)} className="bg-purple-600 text-white px-4 py-2 rounded-md mt-10 w-40 hover:bg-purple-700">
+                    <button onClick={() => setShowModal(true)} className="bg-indigo-500 text-white px-4 py-2 rounded-md mt-10 w-40 hover:bg-purple-700">
                         Add new Patient
                     </button>
                 </div>
@@ -226,23 +226,21 @@ const BookSlots = () => {
                 ) : slots.length > 0 ? (
                     <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {slots.map((slot, index) => (
-                            <li
+                            <div
                                 key={index}
-                                className={`p-4 rounded-lg text-center cursor-pointer transition-all duration-300 ${slot.booked
-                                    ? "text-gray-500 bg-gray-200 cursor-not-allowed"
+                                className={`p-2.5 text-sm text-center rounded-md cursor-pointer transition-all duration-300 ${slot.booked
+                                    ? "text-gray-500 bg-gray-300 cursor-not-allowed"
                                     : selectedSlot === slot.time
-                                        ? "bg-green-600 text-white"
-                                        : "text-white bg-purple-600 hover:bg-purple-700"}`}
+                                        ? "bg-indigo-500 text-white border border-green-700"
+                                        : "bg-black bg-opacity-10 text-neutral-800 hover:bg-indigo-50"}`}
                                 onClick={() => !slot.booked && setSelectedSlot(slot.time)}
                             >
-                                <span className="text-lg font-medium">
-                                    {new Date(`1970-01-01T${slot.time}`).toLocaleTimeString("en-US", {
-                                        hour: "numeric",
-                                        minute: "numeric",
-                                        hour12: true,
-                                    })}
-                                </span>
-                            </li>
+                                {new Date(`1970-01-01T${slot.time}`).toLocaleTimeString("en-US", {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    hour12: true,
+                                })}
+                            </div>
                         ))}
                     </ul>
                 ) : (
@@ -261,11 +259,11 @@ const BookSlots = () => {
                     />
                 </div>
             )}
-            <div className="px-5">
+            <div className=" flex justify-center items-center">
                 <button
                     onClick={handleBooking}
                     disabled={!selectedSlot || !reason.trim() || booking}
-                    className={`mt-6 w-full py-3 rounded-md text-white text-lg font-semibold transition-all duration-300 ${selectedSlot && reason.trim()
+                    className={`mt-6 md:px-40 px-5 py-2 text-sm rounded-md text-white font-semibold transition-all duration-300 ${selectedSlot && reason.trim()
                         ? "bg-green-500 hover:bg-green-600"
                         : "bg-gray-500 cursor-not-allowed"
                         }`}
@@ -273,6 +271,7 @@ const BookSlots = () => {
                     {booking ? "Booking..." : selectedSlot ? `Book Slot (${selectedSlot})` : "Select a Slot to Book"}
                 </button>
             </div>
+
             {showModal && <AddPatientModal onClose={() => setShowModal(false)} onPatientAdded={handleAddPatient} clinicId={clinicId} />}
         </section>
     );

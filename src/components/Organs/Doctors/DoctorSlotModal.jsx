@@ -1,0 +1,85 @@
+import React, { useState } from 'react';
+import Calendar from '../../Atoms/Calender';
+import TimeSlots from '../../Atoms/TImeSlots';
+import { motion } from 'framer-motion';
+import { useSelector } from "react-redux";
+import { bookSlot } from '../../../services/doctors';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+
+function DoctorSlotModal({ onClose, doctorId, clinicId }) {
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedDay, setSelectedDay] = useState(null);
+    const [selectedSlot, setSelectedSlot] = useState(null);
+    const { authenticated } = useSelector(state => state.auth);
+    const [reason, setReason] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+
+    const handleDateSelect = ({ date, day }) => {
+        setSelectedDate(date);
+        setSelectedDay(day);
+    };
+
+    const handleSlotSelect = (slot) => {
+        setSelectedSlot(slot);
+    };
+
+    const handleSubmit = async () => {
+        if (!authenticated) {
+            const loginUrl = '/login';
+            window.open(loginUrl, '_blank');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            if (!selectedDate || !selectedDay || !selectedSlot) {
+                alert('Please select a date and time before submitting.');
+                return;
+            }
+            await bookSlot({ clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
+            toast.success("Slot booked successfully!");
+            navigate('/appointments');
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to book slot.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 p-5 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm">
+            <main className="relative mx-auto w-full max-w-[713px] md:max-w-[40%] lg:max-w-[40%] bg-white border rounded-2xl max-h-[90vh] overflow-y-auto shadow-lg">
+                <header className="box-border px-16 py-5 w-full text-xl font-medium text-black shadow-[0_4px_4px_rgba(0,0,0,0.05)] max-md:px-10 max-sm:px-5 max-sm:py-8 max-sm:h-auto">
+                    Select Date and Time
+                </header>
+                <section className="relative px-16 py-5 max-md:px-10 max-sm:px-5">
+                    <Calendar onDateSelect={handleDateSelect} />
+                </section>
+                <TimeSlots clinicId={clinicId} doctorId={doctorId} date={selectedDate} day={selectedDay} onSlotSelect={handleSlotSelect} />
+                <div className="flex justify-end px-16 pb-5 max-md:px-10 max-sm:px-5">
+                    <motion.button
+                        type="button"
+                        className="flex items-center justify-center px-8 py-2 text-base font-medium bg-indigo-500 rounded-3xl text-white hover:bg-indigo-600 transition-transform"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleSubmit}
+                    >
+                        {loading ? 'Booking...' : 'Submit'}
+                    </motion.button>
+
+                </div>
+                <button
+                    className="absolute top-5 right-5 text-gray-400 hover:text-gray-600"
+                    onClick={onClose}
+                >
+                    ✖
+                </button>
+            </main>
+        </div>
+    );
+}
+
+export default DoctorSlotModal;
