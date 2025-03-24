@@ -3,11 +3,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import MedBLogo from "../../../assets/images/medb-logo-png.png";
+import { useSelector } from "react-redux";
 
 const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
+    const { authenticated } = useSelector(state => state.auth);
 
     useEffect(() => {
         if (menuOpen) {
@@ -100,7 +102,7 @@ const Header = () => {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                Sign In
+                                {authenticated ? "Dashboard" : "Sign In"}
                             </motion.button>
                         </motion.nav>
                     </>
@@ -112,7 +114,7 @@ const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
-                Sign In
+                {authenticated ? "Dashboard" : "Sign In"}
             </motion.button>
         </header>
     );

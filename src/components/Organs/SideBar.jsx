@@ -47,9 +47,15 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     useEffect(() => {
         const storedOpenModuleIndex = localStorage.getItem('openModuleIndex');
         const storedSelectedMenu = localStorage.getItem('selectedMenu');
-        if (storedOpenModuleIndex !== null) setOpenModuleIndex(Number(storedOpenModuleIndex));
-        if (storedSelectedMenu) setSelectedMenu(storedSelectedMenu);
-    }, []);
+        if (storedOpenModuleIndex !== null) {
+            setOpenModuleIndex(Number(storedOpenModuleIndex));
+        } else if (modules.length > 0) {
+            setOpenModuleIndex(0);
+        }
+        if (storedSelectedMenu) {
+            setSelectedMenu(storedSelectedMenu);
+        }
+    }, [modules]);
 
     useEffect(() => {
         if (openModuleIndex !== null) localStorage.setItem('openModuleIndex', openModuleIndex);

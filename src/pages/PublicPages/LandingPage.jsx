@@ -8,10 +8,12 @@ import Testimonials from '../../components/Organs/Landing/Testimonials';
 import DoctorTestimonials from '../../components/Organs/Landing/DoctorTestimonials';
 import Footer from '../../components/Organs/Landing/Footer';
 import FloatingActionButtons from '../../components/Organs/Landing/FloatingButtons';
+import { Toaster } from 'react-hot-toast';
 
 const LandingPage = () => {
     return (
         <>
+            <Toaster />
             <Header />
             <FloatingActionButtons />
             <Hero />

@@ -6,6 +6,7 @@ import Footer from '../../components/Organs/Landing/Footer';
 import FloatingActionButtons from '../../components/Organs/Landing/FloatingButtons';
 import ClinicDetail from '../../components/Organs/Clinics/ClinicDetail';
 import DoctorList from '../../components/Organs/Doctors/DoctorList';
+import { Toaster } from 'react-hot-toast';
 
 const DoctorSearchPage = () => {
     const [clinicData, setClinicData] = useState(null);
@@ -20,8 +21,6 @@ const DoctorSearchPage = () => {
         const fetchClinicData = async () => {
             try {
                 const response = await getClinicDoctors(clinicId);
-                console.log(response.data);
-
                 setClinicData(response.data.clinic);
                 setDoctors(response.data.doctors || []);
             } catch (error) {
@@ -36,6 +35,7 @@ const DoctorSearchPage = () => {
 
     return (
         <>
+            <Toaster />
             <Header />
             <FloatingActionButtons />
             <ClinicDetail clinicData={clinicData} loading={loading} />

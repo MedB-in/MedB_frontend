@@ -12,7 +12,7 @@ const SidebarItem = ({ icon, label, actionUrl, isSelected, onClick, isSidebarOpe
         <div
             onClick={handleClick}
             className={`relative flex items-center gap-2.5 mb-2 text-neutral-800 text-opacity-70 cursor-pointer hover:text-[#257c7c] transition-all 
-                ${isSelected ? "font-bold bg-white rounded-l-[20px] w-[calc(100wh+16px)] pl-8 p-2" : "p-2"}`}
+                ${isSelected ? "font-bold bg-white rounded-l-[20px] w-[calc(100wh+16px)] pl-3 p-2" : "p-2"}`}
         >
             <img
                 loading="lazy"
