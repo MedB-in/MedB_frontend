@@ -60,8 +60,11 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                 <SkeletonLoader />
             ) : (
                 <>
-                    <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="md:mt-8 mt-10 p-16 w-full">
-                        <div className="flex flex-col md:flex-row gap-8">
+                    <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="md:mt-8 mt-10 md:p-16 w-full">
+                        <div className="flex flex-col md:flex-row md:gap-8">
+                            <motion.button onClick={handleBookAppointment} className="md:hidden w-full px-3 my-10 py-6 mt-9 text-base font-medium bg-indigo-500 rounded-lg text-white hover:bg-indigo-600 transition-transform" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                Book Appointment
+                            </motion.button>
                             <section className="md:w-[63%] w-full">
                                 <motion.div variants={fadeInUp} className="flex flex-col md:flex-row gap-8">
                                     <figure className="max-w-xs rounded-none">
@@ -84,7 +87,6 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                     </motion.div>
                                 </motion.div>
                             </section>
-
                             <section className="md:w-[37%] w-full">
                                 <motion.div variants={fadeInUp} className="mt-6 md:mt-0">
                                     <div className="w-full">
@@ -106,7 +108,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                                 <p className="mt-2.5 text-xl text-black">No timings available</p>
                                             )}
                                         </motion.div>
-                                        <motion.button onClick={handleBookAppointment} className="w-full px-3 py-6 mt-9 text-base font-medium bg-indigo-500 rounded-lg text-white hover:bg-indigo-600 transition-transform" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                        <motion.button onClick={handleBookAppointment} className="hidden md:block w-full px-3 py-6 mt-9 text-base font-medium bg-indigo-500 rounded-lg text-white hover:bg-indigo-600 transition-transform" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                             Book Appointment
                                         </motion.button>
                                     </div>
@@ -119,7 +121,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
             <motion.section
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0, transition: { duration: 0.8 } }}
-                className="flex flex-col self-center px-7 py-6 w-full max-w-[1255px] border border-black border-opacity-50 rounded-3xl mx-auto"
+                className="flex flex-col self-center px-7 py-6 w-full max-w-[1255px] mt-10 border border-black border-opacity-50 rounded-3xl mx-auto"
             >
                 <h2 className="text-3xl font-semibold text-indigo-500">Overview</h2>
                 <p className="mt-6 text-base font-light leading-6 text-neutral-800">

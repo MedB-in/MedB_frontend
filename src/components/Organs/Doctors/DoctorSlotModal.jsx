@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { bookSlot } from '../../../services/doctors';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setAuthenticated } from '../../../redux/slices/authSlice';
 
 function DoctorSlotModal({ onClose, doctorId, clinicId }) {
     const [selectedDate, setSelectedDate] = useState(null);
@@ -15,7 +17,7 @@ function DoctorSlotModal({ onClose, doctorId, clinicId }) {
     const [reason, setReason] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
 
     const handleDateSelect = ({ date, day }) => {
         setSelectedDate(date);
@@ -29,7 +31,33 @@ function DoctorSlotModal({ onClose, doctorId, clinicId }) {
     const handleSubmit = async () => {
         if (!authenticated) {
             const loginUrl = '/login';
-            window.open(loginUrl, '_blank');
+            const loginPopup = window.open(loginUrl, '_blank', 'width=500,height=600');
+
+            if (!loginPopup) {
+                toast.error('Popup blocked! Please allow pop-ups for this site.');
+                return;
+            }
+
+            const messageListener = (event) => {
+                if (event.origin === window.location.origin && event.data === 'authenticated') {
+                    clearInterval(popupCheckInterval);
+                    loginPopup.close();
+                    window.removeEventListener('message', messageListener);
+                    dispatch(setAuthenticated(true));
+                    toast.success("Login successful!");
+                }
+            };
+
+            window.addEventListener('message', messageListener);
+
+            const popupCheckInterval = setInterval(() => {
+                if (loginPopup.closed) {
+                    clearInterval(popupCheckInterval);
+                    window.removeEventListener('message', messageListener);
+                    toast.error("Login cancelled. Please log in to book a slot.");
+                }
+            }, 500);
+
             return;
         }
 
@@ -69,7 +97,6 @@ function DoctorSlotModal({ onClose, doctorId, clinicId }) {
                     >
                         {loading ? 'Booking...' : 'Submit'}
                     </motion.button>
-
                 </div>
                 <button
                     className="absolute top-5 right-5 text-gray-400 hover:text-gray-600"
