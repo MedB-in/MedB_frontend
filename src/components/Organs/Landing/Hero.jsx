@@ -76,8 +76,8 @@ const Hero = () => {
                             {isNoResults ? (
                                 <div className="p-3 text-gray-500">No clinics found</div>
                             ) : (
-                                clinicResults.map((clinic) => (
-                                    <div key={clinic.clinicId} className="p-3 hover:bg-gray-100 cursor-pointer" onClick={() => handleClinicSelect(clinic.clinicid, clinic.name)}>
+                                clinicResults.map((clinic, index) => (
+                                    <div key={index} className="p-3 hover:bg-gray-100 cursor-pointer" onClick={() => handleClinicSelect(clinic.clinicid, clinic.name)}>
                                         {clinic.name}{clinic.address && `, ${clinic.address}`}
                                     </div>
                                 ))

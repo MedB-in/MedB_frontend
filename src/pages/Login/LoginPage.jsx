@@ -42,7 +42,12 @@ const LoginPage = () => {
       dispatch(setUserDetails(data.userDetails));
       dispatch(setUserAccess(data.menuData));
       dispatch(setAuthenticated(true));
-      navigate("/");
+      if (window.opener) {
+        window.opener.postMessage('authenticated', window.location.origin);
+        window.close();
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       if (error.response && error.response.data) {
         toast.error(error.response.data.message || "An error occurred on the server.");
