@@ -47,9 +47,7 @@ function DoctorSlotModal({ onClose, doctorId, clinicId }) {
                     toast.success("Login successful!");
                 }
             };
-
             window.addEventListener('message', messageListener);
-
             const popupCheckInterval = setInterval(() => {
                 if (loginPopup.closed) {
                     clearInterval(popupCheckInterval);

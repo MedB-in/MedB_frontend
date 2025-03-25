@@ -20,7 +20,6 @@ const DoctorCard = ({ doctor, onSelect, loading }) => {
 
     return (
         <div
-            key={doctor.doctorId}
             className="relative bg-[#c2b2f0] p-6 mt-16 h-[260px] w-[260px] rounded-xl shadow-lg transition-transform transform hover:scale-105 text-center cursor-pointer border border-gray-200"
             onClick={() => onSelect(doctor.doctorId)}
         >

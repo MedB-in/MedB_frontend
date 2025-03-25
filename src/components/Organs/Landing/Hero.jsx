@@ -19,6 +19,10 @@ const Hero = () => {
     const [isNoResults, setIsNoResults] = useState(false);
     const navigate = useNavigate();
 
+    const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+    const isClinicBooking = !!userDetails?.clinicId;
+    const isDoctorBooking = !!userDetails?.doctorId;
+
     useEffect(() => {
         if (clinicSearch.trim() && !clinicId) {
             const fetchClinics = async () => {
@@ -51,6 +55,8 @@ const Hero = () => {
         setClinicId(null);
     };
 
+    
+
     return (
         <section className="flex flex-col lg:flex-row items-center px-6 py-12 lg:px-16 bg-gradient-to-r from-white to-[#d9f1f2] mt-16 md:mt-20 cursor-default">
             <div className="w-full lg:w-1/2 text-center lg:text-left">
@@ -60,31 +66,36 @@ const Hero = () => {
                 <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-gray-700 text-lg lg:w-[26vw]">
                     Effortlessly Schedule Doctor Appointments Without Waiting In Queues. Our User-Friendly App Ensures A Hassle-Free Experience, Putting You In Control Of Your Healthcare Journey.
                 </motion.p>
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="relative flex items-center bg-[#eef1ff] p-3 rounded-full mt-16 w-full max-w-md mx-auto lg:mx-0">
-                    <input
-                        type="text"
-                        placeholder="Search for Clinics"
-                        value={clinicSearch}
-                        onChange={handleInputChange}
-                        className="bg-transparent border-none outline-none flex-1 p-2 text-lg"
-                    />
-                    <motion.button whileHover={{ scale: 1.05 }} className="bg-white p-2 rounded-full shadow-md transition" disabled={!clinicId} onClick={() => navigate(`/find-doctor/?clinicId=${clinicId}`)}>
-                        <img src={ArrowRight} alt="Arrow" className="w-6" />
-                    </motion.button>
-                    {clinicSearch.trim() && !clinicId && (
-                        <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg shadow-md mt-2 max-h-64 overflow-y-auto z-10">
-                            {isNoResults ? (
-                                <div className="p-3 text-gray-500">No clinics found</div>
-                            ) : (
-                                clinicResults.map((clinic, index) => (
-                                    <div key={index} className="p-3 hover:bg-gray-100 cursor-pointer" onClick={() => handleClinicSelect(clinic.clinicid, clinic.name)}>
-                                        {clinic.name}{clinic.address && `, ${clinic.address}`}
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    )}
-                </motion.div>
+                {!isClinicBooking && !isDoctorBooking && (
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="relative flex items-center bg-[#eef1ff] p-3 rounded-full mt-16 w-full max-w-md mx-auto lg:mx-0">
+                        <span className="absolute left-6 text-2xl mb-1 font-light text-gray-800 animate-blink">|</span>
+                        <input
+                            type="text"
+                            placeholder={clinicSearch ? "" : "Search for Clinics"}
+                            value={clinicSearch}
+                            onChange={handleInputChange}
+                            className="bg-transparent border-none outline-none flex-1 p-2 text-lg pl-4"
+                            onFocus={(e) => e.target.previousSibling.classList.add('hidden')}
+                            onBlur={(e) => !e.target.value && e.target.previousSibling.classList.remove('hidden')}
+                        />
+                        <motion.button whileHover={{ scale: 1.05 }} className="bg-white p-2 rounded-full shadow-md transition" disabled={!clinicId} onClick={() => navigate(`/find-doctor/?clinicId=${clinicId}`)}>
+                            <img src={ArrowRight} alt="Arrow" className="w-6" />
+                        </motion.button>
+                        {clinicSearch.trim() && !clinicId && (
+                            <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg shadow-md mt-2 max-h-64 overflow-y-auto z-10">
+                                {isNoResults ? (
+                                    <div className="p-3 text-gray-500">No clinics found</div>
+                                ) : (
+                                    clinicResults.map((clinic, index) => (
+                                        <div key={index} className="p-3 hover:bg-gray-100 cursor-pointer" onClick={() => handleClinicSelect(clinic.clinicid, clinic.name)}>
+                                            {clinic.name}{clinic.address && `, ${clinic.address}`}
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        )}
+                    </motion.div>
+                )}
             </div>
             <div className="w-full lg:w-1/2 flex flex-col items-center mt-6 lg:mt-0">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 mb-6 w-full">

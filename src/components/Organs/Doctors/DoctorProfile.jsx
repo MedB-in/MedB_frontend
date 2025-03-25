@@ -23,8 +23,17 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
         return acc;
     }, {});
 
+    const formatTimeTo12Hour = (time) => {
+        const [hours, minutes] = time.split(':');
+        const date = new Date();
+        date.setHours(hours, minutes);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    };
+
     const groupedTimings = (doctor?.timings || []).reduce((acc, timing) => {
-        const key = `${timing.timingFrom}-${timing.timingTo}`;
+        const fromTime = formatTimeTo12Hour(timing.timingFrom);
+        const toTime = formatTimeTo12Hour(timing.timingTo);
+        const key = `${fromTime} - ${toTime}`;
         if (!acc[key]) acc[key] = [];
         acc[key].push({ day: timing.day, label: dayMap[timing.day] || `Day ${timing.day}` });
         return acc;
