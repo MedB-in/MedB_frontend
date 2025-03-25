@@ -13,7 +13,8 @@ const InputField = ({
   toggleable,
   disabled,
   ariaLabel,
-  className
+  className,
+  required
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -42,6 +43,7 @@ const InputField = ({
         value={value}
         onChange={onChange}
         disabled={disabled}
+        required={required}
         className={`flex-auto bg-transparent border-none outline-none ${className}`}
       />
       {toggleable && (

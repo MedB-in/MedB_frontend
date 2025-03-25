@@ -72,13 +72,13 @@ const DoctorSelectionList = () => {
             <div className="flex flex-wrap justify-center gap-8 mt-6">
                 {loading ? (
                     Array.from({ length: 8 }).map((_, index) => (
-                        <DoctorCard key={index} loading />
+                        <DoctorCard key={index} loading={loading} />
                     ))
                 ) : doctors.length === 0 ? (
                     <p className="text-center text-gray-500 text-lg">No doctors available.</p>
                 ) : (
-                    doctors.map((doctor) => (
-                        <DoctorCard doctor={doctor} onSelect={onSelect} />
+                    doctors.map((doctor, index ) => (
+                        <DoctorCard doctor={doctor} key={index} onSelect={onSelect} />
                     ))
                 )}
             </div>

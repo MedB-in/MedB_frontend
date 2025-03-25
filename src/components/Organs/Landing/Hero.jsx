@@ -55,6 +55,8 @@ const Hero = () => {
         setClinicId(null);
     };
 
+    
+
     return (
         <section className="flex flex-col lg:flex-row items-center px-6 py-12 lg:px-16 bg-gradient-to-r from-white to-[#d9f1f2] mt-16 md:mt-20 cursor-default">
             <div className="w-full lg:w-1/2 text-center lg:text-left">
@@ -66,12 +68,15 @@ const Hero = () => {
                 </motion.p>
                 {!isClinicBooking && !isDoctorBooking && (
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="relative flex items-center bg-[#eef1ff] p-3 rounded-full mt-16 w-full max-w-md mx-auto lg:mx-0">
+                        <span className="absolute left-6 text-2xl mb-1 font-light text-gray-800 animate-blink">|</span>
                         <input
                             type="text"
-                            placeholder="Search for Clinics"
+                            placeholder={clinicSearch ? "" : "Search for Clinics"}
                             value={clinicSearch}
                             onChange={handleInputChange}
-                            className="bg-transparent border-none outline-none flex-1 p-2 text-lg"
+                            className="bg-transparent border-none outline-none flex-1 p-2 text-lg pl-4"
+                            onFocus={(e) => e.target.previousSibling.classList.add('hidden')}
+                            onBlur={(e) => !e.target.value && e.target.previousSibling.classList.remove('hidden')}
                         />
                         <motion.button whileHover={{ scale: 1.05 }} className="bg-white p-2 rounded-full shadow-md transition" disabled={!clinicId} onClick={() => navigate(`/find-doctor/?clinicId=${clinicId}`)}>
                             <img src={ArrowRight} alt="Arrow" className="w-6" />

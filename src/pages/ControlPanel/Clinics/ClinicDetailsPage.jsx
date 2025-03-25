@@ -11,8 +11,10 @@ import { addDoctor, editDoctor } from "../../../services/doctors";
 import DefaultImage from "../../../assets/images/default-doctor.png";
 
 
-const ClinicDetailsPage = () => {
-    const { clinicId } = useParams();
+const ClinicDetailsPage = ({ idClinic }) => {
+    let { clinicId } = useParams();
+    if (idClinic)
+        clinicId = idClinic
     const navigate = useNavigate();
     const [clinic, setClinic] = useState(null);
     const [doctors, setDoctors] = useState([]);
@@ -172,28 +174,32 @@ const ClinicDetailsPage = () => {
                 </div>
             )}
 
-            <button
-                title="Add New Doctor"
-                className="bg-blue-500 my-5 mr-5 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                onClick={() => handleClinicUsers()}
-            >Manage Clinic Users
-            </button>
-            <button
-                title="Add New Doctor"
-                className="bg-blue-500 my-5 mr-5 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                onClick={() => openModal()}
-            >
-                Add New Doctor
-            </button>
-            <button
-                title="Add a Doctor from a List of Doctors"
-                className="bg-blue-500 my-5  text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                onClick={handleAddDoctorToClinic}
-            >
-                Add Doctor From List
-            </button>
+            {!idClinic && (
+                <>
+                    <button
+                        title="Add New Doctor"
+                        className="bg-blue-500 my-5 mr-5 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                        onClick={() => handleClinicUsers()}
+                    >Manage Clinic Users
+                    </button>
+                    <button
+                        title="Add New Doctor"
+                        className="bg-blue-500 my-5 mr-5 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                        onClick={() => openModal()}
+                    >
+                        Add New Doctor
+                    </button>
+                    <button
+                        title="Add a Doctor from a List of Doctors"
+                        className="bg-blue-500 my-5  text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                        onClick={handleAddDoctorToClinic}
+                    >
+                        Add Doctor From List
+                    </button>
+                </>
+            )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
                 {doctors.map((doctor) => (
                     <div
                         key={doctor.doctorId}
@@ -202,7 +208,7 @@ const ClinicDetailsPage = () => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <img
-                                    src={doctor.profilePicture || DefaultImage} // Fallback image
+                                    src={doctor.profilePicture || DefaultImage}
                                     alt={doctor.doctorName}
                                     className="w-16 h-16 rounded-full object-cover border"
                                 />
@@ -214,14 +220,17 @@ const ClinicDetailsPage = () => {
                                     <p className="text-gray-600">{doctor.qualifications}</p>
                                 </div>
                             </div>
-
-                            <button
-                                className="text-gray-500 hover:text-gray-700 transition"
-                                onClick={() => handleEditDoctor(doctor.doctorId)}
-                                title="Edit Doctor"
-                            >
-                                <Pencil size={25} />
-                            </button>
+                            {!idClinic && (
+                                <>
+                                    <button
+                                        className="text-gray-500 hover:text-gray-700 transition"
+                                        onClick={() => handleEditDoctor(doctor.doctorId)}
+                                        title="Edit Doctor"
+                                    >
+                                        <Pencil size={25} />
+                                    </button>
+                                </>
+                            )}
                         </div>
 
                         <div className="flex gap-2 mt-4">
@@ -279,23 +288,27 @@ const ClinicDetailsPage = () => {
                             </div>
 
                         </div>
-                        <div className="flex items-center mt-5 space-x-2">
-                            <input
-                                type="checkbox"
-                                name="isActive"
-                                checked={doctor.isActiveDoctorClinic}
-                                onChange={(e) => handleDoctorClinicStatus(doctor.doctorId, e.target.checked)}
-                                className="form-checkbox"
-                            />
-                            <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
-                        </div>
+                        {!idClinic && (
+                            <>
+                                <div className="flex items-center mt-5 space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="isActive"
+                                        checked={doctor.isActiveDoctorClinic}
+                                        onChange={(e) => handleDoctorClinicStatus(doctor.doctorId, e.target.checked)}
+                                        className="form-checkbox"
+                                    />
+                                    <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
+                                </div>
 
-                        <button
-                            className="w-full bg-blue-500 mt-2 text-white py-2 rounded-md hover:bg-blue-600 transition"
-                            onClick={() => handleSlots(clinicId, doctor.doctorId)}
-                        >
-                            Edit Slots
-                        </button>
+                                <button
+                                    className="w-full bg-blue-500 mt-2 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                                    onClick={() => handleSlots(clinicId, doctor.doctorId)}
+                                >
+                                    Edit Slots
+                                </button>
+                            </>
+                        )}
                     </div>
                 ))}
             </div>

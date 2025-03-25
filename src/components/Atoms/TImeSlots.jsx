@@ -43,6 +43,7 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
     };
 
     const timeCategories = categorizeSlots(timeSlots);
+    const hasNoSlots = date && Object.values(timeCategories).every(category => category.length === 0);
 
     const renderCategory = (title, icon, slots) => {
         if (!slots.length) return null;
@@ -77,10 +78,16 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
 
     return (
         <section className="px-4 md:px-14 py-4 mx-auto my-5 rounded-2xl border border-solid backdrop-blur-[18.15px] bg-white bg-opacity-70 border-indigo-500 border-opacity-10">
-            {renderCategory('Morning', <Sun className="w-5 h-5 text-yellow-500" />, timeCategories.morning)}
-            {renderCategory('Afternoon', <CloudSun className="w-5 h-5 text-orange-500" />, timeCategories.afternoon)}
-            {renderCategory('Evening', <SunMoon className="w-5 h-5 text-purple-500" />, timeCategories.evening)}
-            {renderCategory('Night', <Moon className="w-5 h-5 text-blue-500" />, timeCategories.night)}
+            {hasNoSlots ? (
+                <p className="text-center text-gray-500">No slots available for the selected date.</p>
+            ) : (
+                <>
+                    {renderCategory('Morning', <Sun className="w-5 h-5 text-yellow-500" />, timeCategories.morning)}
+                    {renderCategory('Afternoon', <CloudSun className="w-5 h-5 text-orange-500" />, timeCategories.afternoon)}
+                    {renderCategory('Evening', <SunMoon className="w-5 h-5 text-purple-500" />, timeCategories.evening)}
+                    {renderCategory('Night', <Moon className="w-5 h-5 text-blue-500" />, timeCategories.night)}
+                </>
+            )}
         </section>
     );
 };
