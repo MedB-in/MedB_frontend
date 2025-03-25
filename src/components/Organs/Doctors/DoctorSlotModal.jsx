@@ -64,7 +64,11 @@ function DoctorSlotModal({ onClose, doctorId, clinicId }) {
         setLoading(true);
         try {
             if (!selectedDate || !selectedDay || !selectedSlot) {
-                alert('Please select a date and time before submitting.');
+                toast.error('Please select a date and time before submitting.');
+                return;
+            }
+            if (!reason.trim()) {
+                toast.error("Please enter a reason for the visit.");
                 return;
             }
             await bookSlot({ clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
@@ -79,7 +83,7 @@ function DoctorSlotModal({ onClose, doctorId, clinicId }) {
 
     return (
         <div className="fixed inset-0 z-50 p-5 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm">
-            <main className="relative mx-auto w-full max-w-[713px] md:max-w-[40%] lg:max-w-[40%] bg-white border rounded-2xl max-h-[90vh] overflow-y-auto shadow-lg">
+            <main className="relative mx-auto px-2 w-full max-w-[713px] md:max-w-[40%] lg:max-w-[40%] bg-white border rounded-2xl max-h-[90vh] overflow-y-auto shadow-lg">
                 <header className="box-border px-16 py-5 w-full text-xl font-medium text-black shadow-[0_4px_4px_rgba(0,0,0,0.05)] max-md:px-10 max-sm:px-5 max-sm:py-8 max-sm:h-auto">
                     Select Date and Time
                 </header>
@@ -87,6 +91,18 @@ function DoctorSlotModal({ onClose, doctorId, clinicId }) {
                     <Calendar onDateSelect={handleDateSelect} />
                 </section>
                 <TimeSlots clinicId={clinicId} doctorId={doctorId} date={selectedDate} day={selectedDay} onSlotSelect={handleSlotSelect} />
+                {selectedSlot && (
+                    <div className=" p-5">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-2">Reason for visit:</h3>
+                        <input
+                            type="text"
+                            value={reason}
+                            onChange={(e) => setReason(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-md bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                    </div>
+                )}
+
                 <div className="flex justify-end px-16 pb-5 max-md:px-10 max-sm:px-5">
                     <motion.button
                         type="button"
