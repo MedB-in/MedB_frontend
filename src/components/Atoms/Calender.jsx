@@ -45,13 +45,13 @@ const Calendar = ({ onDateSelect }) => {
     const isNextDisabled = date >= maxDate;
 
     return (
-        <div className="w-[334px] mx-auto border rounded-xl drop-shadow-lg ">
-            <header className="flex justify-between items-center mb-5 rounded-t-xl bg-indigo-500">
-                <button className="flex items-center gap-2 px-4 py-2 text-lg text-white rounded">
+        <div className="w-full max-w-[334px] mx-auto border rounded-xl drop-shadow-lg ">
+            <header className="flex justify-between items-center mb-5 rounded-t-xl bg-indigo-500 p-4 sm:p-2">
+                <button className="flex items-center gap-2 text-lg text-white rounded">
                     {date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                     <Icon type="dropdown" />
                 </button>
-                <div className="flex gap-2 p-2">
+                <div className="flex gap-2">
                     <button onClick={handlePrevMonth} disabled={isPrevDisabled}><Icon type="prev" /></button>
                     <button onClick={handleNextMonth} disabled={isNextDisabled}><Icon type="next" /></button>
                 </div>
@@ -74,7 +74,7 @@ const Calendar = ({ onDateSelect }) => {
                                 key={day}
                                 onClick={() => handleDateSelect(day)}
                                 disabled={isDisabled}
-                                className={`p-1.5 rounded-full ${isSelected ? 'bg-green-500 text-white' :
+                                className={`p-1.5 rounded-full w-10 h-10 sm:w-8 sm:h-8 ${isSelected ? 'bg-green-500 text-white' :
                                     isDisabled ? 'text-gray-400' : 'hover:bg-indigo-50 text-stone-950'
                                     }`}
                             >
