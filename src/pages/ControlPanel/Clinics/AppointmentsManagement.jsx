@@ -223,8 +223,8 @@ function AppointmentsManagement() {
             <Button variant="primary" className="mt-4" onClick={() => navigate(`/appointments/book-appointment/${clinicId}`)}>
                 Walk-In Appointment
             </Button>
-            <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6 mt-4">
-                <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
+            <div className="w-full mx-auto rounded-xl p-6 mt-4">
+                <table className="w-full border-collapse border bg-white shadow-md border-gray-200 rounded-lg overflow-hidden">
                     <thead>
                         <tr className="bg-gray-100 text-center">
                             <th className="px-4 py-3 border border-gray-200">No.</th>
@@ -250,8 +250,7 @@ function AppointmentsManagement() {
                                     appointments.map((appt, index) => (
                                         <tr key={index} className="odd:bg-white even:bg-gray-50">
                                             <td className="px-4 py-3 border border-gray-200 text-center">{index + 1}</td>
-
-                                            <td className="px-4 py-3 border border-gray-200">
+                                            <td className="px-4 py-3 border border-gray-200 min-w-[200px] whitespace-normal break-words">
                                                 <div className="flex justify-center">
                                                     <div className="flex items-center gap-4">
                                                         <img
@@ -259,21 +258,21 @@ function AppointmentsManagement() {
                                                             alt={appt.doctorFirstName}
                                                             className="w-12 h-12 rounded-full object-cover"
                                                         />
-                                                        <div className="flex-1">
-                                                            <p className="text-lg font-semibold">
+                                                        <div className="flex-1 overflow-hidden">
+                                                            <p className="text-lg font-semibold truncate">
                                                                 {appt.doctorFirstName} {appt.doctorMiddleName ? appt.doctorMiddleName : ""} {appt.doctorLastName ? appt.doctorLastName : ""}
                                                             </p>
                                                             <p className="text-sm text-gray-600">{appt.doctorGender}</p>
-                                                            <p className="text-sm text-gray-600">{appt.speciality}</p>
+                                                            <p className="text-sm text-gray-600 truncate">{appt.speciality}</p>
                                                             <p className="text-sm text-gray-600">{appt.experience} years of experience</p>
-                                                            <p className="text-sm text-gray-600">{appt.qualifications}</p>
+                                                            <p className="text-sm text-gray-600 truncate">{appt.qualifications}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-4 py-3 border border-gray-200 text-center">{appt.appointmentDate}</td>
                                             <td className="px-4 py-3 border border-gray-200 text-center">{appt.appointmentTime}</td>
-                                            <td className="px-4 py-3 border border-gray-200">
+                                            <td className="px-4 py-3 border border-gray-200 min-w-[200px] whitespace-normal break-words">
                                                 <div className="flex justify-center">
                                                     <div className="flex items-center gap-4">
                                                         <img
@@ -281,10 +280,12 @@ function AppointmentsManagement() {
                                                             alt={appt.patientFirstName}
                                                             className="w-12 h-12 rounded-full object-cover"
                                                         />
-                                                        <div className="flex-1">
-                                                            <p className="text-lg font-semibold">{appt.patientFirstName}{appt.patientMiddleName ? appt.patientMiddleName : ""} {appt.patientLastName ? appt.patientLastName : ""} </p>
-                                                            <p className="text-sm text-gray-600">{appt.patientEmail}</p>
-                                                            <p className="text-sm text-gray-600">{appt.patientContactNo}</p>
+                                                        <div className="flex-1 overflow-hidden">
+                                                            <p className="text-lg font-semibold truncate">
+                                                                {appt.patientFirstName}{appt.patientMiddleName ? ` ${appt.patientMiddleName}` : ""}{appt.patientLastName ? ` ${appt.patientLastName}` : ""}
+                                                            </p>
+                                                            <p className="text-sm text-gray-600 truncate">{appt.patientEmail}</p>
+                                                            <p className="text-sm text-gray-600 truncate">{appt.patientContactNo}</p>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import days from '../../lib/slotDays';
 import { format } from 'date-fns';
 import dropdown from '../../assets/images/dropdown.png';
@@ -13,8 +13,22 @@ const Icon = ({ type }) => {
 const Calendar = ({ onDateSelect }) => {
     const [date, setDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
+    const [showDropdown, setShowDropdown] = useState(false);
     const today = new Date();
     const maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 31);
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const handlePrevMonth = () => setDate(new Date(date.getFullYear(), date.getMonth() - 1));
     const handleNextMonth = () => setDate(new Date(date.getFullYear(), date.getMonth() + 1));
@@ -44,16 +58,33 @@ const Calendar = ({ onDateSelect }) => {
     const isPrevDisabled = date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
     const isNextDisabled = date >= maxDate;
 
+    const allowedMonths = Array.from({ length: 4 }, (_, i) => new Date(today.getFullYear(), today.getMonth() + i));
+
     return (
-        <div className="w-full max-w-[334px] mx-auto border rounded-xl drop-shadow-lg ">
+        <div className="w-full max-w-[334px] mx-auto border rounded-xl drop-shadow-lg">
             <header className="flex justify-between items-center mb-5 rounded-t-xl bg-indigo-500 p-4 sm:p-2">
-                <button className="flex items-center gap-2 text-lg text-white rounded">
-                    {date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                    <Icon type="dropdown" />
-                </button>
+                <div className="relative" ref={dropdownRef}>
+                    <button onClick={() => setShowDropdown((prev) => !prev)} className="flex items-center gap-2 text-lg text-white rounded">
+                        {format(date, 'MMMM yyyy')}
+                        <Icon type="dropdown" />
+                    </button>
+                    {showDropdown && (
+                        <div className="absolute top-full left-0 mt-2 w-44 bg-white border rounded shadow-lg z-10">
+                            {allowedMonths.map((m, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => { setDate(m); setShowDropdown(false); }}
+                                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                >
+                                    {m.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
                 <div className="flex gap-2">
-                    <button onClick={handlePrevMonth} disabled={isPrevDisabled}><Icon type="prev" /></button>
-                    <button onClick={handleNextMonth} disabled={isNextDisabled}><Icon type="next" /></button>
+                    <button onClick={handlePrevMonth} disabled={isPrevDisabled} className={isPrevDisabled ? 'opacity-50 cursor-not-allowed' : ''}><Icon type="prev" /></button>
+                    <button onClick={handleNextMonth} disabled={isNextDisabled} className={isNextDisabled ? 'opacity-50 cursor-not-allowed' : ''}><Icon type="next" /></button>
                 </div>
             </header>
             <section className='p-2'>

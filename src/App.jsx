@@ -37,6 +37,7 @@ const App = () => {
       <Route path="/find-clinic" element={<PublicPages.ClinicSearchPage />} />
       <Route path="/find-doctor" element={<PublicPages.DoctorSearchPage />} />
       <Route path="/doctor-profile" element={<PublicPages.DoctorProfilePage />} />
+      <Route path="/doctor-clinic" element={<PublicPages.DoctorClinicPage />} />
 
       {/* Login page */}
       <Route path="/login" element={<LoginPage />} />

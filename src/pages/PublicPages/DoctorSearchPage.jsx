@@ -16,6 +16,10 @@ const DoctorSearchPage = () => {
     const clinicId = new URLSearchParams(location.search).get('clinicId');
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+    useEffect(() => {
         if (!clinicId) return;
 
         const fetchClinicData = async () => {

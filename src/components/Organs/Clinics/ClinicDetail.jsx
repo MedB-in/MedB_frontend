@@ -62,7 +62,7 @@ const ClinicDetail = ({ clinicData, loading }) => {
         >
             <img src={icon} alt="icon" style={{ width: iconSize, height: iconSize }} className="object-contain" />
             <p
-                className={`text-nd font-medium ${clickable ? 'cursor-pointer underline' : ''}`}
+                className={`text-nd font-medium break-all ${clickable ? 'cursor-pointer underline' : ''}`}
                 onClick={() => {
                     if (clickable) {
                         window.open(text, '_blank');
