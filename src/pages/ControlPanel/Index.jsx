@@ -4,7 +4,7 @@ import SideBar from '../../components/Organs/SideBar';
 import { Toaster } from 'react-hot-toast';
 
 const ControlPanel = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
         <div className="flex h-screen overflow-hidden">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import DoctorIcon from "../../../assets/images/doctor-hero.png";
@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 const Hero = () => {
     const tabs = ["Doctors", "Clinic", "Lab"];
     const images = { Doctors: DoctorIcon, Clinic: ClinicIcon, Lab: LabIcon };
+    const redirects = { Doctors: "/find-clinic", Clinic: "/find-clinic", Lab: "/labs" };
 
     const [activeTab, setActiveTab] = useState("Doctors");
     const [clinicSearch, setClinicSearch] = useState("");
@@ -18,10 +19,27 @@ const Hero = () => {
     const [clinicId, setClinicId] = useState(null);
     const [isNoResults, setIsNoResults] = useState(false);
     const navigate = useNavigate();
+    const tabRef = useRef(null);
 
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
     const isClinicBooking = !!userDetails?.clinicId;
     const isDoctorBooking = !!userDetails?.doctorId;
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveTab((prevTab) => {
+                const currentIndex = tabs.indexOf(prevTab);
+                return tabs[(currentIndex + 1) % tabs.length];
+            });
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        if (tabRef.current) {
+            tabRef.current.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        }
+    }, [activeTab]);
 
     useEffect(() => {
         if (clinicSearch.trim() && !clinicId) {
@@ -55,7 +73,10 @@ const Hero = () => {
         setClinicId(null);
     };
 
-    
+    const handleTabClick = (tab) => {
+        setActiveTab(tab);
+        navigate(redirects[tab]);
+    };
 
     return (
         <section className="flex flex-col lg:flex-row items-center px-6 py-12 lg:px-16 bg-gradient-to-r from-white to-[#d9f1f2] mt-16 md:mt-20 cursor-default">
@@ -100,7 +121,7 @@ const Hero = () => {
             <div className="w-full lg:w-1/2 flex flex-col items-center mt-6 lg:mt-0">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 mb-6 w-full">
                     {tabs.map((tab) => (
-                        <motion.button key={tab} whileTap={{ scale: 0.95 }} onClick={() => setActiveTab(tab)} className={`px-4 sm:px-6 py-2 rounded-full transition font-medium w-full sm:w-32 md:w-44 text-xs sm:text-sm md:text-base ${activeTab === tab ? "bg-[#573bff] text-white" : "bg-[#c7e4f2] text-gray-700"}`}> {tab} </motion.button>
+                        <motion.button ref={activeTab === tab ? tabRef : null} key={tab} whileTap={{ scale: 0.95 }} onClick={() => handleTabClick(tab)} className={`px-4 sm:px-6 py-2 rounded-full transition font-medium w-full sm:w-32 md:w-44 text-xs sm:text-sm md:text-base ${activeTab === tab ? "bg-[#573bff] text-white" : "bg-[#c7e4f2] text-gray-700"}`}> {tab} </motion.button>
                     ))}
                 </motion.div>
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} key={activeTab} className="p-4 sm:p-6 flex justify-center w-24 h-[250px] sm:w-32 sm:h-[300px] md:w-40 md:h-[400px]">
