@@ -34,6 +34,7 @@ const FeatureSection = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const touchStartX = useRef(0);
     const touchEndX = useRef(0);
+    const isDragging = useRef(false);
 
     const handleNext = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % features.length);
@@ -43,8 +44,10 @@ const FeatureSection = () => {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + features.length) % features.length);
     };
 
+    // Touch Events (Mobile)
     const handleTouchStart = (e) => {
         touchStartX.current = e.touches[0].clientX;
+        touchEndX.current = e.touches[0].clientX;
     };
 
     const handleTouchMove = (e) => {
@@ -52,6 +55,29 @@ const FeatureSection = () => {
     };
 
     const handleTouchEnd = () => {
+        if (touchStartX.current - touchEndX.current > 50) {
+            handleNext();
+        } else if (touchEndX.current - touchStartX.current > 50) {
+            handlePrev();
+        }
+    };
+
+    // Mouse Drag Events (Desktop)
+    const handleMouseDown = (e) => {
+        isDragging.current = true;
+        touchStartX.current = e.clientX;
+        document.body.style.cursor = "grabbing";
+    };
+
+    const handleMouseMove = (e) => {
+        if (!isDragging.current) return;
+        touchEndX.current = e.clientX;
+    };
+
+    const handleMouseUp = () => {
+        if (!isDragging.current) return;
+        isDragging.current = false;
+        document.body.style.cursor = "default";
         if (touchStartX.current - touchEndX.current > 50) {
             handleNext();
         } else if (touchEndX.current - touchStartX.current > 50) {
@@ -70,7 +96,7 @@ const FeatureSection = () => {
                 {features.map((feature, index) => (
                     <div
                         key={index}
-                        className={`w-full md:w-1/3 h-[550px] md:h-[600px] p-8 ${feature.bgColor} ${feature.borderRadius} flex flex-col justify-between items-center text-center shadow-lg transition-all duration-500 ease-in-out transform hover:scale-105`}
+                        className={`w-full md:w-1/3 h-[550px] md:h-[700px] p-8 ${feature.bgColor} ${feature.borderRadius} flex flex-col justify-between items-center text-center shadow-lg transition-all duration-500 ease-in-out transform hover:scale-105`}
                     >
                         <div className="h-2/3 flex justify-center items-center w-full">
                             <img
@@ -90,7 +116,17 @@ const FeatureSection = () => {
                     </div>
                 ))}
             </div>
-            <div className="md:hidden relative overflow-hidden" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+            <div
+                className="md:hidden relative overflow-hidden cursor-grab active:cursor-grabbing"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                style={{ userSelect: "none" }}
+            >
                 <div
                     key={currentIndex}
                     className={`w-full h-[550px] p-8 ${features[currentIndex].bgColor} ${features[currentIndex].borderRadius} flex flex-col justify-between items-center text-center shadow-lg`}
@@ -116,7 +152,9 @@ const FeatureSection = () => {
                         <button
                             key={index}
                             onClick={() => setCurrentIndex(index)}
-                            className={`w-3 h-3 rounded-full mb-2 transition-all duration-300 ${index === currentIndex ? "bg-[#573bff] scale-125" : "bg-gray-300"}`}
+                            className={`w-3 h-3 rounded-full mb-2 transition-all duration-300 ${
+                                index === currentIndex ? "bg-[#573bff] scale-125" : "bg-gray-300"
+                            }`}
                         />
                     ))}
                 </div>

@@ -6,7 +6,7 @@ import Footer from '../../components/Organs/Landing/Footer';
 import FloatingActionButtons from '../../components/Organs/Landing/FloatingButtons';
 import ClinicDetail from '../../components/Organs/Clinics/ClinicDetail';
 import DoctorList from '../../components/Organs/Doctors/DoctorList';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 const DoctorSearchPage = () => {
     const [clinicData, setClinicData] = useState(null);
@@ -28,7 +28,7 @@ const DoctorSearchPage = () => {
                 setClinicData(response.data.clinic);
                 setDoctors(response.data.doctors || []);
             } catch (error) {
-                console.error('Error fetching clinic data:', error);
+                toast.error('Error fetching clinic data:', error);
             } finally {
                 setLoading(false);
             }

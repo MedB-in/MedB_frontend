@@ -107,7 +107,7 @@ const Testimonials = () => {
                 {testimonials.map((testimonial, index) => (
                     <div
                         key={index}
-                        className="min-w-[80%] sm:min-w-[60%] md:min-w-[40%] lg:min-w-[30%] max-w-xs h-[70vh] 
+                        className="min-w-[80%] sm:min-w-[60%] md:min-w-[40%] lg:min-w-[30%] max-w-xs h-[48vh] 
                            bg-gradient-to-b from-[#D2ECEA] via-white to-[#6F64E7] p-6 rounded-2xl 
                            flex flex-col justify-between items-center text-white snap-start"
                     >

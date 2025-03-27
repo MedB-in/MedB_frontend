@@ -24,7 +24,6 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
         postalCode: "",
     });
     const [loading, setLoading] = useState(false);
-    const [missingFields, setMissingFields] = useState([]);
 
     useEffect(() => {
         if (isUpdate && patient) {

@@ -46,32 +46,42 @@ const ClinicsPage = () => {
     navigate(`/clinics/${clinicId}`);
   };
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data, clinicId) => {
     try {
-      if (data?.clinicId) {
-        const response = await editClinic(data.clinicId, data);
+      const formDataObject = Object.fromEntries(data.entries());
+
+      if (clinicId) {
+        const response = await editClinic(clinicId, data);
+        const editedClinic = response.data.data
+
         setClinics(prevClinics =>
           prevClinics.map(clinic =>
-            clinic.clinicId === data.clinicId ? { ...data } : clinic
+            clinic.clinicId === clinicId ? { ...clinic, ...editedClinic } : clinic
           )
         );
+
         setIsClinicModalOpen(false);
         toast.success(response.data.message);
       } else {
         const response = await addClinic(data);
+
         const newClinic = {
-          ...data,
-          clinicId: response.data.data.clinicId
+          ...formDataObject,
+          clinicId: response.data.data.clinicId,
         };
-        setClinics(prevClinics => [...prevClinics, newClinic])
+
+        setClinics(prevClinics => [...prevClinics, newClinic]);
+
         setIsClinicModalOpen(false);
         toast.success(response.data.message);
       }
+
       return { success: true };
     } catch (error) {
       throw error;
     }
   };
+
 
   const handleCloseModal = () => {
     setIsClinicModalOpen(false);
@@ -100,8 +110,8 @@ const ClinicsPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
         {!loading &&
           clinics.length > 0 &&
-          clinics.map((clinic) => (
-            <div key={clinic?.clinicId} className="bg-white shadow-lg rounded-lg overflow-hidden p-5 border hover:shadow-xl hover:bg-blue-200 transition cursor-pointer"
+          clinics.map((clinic, index) => (
+            <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden p-5 border hover:shadow-xl hover:bg-blue-200 transition cursor-pointer"
               onClick={() => handleCardClick(clinic?.clinicId)}
             >
               <div className="flex items-center gap-4">

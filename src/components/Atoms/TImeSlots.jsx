@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { getDoctorSlots } from '../../services/publicApi';
 import { Sun, SunMoon, Moon, CloudSun } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
     const [timeSlots, setTimeSlots] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchSlots = async () => {
+            setLoading(true);
             try {
                 const response = await getDoctorSlots(clinicId, doctorId, date, day);
                 setTimeSlots(response?.data?.slots || []);
             } catch (error) {
-                console.error('Error fetching time slots:', error);
+                toast.error('Error fetching time slots:', error);
             }
+            setLoading(false);
         };
         setSelectedSlot(null);
         onSlotSelect(null);
@@ -29,19 +33,14 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
         }
     };
 
-    const categorizeSlots = (slots) => {
-        return {
-            morning: slots.filter(slot => isInRange(slot.time, '06:00', '11:59')),
-            afternoon: slots.filter(slot => isInRange(slot.time, '12:00', '16:59')),
-            evening: slots.filter(slot => isInRange(slot.time, '17:00', '19:59')),
-            night: slots.filter(slot => isInRange(slot.time, '20:00', '23:59')),
-        };
-    };
+    const categorizeSlots = (slots) => ({
+        morning: slots.filter(slot => isInRange(slot.time, '06:00', '11:59')),
+        afternoon: slots.filter(slot => isInRange(slot.time, '12:00', '16:59')),
+        evening: slots.filter(slot => isInRange(slot.time, '17:00', '19:59')),
+        night: slots.filter(slot => isInRange(slot.time, '20:00', '23:59')),
+    });
 
-    const isInRange = (time, start, end) => {
-        return time >= start && time <= end;
-    };
-
+    const isInRange = (time, start, end) => time >= start && time <= end;
     const timeCategories = categorizeSlots(timeSlots);
     const hasNoSlots = date && Object.values(timeCategories).every(category => category.length === 0);
 
@@ -76,9 +75,27 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
         );
     };
 
+    const renderSkeleton = () => (
+        <div className="animate-pulse">
+            {['Morning', 'Afternoon', 'Evening'].map((title, index) => (
+                <div key={index} className="mb-6">
+                    <div className="flex items-center gap-2 mb-4">
+                        <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
+                        <div className="h-4 bg-gray-300 w-32 rounded"></div>
+                    </div>
+                    <div className="grid gap-3 grid-cols-[repeat(3,1fr)] sm:grid-cols-[repeat(4,1fr)] md:grid-cols-[repeat(3,1fr)] lg:grid-cols-[repeat(5,1fr)]">
+                        {Array(5).fill(0).map((_, i) => (
+                            <div key={i} className="h-10 bg-gray-300 rounded-md"></div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+
     return (
         <section className="px-4 md:px-14 py-4 mx-auto my-5 rounded-2xl border border-solid backdrop-blur-[18.15px] bg-white bg-opacity-70 border-indigo-500 border-opacity-10">
-            {hasNoSlots ? (
+            {loading ? renderSkeleton() : hasNoSlots ? (
                 <p className="text-center text-gray-500">No slots available for the selected date.</p>
             ) : (
                 <>

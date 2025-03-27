@@ -3,10 +3,13 @@ import toast from "react-hot-toast";
 import LocationSelector from "../../LocationSelector";
 import InputField from "../../Atoms/Input";
 import Button from "../../Atoms/Button1";
+import { UploadIcon } from "lucide-react";
 
 const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [clinicPictureFile, setClinicPictureFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const defaultOpeningHours = {
     Monday: "09:00 AM - 07:00 PM",
@@ -19,7 +22,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
   };
 
   const defaultFormData = {
-    clinicId: null,
+    clinicId: "",
     name: "",
     address: "",
     city: "",
@@ -31,7 +34,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     email: "",
     website: "",
     clinicPicture: "",
-    location: { type: "Point", coordinates: [null, null] },
+    location: { type: "Point", coordinates: [0, 0] },
     openingHours: defaultOpeningHours,
     isActive: true,
   };
@@ -44,7 +47,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
       const newFormData = {
         ...defaultFormData,
         ...clinicData,
-        location: clinicData.location || { type: "Point", coordinates: [null, null] },
+        location: clinicData.location || { type: "Point", coordinates: [0, 0] },
         openingHours: clinicData.openingHours || defaultOpeningHours,
       };
       setFormData(newFormData);
@@ -59,32 +62,34 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
   const initializeTimeInputs = (openingHours) => {
     const initialTimeInputs = {};
     Object.entries(openingHours).forEach(([day, timeRange]) => {
-      if (timeRange === "Closed") {
+      if (!timeRange || timeRange === "Closed") {
         initialTimeInputs[day] = { isClosed: true, startTime: "", endTime: "", startPeriod: "AM", endPeriod: "PM" };
       } else {
-        const [start, end] = timeRange.split(" - ");
-        const [startTime, startPeriod] = start.split(" ");
-        const [endTime, endPeriod] = end.split(" ");
+        const [start, end] = (timeRange || "").split(" - ") || [];
+        const [startTime, startPeriod] = start ? start.split(" ") : ["", "AM"];
+        const [endTime, endPeriod] = end ? end.split(" ") : ["", "PM"];
         initialTimeInputs[day] = {
           isClosed: false,
-          startTime: startTime,
-          endTime: endTime,
-          startPeriod: startPeriod,
-          endPeriod: endPeriod,
+          startTime,
+          endTime,
+          startPeriod,
+          endPeriod,
         };
       }
     });
     setTimeInputs(initialTimeInputs);
   };
 
+
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox" ? checked : value || "",
     }));
     setError(null);
   };
+
 
   const handleTimeInputChange = (day, field, value) => {
     setTimeInputs((prev) => ({
@@ -122,13 +127,46 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     setError(null);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const validTypes = ["image/jpeg", "image/png", "image/jpg"];
+    const maxSize = 2 * 1024 * 1024;
+    if (!validTypes.includes(file.type)) {
+      toast.error("Please select a valid image file (JPG, JPEG, or PNG).");
+      return;
+    }
+    if (file.size > maxSize) {
+      toast.error("File size exceeds 2MB. Please upload a smaller image.");
+      return;
+    }
+    setClinicPictureFile(file);
+    setPreviewImage(URL.createObjectURL(file));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
+    const formDataToSend = new FormData();
+
+    Object.entries(formData).forEach(([key, value]) => {
+      if (typeof value === "object" && value !== null) {
+        formDataToSend.append(key, JSON.stringify(value));
+      } else {
+        formDataToSend.append(key, value);
+      }
+    });
+
+    if (clinicPictureFile) {
+      formDataToSend.append("image", clinicPictureFile);
+    }
     try {
-      await onSubmit(formData);
+      await onSubmit(formDataToSend, formData.clinicId);
+      setClinicPictureFile(null);
+      setPreviewImage(null);
+      closeModal();
     } catch (error) {
       setError(error.response?.data?.message || "Something went wrong");
       toast.error(error.response?.data?.message || "Something went wrong");
@@ -136,6 +174,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
       setLoading(false);
     }
   };
+
 
   const handleLocationSelect = (lat, lng, address, city, district, state, country, postalCode) => {
     setFormData((prev) => ({
@@ -159,11 +198,15 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
       if (window.confirm("Are you sure you want to close? Any unsaved changes will be lost.")) {
         setError(null);
         setFormData(defaultFormData);
+        setClinicPictureFile(null);
+        setPreviewImage(null);
         closeModal();
       }
     } else {
       setError(null);
       setFormData(defaultFormData);
+      setClinicPictureFile(null);
+      setPreviewImage(null);
       closeModal();
     }
   };
@@ -177,6 +220,24 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
           {clinicData ? "Edit Clinic" : "Add New Clinic"}
         </h3>
         <form onSubmit={handleSubmit}>
+          <div className="mt-4">
+            <label className="block text-sm font-medium mb-2">Clinic Picture (click to upload)</label>
+            <div className="relative w-full mb-4 h-40 rounded-md flex items-center justify-center">
+              {formData.clinicPicture && !previewImage && <img src={formData.clinicPicture} alt="Clinic" className="w-32 h-32 object-cover" />}
+              {previewImage ? (
+                <img src={previewImage} alt="Clinic" className="h-full w-full object-contain rounded-md" />
+              ) : (
+                !formData.clinicPicture && (
+                  <UploadIcon className="h-10 w-10 text-gray-400" />)
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+                onChange={handleFileChange}
+              />
+            </div>
+          </div>
           <div className="mb-4">
             <InputField label="Clinic Name" name="name" value={formData.name} onChange={handleChange} required />
           </div>
@@ -219,10 +280,6 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
           <div className="mb-4">
             <InputField label="Website" type="url" name="website" value={formData.website} onChange={handleChange} />
           </div>
-          <div className="mb-4">
-            <InputField label="Clinic Picture URL" name="clinicPicture" value={formData.clinicPicture} onChange={handleChange} />
-          </div>
-
           {/* Opening Hours */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">Opening Hours</label>

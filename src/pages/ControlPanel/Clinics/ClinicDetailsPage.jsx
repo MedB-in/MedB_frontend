@@ -288,19 +288,19 @@ const ClinicDetailsPage = ({ idClinic }) => {
                             </div>
 
                         </div>
+
+                        <div className="flex items-center mt-5 space-x-2">
+                            <input
+                                type="checkbox"
+                                name="isActive"
+                                checked={doctor.isActiveDoctorClinic}
+                                onChange={(e) => handleDoctorClinicStatus(doctor.doctorId, e.target.checked)}
+                                className="form-checkbox"
+                            />
+                            <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
+                        </div>
                         {!idClinic && (
                             <>
-                                <div className="flex items-center mt-5 space-x-2">
-                                    <input
-                                        type="checkbox"
-                                        name="isActive"
-                                        checked={doctor.isActiveDoctorClinic}
-                                        onChange={(e) => handleDoctorClinicStatus(doctor.doctorId, e.target.checked)}
-                                        className="form-checkbox"
-                                    />
-                                    <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
-                                </div>
-
                                 <button
                                     className="w-full bg-blue-500 mt-2 text-white py-2 rounded-md hover:bg-blue-600 transition"
                                     onClick={() => handleSlots(clinicId, doctor.doctorId)}

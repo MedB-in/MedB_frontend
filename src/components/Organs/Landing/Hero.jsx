@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 const Hero = () => {
     const tabs = ["Doctors", "Clinic", "Lab"];
     const images = { Doctors: DoctorIcon, Clinic: ClinicIcon, Lab: LabIcon };
-    const redirects = { Doctors: "/find-clinic", Clinic: "/find-clinic", Lab: "/labs" };
+    const redirects = { Doctors: "/find-doctor-clinic", Clinic: "/find-doctor-clinic", Lab: "/labs" };
 
     const [activeTab, setActiveTab] = useState("Doctors");
     const [clinicSearch, setClinicSearch] = useState("");
@@ -27,19 +27,18 @@ const Hero = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setActiveTab((prevTab) => {
-                const currentIndex = tabs.indexOf(prevTab);
-                return tabs[(currentIndex + 1) % tabs.length];
-            });
-        }, 3000);
+            setTimeout(() => {
+                setActiveTab((prevTab) => {
+                    const currentIndex = tabs.indexOf(prevTab);
+                    const nextIndex = (currentIndex + 1) % tabs.length;
+                    return tabs[nextIndex];
+                });
+                setIsFading(false);
+            }, 300);
+        }, 2000);
+
         return () => clearInterval(interval);
     }, []);
-
-    useEffect(() => {
-        if (tabRef.current) {
-            tabRef.current.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-        }
-    }, [activeTab]);
 
     useEffect(() => {
         if (clinicSearch.trim() && !clinicId) {
