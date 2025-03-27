@@ -137,7 +137,7 @@ const ClinicDetailsPage = ({ idClinic }) => {
                         loading="lazy"
                         src={clinic.clinicPicture}
                         alt={clinic.name}
-                        className="w-full md:w-1/3 h-48 md:h-56 object-cover rounded-lg shadow-md border border-gray-300"
+                        className="w-full md:w-1/3 h-48 md:h-56 object-contain rounded-lg shadow-md border border-gray-300"
                     />
                     <div className="flex-1 space-y-3">
                         <h2 className="text-3xl font-bold text-gray-800">{clinic.name}</h2>
