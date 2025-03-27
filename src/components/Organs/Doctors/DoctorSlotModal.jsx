@@ -96,6 +96,7 @@ function DoctorSlotModal({ onClose, doctorId, clinicId }) {
                             type="text"
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                             className="w-full px-4 py-2 border rounded-md bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>

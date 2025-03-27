@@ -36,10 +36,10 @@ const DoctorList = ({ doctors, loading, clinicId }) => {
     return (
         <div className="flex gap-6 flex-wrap justify-center px-6 md:px-12 mb-10">
             <section className="w-full md:p-8 ">
-                <div className="flex items-center w-full rounded-lg border border-indigo-500 bg-[#6F64E7] opacity-30 p-8 md:px-16 shadow-md max-md:flex-col gap-6">
+                <div className="flex items-center w-full rounded-lg bg-[#6f64e454] p-8 md:px-16 shadow-md max-md:flex-col gap-6">
                     <div className="flex-1 w-full">
                         <select
-                            className="w-full h-12 px-4 rounded-lg border border-gray-300 text-black capitalize"
+                            className="w-full h-12 px-4 rounded-lg border border-gray-300 shadow-xl text-black capitalize"
                             value={selectedDepartment}
                             onChange={(e) => setSelectedDepartment(e.target.value)}
                             aria-label="Select Department"
@@ -54,7 +54,7 @@ const DoctorList = ({ doctors, loading, clinicId }) => {
                         <input
                             type="search"
                             placeholder="Search Doctors"
-                            className="w-full h-12 px-4 rounded-lg border border-gray-300 text-black"
+                            className="w-full h-12 px-4 rounded-lg border border-gray-300 shadow-xl text-black"
                             aria-label="Search Doctors"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}

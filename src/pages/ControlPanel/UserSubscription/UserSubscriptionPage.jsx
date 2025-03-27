@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getSubscriptions } from "../../../services/subscriptions";
+import toast from "react-hot-toast";
 
 function UserSubscription() {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -16,7 +17,7 @@ function UserSubscription() {
         setTotalPages(response.data.totalPages);
         setCurrentPage(response.data.currentPage);
       } catch (error) {
-        console.error("Error fetching subscriptions:", error);
+        toast.error("Error fetching subscriptions:", error);
       } finally {
         setLoading(false);
       }

@@ -55,8 +55,6 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
             setLoading(false);
         }
     };
-    console.log(formData.isVerified);
-
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

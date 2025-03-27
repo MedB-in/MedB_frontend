@@ -51,26 +51,19 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
 
 
     const SkeletonLoader = () => (
-        <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="animate-pulse md:mt-8 mt-10 p-16 w-full">
-            <div className="flex flex-col md:flex-row gap-8">
-                <div className="max-w-xs rounded-none">
-                    <div className="relative w-48 h-60 bg-gray-300 rounded-2xl"></div>
-                </div>
-                <div className="w-full md:w-[57%]">
-                    <div className="h-8 bg-gray-300 rounded w-3/4 mb-4"></div>
-                    <div className="h-6 bg-gray-300 rounded w-1/2 mb-4"></div>
-                    <div className="h-4 bg-gray-300 rounded w-2/3 mb-8"></div>
-                    <div className="h-6 bg-gray-300 rounded w-1/4 mb-4"></div>
-                    <div className="h-6 bg-gray-300 rounded w-full mb-2"></div>
-                    <div className="h-6 bg-gray-300 rounded w-5/6"></div>
+        <div className="animate-pulse mt-10 md:mt-8 p-6 md:p-16 w-full shadow-lg rounded-xl">
+            <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+                <div className="w-full md:w-48 h-52 md:h-60 bg-gray-300 rounded-2xl"></div>
+                <div className="w-full">
+                    <div className="h-6 md:h-8 bg-gray-300 rounded w-3/4 mb-3 md:mb-4"></div>
+                    <div className="h-5 md:h-6 bg-gray-300 rounded w-1/2 mb-3 md:mb-4"></div>
+                    <div className="h-4 bg-gray-300 rounded w-2/3 mb-6 md:mb-8"></div>
+                    <div className="h-5 md:h-6 bg-gray-300 rounded w-1/4 mb-3 md:mb-4"></div>
+                    <div className="h-5 md:h-6 bg-gray-300 rounded w-full mb-1 md:mb-2"></div>
+                    <div className="h-5 md:h-6 bg-gray-300 rounded w-5/6"></div>
                 </div>
             </div>
-        </motion.div>
+        </div>
     );
 
     return (
@@ -88,8 +81,8 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="md:mt-8 mt-10 md:p-16 w-full">
-                        <div className="flex flex-col md:flex-row md:gap-8">
+                        className="md:mt-8 mt-10 md:p-16 w-full md:shadow-lg md:rounded-xl ">
+                        <div className="flex flex-col md:flex-row md:gap-8 ">
                             <div className="md:hidden relative">
                                 <button
                                     onClick={handleBookAppointment}
@@ -106,7 +99,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                     viewport={{ once: true, amount: 0.3 }}
                                     transition={{ duration: 0.8, ease: "easeOut" }}
                                     className="md:hidden flex flex-col items-center text-center p-4">
-                                    <div className="relative w-40 h-52 overflow-hidden rounded-2xl">
+                                    <div className="relative w-40 h-52 overflow-hidden drop-shadow-2xl rounded-2xl">
                                         <img src={doctor?.profilePicture} className="object-cover w-full h-full border-2 border-indigo-500" alt="Doctor" />
                                     </div>
                                     <h1 className="mt-4 font-bold text-2xl">Dr. {doctor?.firstName} {doctor?.middleName || ''} {doctor?.lastName || ''}</h1>
@@ -130,7 +123,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                         transition={{ duration: 0.8, ease: "easeOut" }}
                                         className="flex flex-col md:flex-row gap-8">
                                         <figure className="max-w-xs rounded-none">
-                                            <div className="relative flex justify-center items-start px-2.5 py-3.5 rounded-2xl aspect-[0.791] overflow-hidden">
+                                            <div className="relative flex justify-center items-start px-2.5 py-3.5 rounded-2xl aspect-[0.791] drop-shadow-2xl overflow-hidden">
                                                 <img src={bgOverlay} className="absolute inset-0 size-full object-cover -translate-x-5" alt="Background overlay" />
                                                 <img src={doctor?.profilePicture} className="object-cover h-full rounded-2xl border-2 border-indigo-500 translate-x-2" alt="Doctor" />
                                             </div>
@@ -140,7 +133,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                             whileInView={{ opacity: 1, y: 0 }}
                                             viewport={{ once: true, amount: 0.3 }}
                                             transition={{ duration: 0.8, ease: "easeOut" }}
-                                            className="w-full md:w-[57%]">
+                                            className="w-full md:w-[57%] mt-10">
                                             <h1 className="font-bold text-3xl capitalize">Dr. {doctor?.firstName} {doctor?.middleName || ''} {doctor?.lastName || ''}</h1>
                                             <h2 className="mt-1.5 text-3xl">{doctor?.speciality}</h2>
                                             <p className="mt-1.5 text-xl font-light">{doctor?.qualifications}</p>
@@ -171,7 +164,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                             whileInView={{ opacity: 1, y: 0 }}
                                             viewport={{ once: true, amount: 0.3 }}
                                             transition={{ duration: 0.8, ease: "easeOut" }}
-                                            className="md:flex hidden flex-col px-11 py-10 text-2xl font-semibold text-indigo-500 bg-white rounded-2xl border border-black border-opacity-50 shadow-lg">
+                                            className="md:flex hidden flex-col px-11 py-10 text-2xl font-semibold text-indigo-500 bg-white rounded-2xl border border-black border-opacity-50 shadow-2xl">
                                             <h3>Contact Number</h3>
                                             <p className="mt-5 text-xl text-black">{doctor?.phone}</p>
                                             <h3 className="mt-10">Booking Number</h3>

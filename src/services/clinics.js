@@ -1,4 +1,4 @@
-import axios from "./axios";
+import axios, { uploadHeaders } from "./axios";
 import { getHeaders } from "./axios";
 
 // API to get all clinics
@@ -21,11 +21,11 @@ export const getClinicList = () =>
 
 //API to handle add Clinics.
 export const addClinic = (data) =>
-    axios.post("/api/clinic", data, getHeaders());
+    axios.post("/api/clinic", data, uploadHeaders());
 
 //API to handle edit Clinics.
 export const editClinic = (id, data) =>
-    axios.put(`/api/clinic/byId/${id}`, data, getHeaders());
+    axios.put(`/api/clinic/byId/${id}`, data, uploadHeaders());
 
 //API to get a specific Doctor with a specific Clinic details.
 export const getDoctorClinic = (clinicId, doctorId) =>

@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import dropdown from '../../assets/images/dropdown.png';
 import prev from '../../assets/images/prev-icon.png';
 import next from '../../assets/images/next-icon.png';
+import toast from 'react-hot-toast';
 
 const Icon = ({ type }) => {
     const icons = { dropdown, prev, next };
@@ -45,7 +46,7 @@ const Calendar = ({ onDateSelect }) => {
         if (onDateSelect) {
             onDateSelect({ date: formattedDate, day: day.id });
         } else {
-            console.error('onDateSelect is not defined');
+            toast.error('Date is not defined');
         }
     };
 

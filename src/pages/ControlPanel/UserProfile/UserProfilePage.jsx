@@ -38,11 +38,15 @@ const UserProfilePage = () => {
 
     const handleProfilePictureChange = async (e) => {
         const selectedImage = e.target.files[0];
+        const maxSize = 2 * 1024 * 1024;
         if (!selectedImage || !["image/jpeg", "image/png", "image/jpg"].includes(selectedImage.type)) {
             toast.error("Please select a valid image file.");
             return;
         }
-
+        if (selectedImage.size > maxSize) {
+            toast.error("File size exceeds 2MB. Please upload a smaller image.");
+            return;
+        }
         setProfilePicturePreview(URL.createObjectURL(selectedImage));
         setImageUploading(true);
 
