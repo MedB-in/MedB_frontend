@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import MedBLogo from "../../../assets/images/medb-logo-png.png";
-import MedBLogo2 from "../../../assets/images/medb-logo-2.svg";
 import { useSelector } from "react-redux";
 
 const Header = () => {
@@ -29,10 +28,7 @@ const Header = () => {
 
     return (
         <header className="flex items-center justify-between p-4 lg:px-12 bg-transparent backdrop-blur fixed w-full top-0 z-50">
-            <div className="block lg:hidden h-[42px] w-[42px] cursor-pointer" onClick={() => navigate("/home")}>
-                <img src={MedBLogo2} alt="Logo" className="h-full w-full object-contain" />
-            </div>
-            <div className="hidden lg:block h-[42px] w-[140px] cursor-pointer" onClick={() => navigate("/home")}>
+            <div className="lg:block h-[16px]  lg:h-[42px] lg:w-[140px] cursor-pointer" onClick={() => navigate("/home")}>
                 <img src={MedBLogo} alt="Logo" className="h-full w-full object-contain" />
             </div>
             <button
