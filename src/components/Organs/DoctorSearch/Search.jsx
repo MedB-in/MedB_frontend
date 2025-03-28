@@ -56,7 +56,9 @@ const SearchSection = () => {
     useEffect(() => {
         if (results.length > 0 && searchResultsRef.current) {
             setTimeout(() => {
-                searchResultsRef.current.scrollIntoView({ behavior: "smooth" });
+                const offset = 120;
+                const elementPosition = searchResultsRef.current.getBoundingClientRect().top + window.scrollY;
+                window.scrollTo({ top: elementPosition - offset, behavior: "smooth" });
             }, 200);
         }
     }, [results]);
@@ -137,7 +139,7 @@ const SearchSection = () => {
                     </div>
                 </div>
                 <div className="flex md:hidden flex-col items-center p-5 w-full">
-                    <button ref={searchResultsRef} className="mt-4 bg-[#6F64E7] text-white px-6 py-2 rounded-full flex items-center justify-center shadow-md w-full max-w-sm" onClick={handleSearch}>
+                    <button className="mt-4 bg-[#6F64E7] text-white px-6 py-2 rounded-full flex items-center justify-center shadow-md w-full max-w-sm" onClick={handleSearch}>
                         {isLoading ? 'Searching...' : 'Search'}
                         <img src={searchIcon} alt="Search Icon" className="w-5 h-5 ml-2" />
                     </button>
@@ -163,6 +165,7 @@ const SearchSection = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.5 }}
                     className="p-5"
+                    ref={searchResultsRef}
                 >
                     {results.length > 0 ? (
                         <div className="px-4 md:px-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
