@@ -56,10 +56,12 @@ h3, h4, h5 {
   animation: blink 1s step-end infinite;
 }
 
-.google-login-container {
+.google-login-button {
   width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-.google-login-container>div {
+.google-oauth-container {
   width: 100% !important;
 }
