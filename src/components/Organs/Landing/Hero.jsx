@@ -116,9 +116,6 @@ const Hero = () => {
                         >
                             <img src={ArrowRight} alt="Arrow" className="w-6" />
                         </motion.button>
-
-
-
                         {clinicSearch.trim() && !clinicId && (
                             <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg shadow-md mt-2 max-h-64 overflow-y-auto z-10">
                                 {isNoResults ? (
