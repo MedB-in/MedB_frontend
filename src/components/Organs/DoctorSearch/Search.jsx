@@ -3,7 +3,7 @@ import backgroundImage from '../../../assets/images/background-search.png';
 import toast from 'react-hot-toast';
 import { motion } from "framer-motion";
 import { ArrowDown } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getActiveDoctors, getActiveClinics } from '../../../services/publicApi';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,6 +14,8 @@ const SearchSection = () => {
     const [results, setResults] = useState(JSON.parse(sessionStorage.getItem('results')) || []);
     const [isSearchDone, setIsSearchDone] = useState(sessionStorage.getItem('isSearchDone') === 'true');
     const [isLoading, setIsLoading] = useState(false);
+
+    const searchResultsRef = useRef(null);
 
     useEffect(() => {
         sessionStorage.setItem('searchType', searchType);
@@ -51,6 +53,14 @@ const SearchSection = () => {
         }
     };
 
+    useEffect(() => {
+        if (results.length > 0 && searchResultsRef.current) {
+            setTimeout(() => {
+                searchResultsRef.current.scrollIntoView({ behavior: "smooth" });
+            }, 200);
+        }
+    }, [results]);
+
     const handleCardClick = (item) => {
         if (searchType === 'Doctor') {
             navigate(`/doctor-clinic/?doctorId=${item.doctorid}`);
@@ -80,27 +90,32 @@ const SearchSection = () => {
                         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                     />
                     <div className="relative flex-1">
-                        <select className="flex-1 px-3 py-2 border w-full border-white rounded-lg mr-3 box-border focus:outline-none bg-white text-black"
+                        <select
+                            className="flex-1 px-3 py-2 border w-full border-white rounded-lg box-border focus:outline-none cursor-pointer bg-white text-black appearance-none"
                             value={searchType}
-                            onChange={(e) => setSearchType(e.target.value)}>
-                            <option>Doctor</option>
-                            <option>Hospital/Clinic</option>
+                            onChange={(e) => setSearchType(e.target.value)}
+                        >
+                            <option value="Doctor">Doctor</option>
+                            <option value="Hospital/Clinic">Hospital/Clinic</option>
                         </select>
+                        <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                            ▼
+                        </div>
                     </div>
                 </div>
-
                 <button className="absolute bottom-5 h-12 left-1/2 transform -translate-x-1/2 bg-[#6F64E7] text-white px-6 py-2 rounded-full flex items-center justify-center shadow-md" onClick={handleSearch}>
-                    {isLoading? 'Searching...' : 'Search'}
+                    {isLoading ? 'Searching...' : 'Search'}
                     <img src={searchIcon} alt="Search Icon" className="w-5 h-5 ml-2" />
                 </button>
             </motion.div>
+            {/* Mobile Search UI */}
             <motion.section
                 initial={{ opacity: 0, y: 30 }}
                 viewport={{ once: true, amount: 0.3 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
-                className="p-5">
-                <div className="flex lg:hidden flex-col items-center bg-[#6f64e75b] shadow-lg p-12 rounded-lg w-full">
+                className="p-1">
+                <div className="flex lg:hidden flex-col items-center bg-[#6f64e75b] shadow-lg p-4 rounded-lg w-full">
                     <div className="flex flex-col w-full max-w-sm gap-3">
                         <input
                             type="text"
@@ -122,8 +137,8 @@ const SearchSection = () => {
                     </div>
                 </div>
                 <div className="flex md:hidden flex-col items-center p-5 w-full">
-                    <button className="mt-4 bg-[#6F64E7] text-white px-6 py-2 rounded-full flex items-center justify-center shadow-md w-full max-w-sm" onClick={handleSearch}>
-                        Search...
+                    <button ref={searchResultsRef} className="mt-4 bg-[#6F64E7] text-white px-6 py-2 rounded-full flex items-center justify-center shadow-md w-full max-w-sm" onClick={handleSearch}>
+                        {isLoading ? 'Searching...' : 'Search'}
                         <img src={searchIcon} alt="Search Icon" className="w-5 h-5 ml-2" />
                     </button>
                 </div>
@@ -155,7 +170,7 @@ const SearchSection = () => {
                                 <div
                                     key={index}
                                     onClick={() => handleCardClick(item)}
-                                    className={`relative bg-[#c2b2f0] mt-10 p-6 ${searchType === 'Doctor' ? 'h-[320px]' : 'h-[260px]'} rounded-xl shadow-lg transition-transform transform hover:scale-105 text-center cursor-pointer border border-gray-200`}
+                                    className={`relative bg-[#c2b2f0] mt-12 p-3 ${searchType === 'Doctor' ? 'h-[320px]' : 'h-[260px]'} rounded-xl shadow-lg transition-transform transform hover:scale-105 text-center cursor-pointer border border-gray-200`}
                                 >
                                     <img
                                         src={item.profilepicture || item.clinicpicture}

@@ -168,25 +168,10 @@ const LoginPage = () => {
                     theme="outline"
                     size="large"
                     shape="pill"
-                    width="100%"
-                    className="rounded-xl"
+                    className="rounded-xl !w-full !flex !justify-center"
                   />
                 </div>
               </GoogleOAuthProvider>
-              {/* <Button
-                onClick={() => navigate("/googleLogin")}
-                variant="outline"
-                className="h-12 w-full hover:bg-gray-50 active:bg-gray-100"
-              >
-                <span className="flex items-center justify-center">
-                  <img
-                    src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
-                    alt="Google Logo"
-                    className="w-8 aspect-square mr-2"
-                  />
-                  Login with Google
-                </span>
-              </Button> */}
               <p className="text-center text-sm text-gray-600">
                 Don't have an account?{" "}
                 <button

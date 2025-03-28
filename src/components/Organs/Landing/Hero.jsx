@@ -33,7 +33,6 @@ const Hero = () => {
                     const nextIndex = (currentIndex + 1) % tabs.length;
                     return tabs[nextIndex];
                 });
-                setIsFading(false);
             }, 300);
         }, 2000);
 
