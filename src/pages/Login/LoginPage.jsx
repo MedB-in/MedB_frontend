@@ -159,17 +159,19 @@ const LoginPage = () => {
               </Button>
               <GoogleOAuthProvider clientId={clientId}>
                 <div className="w-full">
-                  <GoogleLogin
-                    onSuccess={(response) => {
-                      const decoded = jwtDecode(response.credential);
-                      handleGoogleLogin(decoded);
-                    }}
-                    onError={() => toast.error("Google login failed")}
-                    theme="outline"
-                    size="large"
-                    shape="pill"
-                    className="rounded-xl !w-full !flex !justify-center"
-                  />
+                  <div className="w-full h-12 overflow-hidden">
+                    <GoogleLogin
+                      onSuccess={(response) => {
+                        const decoded = jwtDecode(response.credential);
+                        handleGoogleLogin(decoded);
+                      }}
+                      onError={() => toast.error("Google login failed")}
+                      theme="outline"
+                      size="large"
+                      shape="pill"
+                      className="!w-full rounded-xl !h-12 flex justify-center items-center"
+                    />
+                  </div>
                 </div>
               </GoogleOAuthProvider>
               <p className="text-center text-sm text-gray-600">
