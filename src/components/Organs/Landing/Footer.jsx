@@ -138,19 +138,36 @@ const Footer = () => {
                         </a>
                     </div>
                     <div className="flex justify-center md:justify-end space-x-4 mt-3 md:mt-0">
-                        {[facebookIcon, instagramIcon, linkedInIcon].map((icon, index) => (
-                            <motion.a
-                                key={index}
-                                href="#"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <img src={icon} alt="Social Icon" className="w-6 hover:opacity-80 transition" />
-                            </motion.a>
-                        ))}
+                        <motion.a
+                            href="https://www.facebook.com/people/MedB/61550544957867/?mibextid=ZbWKwL"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <img src={facebookIcon} alt="Facebook" className="w-6 hover:opacity-80 transition" />
+                        </motion.a>
+                        <motion.a
+                            href="https://www.instagram.com/medb_app/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <img src={instagramIcon} alt="Instagram" className="w-6 hover:opacity-80 transition" />
+                        </motion.a>
+                        <motion.a
+                            href="https://www.linkedin.com/company/medbindia/about/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <img src={linkedInIcon} alt="LinkedIn" className="w-6 hover:opacity-80 transition" />
+                        </motion.a>
                     </div>
                 </div>
             </motion.div>

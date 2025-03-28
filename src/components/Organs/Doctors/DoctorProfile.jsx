@@ -9,9 +9,20 @@ import { useEffect, useState } from 'react';
 
 const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
 
     const handleBookAppointment = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrolledHeight = window.innerHeight + window.scrollY;
+            const totalHeight = document.documentElement.scrollHeight;
+            setIsVisible(scrolledHeight < totalHeight - 50);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const dayMap = days.reduce((acc, day) => {
         acc[day.id] = day.label;
@@ -86,7 +97,8 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                             <div className="md:hidden relative">
                                 <button
                                     onClick={handleBookAppointment}
-                                    className="fixed bottom-5 left-1/2 -translate-x-1/2 w-[90%] py-4 text-base font-medium bg-indigo-500 rounded-lg text-white shadow-lg hover:bg-indigo-600 transition-transform"
+                                    className={`fixed bottom-5 left-1/2 -translate-x-1/2 w-[90%] py-4 text-base font-medium bg-indigo-500 rounded-lg text-white hover:bg-indigo-600 shadow-lg transition-all duration-700 ease-in-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
+                                        }`}
                                 >
                                     Book Appointment
                                 </button>
@@ -100,7 +112,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                     transition={{ duration: 0.8, ease: "easeOut" }}
                                     className="md:hidden flex flex-col items-center text-center p-4">
                                     <div className="relative w-40 h-52 overflow-hidden drop-shadow-2xl rounded-2xl">
-                                        <img src={doctor?.profilePicture} className="object-cover w-full h-full border-2 border-indigo-500" alt="Doctor" />
+                                        <img src={doctor?.profilePicture} className="object-cover w-full h-full rounded-2xl border-2 border-indigo-500" alt="Doctor" />
                                     </div>
                                     <h1 className="mt-4 font-bold text-2xl">Dr. {doctor?.firstName} {doctor?.middleName || ''} {doctor?.lastName || ''}</h1>
                                     <h2 className="mt-1 text-xl">{doctor?.speciality}</h2>

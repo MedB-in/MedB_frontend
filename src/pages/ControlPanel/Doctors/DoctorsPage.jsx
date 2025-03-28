@@ -39,10 +39,10 @@ const DoctorsPage = () => {
     setIsDoctorModalOpen(true);
   };
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data, doctorId) => {
     try {
-      if (data?.doctorId) {
-        const response = await editDoctor(data.doctorId, data);
+      if (doctorId) {
+        const response = await editDoctor(doctorId, data);
         toast.success(response.data.message);
       } else {
         const response = await addDoctor(data);
@@ -104,18 +104,18 @@ const DoctorsPage = () => {
                   <p className="font-medium">Contact No:</p> <p>{doctor.phone}</p>
                   <p className="font-medium">Email:</p> <p>{doctor.email}</p>
                   <p className="font-medium">Address:</p>
-                  <p className="text-gray-600 my-5">
+                  <p className="text-gray-600 mb-5">
                     {doctor.address}, {doctor.district}, {doctor.state}, {doctor.country} - {doctor.postalCode}
                   </p>
                 </div>
                 <div className="mt-auto pt-4 flex justify-between items-center border-t border-gray-200">
                   <div>
-                  <p className={`font-semibold ${doctor.isActive ? "text-green-600" : "text-red-600"}`}>
-                    {doctor.isActive ? "Active" : "Inactive"}
-                  </p>
-                  <p className={`font-semibold ${doctor.isVerified ? "text-blue-600" : "text-red-600"}`}> 
-                    {doctor.isVerified ? "Verified" : "Not Verified"}
-                  </p>
+                    <p className={`font-semibold ${doctor.isActive ? "text-green-600" : "text-red-600"}`}>
+                      {doctor.isActive ? "Active" : "Inactive"}
+                    </p>
+                    <p className={`font-semibold ${doctor.isVerified ? "text-blue-600" : "text-red-600"}`}>
+                      {doctor.isVerified ? "Verified" : "Not Verified"}
+                    </p>
                   </div>
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"

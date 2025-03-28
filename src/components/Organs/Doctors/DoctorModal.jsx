@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { getClinicList } from "../../../services/clinics";
 import LocationSelector from "../../LocationSelector";
+import { UploadIcon } from "lucide-react";
 
 const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onSubmit }) => {
   const [loading, setLoading] = useState(false);
   const [clinics, setClinics] = useState([]);
   const [error, setError] = useState(null);
   const [selfClinic, setSelfClinic] = useState(false);
+  const [doctorPictureFile, setDoctorPictureFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
     if (!fromClinic) {
@@ -25,7 +28,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
   }, [isOpen]);
 
   const defaultFormData = {
-    doctorId: null,
+    doctorId: "",
     clinicId: clinicId || "",
     firstName: "",
     middleName: "",
@@ -38,7 +41,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     gender: "",
     qualifications: "",
     experience: "",
-    location: { type: "Point", coordinates: [null, null] },
+    location: { type: "Point", coordinates: [0, 0] },
     address: "",
     city: "",
     district: "",
@@ -85,12 +88,49 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     setError(null);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const validTypes = ["image/jpeg", "image/png", "image/jpg"];
+    const maxSize = 2 * 1024 * 1024;
+    if (!validTypes.includes(file.type)) {
+      toast.error("Please select a valid image file (JPG, JPEG, or PNG).");
+      return;
+    }
+    if (file.size > maxSize) {
+      toast.error("File size exceeds 2MB. Please upload a smaller image.");
+      return;
+    }
+    setDoctorPictureFile(file);
+    setPreviewImage(URL.createObjectURL(file));
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    const formDataToSend = new FormData();
+
+    Object.entries(formData).forEach(([key, value]) => {
+      if (typeof value === "object" && value !== null) {
+        formDataToSend.append(key, JSON.stringify(value));
+      } else {
+        formDataToSend.append(key, value);
+      }
+    });
+
+    if (doctorPictureFile) {
+      formDataToSend.append("image", doctorPictureFile);
+    }
+
     try {
-      await onSubmit(formData);
+      await onSubmit(formDataToSend, formData.doctorId);
+      setDoctorPictureFile(null);
+      setPreviewImage(null);
+      closeModal();
     } catch (error) {
       setError(error.response?.data?.message || "Something went wrong");
       toast.error(error.response?.data?.message || "Something went wrong");
@@ -141,6 +181,24 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
           {doctorData ? "Edit Doctor" : "Add New Doctor"}
         </h3>
         <form onSubmit={handleSubmit}>
+          <div className="mt-4">
+            <label className="block text-sm font-medium mb-2">Profile Picture (click to upload)</label>
+            <div className="relative w-full mb-4 h-40 rounded-md flex items-center justify-center">
+              {formData.profilePicture && !previewImage && <img src={formData.profilePicture} alt="Clinic" className="w-32 h-32 object-cover" />}
+              {previewImage ? (
+                <img src={previewImage} alt="Clinic" className="h-full w-full object-contain rounded-md" />
+              ) : (
+                !formData.profilePicture && (
+                  <UploadIcon className="h-10 w-10 text-gray-400" />)
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+                onChange={handleFileChange}
+              />
+            </div>
+          </div>
           {!clinicId && !doctorData && !selfClinic && (
             <div className="mb-4">
               <label className="block text-sm font-medium">Clinic</label>
