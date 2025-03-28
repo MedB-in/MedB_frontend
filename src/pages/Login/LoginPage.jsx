@@ -4,7 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthenticated, setUserDetails } from "../../redux/slices/authSlice";
 import { setUserAccess } from "../../redux/slices/userAccessSlice";
-import { doLogin } from "../../services/auth";
+import { doGoogleLogin, doLogin } from "../../services/auth";
 import useToken from "../../hooks/useToken";
 import Frame from "../../assets/images/frame.png";
 import Logo from "../../assets/images/logo.svg";
@@ -14,6 +14,10 @@ import InputField from "../../components/Atoms/Login/InputField";
 import Button from "../../components/Atoms/Login/Button";
 import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
 import { motion } from "framer-motion";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -25,6 +29,7 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { state } = location;
+
 
   useEffect(() => {
     if (authenticated) {
@@ -56,6 +61,24 @@ const LoginPage = () => {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async (googleUser) => {
+    try {
+      const { data } = await doGoogleLogin({
+        email: googleUser.email,
+        googleId: googleUser.sub,
+        name: googleUser.name,
+        avatar: googleUser.picture,
+      });
+      setToken(data.accessToken);
+      dispatch(setUserDetails(data.userDetails));
+      dispatch(setUserAccess(data.menuData));
+      dispatch(setAuthenticated(true));
+      navigate("/");
+    } catch (error) {
+      toast.error("Google login failed. Try again.");
     }
   };
 
@@ -134,7 +157,23 @@ const LoginPage = () => {
               >
                 {loading ? "Logging in..." : "Login"}
               </Button>
-              <Button
+              <GoogleOAuthProvider clientId={clientId}>
+                <div className="w-full">
+                  <GoogleLogin
+                    onSuccess={(response) => {
+                      const decoded = jwtDecode(response.credential);
+                      handleGoogleLogin(decoded);
+                    }}
+                    onError={() => toast.error("Google login failed")}
+                    theme="outline"
+                    size="large"
+                    shape="pill"
+                    width="100%"
+                    className="rounded-xl"
+                  />
+                </div>
+              </GoogleOAuthProvider>
+              {/* <Button
                 onClick={() => navigate("/googleLogin")}
                 variant="outline"
                 className="h-12 w-full hover:bg-gray-50 active:bg-gray-100"
@@ -147,7 +186,7 @@ const LoginPage = () => {
                   />
                   Login with Google
                 </span>
-              </Button>
+              </Button> */}
               <p className="text-center text-sm text-gray-600">
                 Don't have an account?{" "}
                 <button
