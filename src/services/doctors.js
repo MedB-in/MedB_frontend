@@ -1,4 +1,4 @@
-import axios from "./axios";
+import axios, { uploadHeaders } from "./axios";
 import { getHeaders } from "./axios";
 
 //API to handle get Doctors.
@@ -31,8 +31,8 @@ export const addDoctorClinic = (id, data) =>
 
 //API to handle add Doctors.
 export const addDoctor = (data) =>
-    axios.post("/api/doctor/", data, getHeaders());
+    axios.post("/api/doctor/", data, uploadHeaders());
 
 //API to handle edit Doctors.
 export const editDoctor = (id, data) =>
-    axios.put(`/api/doctor/edit/${id}`, data, getHeaders());
+    axios.put(`/api/doctor/edit/${id}`, data, uploadHeaders());
