@@ -58,10 +58,5 @@ h3, h4, h5 {
 
 .google-login-button {
   width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-.google-oauth-container {
-  width: 100% !important;
+  height: 48px !important;
 }
