@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthenticated, setUserDetails } from "../../redux/slices/authSlice";
@@ -13,9 +16,7 @@ import PasswordIcon from "../../assets/images/password-icon.svg";
 import InputField from "../../components/Atoms/Login/InputField";
 import Button from "../../components/Atoms/Login/Button";
 import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
-import { motion } from "framer-motion";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
+import GoogleLoginButton from "../../components/Atoms/GoogleLogin/GoolgeLoginButton";
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -157,23 +158,7 @@ const LoginPage = () => {
               >
                 {loading ? "Logging in..." : "Login"}
               </Button>
-              <GoogleOAuthProvider clientId={clientId}>
-                <div className="w-full">
-                  <div className="w-full h-12 overflow-hidden">
-                    <GoogleLogin
-                      onSuccess={(response) => {
-                        const decoded = jwtDecode(response.credential);
-                        handleGoogleLogin(decoded);
-                      }}
-                      onError={() => toast.error("Google login failed")}
-                      theme="outline"
-                      size="large"
-                      shape="pill"
-                      className="!w-full rounded-xl !h-12 flex justify-center items-center"
-                    />
-                  </div>
-                </div>
-              </GoogleOAuthProvider>
+              <GoogleLoginButton clientId={clientId} handleGoogleLogin={handleGoogleLogin} />
               <p className="text-center text-sm text-gray-600">
                 Don't have an account?{" "}
                 <button
