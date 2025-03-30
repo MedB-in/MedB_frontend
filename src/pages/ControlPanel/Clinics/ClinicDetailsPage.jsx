@@ -108,6 +108,17 @@ const ClinicDetailsPage = ({ idClinic }) => {
     };
 
     const handleDoctorClinicStatus = async (doctorId, isChecked) => {
+        const result = await Swal.fire({
+            title: "Consultation Status",
+            text: `Are you sure you want to ${isChecked ? "activate" : "deactivate"} this doctor?`,
+            showCancelButton: true,
+            confirmButtonColor: "#6F64E7",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Confirm!",
+        });
+
+        if (!result.isConfirmed) return;
+
         try {
             const response = await setIsDoctorClinicStatus(doctorId, clinicId, isChecked);
             setDoctors((prevDoctors) =>
@@ -122,6 +133,7 @@ const ClinicDetailsPage = ({ idClinic }) => {
             toast.error(error.response?.data?.message || "Something went wrong");
         }
     };
+
 
     return (
         <div className="p-4">

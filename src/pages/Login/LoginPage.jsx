@@ -22,13 +22,13 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const { authenticated } = useSelector((state) => state.auth);
   const { setToken } = useToken();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
   const { state } = location;
-
 
   useEffect(() => {
     if (authenticated) {
@@ -47,23 +47,22 @@ const LoginPage = () => {
       dispatch(setUserAccess(data.menuData));
       dispatch(setAuthenticated(true));
       if (window.opener) {
-        window.opener.postMessage('authenticated', window.location.origin);
+        window.opener.postMessage("authenticated", window.location.origin);
         window.close();
       } else {
         navigate("/");
       }
     } catch (error) {
-      if (error.response && error.response.data) {
-        toast.error(error.response.data.message || "An error occurred on the server.");
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
+      toast.error(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleLogin = async (googleUser) => {
+    setGoogleLoading(true);
     try {
       const { data } = await doGoogleLogin({
         email: googleUser.email,
@@ -78,6 +77,8 @@ const LoginPage = () => {
       navigate("/");
     } catch (error) {
       toast.error("Google login failed. Try again.");
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -88,26 +89,57 @@ const LoginPage = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative flex justify-center items-center h-screen px-11 bg-white">
+        className="relative flex justify-center items-center h-screen px-11 bg-white"
+      >
+        {(loading || googleLoading) && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="absolute inset-0 bg-black bg-opacity-10 backdrop-blur-md flex justify-center items-center z-10"
+          >
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="text-lg flex flex-col items-center font-extralight text-indigo-600"
+            >
+              <img
+                src={Logo}
+                alt="Medb Logo"
+                className="h-10 mt-5 w-auto cursor-pointer"
+              />
+              <span className="mt-2 animate-pulse">
+                {googleLoading ? "Logging in with Google..." : "Logging in..."}
+              </span>
+            </motion.p>
+          </motion.div>
+        )}
         <div className="flex flex-grow gap-5">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="hidden lg:flex flex-col w-[75%] p-10 h-screen">
+            className="hidden lg:flex flex-col w-[75%] p-10 h-screen"
+          >
             <img
               loading="lazy"
               src={Frame}
-
               alt="Login illustration"
               className="object-cover h-full w-full rounded-[49px]"
             />
           </motion.div>
-          <div
-            className="flex flex-col justify-center w-full max-w-md :w-2/3 mx-auto px-4 py-8 space-y-6 border bg-white shadow-lg rounded-3xl lg:absolute lg:right-[10%] lg:top-1/2 lg:-translate-y-1/2 lg:w-1/3 lg:px-12">
+
+          <div className="flex flex-col justify-center w-full max-w-md mx-auto px-4 py-8 space-y-6 border bg-white shadow-lg rounded-3xl lg:absolute lg:right-[10%] lg:top-1/2 lg:-translate-y-1/2 lg:w-1/3 lg:px-12">
             <div className="">
               <div className="mb-12 flex justify-center">
-                <img src={Logo} onClick={() => navigate("/home")} alt="Medb Logo" className="h-10 mt-5 w-auto cursor-pointer" />
+                <img
+                  src={Logo}
+                  onClick={() => navigate("/home")}
+                  alt="Medb Logo"
+                  className="h-10 mt-5 w-auto cursor-pointer"
+                />
               </div>
               <h1 className="mb-2 text-2xl font-semibold text-gray-900 text-center">
                 Welcome Back!
@@ -116,6 +148,7 @@ const LoginPage = () => {
                 Please enter your details
               </p>
             </div>
+
             <form className="space-y-6">
               <InputField
                 type="email"
@@ -124,6 +157,7 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+
               <div className="relative">
                 <InputField
                   type="password"
@@ -134,6 +168,7 @@ const LoginPage = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
+
               <div className="flex justify-end">
                 <button
                   onClick={() => navigate("/forgot-password")}
@@ -148,15 +183,22 @@ const LoginPage = () => {
                   Forgot Password
                 </button>
               </div>
+
               <Button
                 onClick={handleSubmit}
                 type="submit"
                 className="h-12 w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800"
-                disabled={loading}
+                disabled={loading || googleLoading}
               >
                 {loading ? "Logging in..." : "Login"}
               </Button>
-              <GoogleLoginButton clientId={clientId} handleGoogleLogin={handleGoogleLogin} />
+
+              <GoogleLoginButton
+                clientId={clientId}
+                handleGoogleLogin={handleGoogleLogin}
+                disabled={loading || googleLoading}
+              />
+
               <p className="text-center text-sm text-gray-600">
                 Don't have an account?{" "}
                 <button
@@ -170,7 +212,7 @@ const LoginPage = () => {
             </form>
           </div>
         </div>
-      </motion.div >
+      </motion.div>
     </>
   );
 };
