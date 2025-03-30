@@ -182,13 +182,12 @@ function AppointmentsManagement() {
                     className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-gray-400"
                 />
             </div>
-
             <div className="w-full max-w-lg mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="relative">
                     <select
                         value={selectedDoctor}
                         onChange={handleDoctorChange}
-                        className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-gray-400"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white appearance-none"
                     >
                         <option value="">All Doctors</option>
                         {doctors.map((doc) => (
@@ -197,44 +196,44 @@ function AppointmentsManagement() {
                             </option>
                         ))}
                     </select>
+                    <div className="absolute inset-y-0 right-2 -top-3 flex items-center pointer-events-none">
+                        ⌄
+                    </div>
                 </div>
-
                 <input
                     type="date"
                     value={startDate}
                     onChange={handleStartDateChange}
-                    className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-gray-400"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white"
                 />
                 <input
                     type="date"
                     value={endDate}
                     onChange={handleEndDateChange}
-                    className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-gray-400"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white"
                 />
             </div>
-
-            <div className="flex gap-2 mt-4">
+            <Button variant="primary" className="lg:hidden" onClick={applyFilters}>Search</Button>
+            <Button variant="secondary" className="lg:hidden" onClick={resetFilters}>Reset</Button>
+            <div className="hidden lg:flex gap-2 mt-4">
                 <Button variant="primary" onClick={applyFilters}>Search</Button>
                 <Button variant="secondary" onClick={resetFilters}>Reset</Button>
             </div>
-
-
-
-            <Button variant="primary" className="mt-4" onClick={() => navigate(`/appointments/book-appointment/${clinicId}`)}>
+            <Button variant="primary" className="" onClick={() => navigate(`/appointments/book-appointment/${clinicId}`)}>
                 Walk-In Appointment
             </Button>
-            <div className="w-full mx-auto rounded-xl p-6 mt-4">
-                <table className="w-full border-collapse border bg-white shadow-md border-gray-200 rounded-lg overflow-hidden">
+            <div className="w-full mx-auto rounded-xl p-6 mt-4 overflow-x-auto">
+                <table className="w-full min-w-max border-collapse border bg-white shadow-md border-gray-200 rounded-lg">
                     <thead>
                         <tr className="bg-gray-100 text-center">
-                            <th className="px-4 py-3 border border-gray-200">No.</th>
-                            <th className="px-4 py-3 border border-gray-200">Doctor</th>
-                            <th className="px-4 py-3 border border-gray-200">Appointment Date</th>
-                            <th className="px-4 py-3 border border-gray-200">Appointment Time</th>
-                            <th className="px-4 py-3 border border-gray-200">Patient</th>
-                            <th className="px-4 py-3 border border-gray-200">Status</th>
-                            <th className="px-4 py-3 border border-gray-200">Reason</th>
-                            <th className="px-4 py-3 border border-gray-200">Actions</th>
+                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">No.</th>
+                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Doctor</th>
+                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Appointment Date</th>
+                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Appointment Time</th>
+                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Patient</th>
+                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Status</th>
+                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Reason</th>
+                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -307,7 +306,7 @@ function AppointmentsManagement() {
                                                 {appt.reasonForVisit || "N/A"}<br />
                                                 {appt.isEmergency && " (Emergency)"}
                                             </td>
-                                            {(appt.appointmentStatus !== "Completed" && appt.appointmentStatus !== "Cancelled") ? (
+                                            {(appt.appointmentStatus !== "Completed" && appt.appointmentStatus !== "Cancelled" && appt.appointmentDate.split('-').reverse().join('-') >= today) ? (
                                                 <td className="flex flex-col gap-2 p-2 items-center">
                                                     <button
                                                         onClick={() => handleStatus(appt)}
@@ -340,37 +339,37 @@ function AppointmentsManagement() {
                         )}
                     </tbody>
                 </table>
-                {totalPages > 1 && (
-                    <div className="mt-6 flex justify-center items-center space-x-2">
-                        <button
-                            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
-                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                            disabled={currentPage === 1}
-                        >
-                            Prev
-                        </button>
-                        {generatePagination.map((page, index) => (
-                            <button
-                                key={index}
-                                className={`${page === "..." ? "text-gray-400 cursor-default"
-                                    : page === currentPage
-                                        ? "bg-gray-300 text-gray-800 font-bold"
-                                        : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-4 py-2 rounded-lg`}
-                                onClick={() => page !== "..." && setCurrentPage(page)}
-                                disabled={page === "..."}>
-                                {page}
-                            </button>
-                        ))}
-                        <button
-                            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
-                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                            disabled={currentPage === totalPages}
-                        >
-                            Next
-                        </button>
-                    </div>
-                )}
             </div>
+            {totalPages > 1 && (
+                <div className="mt-6 flex justify-center items-center space-x-2">
+                    <button
+                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                    >
+                        Prev
+                    </button>
+                    {generatePagination.map((page, index) => (
+                        <button
+                            key={index}
+                            className={`${page === "..." ? "text-gray-400 cursor-default"
+                                : page === currentPage
+                                    ? "bg-gray-300 text-gray-800 font-bold"
+                                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-4 py-2 rounded-lg`}
+                            onClick={() => page !== "..." && setCurrentPage(page)}
+                            disabled={page === "..."}>
+                            {page}
+                        </button>
+                    ))}
+                    <button
+                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
             <AppointMentStatusModal
                 isOpen={statusModalOpen}
                 onClose={closeStatusModal}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
 import { updateAppointmentStatus } from "../../../services/clinics";
 import toast from "react-hot-toast";
 
@@ -8,11 +9,21 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
 
     const handleSubmit = async () => {
         if (!status) return;
+        const result = await Swal.fire({
+            title: "Consultation Status",
+            text: `Are you sure you want to set the status to ${status ? "Completed" : "Cancelled"}?`,
+            showCancelButton: true,
+            confirmButtonColor: "#6F64E7",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Confirm!",
+        });
+
+        if (!result.isConfirmed) return;
         setLoading(true);
         try {
             const response = await updateAppointmentStatus(appointment.appointmentId, status);
-            if (response.data.data === 1) { 
-                updateAppointment({...appointment,appointmentStatus:status}); 
+            if (response.data.data === 1) {
+                updateAppointment({ ...appointment, appointmentStatus: status });
                 toast.success("Appointment status updated successfully.");
                 onClose();
             } else {
@@ -31,7 +42,7 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
             <div className="bg-white p-6 rounded-lg shadow-xl w-96">
                 <h2 className="text-lg font-semibold mb-4">Update Status</h2>
                 <p className="mb-4">Appointment for {appointment?.patientFirstName} {appointment?.patientLastName}</p>
-                
+
                 <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}

@@ -9,6 +9,7 @@ import Logo1 from '../../assets/images/medb-logo-png.png';
 import AlertIcon from '../../assets/images/alert-icon.png';
 import LogoutIcon from '../../assets/images/logout-icon.png';
 import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const dispatch = useDispatch();
@@ -71,8 +72,15 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     };
 
     const doLogout = async () => {
-        const confirmation = confirm('Are you sure you want to logout?');
-        if (!confirmation) return;
+        const result = await Swal.fire({
+            title: "Logout",
+            text: "Are you sure you want to logout?",
+            showCancelButton: true,
+            confirmButtonColor: "#6F64E7",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Confirm!",
+        });
+        if (!result.isConfirmed) return;
         dispatch(setAuthenticated(false));
         await logout();
         navigate('/');

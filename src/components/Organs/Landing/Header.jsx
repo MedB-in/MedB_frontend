@@ -28,8 +28,8 @@ const Header = () => {
 
     return (
         <header className="flex items-center justify-between p-4 lg:px-12 bg-transparent backdrop-blur fixed w-full top-0 z-50">
-            <div className="lg:block h-[16px]  lg:h-[42px] lg:w-[140px] cursor-pointer" onClick={() => navigate("/home")}>
-                <img src={MedBLogo} alt="Logo" className="h-full w-full object-contain" />
+            <div className="h-[16px] lg:h-[42px] lg:w-[140px] flex items-center justify-start cursor-pointer" onClick={() => navigate("/home")}>
+                <img src={MedBLogo} alt="Logo" className="h-full object-contain max-w-[100%]" />
             </div>
             <button
                 className="lg:hidden p-2"
@@ -45,7 +45,7 @@ const Header = () => {
                             <motion.p
                                 onClick={() => navigate(item.path)}
                                 className={`text-white font-medium px-3 py-2 relative cursor-pointer ${location.pathname === item.path ? "underline underline-offset-8" : ""
-                                }`}
+                                    }`}
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                             >
