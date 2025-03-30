@@ -1,6 +1,7 @@
 import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 import ClinicModal from "../../../components/Organs/Clinics/ClinicModal";
 import DoctorToClinicModal from "../../../components/Organs/Clinics/DoctorToClinicModal";
@@ -110,7 +111,7 @@ const ClinicDetailsPage = ({ idClinic }) => {
     const handleDoctorClinicStatus = async (doctorId, isChecked) => {
         const result = await Swal.fire({
             title: "Consultation Status",
-            text: `Are you sure you want to ${isChecked ? "activate" : "deactivate"} this doctor?`,
+            text: `Are you sure you want to ${isChecked ? "activate" : "deactivate"}consultation for this doctor?`,
             showCancelButton: true,
             confirmButtonColor: "#6F64E7",
             cancelButtonColor: "#d33",
