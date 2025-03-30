@@ -74,7 +74,12 @@ const LoginPage = () => {
       dispatch(setUserDetails(data.userDetails));
       dispatch(setUserAccess(data.menuData));
       dispatch(setAuthenticated(true));
-      navigate("/");
+      if (window.opener) {
+        window.opener.postMessage("authenticated", window.location.origin);
+        window.close();
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       toast.error("Google login failed. Try again.");
     } finally {
