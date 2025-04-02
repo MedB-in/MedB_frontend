@@ -44,6 +44,17 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
     const timeCategories = categorizeSlots(timeSlots);
     const hasNoSlots = date && Object.values(timeCategories).every(category => category.length === 0);
 
+    const isPastSlot = (slotTime) => {
+        const now = new Date();
+        const selectedDateTime = new Date(date);
+
+        const [slotHour, slotMinute] = slotTime.split(':').map(Number);
+        selectedDateTime.setHours(slotHour, slotMinute, 0, 0);
+
+        return selectedDateTime < now;
+    };
+
+
     const renderCategory = (title, icon, slots) => {
         if (!slots.length) return null;
         return (
@@ -56,12 +67,13 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
                     {slots.map((slot, index) => (
                         <div
                             key={index}
-                            className={`p-2.5 text-sm text-center rounded-md cursor-pointer transition-all duration-300 ${slot.booked
-                                ? 'text-gray-500 bg-gray-300 cursor-no-drop'
+                            className={`p-2.5 text-sm text-center rounded-md cursor-pointer transition-all duration-300 ${slot.booked || isPastSlot(slot.time)
+                                ? 'text-gray-500 bg-gray-300 cursor-not-allowed'
                                 : selectedSlot === slot.time
                                     ? 'bg-indigo-500 text-white border border-green-700'
-                                    : 'bg-white border border-indigo-500 text-indigo-500 font-semibold hover:bg-indigo-50'}`}
-                            onClick={() => !slot.booked && handleSlotClick(slot)}
+                                    : 'bg-white border border-indigo-500 text-indigo-500 font-semibold hover:bg-indigo-50'
+                                }`}
+                            onClick={() => !slot.booked && !isPastSlot(slot.time) && handleSlotClick(slot)}
                         >
                             {new Date(`1970-01-01T${slot.time}`).toLocaleTimeString('en-US', {
                                 hour: 'numeric',
@@ -69,6 +81,7 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
                                 hour12: true,
                             })}
                         </div>
+
                     ))}
                 </div>
             </div>
@@ -95,6 +108,11 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
 
     return (
         <section className="px-4 md:px-14 py-4 mx-auto my-5 rounded-2xl border border-solid backdrop-blur-[18.15px] bg-white bg-opacity-70 border-indigo-500 border-opacity-10">
+            <div className="flex items-center gap-2 justify-end">
+                <div className="h-4 w-4 bg-gray-300"></div>
+                <p className="text-gray-500 text-sm">Not available</p>
+            </div>
+
             {loading ? renderSkeleton() : hasNoSlots ? (
                 <p className="text-center text-gray-500">No slots available for the selected date.</p>
             ) : (

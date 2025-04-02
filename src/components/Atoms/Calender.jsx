@@ -20,6 +20,20 @@ const Calendar = ({ onDateSelect }) => {
     const dropdownRef = useRef(null);
 
     useEffect(() => {
+        if (!selectedDate) { // Prevent redundant updates
+            setSelectedDate(today);
+            const dayLabel = format(today, 'EEEE');
+            const day = days.find(day => day.label === dayLabel);
+            const formattedDate = format(today, "yyyy-MM-dd");
+
+            if (onDateSelect && day) {
+                onDateSelect({ date: formattedDate, day: day.id });
+            }
+        }
+    }, []);
+
+
+    useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setShowDropdown(false);
@@ -98,17 +112,21 @@ const Calendar = ({ onDateSelect }) => {
                     {emptyDays.map((_, index) => <div key={`empty-${index}`} className="p-1.5" />)}
                     {daysArray.map(day => {
                         const currentDate = new Date(date.getFullYear(), date.getMonth(), day);
-                        const isDisabled = currentDate < today;
+                        const isDisabled = currentDate < today && currentDate.toDateString() !== today.toDateString();
+                        console.log(isDisabled);
+
                         const isSelected = selectedDate && currentDate.toDateString() === selectedDate.toDateString();
+                        const isToday = currentDate.toDateString() === today.toDateString();
 
                         return (
                             <button
                                 key={day}
                                 onClick={() => handleDateSelect(day)}
                                 disabled={isDisabled}
-                                className={`p-1.5 rounded-full w-10 h-10 sm:w-8 sm:h-8 ${isSelected ? 'bg-green-500 text-white' :
-                                    isDisabled ? 'text-gray-400' : 'hover:bg-indigo-50 text-stone-950'
-                                    }`}
+                                className={`p-1.5 rounded-full w-10 h-10 sm:w-8 sm:h-8 
+                ${isSelected ? 'bg-green-500 text-white' :
+                                        isToday ? 'border-indigo-500 text-indigo-500 font-bold' :
+                                            isDisabled ? 'text-gray-400' : 'hover:bg-indigo-50 text-stone-950'}`}
                             >
                                 {day}
                             </button>
