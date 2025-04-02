@@ -225,23 +225,30 @@ const BookSlots = () => {
                     </ul>
                 ) : slots.length > 0 ? (
                     <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {slots.map((slot, index) => (
-                            <div
-                                key={index}
-                                className={`p-2.5 text-sm text-center rounded-md cursor-pointer transition-all duration-300 ${slot.booked
-                                    ? "text-gray-500 bg-gray-300 cursor-not-allowed"
-                                    : selectedSlot === slot.time
-                                        ? "bg-indigo-500 text-white border border-green-700"
-                                        : "bg-black bg-opacity-10 text-neutral-800 hover:bg-indigo-50"}`}
-                                onClick={() => !slot.booked && setSelectedSlot(slot.time)}
-                            >
-                                {new Date(`1970-01-01T${slot.time}`).toLocaleTimeString("en-US", {
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    hour12: true,
-                                })}
-                            </div>
-                        ))}
+                        {slots.map((slot, index) => {
+                            const slotTime = new Date(`1970-01-01T${slot.time}`);
+                            const currentTime = new Date();
+                            const isPastTime = selectedDate.toDateString() === currentTime.toDateString() && slotTime <= currentTime;
+
+                            return (
+                                <div
+                                    key={index}
+                                    className={`p-2.5 text-sm text-center rounded-md cursor-pointer transition-all duration-300 ${slot.booked || isPastTime
+                                            ? "text-red-400 bg-gray-300 cursor-not-allowed"
+                                            : selectedSlot === slot.time
+                                                ? "bg-indigo-500 text-white border border-green-700"
+                                                : "bg-black bg-opacity-10 text-neutral-800 hover:bg-indigo-50"
+                                        }`}
+                                    onClick={() => !slot.booked && !isPastTime && setSelectedSlot(slot.time)}
+                                >
+                                    {slotTime.toLocaleTimeString("en-US", {
+                                        hour: "numeric",
+                                        minute: "numeric",
+                                        hour12: true,
+                                    })}
+                                </div>
+                            );
+                        })}
                     </ul>
                 ) : (
                     <p className="text-gray-500 mt-32">No slots available for this date.</p>
