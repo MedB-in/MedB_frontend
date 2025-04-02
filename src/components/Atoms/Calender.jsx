@@ -20,7 +20,7 @@ const Calendar = ({ onDateSelect }) => {
     const dropdownRef = useRef(null);
 
     useEffect(() => {
-        if (!selectedDate) { // Prevent redundant updates
+        if (!selectedDate) {
             setSelectedDate(today);
             const dayLabel = format(today, 'EEEE');
             const day = days.find(day => day.label === dayLabel);
@@ -113,8 +113,6 @@ const Calendar = ({ onDateSelect }) => {
                     {daysArray.map(day => {
                         const currentDate = new Date(date.getFullYear(), date.getMonth(), day);
                         const isDisabled = currentDate < today && currentDate.toDateString() !== today.toDateString();
-                        console.log(isDisabled);
-
                         const isSelected = selectedDate && currentDate.toDateString() === selectedDate.toDateString();
                         const isToday = currentDate.toDateString() === today.toDateString();
 
