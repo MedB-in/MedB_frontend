@@ -2,8 +2,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { getAppointments } from "../../../services/patient";
 import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";
+import { format } from 'date-fns';
 import toast from "react-hot-toast";
 import DoctorRemarksModal from "../../../components/Organs/Doctors/DoctorRemarksModal";
+import AppointmentActions from "../../../components/Organs/Appointments/AppointmentActions";
 
 function PatientAppointmentsPage() {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -16,7 +18,10 @@ function PatientAppointmentsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAppt, setSelectedAppt] = useState(null);
+  const [selectedApptAction, setSelectedApptAction] = useState(null);
+  const [actionModalOpen, setActionModalOpen] = useState(false);
   const navigate = useNavigate();
+  const today = format(new Date(), "dd-MM-yyyy");
 
   const fetchData = async () => {
     try {
@@ -30,6 +35,8 @@ function PatientAppointmentsPage() {
       setLoading(false);
     }
   }
+  console.log("today", today);
+
 
   useEffect(() => {
     fetchData();
@@ -59,10 +66,25 @@ function PatientAppointmentsPage() {
     setSelectedAppt(appt);
   };
 
+  const handleAppointmentModal = (appt) => {
+    setSelectedApptAction(appt);
+    setActionModalOpen(true);
+  };
+
   const handleClose = useCallback(() => {
     setSelectedAppt(null);
+    setSelectedApptAction(null);
+    setActionModalOpen(false);
     fetchData();
   }, []);
+
+  const formatTime = (timeString) => {
+    const [hour, minute] = timeString.split(":").map(Number);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
+  };
+
 
   return (
     <section className="p-4 flex flex-col items-center justify-center text-center min-h-[calc(100vh-80px)] md:mr-4 bg-[#f0f0ff] rounded-3xl">
@@ -91,6 +113,7 @@ function PatientAppointmentsPage() {
               <th className="px-4 py-3">Clinic</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Reason</th>
+              {!isDoctor && <th className="px-4 py-3">Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -127,6 +150,9 @@ function PatientAppointmentsPage() {
                     <td className="px-4 py-3 text-center rounded-r-lg">
                       <div className="h-5 w-24 bg-gray-300 rounded-md animate-pulse mx-auto"></div>
                     </td>
+                    {!isDoctor && <td className="px-4 py-3 text-center rounded-r-lg">
+                      <div className="h-5 w-24 bg-gray-300 rounded-md animate-pulse mx-auto"></div>
+                    </td>}
                   </tr>
                 ))}
               </>
@@ -176,7 +202,9 @@ function PatientAppointmentsPage() {
                         </td>
                       )}
                       <td className="px-4 py-3 text-center">{appt.appointmentDate}</td>
-                      <td className="px-4 py-3 text-center">{appt.appointmentTime}</td>
+                      {console.log(appt.appointmentDate)
+                      }
+                      <td className="px-4 py-3 text-center"> {formatTime(appt.appointmentTime)}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-4 justify-center">
                           <img
@@ -204,8 +232,18 @@ function PatientAppointmentsPage() {
                         {appt.reasonForVisit || "N/A"}<br />
                         {appt.isEmergency && " (Emergency)"}
                       </td>
+                      {!isDoctor && new Date(appt.appointmentDate.split("-").reverse().join("-")) >= new Date() && appt.appointmentStatus === "Scheduled" ? (
+                        <td className="px-4 py-3 text-center">
+                          <button
+                            className="hover:bg-gray-200 bg-gray-100 text-indigo-400 font-semibold py-2 px-4 rounded-full"
+                            onClick={() => handleAppointmentModal(appt)}
+                          >
+                            Cancel/Reschedule
+                          </button>
+                        </td>) : (
+                        <td className="px-4 py-3 text-center">-</td>
+                      )}
                     </tr>
-
                   ))
                 ) : (
                   <tr>
@@ -279,9 +317,9 @@ function PatientAppointmentsPage() {
         </div>
 
         {totalPages !== 1 && (
-          <div className="mt-6 flex justify-center items-center space-x-2">
+          <div className="mt-6 flex justify-center items-center text-xs space-x-2">
             <button
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+              className="px-4 py-2 bg-indigo-500 text-white  hover:bg-indigo-600 transition rounded-lg disabled:opacity-50"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
@@ -290,10 +328,12 @@ function PatientAppointmentsPage() {
             {generatePagination.map((page, index) => (
               <button
                 key={index}
-                className={`${page === "..." ? "text-gray-400 cursor-default"
+                className={`px-4 py-2 rounded-full transition ${page === "..."
+                  ? "text-gray-400 cursor-default"
                   : page === currentPage
-                    ? "bg-gray-300 text-gray-800 font-bold"
-                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"} px-4 py-2 rounded-lg`}
+                    ? "bg-indigo-700 text-white font-bold"
+                    : "bg-indigo-500 text-white hover:bg-indigo-600"
+                  }`}
                 onClick={() => page !== "..." && setCurrentPage(page)}
                 disabled={page === "..."}
               >
@@ -301,17 +341,22 @@ function PatientAppointmentsPage() {
               </button>
             ))}
             <button
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
+              className="px-4 py-2 bg-indigo-500 text-white hover:bg-indigo-600 transition rounded-lg disabled:opacity-50"
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
             >
               Next
             </button>
           </div>
+
         )}
       </div>
       {selectedAppt && (
         <DoctorRemarksModal appt={selectedAppt} onClose={handleClose} />
+      )}
+
+      {actionModalOpen && selectedApptAction && (
+        <AppointmentActions appointment={selectedApptAction} onClose={handleClose} />
       )}
     </section>
   );
