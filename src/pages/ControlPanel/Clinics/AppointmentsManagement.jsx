@@ -171,47 +171,59 @@ function AppointmentsManagement() {
         setTokenModalOpen(false);
     };
 
+    const formatTime = (timeString) => {
+        const [hour, minute] = timeString.split(":").map(Number);
+        const ampm = hour >= 12 ? "PM" : "AM";
+        const formattedHour = hour % 12 || 12;
+        return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
+    };
+
     return (
-        <section className="flex flex-col items-center justify-center text-center bg-white">
-            <div className="w-full max-w-lg mt-5 flex flex-col sm:flex-row sm:items-center gap-4">
-                <input
-                    type="text"
-                    placeholder="Search by doctor, patient, or date..."
-                    value={searchQuery}
-                    onChange={handleSearch}
-                    className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-gray-400"
-                />
-            </div>
-            <div className="w-full max-w-lg mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="relative">
-                    <select
-                        value={selectedDoctor}
-                        onChange={handleDoctorChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white appearance-none"
-                    >
-                        <option value="">All Doctors</option>
-                        {doctors.map((doc) => (
-                            <option key={doc.doctorId} value={doc.doctorId}>
-                                {`Dr. ${doc.firstName} ${doc.middleName ? doc.middleName + ' ' : ''}${doc.lastName || ''}`}
-                            </option>
-                        ))}
-                    </select>
-                    <div className="absolute inset-y-0 right-2 -top-3 flex items-center pointer-events-none">
-                        ⌄
+        <section className="p-4 flex flex-col items-center min-h-[calc(100vh-80px)] mt-2 bg-[#e8e8ff] rounded-3xl">
+            <div className="w-full mt-5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-white/20 backdrop-blur-md p-4 rounded-xl shadow-lg">
+                <div className="w-full sm:w-1/2">
+                    <input
+                        type="text"
+                        placeholder="Search by doctor, patient, or date..."
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-gray-500 focus:border-gray-600 placeholder-gray-600 text-gray-800"
+                    />
+                </div>
+                <div className="w-full sm:w-1/2 flex flex-col sm:flex-row gap-4">
+                    <div className="relative w-full sm:w-1/2">
+                        <select
+                            value={selectedDoctor}
+                            onChange={handleDoctorChange}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800 appearance-none"
+                        >
+                            <option value="">All Doctors</option>
+                            {doctors.map((doc) => (
+                                <option key={doc.doctorId} value={doc.doctorId}>
+                                    {`Dr. ${doc.firstName} ${doc.middleName ? doc.middleName + ' ' : ''}${doc.lastName || ''}`}
+                                </option>
+                            ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-600">
+                            ⌄
+                        </div>
+                    </div>
+                    <div className="w-full sm:w-1/2 flex items-center gap-2">
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={handleStartDateChange}
+                            className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800"
+                        />
+                        <span className="text-gray-600">To</span>
+                        <input
+                            type="date"
+                            value={endDate}
+                            onChange={handleEndDateChange}
+                            className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800"
+                        />
                     </div>
                 </div>
-                <input
-                    type="date"
-                    value={startDate}
-                    onChange={handleStartDateChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white"
-                />
-                <input
-                    type="date"
-                    value={endDate}
-                    onChange={handleEndDateChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white"
-                />
             </div>
             <Button variant="primary" className="lg:hidden" onClick={applyFilters}>Search</Button>
             <Button variant="secondary" className="lg:hidden" onClick={resetFilters}>Reset</Button>
@@ -223,23 +235,22 @@ function AppointmentsManagement() {
                 Walk-In Appointment
             </Button>
             <div className="w-full mx-auto rounded-xl p-6 mt-4 overflow-x-auto">
-                <table className="w-full min-w-max border-collapse border bg-white shadow-md border-gray-200 rounded-lg">
+                <table className="w-full min-w-max border-collapse bg-[#f0f0ff] drop-shadow-xl rounded-2xl overflow-hidden">
                     <thead>
-                        <tr className="bg-gray-100 text-center">
-                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">No.</th>
-                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Doctor</th>
-                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Appointment Date</th>
-                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Appointment Time</th>
-                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Patient</th>
-                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Status</th>
-                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Reason</th>
-                            <th className="px-4 py-3 border border-gray-200 whitespace-nowrap">Actions</th>
+                        <tr className="bg-white/50 backdrop-blur-lg text-gray-800 text-center">
+                            {["No.", "Doctor", "Appointment Date", "Appointment Time", "Patient", "Status", "Reason", "Actions"].map(
+                                (header, index) => (
+                                    <th key={index} className="px-4 py-3 border-b border-gray-300">
+                                        {header}
+                                    </th>
+                                )
+                            )}
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan="8" className="px-4 py-6 border border-gray-200 text-center text-gray-600 text-lg">
+                                <td colSpan="8" className="px-4 py-6 text-center text-gray-600 text-lg">
                                     Loading...
                                 </td>
                             </tr>
@@ -247,50 +258,49 @@ function AppointmentsManagement() {
                             <>
                                 {appointments.length ? (
                                     appointments.map((appt, index) => (
-                                        <tr key={index} className="odd:bg-white even:bg-gray-50">
-                                            <td className="px-4 py-3 border border-gray-200 text-center">{index + 1}</td>
-                                            <td className="px-4 py-3 border border-gray-200 min-w-[200px] whitespace-normal break-words">
-                                                <div className="flex justify-center">
-                                                    <div className="flex items-center gap-4">
-                                                        <img
-                                                            src={appt.doctorProfilePicture}
-                                                            alt={appt.doctorFirstName}
-                                                            className="w-12 h-12 rounded-full object-cover"
-                                                        />
-                                                        <div className="flex-1 overflow-hidden">
-                                                            <p className="text-lg font-semibold truncate">
-                                                                {appt.doctorFirstName} {appt.doctorMiddleName ? appt.doctorMiddleName : ""} {appt.doctorLastName ? appt.doctorLastName : ""}
-                                                            </p>
-                                                            <p className="text-sm text-gray-600">{appt.doctorGender}</p>
-                                                            <p className="text-sm text-gray-600 truncate">{appt.speciality}</p>
-                                                            <p className="text-sm text-gray-600">{appt.experience} years of experience</p>
-                                                            <p className="text-sm text-gray-600 truncate">{appt.qualifications}</p>
-                                                        </div>
+                                        <tr
+                                            key={index}
+                                            className="bg-white/30 backdrop-blur-md border border-gray-200 odd:bg-white/20 hover:bg-white/40 transition-all"
+                                        >
+                                            <td className="px-4 py-3 text-center">{index + 1}</td>
+                                            <td className="px-4 py-3 min-w-[200px] whitespace-normal break-words">
+                                                <div className="flex justify-center items-center gap-4">
+                                                    <img
+                                                        src={appt.doctorProfilePicture}
+                                                        alt={appt.doctorFirstName}
+                                                        className="w-12 h-12 rounded-full object-cover border border-gray-300 shadow-md"
+                                                    />
+                                                    <div className="text-left">
+                                                        <p className="text-lg font-semibold text-gray-800">
+                                                            {appt.doctorFirstName} {appt.doctorMiddleName || ""} {appt.doctorLastName || ""}
+                                                        </p>
+                                                        <p className="text-sm text-gray-600">{appt.doctorGender}</p>
+                                                        <p className="text-sm text-gray-600">{appt.speciality}</p>
+                                                        <p className="text-sm text-gray-600">{appt.experience} years of experience</p>
+                                                        <p className="text-sm text-gray-600">{appt.qualifications}</p>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-4 py-3 border border-gray-200 text-center">{appt.appointmentDate}</td>
-                                            <td className="px-4 py-3 border border-gray-200 text-center">{appt.appointmentTime}</td>
-                                            <td className="px-4 py-3 border border-gray-200 min-w-[200px] whitespace-normal break-words">
-                                                <div className="flex justify-center">
-                                                    <div className="flex items-center gap-4">
-                                                        <img
-                                                            src={appt.patientProfilePicture}
-                                                            alt={appt.patientFirstName}
-                                                            className="w-12 h-12 rounded-full object-cover"
-                                                        />
-                                                        <div className="flex-1 overflow-hidden">
-                                                            <p className="text-lg font-semibold truncate">
-                                                                {appt.patientFirstName}{appt.patientMiddleName ? ` ${appt.patientMiddleName}` : ""}{appt.patientLastName ? ` ${appt.patientLastName}` : ""}
-                                                            </p>
-                                                            <p className="text-sm text-gray-600 truncate">{appt.patientEmail}</p>
-                                                            <p className="text-sm text-gray-600 truncate">{appt.patientContactNo}</p>
-                                                        </div>
+                                            <td className="px-4 py-3 text-center">{appt.appointmentDate}</td>
+                                            <td className="px-4 py-3 text-center">{formatTime(appt.appointmentTime)}</td>
+                                            <td className="px-4 py-3 min-w-[200px] whitespace-normal break-words">
+                                                <div className="flex justify-center items-center gap-4">
+                                                    <img
+                                                        src={appt.patientProfilePicture}
+                                                        alt={appt.patientFirstName}
+                                                        className="w-12 h-12 rounded-full object-cover border border-gray-300 shadow-md"
+                                                    />
+                                                    <div className="text-left">
+                                                        <p className="text-lg font-semibold text-gray-800">
+                                                            {appt.patientFirstName} {appt.patientMiddleName || ""} {appt.patientLastName || ""}
+                                                        </p>
+                                                        <p className="text-sm text-gray-600">{appt.patientEmail}</p>
+                                                        <p className="text-sm text-gray-600">{appt.patientContactNo}</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td
-                                                className={`px-4 py-3 border border-gray-200 font-semibold text-center ${appt.appointmentStatus === "Scheduled"
+                                                className={`px-4 py-3 font-semibold text-center ${appt.appointmentStatus === "Scheduled"
                                                     ? "text-blue-600"
                                                     : appt.appointmentStatus === "Completed"
                                                         ? "text-green-600"
@@ -300,13 +310,19 @@ function AppointmentsManagement() {
                                                 {appt.appointmentStatus}
                                             </td>
                                             <td
-                                                className={`px-4 py-3 border border-gray-200 text-center capitalize ${(appt.isEmergency && appt.appointmentStatus === "Scheduled" && today === appt.appointmentDate.split('-').reverse().join('-')) ? "bg-red-500 text-white animate-pulse font-bold" : ""
+                                                className={`px-4 py-3 text-center capitalize ${appt.isEmergency &&
+                                                    appt.appointmentStatus === "Scheduled" &&
+                                                    today === appt.appointmentDate.split("-").reverse().join("-")
+                                                    ? "bg-red-500 text-white animate-pulse font-bold"
+                                                    : ""
                                                     }`}
                                             >
                                                 {appt.reasonForVisit || "N/A"}<br />
                                                 {appt.isEmergency && " (Emergency)"}
                                             </td>
-                                            {(appt.appointmentStatus !== "Completed" && appt.appointmentStatus !== "Cancelled" && appt.appointmentDate.split('-').reverse().join('-') >= today) ? (
+                                            {appt.appointmentStatus !== "Completed" &&
+                                                appt.appointmentStatus !== "Cancelled" &&
+                                                appt.appointmentDate.split("-").reverse().join("-") >= today ? (
                                                 <td className="flex flex-col gap-2 p-2 items-center">
                                                     <button
                                                         onClick={() => handleStatus(appt)}
@@ -321,16 +337,14 @@ function AppointmentsManagement() {
                                                         Assign Token
                                                     </button>
                                                 </td>
-                                            ) :
-                                                (<td className="flex flex-col gap-2 p-2 items-center">
-                                                </td>
-                                                )
-                                            }
+                                            ) : (
+                                                <td className="flex flex-col gap-2 p-2 items-center"></td>
+                                            )}
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="8" className="px-4 py-3 border border-gray-200 text-center">
+                                        <td colSpan="8" className="px-4 py-3 text-center">
                                             No appointments found
                                         </td>
                                     </tr>
@@ -339,6 +353,7 @@ function AppointmentsManagement() {
                         )}
                     </tbody>
                 </table>
+
             </div>
             {totalPages > 1 && (
                 <div className="mt-6 flex justify-center items-center space-x-2">

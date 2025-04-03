@@ -3,6 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { getClinicList } from "../../../services/clinics";
 import LocationSelector from "../../LocationSelector";
 import { UploadIcon } from "lucide-react";
+import Swal from "sweetalert2";
 
 const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onSubmit }) => {
   const [loading, setLoading] = useState(false);
@@ -33,6 +34,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     firstName: "",
     middleName: "",
     lastName: "",
+    age: "",
     registration: "",
     speciality: "",
     email: "",
@@ -105,8 +107,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     setPreviewImage(URL.createObjectURL(file));
   };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -139,7 +139,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     }
   };
 
-
   const handleLocationSelect = (lat, lng, address, city, district, state, country, postalCode) => {
     setFormData((prev) => ({
       ...prev,
@@ -159,11 +158,20 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
 
   const handleCloseModal = () => {
     if (!error && JSON.stringify(formData) !== JSON.stringify(defaultFormData)) {
-      if (window.confirm("Are you sure you want to close? Any unsaved changes will be lost.")) {
-        setError(null);
-        setFormData(defaultFormData);
-        closeModal();
-      }
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Any unsaved changes will be lost!",
+        showCancelButton: true,
+        confirmButtonText: "Yes, close it!",
+        cancelButtonText: "No, keep editing",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setError(null);
+          setFormData(defaultFormData);
+          closeModal();
+        }
+      });
     } else {
       setError(null);
       setFormData(defaultFormData);
@@ -244,6 +252,21 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
               <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full p-2 border rounded-md" />
             </div>
           </div>
+          <div className="mb-4 grid grid-cols-2 gap-2">
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Gender</label>
+              <select name="gender" value={formData.gender} onChange={handleChange} className="w-full p-2 border rounded-md" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Age</label>
+              <input type="number" name="age" value={formData.age} onChange={handleChange} className="w-full p-2 border rounded-md" />
+            </div>
+          </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Registration</label>
             <input type="text" name="registration" value={formData.registration} onChange={handleChange} className="w-full p-2 border rounded-md" required />
@@ -263,15 +286,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
           <div className="mb-4">
             <label className="block text-sm font-medium">Experience (Years)</label>
             <input type="text" name="experience" value={formData.experience} onChange={handleChange} className="w-full p-2 border rounded-md" required />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium">Gender</label>
-            <select name="gender" value={formData.gender} onChange={handleChange} className="w-full p-2 border rounded-md" required>
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Email</label>
