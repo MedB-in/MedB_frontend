@@ -8,12 +8,16 @@ import { useNavigate } from "react-router-dom";
 
 const UserProfilePage = () => {
     const storedUser = JSON.parse(localStorage.getItem("userDetails")) || {};
+    const doctor = storedUser?.doctorId ?? null;
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
+        doctorId: doctor,
         firstName: storedUser.firstName || "",
         middleName: storedUser.middleName || "",
         lastName: storedUser.lastName || "",
+        age: storedUser.age || "",
+        gender: storedUser.gender || "",
         email: storedUser.email || "",
         contactNo: storedUser.contactNo || "",
         designation: storedUser.designation || "",
@@ -52,6 +56,7 @@ const UserProfilePage = () => {
 
         const formData = new FormData();
         formData.append("image", selectedImage);
+        formData.append("doctorId", doctor);
 
         try {
             const response = await uploadProfilePicture(formData);
@@ -94,7 +99,7 @@ const UserProfilePage = () => {
         <div className="flex justify-center items-center min-h-[calc(100vh-80px)] p-6">
             <div className="relative bg-white shadow-lg border-2 border-[#3a6ff7] rounded-3xl w-full max-w-5xl p-8">
                 <h1 className="text-2xl font-semibold text-gray-900 text-center mb-6 capitalize">
-                    {formData.firstName} {formData.middleName ? ` ${formData.middleName}` : ''} {formData.lastName ? ` ${formData.lastName}` : ''}'s Profile
+                    {doctor ? "Dr." : formData.gender === "Male" ? "Mr." : formData.gender === "Female" ? "Ms." : "Mr./Ms."} {formData.firstName} {formData.middleName ? ` ${formData.middleName}` : ''} {formData.lastName ? ` ${formData.lastName}` : ''}'s Profile
                 </h1>
                 <form onSubmit={handleSubmit}>
                     <div className="flex flex-col items-center relative mb-6">
@@ -117,9 +122,22 @@ const UserProfilePage = () => {
                         <InputField type="text" name="firstName" placeholder="First Name" className="capitalize" value={formData.firstName} onChange={handleChange} required />
                         <InputField type="text" name="middleName" placeholder="Middle Name" className="capitalize" value={formData.middleName} onChange={handleChange} />
                         <InputField type="text" name="lastName" placeholder="Last Name" className="capitalize" value={formData.lastName} onChange={handleChange} />
+                        <InputField type="number" name="age" placeholder="Age" value={formData.age} onChange={handleChange} required /><select
+                            name="gender"
+                            className="capitalize px-3 py-3.5 bg-white rounded-lg border border-solid border-zinc-300 text-black text-opacity-70"
+                            value={formData.gender}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="" disabled>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+
                         <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required disabled />
                         <InputField type="phone" name="contactNo" placeholder="Contact Number" value={formData.contactNo} onChange={handleChange} required />
-                        <InputField type="text" name="designation" placeholder="Designation" className="capitalize" value={formData.designation} onChange={handleChange} />
+                        <InputField type="text" name="designation" placeholder="Designation" className="capitalize" value={doctor ? "Doctor" : formData.designation} onChange={handleChange} disabled={!!doctor} />
                         <InputField type="text" name="address" placeholder="Address" className="capitalize" value={formData.address} onChange={handleChange} />
                         <InputField type="text" name="city" placeholder="City" className="capitalize" value={formData.city} onChange={handleChange} />
                         <InputField type="text" name="district" placeholder="District" className="capitalize" value={formData.district} onChange={handleChange} />
