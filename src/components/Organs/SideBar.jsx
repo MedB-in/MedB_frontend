@@ -125,7 +125,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                                     actionUrl={menu.controllerName}
                                                     isSidebarOpen={isSidebarOpen}
                                                     isSelected={
-                                                        selectedMenu === menu.controllerName || location.pathname === `/${menu.controllerName}`
+                                                        selectedMenu === menu.controllerName || location.pathname.split("/")[1] === menu.controllerName.split("/")[0]
                                                     }
                                                     onClick={() => handleMenuClick(menu)}
                                                     className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out 1
@@ -174,23 +174,31 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
             {/* Sidebar for sm screens */}
             <div className="lg:hidden">
-                <header className="fixed top-0 left-0 right-3 z-50 h-16 px-4 py-3 flex justify-between items-center bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm">
-                    <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition-all duration-300">
+                <header className="fixed w-screen z-40 h-16 px-6 py-3 bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm shadow-md grid grid-cols-3 items-center">
+                    <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 w-10 transition-all duration-300">
                         <Menu size={24} />
                     </button>
-                    <div className="profile flex items-center">
-                        <img src={AlertIcon} alt="Alert" className="w-10 h-10 rounded-full object-cover mr-2 shadow-sm drop-shadow-md" />
+                    <div className="flex justify-center">
+                        <img
+                            src={isSidebarOpen ? Logo1 : Logo}
+                            alt="Logo"
+                            className={`transition-all duration-300 ease-in-out w-10 md:w-14 opacity-80`}
+                        />
+                    </div>
+                    <div className="flex items-center justify-end gap-x-2 md:gap-x-4">
+                        <img src={AlertIcon} alt="Alert" className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover shadow-sm" />
                         <img
                             src={user?.profilePicture || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
                             alt="Profile"
                             onClick={() => navigate("/user-profile")}
-                            className="w-10 h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
+                            className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
                         />
-                        <button className="ml-3 flex items-center bg-transparent border-none" onClick={doLogout}>
-                            <span className="ml-2 drop-shadow-md">Logout</span>
+                        <button className="ml-2 flex items-center bg-transparent border-none" onClick={doLogout}>
+                            <span className="drop-shadow-md">Logout</span>
                         </button>
                     </div>
                 </header>
+
                 <div className={`fixed inset-0 bg-black bg-opacity-50 z-40 ${isSidebarOpen ? "block" : "hidden"}`} onClick={() => setIsSidebarOpen(false)}></div>
                 <div className={`fixed top-0 left-0 h-full w-64 bg-[#EAF4F4] shadow-lg z-50 transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300`}>
                     <div className="flex justify-center items-center w-full py-6">
@@ -233,7 +241,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                                     actionUrl={menu.controllerName}
                                                     isSidebarOpen={isSidebarOpen}
                                                     isSelected={
-                                                        selectedMenu === menu.controllerName || location.pathname.split("/")[1] === menu.controllerName
+                                                        selectedMenu === menu.controllerName || location.pathname.split("/")[1] === menu.controllerName.split("/")[0]
                                                     }
                                                     onClick={() => { handleMenuClick(menu); setIsSidebarOpen(false) }}
                                                     className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out 1

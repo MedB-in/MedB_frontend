@@ -81,21 +81,23 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4 ">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-                <h2 className="text-2xl font-bold text-center mb-6">{isUpdate ? "Update Patient" : "Add Patient"}</h2>
-                <form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" onSubmit={handleSubmit}>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-md z-[100] p-4">
+            <div className="bg-white p-8 rounded-2xl shadow-2xl border border-white/30 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                <h2 className="text-2xl font-bold text-center mb-6 text-gray-900">
+                    {isUpdate ? "Update Patient" : "Add Patient"}
+                </h2>
+                <form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" onSubmit={handleSubmit}>
                     <InputField type="text" name="firstName" placeholder="First Name*" value={formData.firstName} onChange={handleChange} required />
                     <InputField type="text" name="middleName" placeholder="Middle Name" value={formData.middleName} onChange={handleChange} />
-                    <InputField type="text" name="lastName" placeholder="Last Name*" value={formData.lastName} onChange={handleChange} />
+                    <InputField type="text" name="lastName" placeholder="Last Name*" value={formData.lastName} onChange={handleChange} required />
                     <InputField type="number" name="age" placeholder="Age*" value={formData.age} onChange={handleChange} required />
-                    <select name="gender" value={formData.gender} onChange={handleChange} className="w-full p-3 border border-zinc-300 rounded-lg" required>
+                    <select name="gender" value={formData.gender} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg bg-white/30 backdrop-blur-md" required>
                         <option value="" disabled>Select Gender*</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Other">Other</option>
                     </select>
-                    <select name="careOfRelation" value={formData.careOfRelation} onChange={handleChange} className="w-full p-3 border border-zinc-300 rounded-lg">
+                    <select name="careOfRelation" value={formData.careOfRelation} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg bg-white/30 backdrop-blur-md">
                         <option value="" disabled>Select Care Of</option>
                         {["Father of", "Mother of", "Son of", "Daughter of", "Husband of", "Wife of", "Brother of", "Sister of", "Guardian of", "Other"].map((relation) => (
                             <option key={relation} value={relation}>{relation}</option>

@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { getAppointments } from "../../../services/patient";
 import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";
-import { format } from 'date-fns';
 import toast from "react-hot-toast";
 import DoctorRemarksModal from "../../../components/Organs/Doctors/DoctorRemarksModal";
 import AppointmentActions from "../../../components/Organs/Appointments/AppointmentActions";
@@ -21,7 +20,6 @@ function PatientAppointmentsPage() {
   const [selectedApptAction, setSelectedApptAction] = useState(null);
   const [actionModalOpen, setActionModalOpen] = useState(false);
   const navigate = useNavigate();
-  const today = format(new Date(), "dd-MM-yyyy");
 
   const fetchData = async () => {
     try {
@@ -35,8 +33,6 @@ function PatientAppointmentsPage() {
       setLoading(false);
     }
   }
-  console.log("today", today);
-
 
   useEffect(() => {
     fetchData();
@@ -84,7 +80,6 @@ function PatientAppointmentsPage() {
     const formattedHour = hour % 12 || 12;
     return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
   };
-
 
   return (
     <section className="p-4 flex flex-col items-center justify-center text-center min-h-[calc(100vh-80px)] md:mr-4 bg-[#f0f0ff] rounded-3xl">
@@ -202,8 +197,6 @@ function PatientAppointmentsPage() {
                         </td>
                       )}
                       <td className="px-4 py-3 text-center">{appt.appointmentDate}</td>
-                      {console.log(appt.appointmentDate)
-                      }
                       <td className="px-4 py-3 text-center"> {formatTime(appt.appointmentTime)}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-4 justify-center">
@@ -285,7 +278,7 @@ function PatientAppointmentsPage() {
                   <p className="text-gray-700">{appt.appointmentDate}</p>
 
                   <p className="font-medium text-gray-800">⏰ Time:</p>
-                  <p className="text-gray-700">{appt.appointmentTime}</p>
+                  <p className="text-gray-700">{formatTime(appt.appointmentTime)}</p>
 
                   <p className="font-medium text-gray-800">🏥 Clinic:</p>
                   <p className="text-gray-700">{appt.clinicName}</p>
@@ -316,10 +309,10 @@ function PatientAppointmentsPage() {
           )}
         </div>
 
-        {totalPages !== 1 && (
+        {totalPages > 1 && (
           <div className="mt-6 flex justify-center items-center text-xs space-x-2">
             <button
-              className="px-4 py-2 bg-indigo-500 text-white  hover:bg-indigo-600 transition rounded-lg disabled:opacity-50"
+              className="px-4 py-2 text-black hover:bg-indigo-400 rounded-2xl transition disabled:opacity-20"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
@@ -341,7 +334,7 @@ function PatientAppointmentsPage() {
               </button>
             ))}
             <button
-              className="px-4 py-2 bg-indigo-500 text-white hover:bg-indigo-600 transition rounded-lg disabled:opacity-50"
+              className="px-4 py-2 text-black hover:bg-indigo-400 transition rounded-2xl  disabled:opacity-20"
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
             >

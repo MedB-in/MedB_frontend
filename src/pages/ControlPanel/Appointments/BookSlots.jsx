@@ -135,7 +135,7 @@ const BookSlots = () => {
     };
 
     return (
-        <section className="p-4 flex flex-col min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl md:mr-4">
+        <section className="p-8 flex flex-col min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl">
             <p className="text-sm self-start pl-5 underline font-bold text-[#7a5fd3] cursor-pointer" onClick={() => window.history.back()}> {'<'} Back</p>
             {doctor ? (
                 <div className="flex items-center gap-4 mb-6 p-5">

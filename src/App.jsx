@@ -60,7 +60,6 @@ const App = () => {
             <Route path=":clinicId" element={<Clinics.ClinicDetails />} />
             <Route path="slots/:clinicId/:doctorId" element={<Clinics.ClinicSlot />} />
             <Route path="users/:clinicId" element={<Clinics.ClinicUsers />} />
-            <Route path="appointments-management" element={<Clinics.AppointmentsManagement />} />
             <Route path="clinic-profile" element={<Clinics.ClinicProfile />} />
           </Route>
 
@@ -68,6 +67,7 @@ const App = () => {
           <Route path="appointments">
             <Route index element={<Appointments.PatientAppointmentsPage />} />
             <Route path="book-appointment" element={<Appointments.BookFromClinic />} />
+            <Route path="appointments-management" element={<Clinics.AppointmentsManagement />} />
             <Route path="book-appointment/:clinicId" element={<Appointments.DoctorSelection />} />
             <Route path="book-slots/:clinicId/:doctorId" element={<Appointments.BookSlots />} />
           </Route>
