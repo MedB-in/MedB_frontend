@@ -199,7 +199,7 @@ function AppointmentsManagement() {
                         <select
                             value={selectedDoctor}
                             onChange={handleDoctorChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800 appearance-none"
+                            className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800 appearance-none"
                         >
                             <option value="">All Doctors</option>
                             {doctors.map((doc) => (
@@ -208,7 +208,7 @@ function AppointmentsManagement() {
                                 </option>
                             ))}
                         </select>
-                        <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-600">
+                        <div className="pointer-events-none absolute right-3 top-1/3 -translate-y-1/2 text-gray-600">
                             ⌄
                         </div>
                     </div>
@@ -327,7 +327,7 @@ function AppointmentsManagement() {
                                             {appt.appointmentStatus !== "Completed" &&
                                                 appt.appointmentStatus !== "Cancelled" &&
                                                 appt.appointmentStatus !== "Rescheduled" &&
-                                                appt.appointmentDate.split("-").reverse().join("-") >= today ? (
+                                                appt.appointmentDate.split("-").reverse().join("-") === today ? (
                                                 <td className="flex flex-col gap-2 p-2 items-center">
                                                     <button
                                                         onClick={() => handleStatus(appt)}
@@ -343,7 +343,10 @@ function AppointmentsManagement() {
                                                     </button>
                                                 </td>
                                             ) : (
-                                                <td className="flex flex-col gap-2 p-2 items-center"></td>
+                                                <>
+                                                    <td className="flex flex-col gap-2 p-2 items-center">-</td>
+                                                    <td className="flex flex-col gap-2 p-2 items-center">-</td>
+                                                </>
                                             )}
                                         </tr>
                                     ))
@@ -358,7 +361,6 @@ function AppointmentsManagement() {
                         )}
                     </tbody>
                 </table>
-
             </div>
             {totalPages > 1 && (
                 <div className="mt-6 flex justify-center items-center space-x-2">
