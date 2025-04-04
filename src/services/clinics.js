@@ -68,8 +68,8 @@ export const getPatients = (search) =>
     axios.get(`/api/clinic/patient/list?search=${search}`, getHeaders());
 
 //API to update appointment status  
-export const updateAppointmentStatus = (appointmentId, status) =>
-    axios.put(`/api/clinic/appointment/status/${appointmentId}`, { status }, getHeaders());
+export const updateAppointmentStatus = (appointmentId, status, reason) =>
+    axios.put(`/api/clinic/appointment/status/${appointmentId}`, { status, reason }, getHeaders());
 
 //API to assign a token to a patient
 export const assignPatientToken = (appointmentId, tokenNo) =>

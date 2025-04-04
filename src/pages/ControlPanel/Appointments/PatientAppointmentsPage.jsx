@@ -256,7 +256,14 @@ function PatientAppointmentsPage() {
             appointments.map((appt, index) => (
               <div
                 key={index}
-                className="bg-white shadow-lg rounded-2xl p-5 border border-gray-200 flex flex-col gap-4"
+                onClick={() => {
+                  const isFutureDate =
+                    new Date(appt.appointmentDate.split("-").reverse().join("-")) >= new Date();
+                  if (!isDoctor && isFutureDate && appt.appointmentStatus === "Scheduled") {
+                    handleAppointmentModal(appt);
+                  }
+                }}
+                className="bg-white shadow-lg rounded-2xl p-5 border border-gray-200 flex flex-col gap-4 transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl cursor-pointer"
               >
                 <div className="flex items-center gap-4 border-b pb-3">
                   <img
