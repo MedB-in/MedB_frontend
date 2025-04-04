@@ -63,7 +63,7 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
                     {icon}
                     <span className="text-sm text-black text-opacity-60">{title} ({slots.length} slots)</span>
                 </div>
-                <div className="grid gap-3 grid-cols-[repeat(3,1fr)] sm:grid-cols-[repeat(4,1fr)] md:grid-cols-[repeat(3,1fr)] lg:grid-cols-[repeat(5,1fr)]">
+                <div className="grid gap-3 grid-cols-[repeat(3,1fr)] sm:grid-cols-[repeat(4,1fr)] md:grid-cols-[repeat(3,1fr)] lg:grid-cols-[repeat(4,1fr)]">
                     {slots.map((slot, index) => (
                         <div
                             key={index}

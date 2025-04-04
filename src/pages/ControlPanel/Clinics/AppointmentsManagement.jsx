@@ -161,6 +161,10 @@ function AppointmentsManagement() {
         setAppointments(updatedAppointments);
     };
 
+    const setNewAppointment = () => {
+        fetchData()
+    };
+
     const handleToken = (appointment) => {
         setSelectedAppt(appointment);
         setTokenModalOpen(true);
@@ -322,13 +326,14 @@ function AppointmentsManagement() {
                                             </td>
                                             {appt.appointmentStatus !== "Completed" &&
                                                 appt.appointmentStatus !== "Cancelled" &&
+                                                appt.appointmentStatus !== "Rescheduled" &&
                                                 appt.appointmentDate.split("-").reverse().join("-") >= today ? (
                                                 <td className="flex flex-col gap-2 p-2 items-center">
                                                     <button
                                                         onClick={() => handleStatus(appt)}
                                                         className="px-4 py-2 bg-blue-500/80 backdrop-blur-md border border-blue-500 shadow-lg shadow-blue-500/20 hover:bg-blue-500/50 text-white rounded-lg transition-all duration-300"
                                                     >
-                                                        Update Status
+                                                        Update
                                                     </button>
                                                     <button
                                                         onClick={() => handleToken(appt)}
@@ -389,7 +394,9 @@ function AppointmentsManagement() {
                 isOpen={statusModalOpen}
                 onClose={closeStatusModal}
                 appointment={selectedAppt}
+                clinicId={clinicId}
                 updateAppointment={updateAppointment}
+                setAppointment={setNewAppointment}
             />
             <AssignTokenModal
                 isOpen={tokenModalOpen}

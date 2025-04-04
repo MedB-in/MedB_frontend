@@ -113,7 +113,7 @@ const BookSlots = () => {
             setSelectedSlot(null);
             setReason("");
             setSelectedPatient(null);
-            navigate('/appointments');
+            isClinicBooking ?? navigate(`/appointments/appointments-management`)
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to book slot.");
         } finally {
@@ -234,10 +234,10 @@ const BookSlots = () => {
                                 <div
                                     key={index}
                                     className={`p-2.5 text-sm text-center rounded-md cursor-pointer transition-all duration-300 ${slot.booked || isPastTime
-                                            ? "text-red-400 bg-gray-300 cursor-not-allowed"
-                                            : selectedSlot === slot.time
-                                                ? "bg-indigo-500 text-white border border-green-700"
-                                                : "bg-black bg-opacity-10 text-neutral-800 hover:bg-indigo-50"
+                                        ? "text-red-400 bg-gray-300 cursor-not-allowed"
+                                        : selectedSlot === slot.time
+                                            ? "bg-indigo-500 text-white border border-green-700"
+                                            : "bg-black bg-opacity-10 text-neutral-800 hover:bg-indigo-50"
                                         }`}
                                     onClick={() => !slot.booked && !isPastTime && setSelectedSlot(slot.time)}
                                 >

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const environment = import.meta.env.VITE_REACT_APP_ENVIRONMENT;
 const development = import.meta.env.VITE_REACT_APP_DEVELOPMENT_URL;
@@ -40,12 +41,20 @@ const uploadHeaders = () => {
         },
     };
 };
-
 const sessionExpired = () => {
-    alert('Session expired. Please log in again.');
-    localStorage.removeItem('accessToken');
-    window.location.href = '/login';
-};
+    Swal.fire({
+      icon: 'warning',
+      title: 'Session Expired',
+      text: 'Please log in again.',
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#3085d6',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    }).then(() => {
+      localStorage.removeItem('accessToken');
+      window.location.href = '/login';
+    });
+  };
 
 axiosInstance.interceptors.response.use(
     (response) => response,

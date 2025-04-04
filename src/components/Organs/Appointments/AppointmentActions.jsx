@@ -35,22 +35,22 @@ const AppointmentActions = ({ appointment, onClose }) => {
         setLoading(true);
         try {
             if (action === "reschedule") {
-            if (!selectedDate || !selectedDay || !selectedSlot) {
-                toast.error('Please select a date and time before submitting.');
-                return;
+                if (!selectedDate || !selectedDay || !selectedSlot) {
+                    toast.error('Please select a date and time before submitting.');
+                    return;
+                }
+                if (!reason.trim()) {
+                    toast.error("Please enter a reason for the visit.");
+                    return;
+                }
+                await bookSlot({ appointmentId: appointment.appointmentId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
+                toast.success("Slot booked successfully!");
+                onClose();
+            } else if (action === "cancel") {
+                await bookSlot({ appointmentId: appointment.appointmentId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason, action: "cancel" });
+                toast.success("Slot cancelled successfully!");
+                onClose();
             }
-            if (!reason.trim()) {
-                toast.error("Please enter a reason for the visit.");
-                return;
-            }
-            await bookSlot({ appointmentId: appointment.appointmentId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
-            toast.success("Slot booked successfully!");
-            onClose();
-        } else if (action === "cancel") {
-            await bookSlot({ appointmentId: appointment.appointmentId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason, action: "cancel" });
-            toast.success("Slot cancelled successfully!");
-            onClose();
-        }
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to book slot.");
         } finally {
@@ -84,7 +84,7 @@ const AppointmentActions = ({ appointment, onClose }) => {
                             rows="3"
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
-                            placeholder="Enter reason..."
+                            placeholder="Enter reason visit..."
                         />
                     </div>
                 )}
