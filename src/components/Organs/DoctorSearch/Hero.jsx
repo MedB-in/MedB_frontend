@@ -3,6 +3,10 @@ import doctorImage from "../../../assets/images/doctor-search.png";
 import SearchSection from "./Search";
 
 const HeroSection = () => {
+    const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+    const isClinicBooking = !!userDetails?.clinicId;
+    const isDoctorBooking = !!userDetails?.doctorId;
+
     return (
         <section className="min-h-screen flex flex-col justify-between p-6 md:p-12 bg-gradient-to-br from-indigo-100 to-white">
             <div className="flex flex-col pt-16 md:flex-row items-center justify-center flex-grow">
@@ -28,7 +32,9 @@ const HeroSection = () => {
                 </motion.div>
             </div>
             <div className="w-full">
-                <SearchSection />
+                {!isClinicBooking && !isDoctorBooking && (
+                    <SearchSection />
+                )}
             </div>
         </section>
     );

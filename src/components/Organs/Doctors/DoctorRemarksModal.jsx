@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import Button from "../../Atoms/Login/Button";
 import { getPatientMedHistory, updatePatientMedHistory } from "../../../services/patient";
 
-const DoctorRemarksModal = ({ appt, onClose }) => {
+const DoctorRemarksModal = ({ appt, onClose, onCloseHard }) => {
     const [remark, setRemark] = useState('');
     const [previousRemarks, setPreviousRemarks] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -59,6 +59,10 @@ const DoctorRemarksModal = ({ appt, onClose }) => {
         }
     };
 
+    const handleHardClose = () => {
+        onCloseHard();
+    }
+
     const handleClose = async () => {
         if (!confirmClose) {
             const isConfirmed = window.confirm("Is the consultation over? Click 'OK' for Yes or 'Cancel' for No.");
@@ -73,36 +77,44 @@ const DoctorRemarksModal = ({ appt, onClose }) => {
         onClose();
     };
 
-
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="relative bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+                {new Date(appt.appointmentDate.split("-").reverse().join("-")) !== new Date() && (
+                    <button
+                        onClick={handleHardClose}
+                        className="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-2xl font-bold"
+                        title="Close"
+                    >
+                        &times;
+                    </button>
+                )}
                 <h2 className="text-3xl font-bold text-center mb-6">Patient Diagnosis/Remarks</h2>
 
                 <div className="flex items-center space-x-6 mb-6">
                     <img src={appt?.patientDetails?.profilePicture} alt="Patient" className="w-20 h-20 object-cover rounded-full" />
                     <div>
-                        <p className="text-xl font-semibold">{appt?.patientDetails?.firstName} {appt?.patientDetails?.middleName} {appt?.patientDetails?.lastName}</p>
+                        <p className="text-xl font-semibold capitalize">{appt?.patientDetails?.firstName} {appt?.patientDetails?.middleName} {appt?.patientDetails?.lastName}</p>
                         <p className="text-lg text-gray-500">{appt?.patientDetails?.email}</p>
                     </div>
                 </div>
-
-                <form className="space-y-6" onSubmit={handleSubmit}>
-                    <textarea
-                        className="w-full p-3 text-lg border rounded resize-none"
-                        rows="6"
-                        placeholder="Enter your diagnosis/remark..."
-                        value={remark}
-                        onChange={handleChange}
-                    />
-                    <div className="flex justify-end space-x-4">
-                        <Button type="button" className="bg-gray-500 text-white" onClick={handleClose}>Close</Button>
-                        <Button type="submit" className="bg-violet-600 text-white" disabled={loading}>
-                            {loading ? "Saving..." : "Save Remark"}
-                        </Button>
-                    </div>
-                </form>
-
+                {new Date(appt.appointmentDate.split("-").reverse().join("-")) === new Date() && (
+                    <form className="space-y-6" onSubmit={handleSubmit}>
+                        <textarea
+                            className="w-full p-3 text-lg border rounded resize-none"
+                            rows="6"
+                            placeholder="Enter your diagnosis/remark..."
+                            value={remark}
+                            onChange={handleChange}
+                        />
+                        <div className="flex justify-end space-x-4">
+                            <Button type="button" className="bg-gray-500 text-white" onClick={handleClose}>Close</Button>
+                            <Button type="submit" className="bg-violet-600 text-white" disabled={loading}>
+                                {loading ? "Saving..." : "Save Remark"}
+                            </Button>
+                        </div>
+                    </form>
+                )}
                 <div className="mt-6">
                     <h3 className="text-2xl font-semibold">Previous Records</h3>
                     <div className="mt-4 max-h-64 overflow-y-auto border p-4 rounded bg-gray-100 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
