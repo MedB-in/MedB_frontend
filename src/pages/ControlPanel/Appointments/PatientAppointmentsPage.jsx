@@ -71,8 +71,14 @@ function PatientAppointmentsPage() {
     setSelectedAppt(null);
     setSelectedApptAction(null);
     setActionModalOpen(false);
-    fetchData();
+    if (!searchQuery)
+      fetchData();
   }, []);
+
+  const handleHardClose = () => {
+    setSelectedAppt(null);
+    setActionModalOpen(false);
+  };
 
   const formatTime = (timeString) => {
     const [hour, minute] = timeString.split(":").map(Number);
@@ -86,7 +92,7 @@ function PatientAppointmentsPage() {
       <div className="w-full max-w-md flex justify-between items-center">
         <input
           type="text"
-          placeholder={isDoctor ? "Search by Patient name" : "Search by Doctor name, clinic or date"}
+          placeholder={isDoctor ? "Search by Patient name / Date" : "Search by Doctor name, clinic or date"}
           value={searchQuery}
           onChange={handleSearch}
           className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
@@ -352,7 +358,7 @@ function PatientAppointmentsPage() {
         )}
       </div>
       {selectedAppt && (
-        <DoctorRemarksModal appt={selectedAppt} onClose={handleClose} />
+        <DoctorRemarksModal appt={selectedAppt} onClose={handleClose} onCloseHard={handleHardClose} />
       )}
 
       {actionModalOpen && selectedApptAction && (

@@ -85,7 +85,7 @@ const SearchSection = () => {
                 <div className="flex justify-between mt-4 px-5 w-full md:w-1/3 relative z-10">
                     <input
                         type="text"
-                        placeholder={`${searchType === 'Doctor' ? 'Search Doctors' : 'Enter Location'}`}
+                        placeholder={`${searchType === 'Doctor' ? 'Search Doctors' : 'Enter Location/Clinic'}`}
                         className="flex-1 px-3 py-2 border w-1/2 border-white rounded-lg mr-3 box-border focus:outline-none bg-white"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}

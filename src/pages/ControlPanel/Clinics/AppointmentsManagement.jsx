@@ -185,17 +185,17 @@ function AppointmentsManagement() {
     return (
         <section className="p-4 flex flex-col items-center min-h-[calc(100vh-80px)] mt-2 bg-[#e8e8ff] rounded-3xl">
             <div className="w-full mt-5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-white/20 backdrop-blur-md p-4 rounded-xl shadow-lg">
-                <div className="w-full sm:w-1/2">
-                    <input
-                        type="text"
-                        placeholder="Search by doctor, patient, or date..."
-                        value={searchQuery}
-                        onChange={handleSearch}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-gray-500 focus:border-gray-600 placeholder-gray-600 text-gray-800"
-                    />
-                </div>
-                <div className="w-full sm:w-1/2 flex flex-col sm:flex-row gap-4">
-                    <div className="relative w-full sm:w-1/2">
+                <div className="w-full sm:flex-1 flex flex-col sm:flex-row gap-4">
+                    <div className="w-full sm:w-auto md:w-[300px]">
+                        <input
+                            type="text"
+                            placeholder="Search by doctor, patient, or date..."
+                            value={searchQuery}
+                            onChange={handleSearch}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-gray-500 focus:border-gray-600 placeholder-gray-600 text-gray-800"
+                        />
+                    </div>
+                    <div className="relative w-full sm:w-auto md:w-[300px]">
                         <select
                             value={selectedDoctor}
                             onChange={handleDoctorChange}
@@ -208,11 +208,11 @@ function AppointmentsManagement() {
                                 </option>
                             ))}
                         </select>
-                        <div className="pointer-events-none absolute right-3 top-1/3 -translate-y-1/2 text-gray-600">
+                        <div className="pointer-events-none absolute right-3 top-4 -translate-y-1/2 text-gray-600">
                             ⌄
                         </div>
                     </div>
-                    <div className="w-full sm:w-1/2 flex items-center gap-2">
+                    <div className="w-full sm:flex-1 flex items-center gap-2">
                         <input
                             type="date"
                             value={startDate}
