@@ -161,7 +161,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                 "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"
                             }
                             alt="Profile"
-                            onClick={() => navigate("/user-profile")}
+                            onClick={() => navigate("users/user-profile")}
                             className="w-10 h-10 mr-5 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
                         />
                         <button className="logout flex items-center bg-transparent border-none" onClick={doLogout}>

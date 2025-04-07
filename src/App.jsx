@@ -8,6 +8,7 @@ import * as PublicPages from "./pages/PublicPages/index";
 import * as Clinics from "./pages/ControlPanel/Clinics";
 import * as Appointments from "./pages/ControlPanel/Appointments";
 import * as Patients from "./pages/ControlPanel/Patients";
+import * as Users from "./pages/ControlPanel/Users";
 import Dashboard from "./pages/ControlPanel/DashBoard/DashBoardPage";
 import DoctorsPage from "./pages/ControlPanel/Doctors/DoctorsPage";
 import ControlPanel from "./pages/ControlPanel/Index";
@@ -18,7 +19,6 @@ import LoginPage from "./pages/Login/LoginPage";
 import RegisterPage from "./pages/Register/RegisterPage";
 import VerificationPage from "./pages/Verification/VerificationPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
-import UserProfilePage from "./pages/ControlPanel/UserProfile/UserProfilePage";
 import ErrorPage from "./pages/404Page/ErrorPage";
 
 
@@ -78,7 +78,10 @@ const App = () => {
           </Route>
 
           {/* User profile */}
-          <Route path="user-profile" element={<UserProfilePage />} />
+          <Route path="users">
+            <Route path="user-profile" element={< Users.UserProfilePage />} />
+            <Route path="user-rights" element={<Users.UserRightsPage />} />
+          </Route>
 
           {/* Menu details */}
           <Route path="menu-management" element={<MenuManagementPage />} />
