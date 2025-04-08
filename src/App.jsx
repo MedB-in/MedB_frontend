@@ -81,6 +81,7 @@ const App = () => {
           <Route path="users">
             <Route path="user-profile" element={< Users.UserProfilePage />} />
             <Route path="user-rights" element={<Users.UserRightsPage />} />
+            <Route path="manage-user-rights" element={<Users.ManageUserRightsPage />} />
           </Route>
 
           {/* Menu details */}
