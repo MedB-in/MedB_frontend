@@ -17,13 +17,20 @@ function UserRightsList() {
 
   const handleSetNewRights = (updatedPermissions) => {
     setUsersWithRights((prevList) =>
-      prevList.map((item) =>
-        item.userRightId === selectedRights.userRightId
-          ? { ...item, ...updatedPermissions }
-          : item
-      )
+      updatedPermissions &&
+        (updatedPermissions.viewAllowed ||
+          updatedPermissions.editAllowed ||
+          updatedPermissions.createAllowed ||
+          updatedPermissions.deleteAllowed)
+        ? prevList.map((item) =>
+          item.userRightId === selectedRights.userRightId
+            ? { ...item, ...updatedPermissions }
+            : item
+        )
+        : prevList.filter((item) => item.userRightId !== selectedRights.userRightId)
     );
   };
+
 
   const fetchUsersWithRights = useCallback(async (page) => {
     setLoading(true);
@@ -63,7 +70,7 @@ function UserRightsList() {
         <Button
           onClick={() => navigate("/users/manage-user-rights")}
         >
-          Manage User Rights
+          Manage User Rights for new users
         </Button>
       </div>
       <div className="w-full mx-auto p-6 mt-5">
