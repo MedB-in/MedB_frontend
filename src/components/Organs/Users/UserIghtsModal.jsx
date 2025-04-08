@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getClinicList } from "../../../services/clinics";
+import { getClinicsList } from "../../../services/user";
 import { getMenu } from "../../../services/controlPanel";
 import { addUserRights } from "../../../services/user";
 import Swal from "sweetalert2";
@@ -24,8 +24,8 @@ const UserRightsModal = ({ showModal, setShowModal, user }) => {
 
     const fetchClinicAndMenu = async () => {
         try {
-            const response = await getClinicList();
-            setClinics(response.data.clinics || []);
+            const response = await getClinicsList(user?.userId);
+            setClinics(response?.data.data || []);
             const response2 = await getMenu();
             setMenus(response2.data.menuData || []);
         } catch (error) {
