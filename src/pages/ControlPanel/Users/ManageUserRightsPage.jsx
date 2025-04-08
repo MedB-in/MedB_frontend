@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { getUserList } from "../../../services/user";
 import toast from "react-hot-toast";
-import UserRightsModal from "../../../components/Organs/Users/UseRightsModal";
+import UserRightsModal from "../../../components/Organs/Users/UserRightsModal";
 import { ArrowLeft } from "lucide-react";
 
 function UserList() {
