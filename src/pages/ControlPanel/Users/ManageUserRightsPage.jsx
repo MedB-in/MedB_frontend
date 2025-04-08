@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { getUserList } from "../../../services/user";
 import toast from "react-hot-toast";
-import UserRightsModal from "../../../components/Organs/Users/UserIghtsModal";
+import UserRightsModal from "../../../components/Organs/Users/UseRightsModal";
 import { ArrowLeft } from "lucide-react";
 
 function UserList() {
@@ -83,7 +83,51 @@ function UserList() {
             </div>
             <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
                 {loading ? (
-                    <div className="text-gray-600 text-lg mt-28 text-center">Loading...</div>
+                    <div className="mt-28">
+                        <table className="min-w-full text-sm text-gray-800 animate-pulse">
+                            <thead className="bg-white/70 backdrop-blur text-xs uppercase text-gray-500">
+                                <tr>
+                                    <th className="px-4 py-3 text-center">No.</th>
+                                    <th className="px-4 py-3 text-left">Name</th>
+                                    <th className="px-4 py-3 text-left">Email</th>
+                                    <th className="px-4 py-3 text-left">Phone</th>
+                                    <th className="px-4 py-3 text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[...Array(5)].map((_, i) => (
+                                    <tr
+                                        key={i}
+                                        className="odd:bg-white/50 even:bg-white/30"
+                                    >
+                                        <td className="px-4 py-3 text-center">
+                                            <div className="h-4 bg-gray-300 rounded w-6 mx-auto" />
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-gray-300" />
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="h-4 bg-gray-300 rounded w-32" />
+                                                    <div className="h-3 bg-gray-200 rounded w-20" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <div className="h-4 bg-gray-300 rounded w-40" />
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <div className="h-4 bg-gray-300 rounded w-24" />
+                                        </td>
+                                        <td className="px-4 py-3 space-y-2">
+                                            <div className="h-4 bg-gray-300 rounded w-20 mx-auto" />
+                                            <div className="h-4 bg-gray-300 rounded w-24 mx-auto" />
+                                            <div className="h-6 bg-gray-200 rounded w-24 mx-auto" />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 ) : users.length > 0 ? (
                     <table className="min-w-full text-sm text-gray-800">
                         <thead className="bg-white/70 backdrop-blur text-xs uppercase text-gray-500">

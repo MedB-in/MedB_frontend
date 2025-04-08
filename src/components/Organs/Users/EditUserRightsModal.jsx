@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { editUserRights } from "../../../services/user";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const EditUserRightsModal = ({ showModal, setShowModal, rights, setNewRights }) => {
     const [permissions, setPermissions] = useState({
@@ -22,17 +23,69 @@ const EditUserRightsModal = ({ showModal, setShowModal, rights, setNewRights }) 
     }, [showModal, rights]);
 
     const handleSubmit = async () => {
+        const isAllUnchecked = Object.values(permissions).every((v) => v === false);
+
+        if (isAllUnchecked) {
+            const confirm = await Swal.fire({
+                title: "No permissions selected",
+                text: "This will remove all permissions for this user. Are you sure?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, remove all",
+            });
+
+            if (!confirm.isConfirmed) return;
+        }
+
         try {
             const data = {
                 userRightId: rights.userRightId,
                 ...permissions,
             };
             await editUserRights(data);
-            toast.success("User rights updated successfully");
-            setNewRights(permissions)
+
+            toast.success(
+                isAllUnchecked
+                    ? "All user rights removed"
+                    : "User rights updated successfully"
+            );
+
+            setNewRights(isAllUnchecked ? null : permissions);
             setShowModal(false);
         } catch (error) {
             toast.error(error?.response?.data?.message || "Failed to update rights");
+        }
+    };
+
+    const handleRemoveRights = async () => {
+        const confirm = await Swal.fire({
+            title: "Are you sure?",
+            text: "This will remove all permissions for this user.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, remove",
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                const data = {
+                    userRightId: rights.userRightId,
+                    viewAllowed: false,
+                    editAllowed: false,
+                    createAllowed: false,
+                    deleteAllowed: false,
+                };
+                await editUserRights(data);
+                toast.success("User rights removed");
+                setNewRights(null);
+                setShowModal(false);
+            } catch (error) {
+                toast.error(error?.response?.data?.message || "Failed to remove rights");
+            }
         }
     };
 
@@ -59,19 +112,27 @@ const EditUserRightsModal = ({ showModal, setShowModal, rights, setNewRights }) 
                     ))}
                 </div>
 
-                <div className="flex justify-end space-x-3 pt-4">
+                <div className="flex justify-between items-center pt-4">
                     <button
-                        onClick={() => setShowModal(false)}
-                        className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+                        onClick={handleRemoveRights}
+                        className="px-3 py-2 bg-red-100 text-red-600 text-sm rounded hover:bg-red-200"
                     >
-                        Cancel
+                        Remove Rights
                     </button>
-                    <button
-                        onClick={handleSubmit}
-                        className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
-                    >
-                        Update
-                    </button>
+                    <div className="space-x-2">
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleSubmit}
+                            className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+                        >
+                            Update
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

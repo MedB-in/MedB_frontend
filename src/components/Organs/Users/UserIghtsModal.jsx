@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { getClinicList } from "../../../services/clinics";
+import { getClinicsList } from "../../../services/user";
 import { getMenu } from "../../../services/controlPanel";
 import { addUserRights } from "../../../services/user";
-import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const UserRightsModal = ({ showModal, setShowModal, user }) => {
     const [clinics, setClinics] = useState([]);
@@ -24,33 +24,47 @@ const UserRightsModal = ({ showModal, setShowModal, user }) => {
 
     const fetchClinicAndMenu = async () => {
         try {
-            const response = await getClinicList();
-            setClinics(response.data.clinics || []);
+            const response = await getClinicsList(user?.userId);
+            setClinics(response?.data.data || []);
             const response2 = await getMenu();
             setMenus(response2.data.menuData || []);
         } catch (error) {
-            toast.error("Failed to fetch clinics and menus");
+            Swal.fire("Error", "Failed to fetch clinics and menus", "error");
         }
     };
 
     const handleSubmit = async () => {
-        try {
-            if (!selectedClinic || !selectedMenu) {
-                return toast.error("Select both clinic and menu");
-            }
+        if (!selectedClinic || !selectedMenu) {
+            return Swal.fire("Required", "Select both clinic and menu", "warning");
+        }
 
+        const hasAtLeastOnePermission = Object.values(permissions).some(val => val === true);
+
+        if (!hasAtLeastOnePermission) {
+            return Swal.fire("Permission Required", "Select at least one user right", "warning");
+        }
+
+        try {
             const data = {
-                userId: user?._id || user?.id,
+                userId: user?.userId,
                 clinicId: selectedClinic,
                 menuId: selectedMenu,
                 ...permissions,
             };
 
             await addUserRights(data);
-            toast.success("User rights assigned successfully");
+            Swal.fire("Success", "User rights assigned successfully", "success");
+            setPermissions({
+                viewAllowed: false,
+                editAllowed: false,
+                createAllowed: false,
+                deleteAllowed: false,
+            })
+            setSelectedClinic("");
+            setSelectedMenu("");
             setShowModal(false);
         } catch (error) {
-            toast.error(error?.response?.data?.message || "Failed to assign rights");
+            Swal.fire("Error", error?.response?.data?.message || "Failed to assign rights", "error");
         }
     };
 
@@ -115,7 +129,7 @@ const UserRightsModal = ({ showModal, setShowModal, user }) => {
 
                 <div className="flex justify-end space-x-3 pt-4">
                     <button
-                        onClick={() => setShowModal(false)}
+                        onClick={() => { setPermissions({ viewAllowed: false, editAllowed: false, createAllowed: false, deleteAllowed: false }), setSelectedClinic(""), setSelectedMenu(""), setShowModal(false) }}
                         className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
                     >
                         Cancel

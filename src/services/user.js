@@ -8,6 +8,10 @@ export const updateProfile = (data) =>
 export const uploadProfilePicture = (data) =>
     axios.post("/api/user/uploadProfilePicture", data, uploadHeaders());
 
+//API to get clinics list of the user.
+export const getClinicsList = (userId) =>
+    axios.get(`/api/user/clinicList/${userId}`, getHeaders());
+
 //API to get user list.
 export const getUserList = (search, page) =>
     axios.get(`/api/user/userList?search=${search}&page=${page}`, getHeaders());
