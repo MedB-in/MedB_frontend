@@ -20,10 +20,40 @@ const Hero = () => {
     const [isNoResults, setIsNoResults] = useState(false);
     const navigate = useNavigate();
     const tabRef = useRef(null);
+    const [selectedIndex, setSelectedIndex] = useState(-1);
+    const inputRef = useRef(null);
 
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
     const isClinicBooking = !!userDetails?.clinicId;
     const isDoctorBooking = !!userDetails?.doctorId;
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (!clinicResults || clinicResults.length === 0) return;
+
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                setSelectedIndex((prev) => (prev + 1) % clinicResults.length);
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                setSelectedIndex((prev) => (prev - 1 + clinicResults.length) % clinicResults.length);
+            } else if (e.key === "Enter" && selectedIndex !== -1) {
+                const selectedClinic = clinicResults[selectedIndex];
+                if (selectedClinic) {
+                    handleClinicSelect(selectedClinic.clinicid, selectedClinic.name);
+                    navigate(`/find-doctor/?clinicId=${selectedClinic.clinicid}`);
+                }
+            }
+        };
+
+        const input = inputRef.current;
+        input?.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            input?.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [clinicResults, selectedIndex]);
+
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -89,6 +119,7 @@ const Hero = () => {
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="relative flex items-center bg-[#eef1ff] p-3 rounded-full mt-16 w-full max-w-md mx-auto lg:mx-0">
                         <span className="absolute left-6 text-2xl mb-1 font-light text-gray-800 animate-blink">|</span>
                         <input
+                            ref={inputRef}
                             type="text"
                             placeholder={clinicSearch ? "" : "Search for Clinics"}
                             value={clinicSearch}
@@ -122,7 +153,12 @@ const Hero = () => {
                                     <div className="p-3 text-gray-500">No clinics found</div>
                                 ) : (
                                     clinicResults.map((clinic, index) => (
-                                        <div key={index} className="p-3 hover:bg-gray-100 cursor-pointer" onClick={() => handleClinicSelect(clinic.clinicid, clinic.name)}>
+                                        <div
+                                            key={index}
+                                            className={`p-3 cursor-pointer ${selectedIndex === index ? 'bg-blue-100' : 'hover:bg-gray-100'
+                                                }`}
+                                            onClick={() => handleClinicSelect(clinic.clinicid, clinic.name)}
+                                        >
                                             {clinic.name}{clinic.address && `, ${clinic.address}`}
                                         </div>
                                     ))

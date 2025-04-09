@@ -238,11 +238,11 @@ function AppointmentsManagement() {
             <Button variant="primary" className="" onClick={() => navigate(`/appointments/book-appointment/${clinicId}`)}>
                 Walk-In Appointment
             </Button>
-            <div className="w-full mx-auto rounded-xl p-6 mt-4 overflow-x-auto">
-                <table className="w-full min-w-max border-collapse bg-[#f0f0ff] drop-shadow-xl rounded-2xl overflow-hidden">
+            <div className="w-full overflow-x-auto rounded-lg border border-gray-200 mt-6">
+                <table className="w-full table-auto border-collapse text-sm">
                     <thead>
                         <tr className="bg-white/50 backdrop-blur-lg text-gray-800 text-center">
-                            {["No.", "Doctor", "Appointment Date", "Appointment Time", "Patient", "Status", "Reason", "Actions"].map(
+                            {["No.", "Doctor", "Appointment Date", "Appointment Time", "Patient", "Status", "Visit Reason", "Actions"].map(
                                 (header, index) => (
                                     <th key={index} className="px-4 py-3 border-b border-gray-300">
                                         {header}
@@ -268,38 +268,42 @@ function AppointmentsManagement() {
                                         >
                                             <td className="px-4 py-3 text-center">{index + 1}</td>
                                             <td className="px-4 py-3 min-w-[200px] whitespace-normal break-words">
-                                                <div className="flex justify-center items-center gap-4">
-                                                    <img
-                                                        src={appt.doctorProfilePicture}
-                                                        alt={appt.doctorFirstName}
-                                                        className="w-12 h-12 rounded-full object-cover border border-gray-300 shadow-md"
-                                                    />
-                                                    <div className="text-left">
-                                                        <p className="text-lg font-semibold text-gray-800">
-                                                            {appt.doctorFirstName} {appt.doctorMiddleName || ""} {appt.doctorLastName || ""}
-                                                        </p>
-                                                        <p className="text-sm text-gray-600">{appt.doctorGender}</p>
-                                                        <p className="text-sm text-gray-600">{appt.speciality}</p>
-                                                        <p className="text-sm text-gray-600">{appt.experience} years of experience</p>
-                                                        <p className="text-sm text-gray-600">{appt.qualifications}</p>
+                                                <div className="flex justify-start">
+                                                    <div className="flex items-center justify-start gap-4">
+                                                        <img
+                                                            src={appt.doctorProfilePicture}
+                                                            alt={appt.doctorFirstName}
+                                                            className="w-12 h-12 rounded-full object-cover border border-gray-300 shadow-md"
+                                                        />
+                                                        <div className="text-left">
+                                                            <p className="text-lg font-semibold text-gray-800">
+                                                                {appt.doctorFirstName} {appt.doctorMiddleName || ""} {appt.doctorLastName || ""}
+                                                            </p>
+                                                            <p className="text-sm text-gray-600">{appt.doctorGender}</p>
+                                                            <p className="text-sm text-gray-600">{appt.speciality}</p>
+                                                            <p className="text-sm text-gray-600">{appt.experience} years of experience</p>
+                                                            <p className="text-sm text-gray-600">{appt.qualifications}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-4 py-3 text-center">{appt.appointmentDate}</td>
                                             <td className="px-4 py-3 text-center">{formatTime(appt.appointmentTime)}</td>
                                             <td className="px-4 py-3 min-w-[200px] whitespace-normal break-words">
-                                                <div className="flex justify-center items-center gap-4">
-                                                    <img
-                                                        src={appt.patientProfilePicture}
-                                                        alt={appt.patientFirstName}
-                                                        className="w-12 h-12 rounded-full object-cover border border-gray-300 shadow-md"
-                                                    />
-                                                    <div className="text-left">
-                                                        <p className="text-lg font-semibold text-gray-800">
-                                                            {appt.patientFirstName} {appt.patientMiddleName || ""} {appt.patientLastName || ""}
-                                                        </p>
-                                                        <p className="text-sm text-gray-600">{appt.patientEmail}</p>
-                                                        <p className="text-sm text-gray-600">{appt.patientContactNo}</p>
+                                                <div className="flex justify-start">
+                                                    <div className="flex items-center justify-start gap-4">
+                                                        <img
+                                                            src={appt.patientProfilePicture}
+                                                            alt={appt.patientFirstName}
+                                                            className="w-12 h-12 rounded-full object-cover border border-gray-300 shadow-md"
+                                                        />
+                                                        <div className="text-left">
+                                                            <p className="text-lg font-semibold text-gray-800">
+                                                                {appt.patientFirstName} {appt.patientMiddleName || ""} {appt.patientLastName || ""}
+                                                            </p>
+                                                            <p className="text-sm text-gray-600">{appt.patientEmail}</p>
+                                                            <p className="text-sm text-gray-600">{appt.patientContactNo}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -311,7 +315,8 @@ function AppointmentsManagement() {
                                                         : "text-red-500"
                                                     }`}
                                             >
-                                                {appt.appointmentStatus}
+                                                {appt.appointmentStatus}<br />
+                                                {appt.appointmentStatus === "Cancelled" && "Reason: " + appt.cancellationReason}
                                             </td>
                                             <td
                                                 className={`px-4 py-3 text-center capitalize ${appt.isEmergency &&
@@ -322,12 +327,12 @@ function AppointmentsManagement() {
                                                     }`}
                                             >
                                                 {appt.reasonForVisit || "N/A"}<br />
-                                                {appt.isEmergency && " (Emergency)"}
+                                                {appt.isEmergency && " (Emergency)"}<br />
                                             </td>
                                             {appt.appointmentStatus !== "Completed" &&
                                                 appt.appointmentStatus !== "Cancelled" &&
                                                 appt.appointmentStatus !== "Rescheduled" &&
-                                                appt.appointmentDate.split("-").reverse().join("-") === today ? (
+                                                appt.appointmentDate.split("-").reverse().join("-") >= today ? (
                                                 <td className="flex flex-col gap-2 p-2 items-center">
                                                     <button
                                                         onClick={() => handleStatus(appt)}

@@ -12,7 +12,7 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
     const [selectedDay, setSelectedDay] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedSlot, setSelectedSlot] = useState(null);
-    const [reason, setReason] = useState("");
+    const [reason, setReason] = useState('');
     const doctorId = appointment?.doctorId;
 
     const handleDateSelect = ({ date, day }) => {
@@ -26,6 +26,11 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
 
     const handleSubmit = async () => {
         if (!status) return;
+        if (reason.trim() === "" && status === "Cancelled") {
+            toast.error("Please enter a reason for the visit.");
+            setLoading(false);
+            return;
+        }
         if (status === "Completed" || status === "Cancelled") {
             const result = await Swal.fire({
                 title: "Consultation Status",
@@ -117,11 +122,12 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                     <div className="mb-4">
                         <label className="block text-sm font-medium mb-2">Reason for Cancellation</label>
                         <textarea
-                            className="w-full p-2 bg-white/10 border border-white/20 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
+                            className="w-full p-2 border rounded-md text-black focus:ring-2 focus:ring-indigo-500"
                             rows="3"
+                            type="text"
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
-                            placeholder="Enter reason..."
+                            placeholder="Enter reason for cancellation..."
                         />
                     </div>
                 )}
