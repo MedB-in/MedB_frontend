@@ -103,8 +103,8 @@ function PatientAppointmentsPage() {
           Book Appointment
         </Button>
       )}
-      <div className="w-full mx-auto rounded-2xl p-6">
-        <table className="hidden lg:table w-full border-collapse border border-gray-200 rounded-lg overflow-scroll">
+      <div className="w-full overflow-x-auto rounded-lg border border-gray-200 mt-6">
+        <table className="hidden lg:table w-full table-auto border-collapse text-sm">
           <thead>
             <tr className="bg-[#e0e0ff] text-center">
               {!isDoctor ? <th className="px-4 py-3">Doctor</th> :
@@ -168,34 +168,38 @@ function PatientAppointmentsPage() {
                     >
                       {!isDoctor ? (
                         <td className="px-4 py-3 text-left rounded-l-lg">
-                          <div className="flex justify-center">
-                            <div className="flex items-center gap-4">
+                          <div className="flex justify-start">
+                            <div className="flex items-center justify-start gap-4">
                               <img
                                 src={appt.profilePicture}
                                 alt={appt.firstName}
                                 className="w-12 h-12 rounded-full object-cover"
                               />
-                              <div className="flex-1">
+                              <div className="flex flex-col">
                                 <p className="text-lg font-semibold">
-                                  {appt.firstName} {appt.middleName || ""} {appt.lastName || ""}
+                                  {appt?.firstName} {appt.middleName || ""} {appt.lastName || ""}
                                 </p>
+                                <p className="text-sm text-gray-600">{appt.doctorGender}</p>
                                 <p className="text-sm text-gray-600">{appt.speciality}</p>
+                                <p className="text-sm text-gray-600">{appt.experience} years of experience</p>
+                                <p className="text-sm text-gray-600">{appt.qualifications}</p>
                               </div>
                             </div>
                           </div>
                         </td>
+
                       ) : (
                         <td className="px-4 py-3 text-left rounded-l-lg">
-                          <div className="flex justify-center">
-                            <div className="flex items-center gap-4">
+                          <div className="flex justify-start">
+                            <div className="flex items-center justify-start gap-4">
                               <img
-                                src={appt.patientDetails.profilePicture}
-                                alt={appt.patientDetails.firstName}
+                                src={appt.patientDetails?.profilePicture}
+                                alt={appt.patientDetails?.firstName}
                                 className="w-12 h-12 rounded-full object-cover"
                               />
                               <div className="flex-1">
                                 <p className="text-lg font-semibold">
-                                  {appt.patientDetails.firstName} {appt.patientDetails.middleName || ""} {appt.patientDetails.lastName || ""}
+                                  {appt.patientDetails?.firstName} {appt.patientDetails?.middleName || ""} {appt.patientDetails?.lastName || ""}
                                 </p>
                               </div>
                             </div>
@@ -204,14 +208,21 @@ function PatientAppointmentsPage() {
                       )}
                       <td className="px-4 py-3 text-center">{appt.appointmentDate}</td>
                       <td className="px-4 py-3 text-center"> {formatTime(appt.appointmentTime)}</td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-4 justify-center">
-                          <img
-                            src={appt.clinicPicture}
-                            alt={appt.clinicName}
-                            className="w-12 h-12 rounded-full object-cover"
-                          />
-                          <p className="text-lg font-semibold">{appt.clinicName}</p>
+                      <td className="px-4 py-3 text-left rounded-l-lg">
+                        <div className="flex justify-start">
+                          <div className="flex items-center justify-start gap-4">
+                            <img
+                              src={appt.clinicPicture}
+                              alt={appt.clinicName}
+                              className="w-12 h-12 rounded-full object-cover"
+                            />
+                            <div className="flex flex-col">
+                              <p className="text-lg font-semibold">{appt.clinicName}</p>
+                              <p className="text-sm text-gray-600">{appt.address}</p>
+                              <p className="text-sm text-gray-600">{appt.email}</p>
+                              <p className="text-sm text-gray-600">{appt.contact}</p>
+                            </div>
+                          </div>
                         </div>
                       </td>
                       <td
@@ -223,6 +234,11 @@ function PatientAppointmentsPage() {
                           }`}
                       >
                         {appt.appointmentStatus}
+                        {appt.appointmentStatus === "Cancelled" && (
+                          <div className="text-sm font-normal text-gray-500 mt-1">
+                            Reason: <span className="italic">{appt.cancellationReason}</span>
+                          </div>
+                        )}
                       </td>
                       <td
                         className={`px-4 py-3 text-center capitalize rounded-r-lg ${appt.isEmergency && appt.appointmentStatus === "Scheduled" && isDoctor ? "bg-red-500 text-white animate-pulse font-bold" : ""
