@@ -45,15 +45,15 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
     const hasNoSlots = date && Object.values(timeCategories).every(category => category.length === 0);
 
     const isPastSlot = (slotTime) => {
-        const now = new Date();
-        const selectedDateTime = new Date(date);
-
+        const nowUTC = new Date();
+        const nowIST = new Date(nowUTC.getTime() + (5.5 * 60 * 60 * 1000));
         const [slotHour, slotMinute] = slotTime.split(':').map(Number);
-        selectedDateTime.setHours(slotHour, slotMinute, 0, 0);
+        const slotDateIST = new Date(date);
+        slotDateIST.setHours(slotHour, slotMinute, 0, 0);
+        const slotDateISTAdjusted = new Date(slotDateIST.getTime() - (slotDateIST.getTimezoneOffset() * 60000));
 
-        return selectedDateTime < now;
+        return slotDateISTAdjusted < nowIST;
     };
-
 
     const renderCategory = (title, icon, slots) => {
         if (!slots.length) return null;
@@ -109,6 +109,7 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
     return (
         <section className="px-4 md:px-14 py-4 mx-auto my-5 rounded-2xl border border-solid backdrop-blur-[18.15px] bg-white bg-opacity-70 border-indigo-500 border-opacity-10">
             <div className="flex items-center gap-2 justify-end">
+                <p className="text-gray-600 text-sm">Slots are in Indian Timezone - <span className='font-bold'> IST</span></p>
                 <div className="h-4 w-4 bg-gray-300"></div>
                 <p className="text-gray-500 text-sm">Not available</p>
             </div>

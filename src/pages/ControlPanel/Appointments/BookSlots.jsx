@@ -227,13 +227,14 @@ const BookSlots = () => {
                     <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {slots.map((slot, index) => {
                             const [slotHour, slotMinute] = slot.time.split(":").map(Number);
-                            const now = new Date();
+                            const nowUTC = new Date();
+                            const nowIST = new Date(nowUTC.getTime() + (5.5 * 60 * 60 * 1000));
                             const slotDateTime = new Date(selectedDate);
                             slotDateTime.setHours(slotHour, slotMinute, 0, 0);
-
-                            const isSameDay = selectedDate.toDateString() === now.toDateString();
-                            const isPastTime = isSameDay && slotDateTime < now;
-
+                            const slotDateTimeIST = new Date(slotDateTime.getTime() - (slotDateTime.getTimezoneOffset() * 60000));
+                            const isSameDay = nowIST.toDateString() === slotDateTimeIST.toDateString();
+                            const isPastTime = isSameDay && slotDateTimeIST < nowIST;
+                            
                             const isSelected = selectedSlot === slot.time;
                             const isDisabled = slot.booked || isPastTime;
 

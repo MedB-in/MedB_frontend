@@ -28,7 +28,31 @@ function DoctorSlotModal({ onClose, doctorId, clinicId }) {
         setSelectedSlot(slot);
     };
 
+    const isPastSlot = (slotTime) => {
+        const nowUTC = new Date();
+        const nowIST = new Date(nowUTC.getTime() + (5.5 * 60 * 60 * 1000));
+        const [slotHour, slotMinute] = slotTime.split(':').map(Number);
+        const slotDateIST = new Date(selectedDate);
+        slotDateIST.setHours(slotHour, slotMinute, 0, 0);
+        const slotDateISTAdjusted = new Date(slotDateIST.getTime() - (slotDateIST.getTimezoneOffset() * 60000));
+
+        return slotDateISTAdjusted < nowIST;
+    };
+
     const handleSubmit = async () => {
+        const isPast = isPastSlot(selectedSlot);
+        if (isPast) {
+            toast.error('Selected slot is Expired. Please select another slot.');
+            return;
+        }
+        if (!selectedDate || !selectedDay || !selectedSlot) {
+            toast.error('Please select a date and time before submitting.');
+            return;
+        }
+        if (!reason.trim()) {
+            toast.error("Please enter a reason for the visit.");
+            return;
+        }
         if (!authenticated) {
             const loginUrl = '/login';
             const loginPopup = window.open(loginUrl, '_blank', 'width=500,height=600');
@@ -61,14 +85,6 @@ function DoctorSlotModal({ onClose, doctorId, clinicId }) {
 
         setLoading(true);
         try {
-            if (!selectedDate || !selectedDay || !selectedSlot) {
-                toast.error('Please select a date and time before submitting.');
-                return;
-            }
-            if (!reason.trim()) {
-                toast.error("Please enter a reason for the visit.");
-                return;
-            }
             await bookSlot({ clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
             toast.success("Slot booked successfully!");
             navigate('/appointments');

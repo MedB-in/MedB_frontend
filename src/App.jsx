@@ -57,6 +57,7 @@ const App = () => {
           {/* Clinics */}
           <Route path="clinics">
             <Route index element={<Clinics.ClinicsPage />} />
+            <Route path="overview" element={<Clinics.Overview />} />
             <Route path=":clinicId" element={<Clinics.ClinicDetails />} />
             <Route path="slots/:clinicId/:doctorId" element={<Clinics.ClinicSlot />} />
             <Route path="users/:clinicId" element={<Clinics.ClinicUsers />} />
