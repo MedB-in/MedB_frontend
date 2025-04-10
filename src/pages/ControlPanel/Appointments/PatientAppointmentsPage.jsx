@@ -15,24 +15,57 @@ function PatientAppointmentsPage() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedAppt, setSelectedAppt] = useState(null);
+
+  const cachedSearchQuery = sessionStorage.getItem("appointment_search_query") || "";
+  const [searchQuery, setSearchQuery] = useState(cachedSearchQuery);
+
+  const [selectedAppt, setSelectedAppt] = useState(() => {
+    const cached = sessionStorage.getItem("selectedAppt");
+    return cached ? JSON.parse(cached) : null;
+  });
+
   const [selectedApptAction, setSelectedApptAction] = useState(null);
   const [actionModalOpen, setActionModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    sessionStorage.setItem("appointment_search_query", searchQuery);
+  }, [searchQuery]);
+
+
   const fetchData = async () => {
+    const storageKey = `appointments_${doctor}_${currentPage}_${searchQuery}`;
+
+    const cachedData = sessionStorage.getItem(storageKey);
+    if (cachedData) {
+      const parsed = JSON.parse(cachedData);
+      setAppointments(parsed.appointments);
+      setTotalPages(parsed.totalPages);
+      setCurrentPage(parsed.currentPage);
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await getAppointments(doctor, currentPage, searchQuery);
-      setAppointments(response.data.appointments.appointments);
-      setTotalPages(response.data.appointments.totalPages);
-      setCurrentPage(response.data.appointments.currentPage);
+
+      const result = {
+        appointments: response.data.appointments.appointments,
+        totalPages: response.data.appointments.totalPages,
+        currentPage: response.data.appointments.currentPage,
+      };
+
+      setAppointments(result.appointments);
+      setTotalPages(result.totalPages);
+      setCurrentPage(result.currentPage);
+
+      sessionStorage.setItem(storageKey, JSON.stringify(result));
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to fetch appointments.");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchData();
@@ -60,6 +93,7 @@ function PatientAppointmentsPage() {
 
   const handleOpenModal = (appt) => {
     setSelectedAppt(appt);
+    sessionStorage.setItem("selectedAppt", JSON.stringify(appt));
   };
 
   const handleAppointmentModal = (appt) => {
@@ -74,9 +108,10 @@ function PatientAppointmentsPage() {
     if (!searchQuery)
       fetchData();
   }, []);
-
+  
   const handleHardClose = () => {
     setSelectedAppt(null);
+    sessionStorage.removeItem("selectedAppt");
     setActionModalOpen(false);
   };
 

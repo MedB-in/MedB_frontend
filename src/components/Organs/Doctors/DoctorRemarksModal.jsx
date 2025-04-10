@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import Button from "../../Atoms/Login/Button";
 import { getPatientMedHistory, updatePatientMedHistory } from "../../../services/patient";
+import { useNavigate } from "react-router-dom";
 
 const DoctorRemarksModal = ({ appt, onClose, onCloseHard }) => {
     const [remark, setRemark] = useState('');
@@ -9,6 +10,7 @@ const DoctorRemarksModal = ({ appt, onClose, onCloseHard }) => {
     const [loading, setLoading] = useState(false);
     const [confirmClose, setConfirmClose] = useState(false);
     const [selectedRemark, setSelectedRemark] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (appt?.patientDetails?.userId) {
@@ -91,12 +93,15 @@ const DoctorRemarksModal = ({ appt, onClose, onCloseHard }) => {
                 )}
                 <h2 className="text-3xl font-bold text-center mb-6">Patient Diagnosis/Remarks</h2>
 
-                <div className="flex items-center space-x-6 mb-6">
-                    <img src={appt?.patientDetails?.profilePicture} alt="Patient" className="w-20 h-20 object-cover rounded-full" />
-                    <div>
-                        <p className="text-xl font-semibold capitalize">{appt?.patientDetails?.firstName} {appt?.patientDetails?.middleName} {appt?.patientDetails?.lastName}</p>
-                        <p className="text-lg text-gray-500">{appt?.patientDetails?.email}</p>
+                <div className="flex items-center justify-between space-x-6 mb-6">
+                    <div className="flex items-center space-x-4">
+                        <img src={appt?.patientDetails?.profilePicture} alt="Patient" className="w-20 h-20 object-cover rounded-full" />
+                        <div>
+                            <p className="text-xl font-semibold capitalize">{appt?.patientDetails?.firstName} {appt?.patientDetails?.middleName} {appt?.patientDetails?.lastName}</p>
+                            <p className="text-lg text-gray-500">{appt?.patientDetails?.email}</p>
+                        </div>
                     </div>
+                    <div className="flex text-right space-x-2 font-semibold cursor-pointer hover:text-violet-600 hover:underline" onClick={() => navigate(`/patients/prescriptions/${appt?.patientDetails?.userId}/${appt?.doctorId}/${appt?.clinicId}/${appt?.appointmentId}/${appt?.appointmentDate}`)}>Prescriptions</div>
                 </div>
                 {new Date(appt.appointmentDate.split("-").reverse().join("-")) === new Date() && (
                     <form className="space-y-6" onSubmit={handleSubmit}>

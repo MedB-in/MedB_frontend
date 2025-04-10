@@ -22,6 +22,7 @@ function useAuth() {
         localStorage.removeItem("openModuleIndex");
         localStorage.removeItem("selectedMenu");
         localStorage.removeItem("userDetails");
+        sessionStorage.clear();
         await persistor.purge();
         setUser(null);
         await doLogout().catch((error) => {

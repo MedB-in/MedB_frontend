@@ -1,5 +1,5 @@
 import AppointmentCard from '../../../components/Atoms/Overview/AppointmentCard'
-import { Reports } from '../../../components/Atoms/Overview/Reports'
+import Reports from '../../../components/Atoms/Overview/Reports'
 import DoctorList from '../../../components/Atoms/Overview/DoctorList'
 import Calendar from '../../../components/Atoms/Overview/Calender';
 import PatientFeedback from '../../../components/Atoms/Overview/PatientFeedback';
