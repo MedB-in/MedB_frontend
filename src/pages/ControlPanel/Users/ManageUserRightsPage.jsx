@@ -170,7 +170,7 @@ function UserList() {
                                                     {user.lastName ? ` ${user.lastName}` : ""}
                                                 </span>
                                                 {user.address && (
-                                                    <span className="text-sm text-gray-500">{user.address}</span>
+                                                    <span className="text-sm self-start text-gray-500">{user.address}</span>
                                                 )}
                                             </div>
                                         </div>

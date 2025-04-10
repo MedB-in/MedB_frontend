@@ -74,3 +74,7 @@ export const updateAppointmentStatus = (appointmentId, status, reason) =>
 //API to assign a token to a patient
 export const assignPatientToken = (appointmentId, tokenNo) =>
     axios.post(`/api/clinic/appointmentToken/${appointmentId}`, { tokenNo }, getHeaders());
+
+//API to fetch Analytics of a specific Clinic.
+export const getAnalytics = (clinicId) =>
+    axios.get(`/api/clinic/analytics/${clinicId}`, getHeaders());

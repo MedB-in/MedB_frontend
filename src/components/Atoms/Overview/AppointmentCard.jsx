@@ -1,16 +1,22 @@
-const AppointmentCard = ({ appt }) => {
+import { useNavigate } from "react-router-dom";
+
+const AppointmentCard = ({ appt, title }) => {
+
+    const navigate = useNavigate();
+
     return (
         <article className="flex flex-col items-center p-6 rounded-xl border border-emerald-300 border-solid my-5 shadow-lg bg-indigo-500 bg-opacity-10">
             <h2
                 className="text-7xl font-bold text-indigo-500"
                 aria-label="180 appointments"
             >
-                180
+                {appt ? appt : "0"}
             </h2>
-            <p className="text-xl">Today's Appointment</p>
+            <p className="text-xl my-6">{title}</p>
             <button
                 className="flex justify-end items-center pr-5 mt-auto w-full h-10 bg-emerald-300 rounded-xl hover:bg-emerald-400 transition-colors"
                 aria-label="View appointments"
+                onClick={() => navigate("/appointments/appointments-management")}
             >
                 <svg
                     width="30"
