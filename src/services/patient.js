@@ -1,5 +1,5 @@
-import axios from "./axios";
-import { getHeaders } from "./axios";
+import axios, { uploadHeaders, getHeaders } from "./axios";
+
 
 //API to handle get appointments.
 export const getAppointments = (doctor, page, search) =>
@@ -20,3 +20,11 @@ export const getPatientMedHistory = (patientId, doctorId) =>
 //API to add medical history of a patient.
 export const updatePatientMedHistory = (patientId, doctorId, date, appointmentId, data) =>
     axios.post(`/api/patient/medicalHistory/${patientId}?doctorId=${doctorId}&appointmentDate=${date}&appointmentId=${appointmentId}`, data, getHeaders());
+
+//API to get prescription of a patient.
+export const getPrescriptions = (patientId, doctorId) =>
+    axios.get(`/api/patient/prescription/${patientId}/${doctorId}`, getHeaders());
+
+//API to upload prescription of a patient.
+export const uploadPrescription = (patientId, doctorId, data) =>
+    axios.post(`/api/patient/prescription/${patientId}/${doctorId}`, data, uploadHeaders());

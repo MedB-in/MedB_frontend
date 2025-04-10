@@ -193,7 +193,7 @@ function UserRightsList() {
                             className="w-14 h-14 rounded-lg object-cover border border-gray-300 shadow-sm"
                           />
                         )}
-                        <div className="flex flex-col text-sm items-start">
+                        <div className="flex flex-col text-sm text-start">
                           <span className="font-medium text-gray-800">{user.clinicName}</span>
                           <span className="text-gray-600">{user.clinicAddress}</span>
                           <span className="text-gray-500">{user.clinicEmail}</span>

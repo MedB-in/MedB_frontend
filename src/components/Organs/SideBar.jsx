@@ -54,13 +54,24 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
             setOpenModuleIndex(0);
         }
         if (storedSelectedMenu) {
-            setSelectedMenu(storedSelectedMenu);
+            try {
+                const parsedMenu = JSON.parse(storedSelectedMenu);
+                const validMenu = modules
+                    .flatMap(module => module.menus || [])
+                    .find(menu => menu.menuId === parsedMenu.menuId);
+
+                if (validMenu) {
+                    setSelectedMenu(validMenu);
+                }
+            } catch (error) {
+                console.error('Error parsing stored selectedMenu:', error);
+            }
         }
     }, [modules]);
 
     useEffect(() => {
         if (openModuleIndex !== null) localStorage.setItem('openModuleIndex', openModuleIndex);
-        if (selectedMenu) localStorage.setItem('selectedMenu', selectedMenu);
+        if (selectedMenu) localStorage.setItem('selectedMenu', JSON.stringify(selectedMenu));
     }, [openModuleIndex, selectedMenu]);
 
     const toggleModule = (index) => {
@@ -68,7 +79,8 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     };
 
     const handleMenuClick = (menu) => {
-        setSelectedMenu(menu.actionUrl);
+        setSelectedMenu(menu);
+        localStorage.setItem('selectedMenu', JSON.stringify(menu));
     };
 
     const doLogout = async () => {

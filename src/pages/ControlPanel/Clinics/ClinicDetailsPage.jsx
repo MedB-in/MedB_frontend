@@ -11,7 +11,6 @@ import { editClinic, getClinicById, setIsDoctorClinicStatus } from "../../../ser
 import { addDoctor, editDoctor } from "../../../services/doctors";
 import DefaultImage from "../../../assets/images/default-doctor.png";
 
-
 const ClinicDetailsPage = ({ idClinic }) => {
     let { clinicId } = useParams();
     if (idClinic)
@@ -25,6 +24,8 @@ const ClinicDetailsPage = ({ idClinic }) => {
     const [isDoctorToClinicModalOpen, setIsDoctorToClinicModalOpen] = useState(false);
     const [clinicData, setClinicData] = useState(null);
     const [selectedDays, setSelectedDays] = useState({});
+    const storedSelectedMenu = JSON.parse(localStorage.getItem('selectedMenu'));
+    const menuRights = storedSelectedMenu?.rights
 
     const fetchClinicDetails = async () => {
         try {
@@ -186,8 +187,7 @@ const ClinicDetailsPage = ({ idClinic }) => {
                     </button>
                 </div>
             )}
-
-            {!idClinic && (
+            {(!idClinic || menuRights.createAllowed === true) && (
                 <>
                     <button
                         title="Add New Doctor"
@@ -211,20 +211,19 @@ const ClinicDetailsPage = ({ idClinic }) => {
                     </button>
                 </>
             )}
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
                 {doctors.map((doctor) => (
                     <div
-                        key={doctor.doctorId}
+                    key={doctor.doctorId}
                         className="p-6 border border-gray-200 rounded-xl shadow-md bg-white hover:shadow-lg transition duration-200 flex flex-col"
-                    >
+                        >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <img
                                     src={doctor.profilePicture || DefaultImage}
                                     alt={doctor.doctorName}
                                     className="w-16 h-16 rounded-full object-cover border"
-                                />
+                                    />
                                 <div>
                                     <h3 className="text-lg font-semibold">
                                         Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}
@@ -233,7 +232,7 @@ const ClinicDetailsPage = ({ idClinic }) => {
                                     <p className="text-gray-600">{doctor.qualifications}</p>
                                 </div>
                             </div>
-                            {!idClinic && (
+                            {(!idClinic || menuRights.editAllowed === true) && (
                                 <>
                                     <button
                                         className="text-gray-500 hover:text-gray-700 transition"
@@ -312,7 +311,7 @@ const ClinicDetailsPage = ({ idClinic }) => {
                             />
                             <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
                         </div>
-                        {!idClinic && (
+                        {(!idClinic || menuRights.editAllowed === true) && (
                             <>
                                 <button
                                     className="w-full bg-blue-500 mt-2 text-white py-2 rounded-md hover:bg-blue-600 transition"

@@ -76,6 +76,7 @@ const App = () => {
           {/* Patients */}
           <Route path="patients">
             <Route index element={<Patients.PatientManagementPage />} />
+            <Route path="prescriptions/:patientId/:doctorId/:clinicId/:appointmentId/:appointmentDate" element={<Patients.Prescriptions />} />
           </Route>
 
           {/* User profile */}

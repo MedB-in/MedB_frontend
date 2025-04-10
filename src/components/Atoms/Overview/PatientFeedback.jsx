@@ -1,5 +1,4 @@
 
-
 export const PatientFeedback = ({ feedbacks = [] }) => {
     return (
         <div className="bg-white border p-6 my-5 shadow-lg rounded-lg border-solid border-[rgba(0,0,0,0.1)]">

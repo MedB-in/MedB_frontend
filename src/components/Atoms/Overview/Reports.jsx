@@ -1,12 +1,10 @@
-import React from "react";
 
-export const Reports = () => {
+const Reports = () => {
     return (
-        <div className="bg-white border p-6 rounded-lg border-solid my-5 shadow-lg border-[rgba(0,0,0,0.1)]">
+        <div className="bg-white border p-6 rounded-lg max-h-[500px] border-solid my-5 shadow-lg border-[rgba(0,0,0,0.1)]">
             <h2 className="text-[19px] font-bold mb-5">Reports</h2>
 
             <div className="p-6 rounded-[14px] grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                {/* Round Chart */}
                 <div className="flex justify-center">
                     <svg
                         width="346"
@@ -112,3 +110,5 @@ export const Reports = () => {
         </div>
     );
 };
+
+export default Reports;

@@ -1,18 +1,41 @@
-import React from 'react'
 import AppointmentCard from '../../../components/Atoms/Overview/AppointmentCard'
-import { Reports } from '../../../components/Atoms/Overview/Reports'
+import Reports from '../../../components/Atoms/Overview/Reports'
 import DoctorList from '../../../components/Atoms/Overview/DoctorList'
 import Calendar from '../../../components/Atoms/Overview/Calender';
 import PatientFeedback from '../../../components/Atoms/Overview/PatientFeedback';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { getAnalytics } from '../../../services/clinics';
 
-function Overview() {
+const Overview = () => {
 
-    const doctors = [
-        { name: "Sumith Kk", qualification: "MBBS, MD", available: true },
-        { name: "Sumith Kk", qualification: "MBBS, MD", available: false },
-        { name: "Sumith Kk", qualification: "MBBS, MD", available: true },
-        { name: "Sumith Kk", qualification: "MBBS, MD", available: true },
-    ];
+    const [todaysAppointments, setTodaysAppointments] = useState(null);
+    const [totalAppointments, setTotalAppointments] = useState(null);
+    const [upcomingAppointments, setUpcomingAppointments] = useState(null);
+    const [doctors, setDoctors] = useState([]);
+    // const [expenses, setExpenses] = useState([]);
+    // const [feedbacks, setFeedbacks] = useState([]);
+
+    const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+    const clinicId = userDetails?.clinicId;
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await getAnalytics(clinicId);
+                setTodaysAppointments(result.data.clinics.todayAppointments);
+                setTotalAppointments(result.data.clinics.totalAppointments);
+                setUpcomingAppointments(result.data.clinics.upcomingAppointments);
+                setDoctors(result.data.clinics.doctors);
+                // setExpenses(result.expenses);
+            } catch (error) {
+                toast.error(error.response?.data?.message || "Something went wrong");
+            }
+        }
+
+        fetchData();
+    }, [clinicId]);
+
 
     const feedbacks = [
         {
@@ -39,13 +62,13 @@ function Overview() {
         <>
             <div className="flex gap-4 w-full mb-6">
                 <div className="flex-1">
-                    <AppointmentCard />
+                    <AppointmentCard appt={todaysAppointments} title={"Today's Appointments"} />
                 </div>
                 <div className="flex-1">
-                    <AppointmentCard />
+                    <AppointmentCard appt={totalAppointments} title={"Total Appointments"} />
                 </div>
                 <div className="flex-1">
-                    <AppointmentCard />
+                    <AppointmentCard appt={upcomingAppointments} title={"Upcoming Appointments"} />
                 </div>
             </div>
             <div className="flex gap-4 w-full mb-6">
