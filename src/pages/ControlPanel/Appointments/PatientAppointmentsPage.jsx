@@ -108,7 +108,7 @@ function PatientAppointmentsPage() {
     if (!searchQuery)
       fetchData();
   }, []);
-  
+
   const handleHardClose = () => {
     setSelectedAppt(null);
     sessionStorage.removeItem("selectedAppt");
@@ -313,16 +313,10 @@ function PatientAppointmentsPage() {
             appointments.map((appt, index) => (
               <div
                 key={index}
-                onClick={() => {
-                  const isFutureDate =
-                    new Date(appt.appointmentDate.split("-").reverse().join("-")) >= new Date();
-                  if (!isDoctor && isFutureDate && appt.appointmentStatus === "Scheduled") {
-                    handleAppointmentModal(appt);
-                  }
-                }}
+                onClick={isDoctor ? () => handleOpenModal(appt) : undefined}
                 className="bg-white shadow-lg rounded-2xl p-5 border border-gray-200 flex flex-col gap-4 transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl cursor-pointer"
               >
-                <div className="flex items-center gap-4 border-b pb-3">
+                <div className="flex items-center text-left gap-4 border-b pb-3">
                   <img
                     src={isDoctor ? appt.patientDetails.profilePicture : appt.profilePicture}
                     alt={isDoctor ? appt.patientDetails.firstName : appt.firstName}
@@ -331,10 +325,10 @@ function PatientAppointmentsPage() {
                   <div>
                     <p className="text-lg font-semibold">
                       {isDoctor
-                        ? `${appt.patientDetails.firstName} ${appt.patientDetails.lastName || ''}`
+                        ? `${appt.patientDetails.firstName} ${appt.patientDetails.middleName || ''} ${appt.patientDetails.lastName || ''}`
                         : `${appt.firstName} ${appt.lastName || ''}`}
                     </p>
-                    <p className="text-sm text-gray-600">{appt.speciality || "Patient"}</p>
+                    <p className="text-sm text-gray-600">{isDoctor ? "" : appt.speciality}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-x-1 gap-y-3 text-sm text-left">
