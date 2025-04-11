@@ -36,23 +36,21 @@ const steps = [
 const EasySteps = () => {
     return (
         <div
-            className="w-full py-10 px-4 lg:px-6 flex flex-col items-center relative bg-no-repeat bg-contain bg-center mt-24"
-            style={{ backgroundImage: `url(${BgForDoc})` }}
+            className="w-full py-10 px-4 lg:px-6 flex flex-col items-center relative bg-no-repeat bg-contain bg-center mt-24 bg-slate-50"
+            // style={{ backgroundImage: `url(${BgForDoc})` }}
         >
-            <motion.h2
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="text-[32px] md:text-[40px] lg:text-[48px] font-bold italic text-[#5a3fd8] mb-16 text-center leading-tight"
-            >
-                Easy Steps For Your Solution
-            </motion.h2>
-
+                <motion.h2
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true }}
+                    className="text-[32px] md:text-[40px] lg:text-[48px] font-bold italic text-[#5a3fd8] mb-16 text-center leading-tight"
+                >
+                    Easy Steps For Your Solution
+                </motion.h2>
             <div className="flex flex-col gap-16 md:gap-24 relative w-full max-w-6xl">
                 {steps.map((step, idx) => {
                     const isReversed = idx % 2 === 1;
-
                     return (
                         <motion.div
                             key={idx}
