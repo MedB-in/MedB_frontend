@@ -195,7 +195,8 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         <img
                             src={isSidebarOpen ? Logo1 : Logo}
                             alt="Logo"
-                            className={`transition-all duration-300 ease-in-out w-10 md:w-14 opacity-80`}
+                            onClick={() => navigate("/home")}
+                            className={`transition-all cursor-pointer duration-300 ease-in-out w-10 md:w-14 opacity-80`}
                         />
                     </div>
                     <div className="flex items-center justify-end gap-x-2 md:gap-x-4">
@@ -203,7 +204,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         <img
                             src={user?.profilePicture || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
                             alt="Profile"
-                            onClick={() => navigate("/user-profile")}
+                            onClick={() => navigate("users/user-profile")}
                             className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
                         />
                         <button className="ml-2 flex items-center bg-transparent border-none" onClick={doLogout}>
