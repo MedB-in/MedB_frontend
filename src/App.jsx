@@ -38,6 +38,7 @@ const App = () => {
       <Route path="/find-doctor" element={<PublicPages.DoctorSearchPage />} />
       <Route path="/doctor-profile" element={<PublicPages.DoctorProfilePage />} />
       <Route path="/doctor-clinic" element={<PublicPages.DoctorClinicPage />} />
+      <Route path="/for-doctor" element={<PublicPages.ForDoctorPage />} />
 
       {/* Login page */}
       <Route path="/login" element={<LoginPage />} />

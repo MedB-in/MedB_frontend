@@ -3,5 +3,6 @@ import FindDoctorClinicPage from "./FindDoctorClinicPage";
 import DoctorSearchPage from "./DoctorSearchPage";
 import DoctorProfilePage from "./DoctorProfilePage";
 import DoctorClinicPage from "./DoctorClinicPage";
+import ForDoctorPage from "./ForDoctorPage";
 
-export { LandingPage, FindDoctorClinicPage, DoctorSearchPage, DoctorProfilePage, DoctorClinicPage };
+export { LandingPage, FindDoctorClinicPage, DoctorSearchPage, DoctorProfilePage, DoctorClinicPage, ForDoctorPage };
