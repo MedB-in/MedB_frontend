@@ -21,7 +21,14 @@ const Header = () => {
 
     const navItems = [
         { name: "Home", path: "/home" },
-        { name: "For Healthcare", path: "/healthcare" },
+        {
+            name: "For Healthcare",
+            dropdown: true,
+            items: [
+                { name: "For Doctor", path: "/for-doctor" },
+                { name: "For Clinic", path: "/for-clinic" },
+            ]
+        },
         { name: "Find Doctor/Clinic", path: "/find-doctor-clinic" },
         { name: "Contact Us", path: "/contact" },
     ];
@@ -41,16 +48,48 @@ const Header = () => {
             <nav className="hidden lg:flex items-center bg-[#6F64E7] px-6 py-3 rounded-lg ml-auto">
                 <ul className="flex items-center gap-6">
                     {navItems.map((item) => (
-                        <li key={item.name}>
-                            <motion.p
-                                onClick={() => navigate(item.path)}
-                                className={`text-white font-medium px-3 py-2 relative cursor-pointer ${location.pathname === item.path ? "underline underline-offset-8" : ""
-                                    }`}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                            >
-                                {item.name}
-                            </motion.p>
+                        <li key={item.name} className="relative group">
+                            {item.dropdown ? (
+                                <>
+                                    <motion.div
+                                        className="text-white font-medium px-3 py-2 cursor-pointer flex items-center gap-1"
+                                        whileHover={{ scale: 1.05 }}
+                                    >
+                                        {item.name}
+                                        <svg
+                                            className="w-4 h-4 mt-[2px]"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </motion.div>
+                                    <div className="absolute top-full left-0 z-50 w-48 pt-2 hidden group-hover:block">
+                                        <div className="bg-white rounded-md shadow-lg overflow-hidden">
+                                            {item.items.map((subItem) => (
+                                                <div
+                                                    key={subItem.name}
+                                                    onClick={() => navigate(subItem.path)}
+                                                    className={`text-[#6F64E7] px-4 py-2 hover:bg-gray-100 cursor-pointer ${location.pathname === subItem.path ? "bg-gray-100 font-semibold" : ""}`}
+                                                >
+                                                    {subItem.name}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <motion.p
+                                    onClick={() => navigate(item.path)}
+                                    className={`text-white font-medium px-3 py-2 cursor-pointer ${location.pathname === item.path ? "underline underline-offset-8" : ""}`}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    {item.name}
+                                </motion.p>
+                            )}
                         </li>
                     ))}
                 </ul>
@@ -81,14 +120,36 @@ const Header = () => {
                             </button>
                             <ul className="mt-6 space-y-4">
                                 {navItems.map((item) => (
-                                    <li key={item.name} onClick={() => setMenuOpen(false)}>
-                                        <motion.p
-                                            onClick={() => navigate(item.path)}
-                                            className={`block text-[#6F64E7] font-medium py-2 px-4 rounded-md text-lg cursor-pointer ${location.pathname === item.path ? "bg-gray-100" : ""}`}
-                                            whileTap={{ scale: 0.95 }}
-                                        >
-                                            {item.name}
-                                        </motion.p>
+                                    <li key={item.name}>
+                                        {item.dropdown ? (
+                                            <div className="space-y-2">
+                                                <p className="text-[#6F64E7] font-medium text-lg px-4 pt-2">For Healthcare</p>
+                                                {item.items.map((subItem) => (
+                                                    <motion.p
+                                                        key={subItem.name}
+                                                        onClick={() => {
+                                                            navigate(subItem.path);
+                                                            setMenuOpen(false);
+                                                        }}
+                                                        className={`block text-[#6F64E7] font-medium py-2 px-6 rounded-md cursor-pointer ${location.pathname === subItem.path ? "bg-gray-100" : ""}`}
+                                                        whileTap={{ scale: 0.95 }}
+                                                    >
+                                                        {subItem.name}
+                                                    </motion.p>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <motion.p
+                                                onClick={() => {
+                                                    navigate(item.path);
+                                                    setMenuOpen(false);
+                                                }}
+                                                className={`block text-[#6F64E7] font-medium py-2 px-4 rounded-md text-lg cursor-pointer ${location.pathname === item.path ? "bg-gray-100" : ""}`}
+                                                whileTap={{ scale: 0.95 }}
+                                            >
+                                                {item.name}
+                                            </motion.p>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
