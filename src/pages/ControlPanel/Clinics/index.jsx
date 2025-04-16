@@ -5,5 +5,6 @@ import ClinicUsers from "./ClinicUsers";
 import AppointmentsManagement from "./AppointmentsManagement";
 import ClinicProfile from "./ClinicProfile";
 import Overview from "./Overview";
+import ClinicRegistrations from "./ClinicRegistrations";
 
-export { ClinicsPage, ClinicDetails, ClinicSlot, ClinicUsers, AppointmentsManagement, ClinicProfile, Overview };
+export { ClinicsPage, ClinicDetails, ClinicSlot, ClinicUsers, AppointmentsManagement, ClinicProfile, Overview, ClinicRegistrations };

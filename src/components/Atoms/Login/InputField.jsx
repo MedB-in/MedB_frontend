@@ -12,6 +12,9 @@ const InputField = ({
   onChange,
   toggleable,
   disabled,
+  pattern,
+  maxLength,
+  title,
   ariaLabel,
   className,
   required
@@ -40,11 +43,23 @@ const InputField = ({
         id={id}
         name={name}
         placeholder={placeholder}
+        title={title}
+        maxLength={maxLength}
+        pattern={pattern}
         value={value}
         onChange={onChange}
         disabled={disabled}
         required={required}
         className={`flex-auto bg-transparent border-none outline-none ${className}`}
+        onKeyDown={(e) => {
+          if (
+            type === "tel" &&
+            !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key) &&
+            !/^[0-9]$/.test(e.key)
+          ) {
+            e.preventDefault();
+          }
+        }}
       />
       {toggleable && (
         <button

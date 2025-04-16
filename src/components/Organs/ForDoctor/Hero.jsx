@@ -1,14 +1,19 @@
 import { motion } from "framer-motion";
+import { useLocation, useNavigate } from "react-router-dom";
 import HeroImage from "../../../assets/images/healthcare/hero.png";
 import HeroMap from "../../../assets/images/healthcare/hero-map.png";
 import ArrowRightUp from "../../../assets/images/healthcare/arrow-right-up.png";
 
 const Hero = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const isClinicPage = location.pathname === "/for-clinic";
     return (
         <>
             <div
                 className="fixed top-[60dvh] md:top-[65dvh] right-2 z-[100] flex items-center gap-[14px] px-3 py-2 bg-[#6F64E7] text-white text-[16px] font-poppins rounded-[30px] cursor-pointer"
                 title="Send us a message"
+                onClick={() => navigate("/register-clinic")}
             >
                 <span>Register Now</span>
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -28,7 +33,7 @@ const Hero = () => {
                 >
                     <h1 className="text-[28px] sm:text-[36px] md:text-[42px] lg:text-[48px] leading-tight font-light font-poppins bg-black bg-clip-text text-transparent">
                         <span className="font-extrabold">
-                            Doctors, get ready to streamline your schedules with MedB!
+                            {isClinicPage ? "Clinics" : "Doctors"}, get ready to streamline your schedules with <span className="text-[#6F64E7]"> MedB!</span>
                         </span>
                     </h1>
                 </motion.div>
