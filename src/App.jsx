@@ -39,6 +39,8 @@ const App = () => {
       <Route path="/doctor-profile" element={<PublicPages.DoctorProfilePage />} />
       <Route path="/doctor-clinic" element={<PublicPages.DoctorClinicPage />} />
       <Route path="/for-doctor" element={<PublicPages.ForDoctorPage />} />
+      <Route path="/for-clinic" element={<PublicPages.ForDoctorPage />} />
+      <Route path="/register-clinic" element={<PublicPages.ClinicRegistrationPage />} />
 
       {/* Login page */}
       <Route path="/login" element={<LoginPage />} />
@@ -63,6 +65,7 @@ const App = () => {
             <Route path="slots/:clinicId/:doctorId" element={<Clinics.ClinicSlot />} />
             <Route path="users/:clinicId" element={<Clinics.ClinicUsers />} />
             <Route path="clinic-profile" element={<Clinics.ClinicProfile />} />
+            <Route path="clinic-registrations" element={<Clinics.ClinicRegistrations />} />
           </Route>
 
           {/* Appointments */}

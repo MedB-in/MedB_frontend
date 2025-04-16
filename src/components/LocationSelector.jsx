@@ -59,7 +59,7 @@ const LocationSelector = ({ onSelect }) => {
             <div id="geocoder" className="w-full"></div>
             <input
                 type="text"
-                className="w-full p-2 border rounded-md mt-2"
+                className="w-full p-2 gap-1 px-3 py-3.5 bg-white rounded-lg border border-solid border-zinc-300 text-black text-opacity-70 mt-2"
                 value={inputValue}
                 readOnly
             />

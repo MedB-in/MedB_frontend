@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { getAllClinics, addClinic, editClinic } from "../../../services/clinics";
 import toast, { Toaster } from "react-hot-toast";
 import ClinicModal from "../../../components/Organs/Clinics/ClinicModal";
+import Button from "../../../components/Atoms/Login/Button";
 
 const ClinicsPage = () => {
   const [clinics, setClinics] = useState([]);
@@ -92,12 +93,17 @@ const ClinicsPage = () => {
     <section className="p-4">
       <Toaster />
       <div className="flex justify-center gap-5 items-center py-4">
-        <button
-          className="py-2 px-4 border rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition"
+        <Button
           onClick={handleAddClinic}
         >
           Add Clinic
-        </button>
+        </Button>
+        <Button
+          onClick={() => navigate("clinic-registrations")}
+          variant="secondary"
+        >
+          Clinic Registrations
+        </Button>
       </div>
 
       {loading && <p className="text-center">Loading clinics...</p>}

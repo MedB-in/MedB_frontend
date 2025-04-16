@@ -15,6 +15,18 @@ export const getClinicById = (id) => {
 export const getActiveClinics = (page, search) =>
     axios.get(`/api/clinic/list/${page}?searchQuery=${search}`, getHeaders());
 
+//API to get clinic registrations
+export const getClinicRegistrations = (page) =>
+    axios.get(`/api/clinic/registrations/${page}`, getHeaders());
+
+//API to approve clinic registration
+export const approveClinic = (id) =>
+    axios.put(`/api/clinic/registration/approve/${id}`, getHeaders());
+
+//API to reject clinic registration
+export const rejectClinic = (id) =>
+    axios.put(`/api/clinic/registration/reject/${id}`, getHeaders());
+
 //API to handle get Clinics list.
 export const getClinicList = () =>
     axios.get("/api/clinic/clinicList", getHeaders());
@@ -78,3 +90,7 @@ export const assignPatientToken = (appointmentId, tokenNo) =>
 //API to fetch Analytics of a specific Clinic.
 export const getAnalytics = (clinicId) =>
     axios.get(`/api/clinic/analytics/${clinicId}`, getHeaders());
+
+//API to register a new Clinic.
+export const registerClinic = (data) =>
+    axios.post("/api/clinic/register", data, getHeaders());
