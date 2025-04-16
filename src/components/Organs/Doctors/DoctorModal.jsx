@@ -128,9 +128,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
 
     try {
       await onSubmit(formDataToSend, formData.doctorId);
-      setDoctorPictureFile(null);
-      setPreviewImage(null);
-      closeModal();
     } catch (error) {
       setError(error.response?.data?.message || "Something went wrong");
       toast.error(error.response?.data?.message || "Something went wrong");
@@ -272,10 +269,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
             <input type="text" name="registration" value={formData.registration} onChange={handleChange} className="w-full p-2 border rounded-md" required />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium">Profile Picture</label>
-            <input type="text" name="profilePicture" value={formData.profilePicture} onChange={handleChange} className="w-full p-2 border rounded-md" required />
-          </div>
-          <div className="mb-4">
             <label className="block text-sm font-medium">Specialization</label>
             <input type="text" name="speciality" value={formData.speciality} onChange={handleChange} className="w-full p-2 border rounded-md" required />
           </div>
@@ -285,7 +278,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Experience (Years)</label>
-            <input type="text" name="experience" value={formData.experience} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+            <input type="number" name="experience" value={formData.experience} onChange={handleChange} className="w-full p-2 border rounded-md" required />
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Email</label>
