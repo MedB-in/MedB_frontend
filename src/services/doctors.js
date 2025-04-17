@@ -36,3 +36,15 @@ export const addDoctor = (data) =>
 //API to handle edit Doctors.
 export const editDoctor = (id, data) =>
     axios.put(`/api/doctor/edit/${id}`, data, uploadHeaders());
+
+//API to fetch doctor leave list of a specific Clinic.
+export const getDoctorLeaveList = (doctorId, clinicId) =>
+    axios.get(`/api/doctor/leave/${doctorId}/${clinicId}`, getHeaders());
+
+//API to post leave of a specific Doctor.
+export const postDoctorLeave = (doctorId, clinicId, data) =>
+    axios.post(`/api/doctor/leave/${doctorId}/${clinicId}`, data, getHeaders());
+
+//API to update leave of a specific Doctor.
+export const updateDoctorLeave = (doctorId, clinicId, leaveId, status) =>
+    axios.put(`/api/doctor/leave/${doctorId}/${clinicId}`, { leaveId, status }, getHeaders());

@@ -44,17 +44,16 @@ const ClinicRegistrations = () => {
         if (result.isConfirmed) {
             try {
                 setLoading(true);
-                const { data } = await approveClinic(id);
-
+                const result = await approveClinic(id);
                 setClinics((prevClinics) =>
                     prevClinics.map((clinic) =>
                         clinic.registrationId === id
                             ? {
                                 ...clinic,
-                                isApproved: true,
-                                isRejected: false,
+                                isApproved: result.data.isApproved,
+                                isRejected: result.data.isRejected,
                                 approvedBy: "Super Admin",
-                                approvedOn: new Date().toISOString(),
+                                approvedOn: result.data.approvedOn,
                             }
                             : clinic
                     )
@@ -83,18 +82,18 @@ const ClinicRegistrations = () => {
         if (result.isConfirmed) {
             try {
                 setLoading(true);
-                const { data } = await rejectClinic(id);
+                const result = await rejectClinic(id);
 
                 setClinics((prevClinics) =>
                     prevClinics.map((clinic) =>
                         clinic.registrationId === id
                             ? {
                                 ...clinic,
-                                isApproved: false,
-                                isRejected: true,
+                                isApproved: result.data.isApproved,
+                                isRejected: result.data.isRejected,
                                 rejectedBy: "Super Admin",
-                                rejectedOn: new Date().toISOString(),
-                                rejectedReason: "Reason for rejection here",
+                                rejectedOn: result.data.rejectedOn,
+                                rejectedReason: result.data.rejectedReason,
                             }
                             : clinic
                     )

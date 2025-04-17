@@ -1,10 +1,25 @@
 import { Outlet } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SideBar from '../../components/Organs/SideBar';
 import { Toaster } from 'react-hot-toast';
 
 const ControlPanel = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    useEffect(() => {
+        const checkScreenSize = () => {
+            if (window.innerWidth >= 1024) {
+                setIsSidebarOpen(true);
+            } else {
+                setIsSidebarOpen(false);
+            }
+        };
+
+        checkScreenSize();
+
+        window.addEventListener('resize', checkScreenSize);
+        return () => window.removeEventListener('resize', checkScreenSize);
+    }, []);
 
     return (
         <div className="flex h-screen overflow-hidden">
