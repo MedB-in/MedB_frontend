@@ -83,9 +83,9 @@ const ClinicDetailsPage = ({ idClinic }) => {
     };
 
 
-    const handleClinicEditSubmit = async (data) => {
+    const handleClinicEditSubmit = async (data, clinicId) => {
         try {
-            const response = await editClinic(data.clinicId, data);
+            const response = await editClinic(clinicId, data);
             toast.success(response.data.message);
             await fetchClinicDetails();
             setIsClinicModalOpen(false);
@@ -214,16 +214,16 @@ const ClinicDetailsPage = ({ idClinic }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
                 {doctors.map((doctor) => (
                     <div
-                    key={doctor.doctorId}
+                        key={doctor.doctorId}
                         className="p-6 border border-gray-200 rounded-xl shadow-md bg-white hover:shadow-lg transition duration-200 flex flex-col"
-                        >
+                    >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <img
                                     src={doctor.profilePicture || DefaultImage}
                                     alt={doctor.doctorName}
                                     className="w-16 h-16 rounded-full object-cover border"
-                                    />
+                                />
                                 <div>
                                     <h3 className="text-lg font-semibold">
                                         Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}
