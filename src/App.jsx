@@ -9,8 +9,8 @@ import * as Clinics from "./pages/ControlPanel/Clinics";
 import * as Appointments from "./pages/ControlPanel/Appointments";
 import * as Patients from "./pages/ControlPanel/Patients";
 import * as Users from "./pages/ControlPanel/Users";
+import * as DoctorsPage from "./pages/ControlPanel/Doctors";
 import Dashboard from "./pages/ControlPanel/DashBoard/DashBoardPage";
-import DoctorsPage from "./pages/ControlPanel/Doctors/DoctorsPage";
 import ControlPanel from "./pages/ControlPanel/Index";
 import MenuManagementPage from "./pages/ControlPanel/MenuManagement/MenuManagementPage";
 import ProductsPage from "./pages/ControlPanel/Products/ProductsPage";
@@ -97,7 +97,10 @@ const App = () => {
           <Route path="products" element={< ProductsPage />} />
 
           {/* Doctors */}
-          <Route path="doctors" element={< DoctorsPage />} />
+          <Route path="doctors" >
+            <Route index element={< DoctorsPage.DoctorsPage />} />
+            <Route path="leave-management/:doctorId/:clinicId" element={<DoctorsPage.LeaveMangement />} />
+          </Route>
 
           {/* Subscriptions */}
           <Route path="subscriptions" element={< UserSubscriptionPage />} />

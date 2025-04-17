@@ -102,7 +102,7 @@ const ClinicRegistration = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <FormInput
                                 type="text"
-                                placeholder="Clinic Name"
+                                placeholder="Clinic Name*"
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
@@ -116,7 +116,7 @@ const ClinicRegistration = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <FormInput
                                 type="text"
-                                placeholder="Address"
+                                placeholder="Address*"
                                 name="address"
                                 value={formData.address}
                                 onChange={handleChange}
@@ -124,7 +124,7 @@ const ClinicRegistration = () => {
                             />
                             <FormInput
                                 type="text"
-                                placeholder="City"
+                                placeholder="City*"
                                 name="city"
                                 value={formData.city}
                                 onChange={handleChange}
@@ -132,7 +132,7 @@ const ClinicRegistration = () => {
                             />
                             <FormInput
                                 type="text"
-                                placeholder="District"
+                                placeholder="District*"
                                 name="district"
                                 value={formData.district}
                                 onChange={handleChange}
@@ -140,7 +140,7 @@ const ClinicRegistration = () => {
                             />
                             <FormInput
                                 type="text"
-                                placeholder="State"
+                                placeholder="State*"
                                 name="state"
                                 value={formData.state}
                                 onChange={handleChange}
@@ -148,7 +148,7 @@ const ClinicRegistration = () => {
                             />
                             <FormInput
                                 type="text"
-                                placeholder="Country"
+                                placeholder="Country*"
                                 name="country"
                                 value={formData.country}
                                 onChange={handleChange}
@@ -156,7 +156,7 @@ const ClinicRegistration = () => {
                             />
                             <FormInput
                                 type="text"
-                                placeholder="Postal Code"
+                                placeholder="Postal Code*"
                                 name="postalCode"
                                 value={formData.postalCode}
                                 onChange={handleChange}
@@ -164,7 +164,7 @@ const ClinicRegistration = () => {
                             />
                             <FormInput
                                 type="tel"
-                                placeholder="Contact Number"
+                                placeholder="Contact Number*"
                                 name="contact"
                                 value={formData.contact}
                                 onChange={handleChange}
@@ -176,7 +176,7 @@ const ClinicRegistration = () => {
 
                             <FormInput
                                 type="email"
-                                placeholder="Email"
+                                placeholder="Email*"
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
@@ -188,7 +188,6 @@ const ClinicRegistration = () => {
                                 name="website"
                                 value={formData.website}
                                 onChange={handleChange}
-                                required
                             />
                         </div>
 
