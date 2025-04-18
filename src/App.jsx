@@ -101,7 +101,8 @@ const App = () => {
           {/* Doctors */}
           <Route path="doctors" >
             <Route index element={< DoctorsPage.DoctorsPage />} />
-            <Route path="leave-management/:doctorId/:clinicId" element={<DoctorsPage.LeaveMangement />} />
+            <Route path="leave-management/:doctorId/:clinicId" element={<DoctorsPage.MangeDoctorPage />} />
+            <Route path="manage-consultation" element={<DoctorsPage.ManageConsultation />} />
           </Route>
 
           {/* Subscriptions */}
