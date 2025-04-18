@@ -1,4 +1,5 @@
 import DoctorsPage from "./DoctorsPage";
-import LeaveMangement from "./LeaveMangement";
+import MangeDoctorPage from "./MangeDoctorPage";
+import ManageConsultation from "./ManageConsultationPage";
 
-export { DoctorsPage, LeaveMangement };
+export { DoctorsPage, MangeDoctorPage, ManageConsultation };
