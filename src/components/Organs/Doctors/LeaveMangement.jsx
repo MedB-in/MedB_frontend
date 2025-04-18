@@ -29,11 +29,14 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
 
     const fetchDoctorLeaves = async () => {
         try {
+            setLoading(true);
             const response = await getDoctorLeaveList(useDoctorId, idClinic);
             setDoctor(response?.data.doctor);
             setLeaveList(response?.data.leaveList || []);
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -155,7 +158,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                 {/* Doctor Details */}
                 {!clinics && (
                     <>
-                        {loading ? (
+                        {loading && !doctor ? (
                             <div className="flex items-center gap-6 animate-pulse">
                                 <div className="w-20 h-20 rounded-full bg-gray-300" />
 

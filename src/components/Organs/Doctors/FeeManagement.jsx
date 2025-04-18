@@ -5,7 +5,6 @@ import FormInput from "../../Atoms/Login/InputField";
 import FormButton from "../../Atoms/Login/Button";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { current } from "@reduxjs/toolkit";
 
 const FeeMangement = () => {
     const { doctorId, clinicId } = useParams();
@@ -19,7 +18,7 @@ const FeeMangement = () => {
                 const response = await getDoctorFee(doctorId, clinicId);
                 if (response?.data?.fees) {
                     setCurrentFee(response.data.fees);
-                    setNewFee(response.fee.toString());
+                    setNewFee(response.data.fees.toString());
                 }
             } catch (error) {
                 toast.error(error.response?.data?.message || "Something went wrong");
