@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import FormInput from "../../Atoms/Login/InputField";
 import FormButton from "../../Atoms/Login/Button";
-import { registerClinic } from "../../../services/clinics";
+import { registerClinic } from "../../../services/publicApi";
 import registration from "../../../assets/images/registration.png";
 import toast from "react-hot-toast";
 import LocationSelector from "../../LocationSelector";

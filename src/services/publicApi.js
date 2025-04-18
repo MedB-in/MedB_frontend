@@ -23,3 +23,11 @@ export const getDoctor = (clinicId, doctorId) =>
 //API to handle Doctor slots.
 export const getDoctorSlots = (clinicId, doctorId, date, day) =>
     axios.get(`/api/public/slots/${clinicId}/${doctorId}/${date}/${day}`);
+
+//API to register a new Clinic.
+export const registerClinic = (data) =>
+    axios.post("/api/public/register", data);
+
+//API to get the registration details of the Clinic.
+export const getRegistrationDetails = (id) =>
+    axios.get(`/api/public/registrationStatus/${id}`);
