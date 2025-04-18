@@ -108,11 +108,13 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
 
     return (
         <section className="px-4 md:px-14 py-4 mx-auto my-5 rounded-2xl border border-solid backdrop-blur-[18.15px] bg-white bg-opacity-70 border-indigo-500 border-opacity-10">
-            <div className="flex items-center gap-2 justify-end">
-                <p className="text-gray-600 text-sm">Slots are in Indian Timezone - <span className='font-bold'> IST</span></p>
-                <div className="h-4 w-4 bg-gray-300"></div>
-                <p className="text-gray-500 text-sm">Not available</p>
-            </div>
+            {!hasNoSlots &&
+                <div className="flex items-center gap-2 justify-end">
+                    <p className="text-gray-600 text-sm">Slots are in Indian Timezone - <span className='font-bold'> IST</span></p>
+                    <div className="h-4 w-4 bg-gray-300"></div>
+                    <p className="text-gray-500 text-sm">Not available</p>
+                </div>
+            }
 
             {loading ? renderSkeleton() : hasNoSlots ? (
                 <p className="text-center text-gray-500">No slots available for the selected date.</p>

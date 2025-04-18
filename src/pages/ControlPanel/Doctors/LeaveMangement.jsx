@@ -3,6 +3,7 @@ import { postDoctorLeave, getDoctorLeaveList, updateDoctorLeave } from '../../..
 import { useParams } from 'react-router-dom';
 import Calendar from '../../../components/Atoms/Calender';
 import toast from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 const LeaveManagement = () => {
     const { doctorId, clinicId } = useParams();
@@ -11,6 +12,7 @@ const LeaveManagement = () => {
     const [leaveReason, setLeaveReason] = useState('');
     const [leaveList, setLeaveList] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [updating, setUpdating] = useState(false);
     const [selectedLeave, setSelectedLeave] = useState(null);
 
     useEffect(() => {
@@ -79,9 +81,35 @@ const LeaveManagement = () => {
     };
 
     const handleApproveReject = async (leave, status) => {
+        if (status === 'approved') {
+            const confirmApproval = await Swal.fire({
+                title: 'Are you sure?',
+                text: "Approving this leave will cancel all the scheduled appointments for this doctor.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, approve leave',
+                cancelButtonText: 'No, cancel'
+            });
+
+            if (!confirmApproval.isConfirmed) return;
+        }
+
+        if (status === 'rejected') {
+            const confirmRejection = await Swal.fire({
+                title: 'Are you sure?',
+                text: "Are you sure you want to reject this leave request?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, reject leave',
+                cancelButtonText: 'No, cancel'
+            });
+
+            if (!confirmRejection.isConfirmed) return;
+        }
+
         try {
-            setLoading(true);
-            const result = await updateDoctorLeave(doctorId, clinicId, leave, status)
+            setUpdating(true);
+            const result = await updateDoctorLeave(doctorId, clinicId, leave, status);
             setLeaveList((prev) =>
                 prev.map((l) => {
                     if (l.doctorLeaveId === leave) {
@@ -98,7 +126,7 @@ const LeaveManagement = () => {
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong");
         } finally {
-            setLoading(false);
+            setUpdating(false);
         }
     };
 
@@ -203,16 +231,18 @@ const LeaveManagement = () => {
                                 <button
                                     className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                                     onClick={() => handleApproveReject(selectedLeave.doctorLeaveId, 'approved')}
+                                    disabled={updating}
                                 >
-                                    Approve
+                                    {updating ? 'Approving...' : 'Approve'}
                                 </button>
                             )}
                             {(!selectedLeave.isRejected || selectedLeave.isApproved) && (
                                 <button
                                     className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                                     onClick={() => handleApproveReject(selectedLeave.doctorLeaveId, 'rejected')}
+                                    disabled={updating}
                                 >
-                                    Reject
+                                    {updating ? 'Rejecting...' : 'Reject'}
                                 </button>
                             )}
                             <button
@@ -222,8 +252,14 @@ const LeaveManagement = () => {
                                 Cancel
                             </button>
                         </div>
+                        {updating && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 rounded-xl z-10">
+                                <div className="w-8 h-8 border-t-2 border-blue-500 border-solid rounded-full animate-spin"></div>
+                            </div>
+                        )}
                     </div>
                 </div>
+
             )}
         </div>
     );
