@@ -90,7 +90,3 @@ export const assignPatientToken = (appointmentId, tokenNo) =>
 //API to fetch Analytics of a specific Clinic.
 export const getAnalytics = (clinicId) =>
     axios.get(`/api/clinic/analytics/${clinicId}`, getHeaders());
-
-//API to register a new Clinic.
-export const registerClinic = (data) =>
-    axios.post("/api/clinic/register", data, getHeaders());
