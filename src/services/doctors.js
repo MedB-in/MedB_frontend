@@ -56,3 +56,7 @@ export const getDoctorFee = (doctorId, clinicId) =>
 //API to post doctor fee
 export const postDoctorFee = (doctorId, clinicId, data) =>
     axios.post(`/api/doctor/fee/${doctorId}/${clinicId}`, data, getHeaders());
+
+//API to post consultation cancelation of a specific Doctor.
+export const postConsultCancellation = (doctorId, clinicId, data) =>
+    axios.post(`/api/doctor/cancelConsult/${doctorId}/${clinicId}`, data, getHeaders());
