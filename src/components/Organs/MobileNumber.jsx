@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
+import Swal from 'sweetalert2';
 import { addMobileNumber, sendOtp } from '../../services/user';
 import toast from 'react-hot-toast';
 import InputField from '../Atoms/Login/InputField';
 import Button from '../Atoms/Login/Button';
 
-const MobileNumberModal = () => {
+const MobileNumberModal = ({ setMobileModal }) => {
     const [mobileNumber, setMobileNumber] = useState('');
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({ code: '' });
@@ -48,6 +49,7 @@ const MobileNumberModal = () => {
             setStep(1);
             setMobileNumber('');
             setFormData({ code: '' });
+            setMobileModal(false);
         } catch (error) {
             toast.error(error.response?.data?.message || 'Failed to verify OTP.');
         } finally {
@@ -72,9 +74,33 @@ const MobileNumberModal = () => {
         }
     };
 
+    const handleClose = () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'If you skip this step, communication will only be available via email.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, skip mobile verification',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setMobileModal(false);
+            }
+        });
+    };
+
     return (
         <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-[1000]">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+
+                <button
+                    onClick={handleClose}
+                    className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl font-bold"
+                >
+                    &times;
+                </button>
+
                 <h2 className="text-xl font-semibold mb-4">
                     {step === 1 ? 'Enter Your Mobile Number' : 'Enter OTP'}
                 </h2>
