@@ -22,6 +22,10 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const modules = userAccess || [];
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('userDetails')));
+    const [mobileModal, setMobileModal] = useState(() => {
+        const storedValue = sessionStorage.getItem('mobileModal');
+        return storedValue ? JSON.parse(storedValue) : true;
+    });
     const [openModuleIndex, setOpenModuleIndex] = useState(null);
     const [selectedMenu, setSelectedMenu] = useState(null);
 
@@ -99,11 +103,16 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         navigate('/');
     };
 
+    const setMobileModalAction = () => {
+        setMobileModal(false);
+        sessionStorage.setItem('mobileModal', false);
+    };
+
     return (
         <>
             <div className="lg:flex hidden">
-                {user.contactNo && (
-                    <MobileNumberModal />
+                {user.contactNo && mobileModal === true && (
+                    <MobileNumberModal setMobileModal={setMobileModalAction} />
                 )}
                 <div className={`fixed z-30 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
                     <div className="flex justify-center items-center w-full py-6 cursor-pointer"

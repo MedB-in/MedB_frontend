@@ -7,6 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import DefaultImage from "../../../assets/images/default-doctor.png";
 import days from "../../../lib/slotDays";
 import { getDoctorClinic, bookFromClinic, getPatients } from "../../../services/clinics";
+import visitReasons from "../../../lib/reasonOptions";
 import { getDoctorSlots, bookSlot } from "../../../services/doctors";
 import AddPatientModal from "../../../components/Organs/Patient/PatientModal";
 
@@ -121,6 +122,8 @@ const BookSlots = () => {
         }
     };
 
+    const department = doctor?.speciality
+
     const handleAddPatient = (newPatient) => {
         setPatients((prevPatients) => [...prevPatients, newPatient]);
         setShowModal(false);
@@ -234,7 +237,7 @@ const BookSlots = () => {
                             const slotDateTimeIST = new Date(slotDateTime.getTime() - (slotDateTime.getTimezoneOffset() * 60000));
                             const isSameDay = nowIST.toDateString() === slotDateTimeIST.toDateString();
                             const isPastTime = isSameDay && slotDateTimeIST < nowIST;
-                            
+
                             const isSelected = selectedSlot === slot.time;
                             const isDisabled = slot.booked || isPastTime;
 
@@ -242,10 +245,10 @@ const BookSlots = () => {
                                 <li
                                     key={index}
                                     className={`p-2.5 text-sm text-center rounded-md cursor-pointer transition-all duration-300 ${isDisabled
-                                            ? "text-red-400 bg-gray-300 cursor-not-allowed"
-                                            : isSelected
-                                                ? "bg-indigo-500 text-white border border-green-700"
-                                                : "bg-black bg-opacity-10 text-neutral-800 hover:bg-indigo-50"
+                                        ? "text-red-400 bg-gray-300 cursor-not-allowed"
+                                        : isSelected
+                                            ? "bg-indigo-500 text-white border border-green-700"
+                                            : "bg-black bg-opacity-10 text-neutral-800 hover:bg-indigo-50"
                                         }`}
                                     onClick={() => {
                                         if (!isDisabled) {
@@ -268,15 +271,33 @@ const BookSlots = () => {
                 )}
             </div>
             {selectedSlot && (
-                <div className="mt-6 px-5">
+                <div className="p-5">
                     <h3 className="text-lg font-semibold text-gray-800 mb-2">Reason for visit:</h3>
                     <input
                         type="text"
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
-                        placeholder="Reason for visit..."
-                        className="w-full px-4 py-2 border rounded-md bg-purple-100 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                        className="w-full px-4 py-2 border rounded-md bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
+                    {/* Suggested reasons */}
+                    {visitReasons[department?.charAt(0).toUpperCase() + department?.slice(1)]?.length > 0 && (
+                        <div className="mt-4">
+                            <h4 className="text-sm font-medium text-gray-600 mb-1">Common reasons:</h4>
+                            <div className="flex flex-wrap gap-2">
+                                {visitReasons[department?.charAt(0).toUpperCase() + department?.slice(1)].map((item, idx) => (
+
+                                    <button
+                                        key={idx}
+                                        onClick={() => setReason(item)}
+                                        className="px-3 py-1 bg-gray-200 text-sm rounded-full hover:bg-indigo-200 transition"
+                                    >
+                                        {item}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
             <div className=" flex justify-center items-center">
