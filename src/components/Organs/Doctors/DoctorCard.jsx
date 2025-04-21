@@ -116,7 +116,7 @@ const DoctorCard = ({
                 <div>
                     <span
                         className="text-gray-500 text-md underline hover:text-red-500 cursor-pointer"
-                        onClick={() => navigate(`/doctors/leave-management/${doctor.doctorId}/${clinicId}`)}
+                        onClick={() => navigate(`/clinics/leave-management/${doctor.doctorId}/${clinicId}`)}
                     >
                         Manage Doctor
                     </span>

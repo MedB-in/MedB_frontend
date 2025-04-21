@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { postDoctorLeave, getDoctorLeaveList, updateDoctorLeave } from '../../../services/doctors';
+import { postDoctorLeave, getDoctorLeaveList, updateDoctorLeave, postConsultCancellation } from '../../../services/doctors';
 import { useParams } from 'react-router-dom';
 import Calendar from '../../../components/Atoms/Calender';
 import toast from 'react-hot-toast';
@@ -25,7 +25,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []);
+    }, [useDoctorId]);
 
     const fetchDoctorLeaves = async () => {
         try {
@@ -73,7 +73,15 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
 
     const handleAddLeave = async () => {
 
-        if (!leaveReason) {
+        if (!idClinic) {
+            toast.error('Please select a clinic.');
+            return;
+        }
+        if (!selectedDate) {
+            toast.error('Please select a date.');
+            return;
+        }
+        if (!leaveReason || !selectedDate || !idClinic) {
             toast.error('Please enter a reason for the leave.');
             return;
         }
@@ -88,6 +96,28 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
             toast.error(error.response?.data?.message || "Something went wrong");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleCancelConsultation = async (leave) => {
+        if (!leaveReason) {
+            toast.error('Please enter a reason for the cancellation.');
+            return;
+        }
+        try {
+            setUpdating(true);
+            const result = await postConsultCancellation(useDoctorId, idClinic, { leaveDate: selectedDate, reason: leaveReason });
+            console.log(result.data.leave);
+
+            setLeaveList(prev => {
+                const filtered = prev.filter(item => item.doctorLeaveId !== result.data.leave.doctorLeaveId);
+                return [result.data.leave, ...filtered];
+            });
+            toast.success('Leave posted successfully.');
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong");
+        } finally {
+            setUpdating(false);
         }
     };
 
@@ -191,7 +221,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                         }
                     </>
                 )}
-                {clinics && (
+                {clinics && location.pathname.startsWith('/doctors') && (
                     <>
                         <h2 className="text-md md:text-2xl text-center font-bold text-gray-800">Leave Management</h2>
                         <p className="text-gray-600 text-sm text-center">You can add your leave request here.</p>
@@ -210,6 +240,11 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                         </select>
                     </>
                 )}
+                {clinicId && location.pathname.startsWith('/clinics') && (
+                    <>
+                        <p className="text-gray-600 text-sm text-center">You can cancel <span className='font-bold capitalize'>{doctor?.firstName} {doctor?.middleName ? `${doctor?.middleName} ` : ''}{doctor?.lastName}{doctor?.firstName} {doctor?.middleName ? `${doctor?.middleName} ` : ''}{doctor?.lastName}'s</span> consultation here.</p>
+                    </>
+                )}
                 {/* Calendar + Add Leave */}
                 <div className="flex flex-col items-center space-y-6 max-w-md mx-auto p-6">
                     <div className="w-full">
@@ -219,7 +254,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                     <div className="w-full">
                         <input
                             type="text"
-                            placeholder="Reason for leave"
+                            placeholder={clinics && location.pathname.startsWith('/doctors') ? "Reason for leave" : "Reason for cancellation"}
                             className="w-full px-4 py-3 mt-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
                             value={leaveReason}
                             onChange={(e) => setLeaveReason(e.target.value)}
@@ -227,11 +262,13 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                     </div>
                     <div className="w-full">
                         <button
-                            className="w-full px-6 py-3 mt-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none"
-                            onClick={handleAddLeave}
-                            disabled={loading || !leaveReason.trim()}
+                            className="w-full px-6 py-3 mt-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none cursor-pointer"
+                            onClick={clinics && location.pathname.startsWith('/doctors') ? handleAddLeave : handleCancelConsultation}
+                            disabled={loading}
                         >
-                            {loading ? 'Request in progress...' : 'Post Leave Request'}
+                            {clinics && location.pathname.startsWith('/doctors')
+                                ? (loading ? 'Request in progress...' : 'Post Leave Request')
+                                : (loading ? 'Cancellation in progress...' : 'Cancel Consultation')}
                         </button>
                     </div>
                 </div>
