@@ -27,3 +27,11 @@ export const addUserRights = (data) =>
 //API to edit user rights.
 export const editUserRights = (data) =>
     axios.put("/api/user/userRights", data, getHeaders());
+
+//API to send OTP for mobile number verification.
+export const sendOtp = (data) =>
+    axios.post("/api/user/sendOtp", data, getHeaders());
+
+//API to add mobile phone number.
+export const addMobileNumber = (data) =>
+    axios.post("/api/user/addMobileNumber", data, getHeaders());
