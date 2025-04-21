@@ -7,10 +7,11 @@ import { bookSlot } from '../../../services/doctors';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { setAuthenticated } from '../../../redux/slices/authSlice';
+import visitReasons from '../../../lib/reasonOptions';
 import MobileNumberModal from '../MobileNumber';
 
-function DoctorSlotModal({ onClose, doctorId, clinicId }) {
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('userDetails')));
+function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
+    const user = useState(JSON.parse(localStorage.getItem('userDetails')));
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedDay, setSelectedDay] = useState(null);
     const [selectedSlot, setSelectedSlot] = useState(null);
@@ -138,6 +139,23 @@ function DoctorSlotModal({ onClose, doctorId, clinicId }) {
                             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                             className="w-full px-4 py-2 border rounded-md bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
+                        {/* Suggested reasons */}
+                        {visitReasons[department?.charAt(0).toUpperCase() + department?.slice(1)]?.length > 0 && (
+                            <div className="mt-4">
+                                <h4 className="text-sm font-medium text-gray-600 mb-1">Common reasons:</h4>
+                                <div className="flex flex-wrap gap-2">
+                                    {visitReasons[department?.charAt(0).toUpperCase() + department?.slice(1)].map((item, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => setReason(item)}
+                                            className="px-3 py-1 bg-gray-200 text-sm rounded-full hover:bg-indigo-200 transition"
+                                        >
+                                            {item}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
                 <div className="flex justify-end px-16 pb-5 max-md:px-10 max-sm:px-5">
