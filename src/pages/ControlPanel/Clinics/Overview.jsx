@@ -13,6 +13,10 @@ const Overview = () => {
     const [totalAppointments, setTotalAppointments] = useState(null);
     const [upcomingAppointments, setUpcomingAppointments] = useState(null);
     const [doctors, setDoctors] = useState([]);
+    const [weeklyAppointments, setWeeklyAppointment] = useState([]);
+    const [doctorRatios, setDoctorRatios] = useState([]);
+    const [todaySlots, setTodaySlots] = useState([]);
+
     // const [expenses, setExpenses] = useState([]);
     // const [feedbacks, setFeedbacks] = useState([]);
 
@@ -23,10 +27,13 @@ const Overview = () => {
         const fetchData = async () => {
             try {
                 const result = await getAnalytics(clinicId);
-                setTodaysAppointments(result.data.clinics.todayAppointments);
-                setTotalAppointments(result.data.clinics.totalAppointments);
-                setUpcomingAppointments(result.data.clinics.upcomingAppointments);
-                setDoctors(result.data.clinics.doctors);
+                setTodaysAppointments(result?.data?.clinics.todayAppointments);
+                setTotalAppointments(result?.data?.clinics.totalAppointments);
+                setUpcomingAppointments(result?.data?.clinics.upcomingAppointments);
+                setWeeklyAppointment(result?.data?.clinics.weeklyAppointments);
+                setDoctorRatios(result?.data?.clinics.doctorRatios);
+                setDoctors(result?.data?.clinics.doctors);
+                setTodaySlots(result?.data?.clinics.doctorRatios);
                 // setExpenses(result.expenses);
             } catch (error) {
                 toast.error(error.response?.data?.message || "Something went wrong");
@@ -73,13 +80,13 @@ const Overview = () => {
             </div>
             <div className="flex gap-4 w-full mb-6">
                 <div className="w-2/3">
-                    <Reports />
+                    <Reports weeklyAppointments={weeklyAppointments} doctorRatios={doctorRatios} todaySlots={todaySlots} />
                 </div>
                 <div className="w-1/3">
                     <DoctorList doctors={doctors} />
                 </div>
             </div>
-            <div className="flex justify-center w-full">
+            {/* <div className="flex justify-center w-full">
                 <div className="flex gap-6 w-[1200px] max-w-full h-full">
                     <div className="flex-1 h-full">
                         <Calendar />
@@ -88,7 +95,7 @@ const Overview = () => {
                         <PatientFeedback feedbacks={feedbacks} />
                     </div>
                 </div>
-            </div>
+            </div> */}
         </>
     )
 }

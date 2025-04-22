@@ -111,7 +111,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     return (
         <>
             <div className="lg:flex hidden">
-                {user.contactNo && mobileModal === true && (
+                {user?.contactNo && mobileModal === true && (
                     <MobileNumberModal setMobileModal={setMobileModalAction} />
                 )}
                 <div className={`fixed z-30 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
@@ -124,7 +124,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         />
                     </div>
                     <div className="py-6 w-full">
-                        {modules.length > 0 ? (
+                        {modules?.length > 0 ? (
                             modules.map((module, moduleIndex) => (
                                 <div key={moduleIndex} className="mb-2">
                                     <div
