@@ -4,6 +4,7 @@ import { getClinicList } from "../../../services/clinics";
 import LocationSelector from "../../LocationSelector";
 import { UploadIcon } from "lucide-react";
 import Swal from "sweetalert2";
+import { medicalDepartments } from "../../../lib/medicalDepartments";
 
 const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onSubmit }) => {
   const [loading, setLoading] = useState(false);
@@ -34,7 +35,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     firstName: "",
     middleName: "",
     lastName: "",
-    age: "",
+    age: '',
     registration: "",
     speciality: "",
     email: "",
@@ -261,7 +262,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
             </div>
             <div>
               <label className="block text-sm font-medium">Age</label>
-              <input type="number" name="age" value={formData.age} onChange={handleChange} className="w-full p-2 border rounded-md" />
+              <input type="number" name="age" value={formData.age} onChange={handleChange} className="w-full p-2 border rounded-md" required />
             </div>
           </div>
           <div className="mb-4">
@@ -270,7 +271,21 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Specialization</label>
-            <input type="text" name="speciality" value={formData.speciality} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+            <select
+              name="speciality"
+              value={formData.speciality}
+              onChange={handleChange}
+              className="w-full p-2 border rounded-md"
+              required
+            >
+              <option value="">Select Specialization</option>
+              {Object.keys(medicalDepartments).map((dept) => (
+                <option key={dept} value={dept}>
+                  {dept}
+                </option>
+              ))}
+            </select>
+
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Qualifications</label>

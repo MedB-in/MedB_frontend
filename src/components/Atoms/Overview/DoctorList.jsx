@@ -5,7 +5,7 @@ const DoctorsList = ({ doctors = [] }) => {
     const navigate = useNavigate();
 
     return (
-        <div className="bg-white border p-6 rounded-lg my-5 max-h-[500px] shadow-lg border-solid border-[rgba(0,0,0,0.1)]">
+        <div className="bg-white border p-6 rounded-lg min-h-[460px] border-solid my-5 shadow-lg border-[rgba(0,0,0,0.1)]">
             <h2 className="text-[19px] font-bold mb-5">Doctors List</h2>
 
             <div className="bg-[#6F64E7] text-white flex justify-between mb-[15px] p-3 rounded-lg">

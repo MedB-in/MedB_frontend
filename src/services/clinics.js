@@ -90,3 +90,8 @@ export const assignPatientToken = (appointmentId, tokenNo) =>
 //API to fetch Analytics of a specific Clinic.
 export const getAnalytics = (clinicId) =>
     axios.get(`/api/clinic/analytics/${clinicId}`, getHeaders());
+
+//API to fetch the reports of a specific Clinic.
+export const getReports = (clinicId, type) =>
+    axios.get(`/api/clinic/reports/${clinicId}?type=${type}`, getHeaders());
+
