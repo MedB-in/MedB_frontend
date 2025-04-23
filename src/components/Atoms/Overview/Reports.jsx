@@ -4,8 +4,6 @@ import DoctorsBookingRatio from "../Clinic/DoctorsBookingRatio";
 import WeeklyBookingOverview from "../Clinic/WeeklyBookingOverview";
 
 const Reports = ({ weeklyAppointments, doctorRatios, todaySlots }) => {
-    console.log(doctorRatios);
-
 
     return (
         <div className="bg-white border p-6 rounded-lg min-h-[460px] border-solid my-5 shadow-lg border-[rgba(0,0,0,0.1)]">

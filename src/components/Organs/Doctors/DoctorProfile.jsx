@@ -178,7 +178,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                             transition={{ duration: 0.8, ease: "easeOut" }}
                                             className="md:flex hidden flex-col px-11 py-10 text-2xl font-semibold text-indigo-500 bg-white rounded-2xl border border-black border-opacity-50 shadow-2xl">
                                             <h3>Contact Number</h3>
-                                            <p className="mt-5 text-xl text-black">{doctor?.phone}</p>
+                                            <p className="mt-5 text-xl text-black">{doctor?.phone ? ` ${doctor?.phone}` : 'Not Available'}</p>
                                             <h3 className="mt-10">Booking Number</h3>
                                             <p className="mt-5 text-xl text-black">{clinic?.contactNumber}</p>
                                             <h3 className="mt-10">Consulting Time</h3>
@@ -193,6 +193,8 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                             ) : (
                                                 <p className="mt-2.5 text-xl text-black">No timings available</p>
                                             )}
+                                            <h3 className="mt-10">Consultation Fee</h3>
+                                            <p className="mt-5 text-xl text-black"> {doctor?.consultationFee ? `₹ ${doctor?.consultationFee}/-` : 'Not Available'}</p>
                                         </motion.div>
                                         {/* Mobile UI */}
                                         <motion.div
@@ -201,7 +203,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                             viewport={{ once: true, amount: 0.3 }}
                                             transition={{ duration: 0.8, ease: "easeOut" }} className="flex md:hidden flex-col p-4 text-base font-medium text-indigo-500 bg-white rounded-xl border border-black border-opacity-30 shadow-md">
                                             <h3>Contact Number</h3>
-                                            <p className="mt-3 text-sm text-black">{doctor?.phone}</p>
+                                            <p className="mt-3 text-sm text-black">{doctor?.phone ? ` ${doctor?.phone}` : 'Not Available'}</p>
 
                                             <h3 className="mt-6">Booking Number</h3>
                                             <p className="mt-3 text-sm text-black">{clinic?.contactNumber}</p>
@@ -218,6 +220,8 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                             ) : (
                                                 <p className="mt-2 text-sm text-black">No timings available</p>
                                             )}
+                                            <h3 className="mt-6">Consultation Fee</h3>
+                                            <p className="mt-3 text-sm text-black"> {doctor?.consultationFee ? `₹ ${doctor?.consultationFee}/-` : 'Not Available'}</p>
                                         </motion.div>
                                         <motion.button onClick={handleBookAppointment} className="hidden md:block w-full px-3 py-6 mt-9 text-base font-medium bg-indigo-500 rounded-lg text-white hover:bg-indigo-600 transition-transform" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                             Book Appointment

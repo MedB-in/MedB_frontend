@@ -59,6 +59,10 @@ export const addSlots = (data) =>
 export const editSlot = (id, data) =>
     axios.put(`/api/clinic/slots/${id}`, data, getHeaders());
 
+//API to delete slots of a specific Doctor with a specific Clinic details.
+export const deleteSlot = (id) =>
+    axios.delete(`/api/clinic/slots/${id}`, getHeaders());
+
 //API to fetch Users of a specific Clinic.
 export const getClinicUsers = (clinicId) =>
     axios.get(`/api/clinic/users/${clinicId}`, getHeaders());

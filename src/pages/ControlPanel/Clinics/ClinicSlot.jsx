@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import days from "../../../lib/slotDays";
-import { addSlots, getDoctorClinic, getSlots, editSlot } from "../../../services/clinics";
+import { addSlots, getDoctorClinic, getSlots, editSlot, deleteSlot } from "../../../services/clinics";
+import Swal from "sweetalert2";
 
 const ClinicSlot = () => {
   const { clinicId, doctorId } = useParams();
@@ -226,6 +227,29 @@ const ClinicSlot = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "Deleting this slot will affect appointment scheduling. If there are any appointments already booked, deletion is not allowed. Please cancel the associated appointments first.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+      });
+
+      if (result.isConfirmed) {
+        await deleteSlot(id);
+        setSlots((prevSlots) =>
+          prevSlots.filter((slot) => slot.doctorSlotId !== id)
+        );
+        toast.success("Slot deleted successfully");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong. Please try again");
+    }
+  };
+
   const groupedSlots = useMemo(() => {
     return days.map(day => ({
       ...day,
@@ -423,12 +447,20 @@ const ClinicSlot = () => {
                     <p className={`text-sm ${overlappingSlots.some(overlap => overlap.doctorSlotId === slot.doctorSlotId) ? 'text-red-700' : 'text-gray-700'}`}>
                       🕒  {formatTime(slot.timingFrom)} - {formatTime(slot.timingTo)} <span className="text-gray-500">(Gap: {slot.slotGap} mins)</span>
                     </p>
-                    <button
-                      className="text-yellow-500 px-3 py-1 rounded-md text-xs hover:text-yellow-600"
-                      onClick={() => handleEdit(slot)}
-                    >
-                      Edit
-                    </button>
+                    <div>
+                      <button
+                        className="text-yellow-700 px-3 py-1 rounded-md text-xs hover:text-yellow-500"
+                        onClick={() => handleEdit(slot)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="text-red-500 px-3 py-1 rounded-md text-xs hover:text-red-600"
+                        onClick={() => handleDelete(slot.doctorSlotId)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
