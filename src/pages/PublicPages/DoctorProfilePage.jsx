@@ -31,10 +31,9 @@ const DoctorProfilePage = () => {
                 setLoading(false);
             }
         };
-
         fetchDoctorData();
     }, [clinicId, doctorId]);
-
+    
     return (
         <>
             <Toaster />

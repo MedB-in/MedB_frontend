@@ -154,6 +154,7 @@ const BookSlots = () => {
                         <p className="text-gray-700 text-lg font-medium">{doctor.speciality}</p>
                         <p className="text-gray-500 text-sm">{doctor.qualifications}</p>
                         <p className="text-gray-500 text-sm">Experience: {doctor.experience} years</p>
+                        <p className="text-gray-500 text-md mt-2 font-semibold">Consultation fee: {doctor.consultationFee ? `Rs. ${doctor.consultationFee} /-` : "N/A" } </p>
                     </div>
                 </div>
             ) : (

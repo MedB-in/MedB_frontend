@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import io from 'socket.io-client';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SidebarItem from '../Atoms/SideBar/SidebarItem';
@@ -11,6 +12,10 @@ import LogoutIcon from '../../assets/images/logout-icon.png';
 import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
 import Swal from 'sweetalert2';
 import MobileNumberModal from './MobileNumber';
+import { getNotifications, deleteNotification, deleteAllNotifications } from '../../services/notification';
+import socket from '../../utils/socket';
+import { reconnectSocketWithNewToken } from '../../utils/socket';
+import toast from 'react-hot-toast';
 
 const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const dispatch = useDispatch();
@@ -20,6 +25,8 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const { authenticated, userDetails } = useSelector((state) => state.auth);
     const userAccess = useSelector((state) => state.userAccess.userAccess);
     const modules = userAccess || [];
+    const notificationRef = useRef(null);
+    const notificationRef2 = useRef(null);
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('userDetails')));
     const [mobileModal, setMobileModal] = useState(() => {
@@ -28,14 +35,66 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     });
     const [openModuleIndex, setOpenModuleIndex] = useState(null);
     const [selectedMenu, setSelectedMenu] = useState(null);
+    const [notifications, setNotifications] = useState([]);
+    const [showNotifications, setShowNotifications] = useState(false);
+
+    const userId = user?.userId;
+
+    useEffect(() => {
+        if (authenticated && userId) {
+            reconnectSocketWithNewToken();
+
+            socket.emit('subscribe', userId);
+
+            socket.on('notification', (newNotification) => {
+                setNotifications(prev => [newNotification, ...prev]);
+            });
+
+            return () => {
+                socket.off('notification');
+            };
+        }
+    }, [authenticated, userId]);
 
     if (userDetails) {
         localStorage.setItem('userDetails', JSON.stringify(userDetails));
     }
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                (notificationRef.current && !notificationRef.current.contains(event.target)) &&
+                (notificationRef2.current && !notificationRef2.current.contains(event.target))
+            ) {
+                setShowNotifications(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+
     const updateUserDetails = () => {
         setUser(JSON.parse(localStorage.getItem('userDetails')) || {});
     };
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            if (showNotifications) {
+                try {
+                    const response = await getNotifications();
+                    setNotifications(response.data.data);
+                } catch (error) {
+                    console.error('Error fetching notifications:', error);
+                }
+            }
+        };
+
+        fetchNotifications();
+    }, [showNotifications]);
 
     useEffect(() => {
         window.addEventListener('storage', updateUserDetails);
@@ -102,6 +161,24 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         await logout();
         navigate('/');
     };
+
+    const handleClearNotification = async (notificationId) => {
+        try {
+            await deleteNotification(notificationId);
+            setNotifications(prev => prev.filter(notification => notification._id !== notificationId));
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong");
+        }
+    };
+
+    const handleClearAllNotifications = async () => {
+        try {
+            await deleteAllNotifications();
+            setNotifications([]);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong");
+        }
+    }
 
     const setMobileModalAction = () => {
         setMobileModal(false);
@@ -180,7 +257,52 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         {isSidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
                     </button>
                     <div className="profile flex items-center">
-                        <img src={AlertIcon} alt="Alert" className="w-10 h-10 rounded-full object-cover mr-2 shadow-sm drop-shadow-md" />
+                        <div className="relative">
+                            <img
+                                src={AlertIcon}
+                                alt="Alert"
+                                className="w-10 h-10 rounded-full object-cover mr-2 shadow-sm drop-shadow-md cursor-pointer"
+                                onClick={() => setShowNotifications(!showNotifications)}
+                            />
+                            {showNotifications && (
+                                <div
+                                    ref={notificationRef}
+                                    className="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-xl border border-gray-200 z-50 overflow-hidden"
+                                >
+                                    <div className="flex justify-between items-center p-4 border-b font-semibold text-gray-700">
+                                        <span>Notifications</span>
+
+                                        {notifications.length > 0 && <button
+                                            onClick={handleClearAllNotifications}
+                                            className="text-sm text-red-500 hover:text-red-700"
+                                        >
+                                            Clear All
+                                        </button>
+                                        }
+                                    </div>
+                                    <ul className="max-h-60 overflow-y-auto">
+                                        {notifications.length > 0 ? (
+                                            notifications.map((n) => (
+                                                <li key={n._id} className="px-4 py-2 hover:bg-gray-100 border-b flex justify-between items-center">
+                                                    <div>
+                                                        <div className="font-medium text-sm">{n.title}</div>
+                                                        <div className="text-xs text-gray-500">{n.message}</div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => handleClearNotification(n._id)}
+                                                        className="text-xs text-gray-400 hover:text-gray-600"
+                                                    >
+                                                        X
+                                                    </button>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li className="p-4 my-5 text-center text-gray-500">No notifications</li>
+                                        )}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
                         <img
                             src={
                                 user?.profilePicture ||
@@ -200,6 +322,9 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
             {/* Sidebar for sm screens */}
             <div className="lg:hidden">
+                {user?.contactNo && mobileModal === true && (
+                    <MobileNumberModal setMobileModal={setMobileModalAction} />
+                )}
                 <header className="fixed w-screen z-40 h-16 px-6 py-3 bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm shadow-md grid grid-cols-3 items-center">
                     <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 w-10 transition-all duration-300">
                         <Menu size={24} />
@@ -213,7 +338,45 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         />
                     </div>
                     <div className="flex items-center justify-end gap-x-2 md:gap-x-4">
-                        <img src={AlertIcon} alt="Alert" className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover shadow-sm" />
+                        <img src={AlertIcon} alt="Alert" className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover shadow-sm cursor-pointer"
+                            onClick={() => setShowNotifications(!showNotifications)} />
+                        {showNotifications && (
+                            <div
+                                ref={notificationRef2}
+                                className="absolute right-5 mt-64  w-80 bg-white shadow-lg rounded-xl border border-gray-200 z-50 overflow-hidden"
+                            >
+                                <div className="flex justify-between items-center p-4 border-b font-semibold text-gray-700">
+                                    <span>Notifications</span>
+                                    {notifications.length > 0 && <button
+                                        onClick={handleClearAllNotifications}
+                                        className="text-sm text-red-500 hover:text-red-700"
+                                    >
+                                        Clear All
+                                    </button>
+                                    }
+                                </div>
+                                <ul className="max-h-60 overflow-y-auto">
+                                    {notifications.length > 0 ? (
+                                        notifications.map((n) => (
+                                            <li key={n._id} className="px-4 py-2 hover:bg-gray-100 border-b flex justify-between items-center">
+                                                <div>
+                                                    <div className="font-medium text-sm">{n.title}</div>
+                                                    <div className="text-xs text-gray-500">{n.message}</div>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleClearNotification(n._id)}
+                                                    className="text-xs text-gray-400 hover:text-gray-600"
+                                                >
+                                                    X
+                                                </button>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li className="p-4 my-5 text-center text-gray-500">No notifications</li>
+                                    )}
+                                </ul>
+                            </div>
+                        )}
                         <img
                             src={user?.profilePicture || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
                             alt="Profile"

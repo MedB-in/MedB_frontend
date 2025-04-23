@@ -96,7 +96,7 @@ const MobileNumberModal = ({ setMobileModal }) => {
 
                 <button
                     onClick={handleClose}
-                    className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl font-bold"
+                    className="absolute top-2 right-4 text-gray-500 hover:text-red-600 text-xl font-bold"
                 >
                     &times;
                 </button>
