@@ -5,6 +5,10 @@ import { getHeaders } from "./axios";
 export const getDoctors = () =>
     axios.get("/api/doctor/", getHeaders());
 
+//API to handle analytics.
+export const getAnalytics = (doctorId, clinicId) =>
+    axios.get(`/api/doctor/analytics/${doctorId}/${clinicId}`, getHeaders());
+
 //API to handle get Active Doctors.
 export const getActiveDoctors = (clinicId, page, search) =>
     axios.get(`/api/doctor/list/active/${clinicId}/${page}?searchQuery=${search}`, getHeaders());

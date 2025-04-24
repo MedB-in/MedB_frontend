@@ -89,7 +89,7 @@ const Calendar = ({ onDateSelect }) => {
                                 <button
                                     key={index}
                                     onClick={() => { setDate(m); setShowDropdown(false); }}
-                                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                    className="block w-full text-black text-left px-4 py-2 hover:bg-gray-100"
                                 >
                                     {m.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                                 </button>

@@ -30,7 +30,6 @@ const Header = () => {
             ]
         },
         { name: "Find Doctor/Clinic", path: "/find-doctor-clinic" },
-        { name: "Contact Us", path: "/contact" },
     ];
 
     return (
@@ -92,6 +91,14 @@ const Header = () => {
                             )}
                         </li>
                     ))}
+                    <motion.p
+                        className={`text-white font-medium px-3 py-2 cursor-pointer`}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => window.dispatchEvent(new Event("scroll-to-contact"))}
+                    >
+                        Contact Us
+                    </motion.p>
                 </ul>
             </nav>
             <AnimatePresence>

@@ -5,7 +5,7 @@ import TimeSlots from "../../Atoms/TImeSlots";
 import { bookSlot } from "../../../services/doctors";
 import toast from "react-hot-toast";
 
-const AppointmentActions = ({ appointment, onClose }) => {
+const AppointmentActions = ({ appointment, onClose, fetchAppointments }) => {
     const [reason, setReason] = useState("");
     const [action, setAction] = useState("cancel");
     const [selectedDate, setSelectedDate] = useState(null);
@@ -45,6 +45,7 @@ const AppointmentActions = ({ appointment, onClose }) => {
                 }
                 await bookSlot({ appointmentId: appointment.appointmentId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
                 toast.success("Slot booked successfully!");
+                fetchAppointments();
                 onClose();
             } else if (action === "cancel") {
                 await bookSlot({ appointmentId: appointment.appointmentId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason, action: "cancel" });

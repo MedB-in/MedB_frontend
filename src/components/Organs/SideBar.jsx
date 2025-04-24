@@ -37,6 +37,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const [selectedMenu, setSelectedMenu] = useState(null);
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
+    const [newNotificationCount, setNewNotificationCount] = useState(0);
 
     const userId = user?.userId;
 
@@ -44,14 +45,19 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         if (authenticated && userId) {
             reconnectSocketWithNewToken();
 
-            socket.emit('subscribe', userId);
+            const handleNotification = (newNotification) => {
+                setNotifications(prev => {
+                    if (prev.some(n => n._id === newNotification._id)) return prev;
+                    return [newNotification, ...prev];
+                });
+                setNewNotificationCount(prev => prev + 1);
+            };
 
-            socket.on('notification', (newNotification) => {
-                setNotifications(prev => [newNotification, ...prev]);
-            });
+
+            socket.on('newNotification', handleNotification);
 
             return () => {
-                socket.off('notification');
+                socket.off('newNotification', handleNotification);
             };
         }
     }, [authenticated, userId]);
@@ -63,19 +69,21 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
-                (notificationRef.current && !notificationRef.current.contains(event.target)) &&
-                (notificationRef2.current && !notificationRef2.current.contains(event.target))
-            ) {
+                notificationRef.current && !notificationRef.current.contains(event.target) &&
+                notificationRef2.current && !notificationRef2.current.contains(event.target)) {
                 setShowNotifications(false);
             }
         };
 
         document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+
+    const handleNotificationModal = () => {
+        setNewNotificationCount(0);
+        setShowNotifications(!showNotifications);
+    };
 
     const updateUserDetails = () => {
         setUser(JSON.parse(localStorage.getItem('userDetails')) || {});
@@ -262,8 +270,13 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                 src={AlertIcon}
                                 alt="Alert"
                                 className="w-10 h-10 rounded-full object-cover mr-2 shadow-sm drop-shadow-md cursor-pointer"
-                                onClick={() => setShowNotifications(!showNotifications)}
+                                onClick={handleNotificationModal}
                             />
+                            {newNotificationCount > 0 && (
+                                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                                    {newNotificationCount > 9 ? '9+' : newNotificationCount}
+                                </span>
+                            )}
                             {showNotifications && (
                                 <div
                                     ref={notificationRef}
@@ -284,7 +297,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                         {notifications.length > 0 ? (
                                             notifications.map((n) => (
                                                 <li key={n._id} className="px-4 py-2 hover:bg-gray-100 border-b flex justify-between items-center">
-                                                    <div>
+                                                    <div className={`${n.link ? 'cursor-pointer' : ''}`} {...n.link && { onClick: () => navigate(n.link) }} >
                                                         <div className="font-medium text-sm">{n.title}</div>
                                                         <div className="text-xs text-gray-500">{n.message}</div>
                                                     </div>

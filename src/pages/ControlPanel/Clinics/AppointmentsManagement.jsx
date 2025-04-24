@@ -282,6 +282,7 @@ function AppointmentsManagement() {
                 onClose={closeStatusModal}
                 appointment={selectedAppt}
                 clinicId={clinicId}
+                today={today}
                 updateAppointment={updateAppointment}
                 setAppointment={setNewAppointment}
             />
