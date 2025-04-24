@@ -107,8 +107,6 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
         try {
             setUpdating(true);
             const result = await postConsultCancellation(useDoctorId, idClinic, { leaveDate: selectedDate, reason: leaveReason });
-            console.log(result.data.leave);
-
             setLeaveList(prev => {
                 const filtered = prev.filter(item => item.doctorLeaveId !== result.data.leave.doctorLeaveId);
                 return [result.data.leave, ...filtered];

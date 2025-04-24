@@ -6,7 +6,7 @@ import Calendar from "../../Atoms/Calender";
 import TimeSlots from "../../Atoms/TImeSlots";
 import { bookSlot } from "../../../services/doctors";
 
-const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointment, clinicId, setAppointment }) => {
+const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointment, today, clinicId, setAppointment }) => {
     const [status, setStatus] = useState('');
     const [loading, setLoading] = useState(false);
     const [selectedDay, setSelectedDay] = useState(null);
@@ -66,7 +66,7 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                 });
                 if (!result.isConfirmed) return;
 
-                await bookSlot({ appointmentId: appointment.appointmentId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
+                await bookSlot({ appointmentId: appointment.appointmentId, patientId: appointment.userId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
                 setAppointment();
                 toast.success("Slot booked successfully!");
                 onClose();
@@ -92,7 +92,6 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
         onClose();
     };
 
-
     if (!isOpen) return null;
 
     return (
@@ -105,7 +104,6 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                 </p>
                 <p className="text-sm text-black">Date: {appointment?.appointmentDate}</p>
                 <p className="text-sm text-black mb-4">Time: {appointment?.appointmentTime}</p>
-
                 <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
@@ -113,7 +111,7 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                     disabled={loading}
                 >
                     <option value="">Select Status</option>
-                    <option value="Completed">Completed</option>
+                    {today === appointment?.appointmentDate && <option value="Completed">Completed</option>}
                     <option value="Cancelled">Cancel</option>
                     <option value="Reschedule">Reschedule</option>
                 </select>
@@ -158,21 +156,10 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                     </div>
                 )}
 
-                <div className="flex justify-end gap-2 mt-6 sticky bottom-0 pt-4">
-                    <button
-                        onClick={handleClose}
-                        className="px-4 py-2 rounded-lg bg-gray-400 hover:bg-gray-500 text-white transition-all duration-200"
-                        disabled={loading}
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleSubmit}
-                        className="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-all duration-200"
-                        disabled={loading}
-                    >
-                        {loading ? "Saving..." : "Save"}
-                    </button>
+
+                <div className="flex justify-end mt-5 gap-2">
+                    <button onClick={handleClose} className="px-4 py-2 bg-gray-300 rounded">Close</button>
+                    <button onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">{loading ? "Saving..." : "Confirm"}</button>
                 </div>
             </div>
         </div>

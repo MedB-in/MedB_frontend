@@ -5,7 +5,7 @@ const DoctorsBookingRatio = ({ doctorRatios = [], modal = false, todaySlots }) =
     const [modalOpen, setModalOpen] = useState(false);
     return (
         <div className="relative bg-[rgba(210,236,234,0.3)] max-w-2xl p-6 rounded-2xl">
-            <h2 className="text-sm mb-5 text-center">Doctor's Booking Ratio</h2>
+            <h2 className="text-sm mb-5 text-center">Doctor's Booking Ratio (Weekly)</h2>
 
             <div className="flex">
                 {/* Y-Axis */}
@@ -26,12 +26,12 @@ const DoctorsBookingRatio = ({ doctorRatios = [], modal = false, todaySlots }) =
                                     {/* Scheduled */}
                                     <div
                                         className="w-[10px] bg-[#6F64E7]"
-                                        style={{ height: `${data.scheduled}px` }}
+                                        style={{ height: `${data.scheduledForWeek}px` }}
                                     />
                                     {/* Completed */}
                                     <div
                                         className="w-[10px] bg-[#86CFC3]"
-                                        style={{ height: `${data.completed}px` }}
+                                        style={{ height: `${data.completedInTheWeek}px` }}
                                     />
                                 </div>
                                 <div

@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import aliceImage from "../../../assets/images/alice-testimonials.png";
 import samuelImage from "../../../assets/images/samuel-testimonials.png";
 import fahadImage from "../../../assets/images/fahad-testimonials.png";
+import rachelImage from "../../../assets/images/rachel-testimonials.png";
+import imranImage from "../../../assets/images/imran-testimonials.png";
 
 const testimonials = [
     {
@@ -25,17 +27,18 @@ const testimonials = [
     },
     {
         text: "I travel frequently for work, so being able to book appointments with healthcare providers in different cities through MedB is incredibly convenient.",
-        name: "Alice",
-        role: "Chief Accountant",
-        image: aliceImage,
+        name: "Rachel",
+        role: "Product Manager",
+        image: rachelImage,
     },
     {
         text: "The ability to book urgent care appointments quickly and easily through the app has saved me countless hours of waiting in crowded waiting rooms.",
-        name: "Samuel",
-        role: "Accountant",
-        image: samuelImage,
+        name: "Imran",
+        role: "Operations Lead",
+        image: imranImage,
     },
 ];
+
 
 const Testimonials = () => {
     const scrollRef = useRef(null);
@@ -107,7 +110,7 @@ const Testimonials = () => {
                 {testimonials.map((testimonial, index) => (
                     <div
                         key={index}
-                        className="min-w-[80%] sm:min-w-[60%] md:min-w-[40%] lg:min-w-[30%] max-w-xs h-[48vh] 
+                        className="min-w-[80%] sm:min-w-[60%] md:min-w-[40%] lg:min-w-[30%] max-w-xs h-[480px] 
                            bg-gradient-to-b from-[#D2ECEA] via-white to-[#6F64E7] p-6 rounded-2xl 
                            flex flex-col justify-between items-center text-white snap-start"
                     >
@@ -118,7 +121,7 @@ const Testimonials = () => {
                             <img
                                 src={testimonial.image}
                                 alt={testimonial.name}
-                                className="w-32 h-32 rounded-full border-4 border-white"
+                                className="w-32 h-32 rounded-full border-4 object-cover border-white"
                             />
                             <h3 className="text-lg font-semibold">{testimonial.name}</h3>
                             <span className="text-sm opacity-80">{testimonial.role}</span>

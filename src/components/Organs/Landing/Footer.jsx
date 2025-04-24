@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import logo from "../../../assets/images/medb-logo-png.png";
 import emailIcon from "../../../assets/images/email-icon.png";
@@ -7,8 +7,11 @@ import locationIcon from "../../../assets/images/location-06.png";
 import facebookIcon from "../../../assets/images/facebook-logo.png";
 import linkedInIcon from "../../../assets/images/linkedin-icon.png";
 import instagramIcon from "../../../assets/images/instagram-icon.png";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
+
+    const contactRef = useRef(null);
     const [email, setEmail] = useState("");
     const [formData, setFormData] = useState({
         role: "Doctor",
@@ -17,6 +20,23 @@ const Footer = () => {
         message: ""
     });
 
+    useEffect(() => {
+        const handleScroll = () => {
+            contactRef.current?.scrollIntoView({ behavior: "smooth" });
+        };
+
+        window.addEventListener("scroll-to-contact", handleScroll);
+        return () => window.removeEventListener("scroll-to-contact", handleScroll);
+    }, []);
+
+    const links = [
+        { name: "Home", path: "/home" },
+        { name: "Features", path: "/for-doctor" },
+        { name: "About Us", path: "" },
+        { name: "For Doctor", path: "/for-doctor" },
+        { name: "Contact Us", path: "" }
+    ]
+
     return (
         <motion.footer
             className="bg-gradient-to-b from-white via-white to-[#6F64E7]/30 text-center p-6"
@@ -24,6 +44,7 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
+            ref={contactRef}
         >
             <motion.div
                 className="py-6 border-t border-b"
@@ -44,9 +65,11 @@ const Footer = () => {
                 >
                     <h3 className="text-xl font-semibold text-[#6F64E7] mb-4">Quick Links</h3>
                     <ul className="space-y-3 text-gray-700 text-sm md:text-base">
-                        {['Home', 'Features', 'About Us', 'Blog', 'For Doctor', 'Contact Us'].map(link => (
-                            <li key={link}>
-                                <a href="#" className="hover:text-[#6F64E7] transition">{link}</a>
+                        {links.map(link => (
+                            <li key={link.name}>
+                                <Link to={link.path} className="hover:text-[#6F64E7] transition">
+                                    {link.name}
+                                </Link>
                             </li>
                         ))}
                     </ul>
@@ -62,11 +85,15 @@ const Footer = () => {
                     <div className="space-y-3 text-sm md:text-base text-gray-700">
                         <p className="flex items-center">
                             <img src={phoneIcon} className="mr-2 w-5 h-5 object-contain" alt="" />
-                            +91 8137854445
+                            <a href="tel:+918137854445" className="hover:underline">
+                                +91 8137854445
+                            </a>
                         </p>
                         <p className="flex items-center">
                             <img src={emailIcon} className="mr-2 w-5 h-5 object-contain" alt="" />
-                            info@medb.co.in
+                            <a href="mailto:info@medb.co.in" className="hover:underline">
+                                info@medb.co.in
+                            </a>
                         </p>
                         <div className="flex">
                             <img src={locationIcon} className="mr-2 w-5 h-5 object-contain self-start" alt="" />
@@ -133,9 +160,9 @@ const Footer = () => {
                         © 2025 MEDB India. All rights reserved.
                     </p>
                     <div className="flex justify-center md:justify-center">
-                        <a href="#" className="text-[#6F64E7] hover:underline">
+                        <div className="text-[#6F64E7] hover:underline cursor-pointer">
                             Privacy Policy
-                        </a>
+                        </div>
                     </div>
                     <div className="flex justify-center md:justify-end space-x-4 mt-3 md:mt-0">
                         <motion.a
