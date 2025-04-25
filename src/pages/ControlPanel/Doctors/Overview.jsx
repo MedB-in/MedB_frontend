@@ -52,7 +52,7 @@ const Overview = () => {
             {analyticsData ? (
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                        <AppointmentCard appt={analyticsData.upcomingAppointments} title="Upcoming Appointments" />
+                        <AppointmentCard appt={analyticsData.upcomingAppointments} title="Appointments Upcoming" />
                         <AppointmentCard appt={analyticsData.totalPatients} title="Total Patients" />
                         <AppointmentCard appt={analyticsData.reportedPatients} title="Reported Patients" />
                         <AppointmentCard appt={analyticsData.todayCompleted} title="Completed Today" />
