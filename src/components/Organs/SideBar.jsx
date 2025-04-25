@@ -1,4 +1,3 @@
-import io from 'socket.io-client';
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -52,10 +51,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                 });
                 setNewNotificationCount(prev => prev + 1);
             };
-
-
             socket.on('newNotification', handleNotification);
-
             return () => {
                 socket.off('newNotification', handleNotification);
             };
@@ -265,7 +261,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         {isSidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
                     </button>
                     <div className="profile flex items-center">
-                        <div className="relative">
+                        <div ref={notificationRef} className="relative">
                             <img
                                 src={AlertIcon}
                                 alt="Alert"
@@ -279,7 +275,6 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             )}
                             {showNotifications && (
                                 <div
-                                    ref={notificationRef}
                                     className="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-xl border border-gray-200 z-50 overflow-hidden"
                                 >
                                     <div className="flex justify-between items-center p-4 border-b font-semibold text-gray-700">
@@ -350,12 +345,11 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             className={`transition-all cursor-pointer duration-300 ease-in-out w-10 md:w-14 opacity-80`}
                         />
                     </div>
-                    <div className="flex items-center justify-end gap-x-2 md:gap-x-4">
+                    <div ref={notificationRef2} className="flex items-center justify-end gap-x-2 md:gap-x-4">
                         <img src={AlertIcon} alt="Alert" className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover shadow-sm cursor-pointer"
-                            onClick={() => setShowNotifications(!showNotifications)} />
+                            onClick={handleNotificationModal} />
                         {showNotifications && (
                             <div
-                                ref={notificationRef2}
                                 className="absolute right-5 mt-64  w-80 bg-white shadow-lg rounded-xl border border-gray-200 z-50 overflow-hidden"
                             >
                                 <div className="flex justify-between items-center p-4 border-b font-semibold text-gray-700">

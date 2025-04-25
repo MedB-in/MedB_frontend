@@ -30,7 +30,7 @@ const AppointmentCard = ({ appt, title }) => {
                 aria-label="View appointments"
                 onClick={handleClick}
             >
-                {title !== "Total Appointments" &&
+                {title === "Today's Appointments" || title === "Upcoming Appointments" &&
                     <svg
                         width="30"
                         height="25"
