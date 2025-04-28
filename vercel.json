@@ -1,0 +1,10 @@
+{
+    "redirects": [
+      {
+        "source": "/(?!index.html)(:path*)",
+        "destination": "/index.html",
+        "permanent": false
+      }
+    ]
+  }
+  
