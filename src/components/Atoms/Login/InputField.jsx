@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ShowPasswordIcon from "../../../assets/images/show-password-icon.svg";
 
 
@@ -11,7 +11,13 @@ const InputField = ({
   value,
   onChange,
   toggleable,
+  disabled,
+  pattern,
+  maxLength,
+  title,
   ariaLabel,
+  className,
+  required
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -20,7 +26,7 @@ const InputField = ({
   };
 
   return (
-    <div className="flex overflow-hidden gap-1 px-3 py-3.5 bg-white rounded-lg border border-solid border-zinc-300 text-stone-900 text-opacity-50">
+    <div className="flex overflow-hidden gap-1 px-3 py-3.5 bg-white rounded-lg border border-solid border-zinc-300 text-black text-opacity-70">
       {icon && (
         <img
           loading="lazy"
@@ -37,9 +43,23 @@ const InputField = ({
         id={id}
         name={name}
         placeholder={placeholder}
+        title={title}
+        maxLength={maxLength}
+        pattern={pattern}
         value={value}
         onChange={onChange}
-        className="flex-auto bg-transparent border-none outline-none"
+        disabled={disabled}
+        required={required}
+        className={`flex-auto bg-transparent border-none outline-none ${className}`}
+        onKeyDown={(e) => {
+          if (
+            type === "tel" &&
+            !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key) &&
+            !/^[0-9]$/.test(e.key)
+          ) {
+            e.preventDefault();
+          }
+        }}
       />
       {toggleable && (
         <button

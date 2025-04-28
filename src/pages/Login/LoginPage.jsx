@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthenticated, setUserDetails } from "../../redux/slices/authSlice";
 import { setUserAccess } from "../../redux/slices/userAccessSlice";
-import { doLogin } from "../../services/auth";
+import { doGoogleLogin, doLogin } from "../../services/auth";
 import useToken from "../../hooks/useToken";
 import Frame from "../../assets/images/frame.png";
 import Logo from "../../assets/images/logo.svg";
@@ -13,11 +14,15 @@ import PasswordIcon from "../../assets/images/password-icon.svg";
 import InputField from "../../components/Atoms/Login/InputField";
 import Button from "../../components/Atoms/Login/Button";
 import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
+import GoogleLoginButton from "../../components/Atoms/GoogleLogin/GoolgeLoginButton";
+
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const { authenticated } = useSelector((state) => state.auth);
   const { setToken } = useToken();
   const navigate = useNavigate();
@@ -41,35 +46,105 @@ const LoginPage = () => {
       dispatch(setUserDetails(data.userDetails));
       dispatch(setUserAccess(data.menuData));
       dispatch(setAuthenticated(true));
-      navigate("/");
-    } catch (error) {
-      if (error.response && error.response.data) {
-        toast.error(error.response.data.message || "An error occurred on the server.");
+      if (window.opener) {
+        window.opener.postMessage("authenticated", window.location.origin);
+        window.close();
       } else {
-        toast.error("Something went wrong. Please try again.");
+        navigate("/");
       }
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async (googleUser) => {
+    setGoogleLoading(true);
+    try {
+      const { data } = await doGoogleLogin({
+        email: googleUser.email,
+        googleId: googleUser.sub,
+        name: googleUser.name,
+        avatar: googleUser.picture,
+      });
+      setToken(data.accessToken);
+      dispatch(setUserDetails(data.userDetails));
+      dispatch(setUserAccess(data.menuData));
+      dispatch(setAuthenticated(true));
+      if (window.opener) {
+        window.opener.postMessage("authenticated", window.location.origin);
+        window.close();
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error("Google login failed. Try again.");
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
   return (
     <>
       <Toaster />
-      <div className="relative justify-center items-center h-screen flex px-11  bg-white">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative flex justify-center items-center h-screen px-11 bg-white"
+      >
+        {(loading || googleLoading) && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="absolute inset-0 bg-black bg-opacity-10 backdrop-blur-md flex justify-center items-center z-10"
+          >
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="text-lg flex flex-col items-center font-extralight text-indigo-600"
+            >
+              <img
+                src={Logo}
+                alt="Medb Logo"
+                className="h-10 mt-5 w-auto cursor-pointer"
+              />
+              <span className="mt-2 animate-pulse">
+                {googleLoading ? "Logging in with Google..." : "Logging in..."}
+              </span>
+            </motion.p>
+          </motion.div>
+        )}
         <div className="flex flex-grow gap-5">
-          <div className="hidden p-10 h-screen flex-col w-[75%] lg:flex">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="hidden lg:flex flex-col w-[75%] p-10 h-screen"
+          >
             <img
               loading="lazy"
               src={Frame}
               alt="Login illustration"
-              className="object-contain h-full rounded-[49px]"
+              className="object-cover h-full w-full rounded-[49px]"
             />
-          </div>
-          <div className="flex flex-col justify-center w-full max-w-md sm:w-4/5 sm:mx-auto md:w-2/3 md:mx-auto px-4 py-8 space-y-6 bg-white shadow-lg rounded-3xl lg:absolute lg:right-1/4 lg:top-1/4 lg:-mx-28 lg:-my-20 lg:w-1/3 lg:px-12">
+          </motion.div>
+
+          <div className="flex flex-col justify-center w-full max-w-md mx-auto px-4 py-8 space-y-6 border bg-white shadow-lg rounded-3xl lg:absolute lg:right-[10%] lg:top-1/2 lg:-translate-y-1/2 lg:w-1/3 lg:px-12">
             <div className="">
               <div className="mb-12 flex justify-center">
-                <img src={Logo} alt="Medb Logo" className="h-10 w-auto" />
+                <img
+                  src={Logo}
+                  onClick={() => navigate("/home")}
+                  alt="Medb Logo"
+                  className="h-10 mt-5 w-auto cursor-pointer"
+                />
               </div>
               <h1 className="mb-2 text-2xl font-semibold text-gray-900 text-center">
                 Welcome Back!
@@ -80,7 +155,6 @@ const LoginPage = () => {
             </div>
 
             <form className="space-y-6">
-              {/* Email Input */}
               <InputField
                 type="email"
                 placeholder="Email/Phone Number"
@@ -89,7 +163,6 @@ const LoginPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
 
-              {/* Password Input */}
               <div className="relative">
                 <InputField
                   type="password"
@@ -101,7 +174,6 @@ const LoginPage = () => {
                 />
               </div>
 
-              {/* Forgot Password */}
               <div className="flex justify-end">
                 <button
                   onClick={() => navigate("/forgot-password")}
@@ -117,33 +189,21 @@ const LoginPage = () => {
                 </button>
               </div>
 
-              {/* Login Button */}
               <Button
                 onClick={handleSubmit}
                 type="submit"
                 className="h-12 w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800"
-                disabled={loading}
+                disabled={loading || googleLoading}
               >
                 {loading ? "Logging in..." : "Login"}
               </Button>
 
-              {/* Google Login Button */}
-              <Button
-                onClick={() => navigate("/googleLogin")}
-                variant="outline"
-                className="h-12 w-full hover:bg-gray-50 active:bg-gray-100"
-              >
-                <span className="flex items-center justify-center">
-                  <img
-                    src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
-                    alt="Google Logo"
-                    className="w-8 aspect-square mr-2"
-                  />
-                  Login with Google
-                </span>
-              </Button>
+              <GoogleLoginButton
+                clientId={clientId}
+                handleGoogleLogin={handleGoogleLogin}
+                disabled={loading || googleLoading}
+              />
 
-              {/* Sign Up */}
               <p className="text-center text-sm text-gray-600">
                 Don't have an account?{" "}
                 <button
@@ -157,7 +217,7 @@ const LoginPage = () => {
             </form>
           </div>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };

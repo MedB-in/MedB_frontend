@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
         firstName: "",
+        middleName: "",
         lastName: "",
         email: "",
         contactNo: "",
@@ -51,7 +52,7 @@ const RegisterPage = () => {
         }
         setLoading(true);
         try {
-            if (!formData.firstName || !formData.lastName || !formData.email || !formData.contactNo || !formData.password || !formData.confirmPassword) {
+            if (!formData.firstName || !formData.email || !formData.password || !formData.confirmPassword) {
                 toast.error("All fields are required.");
                 return;
             }
@@ -91,7 +92,7 @@ const RegisterPage = () => {
                                     <InputField type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
                                 </div>
                                 <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-                                <InputField type="text" name="contactNo" placeholder="Contact Number" value={formData.contactNo} onChange={handleChange} required />
+                                {/*<InputField type="text" name="contactNo" placeholder="Contact Number" value={formData.contactNo} onChange={handleChange} required />*/}
                                 <InputField type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} toggleable required />
                                 <InputField type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} toggleable required />
                                 <div className="min-h-[1.5rem]">

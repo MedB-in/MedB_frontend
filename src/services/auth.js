@@ -4,6 +4,10 @@ import axios from "./axios";
 export const doLogin = (credentials) =>
   axios.post("/api/auth/login", credentials);
 
+// Function to handle Google login/signup.
+export const doGoogleLogin = (credentials) =>
+  axios.post("/api/auth/googleLogin", credentials);
+
 // Function to handle logout.
 export const doLogout = (credentials) =>
   axios.post('/api/auth/logout', credentials);
@@ -15,3 +19,11 @@ export const doRegister = (credentials) =>
 //Function to verify user email.
 export const verifyEmail = (token, userId) =>
   axios.get(`/api/auth/verifyEmail/${token}/${userId}`);
+
+//Function to get reset code for password.
+export const getCodeForgotPass = (email) =>
+  axios.get(`/api/auth/forgotPassword/${email}`);
+
+//Function to reset password.
+export const resetPassword = (data) =>
+  axios.post("/api/auth/resetPassword", data);

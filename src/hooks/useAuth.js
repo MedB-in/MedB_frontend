@@ -19,6 +19,10 @@ function useAuth() {
 
     const logout = async () => {
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("openModuleIndex");
+        localStorage.removeItem("selectedMenu");
+        localStorage.removeItem("userDetails");
+        sessionStorage.clear();
         await persistor.purge();
         setUser(null);
         await doLogout().catch((error) => {

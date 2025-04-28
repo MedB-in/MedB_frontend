@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import days from "../../../lib/slotDays";
-import { addSlots, getDoctorClinic, getSlots, editSlot } from "../../../services/clinics";
+import { addSlots, getDoctorClinic, getSlots, editSlot, deleteSlot } from "../../../services/clinics";
+import Swal from "sweetalert2";
 
 const ClinicSlot = () => {
   const { clinicId, doctorId } = useParams();
   const [overlappingSlots, setOverlappingSlots] = useState([]);
   const [overlappingSlotsRes, setOverlappingSlotsRes] = useState([]);
-  const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState("");
   const [timingFrom, setTimingFrom] = useState("");
   const [timingTo, setTimingTo] = useState("");
@@ -18,6 +18,8 @@ const ClinicSlot = () => {
   const [doctorClinic, setDoctorClinic] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [editingSlot, setEditingSlot] = useState(null);
+  const [isFromFocused, setIsFromFocused] = useState(false);
+  const [isToFocused, setIsToFocused] = useState(false);
   const [fromPeriod, setFromPeriod] = useState("AM");
   const [toPeriod, setToPeriod] = useState("AM");
 
@@ -179,8 +181,8 @@ const ClinicSlot = () => {
       clinicId,
       doctorId,
       day: parsedDay,
-      timingFrom,
-      timingTo,
+      timingFrom: timingFrom24,
+      timingTo: timingTo24,
       slotGap: parseInt(slotGap),
     };
 
@@ -225,6 +227,29 @@ const ClinicSlot = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "Deleting this slot will affect appointment scheduling. If there are any appointments already booked, deletion is not allowed. Please cancel the associated appointments first.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+      });
+
+      if (result.isConfirmed) {
+        await deleteSlot(id);
+        setSlots((prevSlots) =>
+          prevSlots.filter((slot) => slot.doctorSlotId !== id)
+        );
+        toast.success("Slot deleted successfully");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong. Please try again");
+    }
+  };
+
   const groupedSlots = useMemo(() => {
     return days.map(day => ({
       ...day,
@@ -236,7 +261,7 @@ const ClinicSlot = () => {
     <div className="p-5">
       <button
         className="bg-gray-200 text-gray-700 px-4 py-2 my-5 rounded-md hover:bg-gray-300"
-        onClick={() => navigate(-1)}
+        onClick={() => window.history.back()}
       >
         ← Back
       </button>
@@ -301,19 +326,28 @@ const ClinicSlot = () => {
             <option value="">Select from the List</option>
             {days.map(day => <option key={day.id} value={day.id}>{day.label}</option>)}
           </select>
-          
+
           <div className="flex gap-4 mt-4">
             {/* From Time Selection */}
             <div className="flex flex-col w-full">
               <label className="text-gray-700 font-medium mb-1">From</label>
               <div className="flex gap-2">
-                <input
-                  type="text"
-                  className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
-                  value={timingFrom}
-                  onChange={(e) => handleTimeChange(e, setTimingFrom)}
-                  placeholder="HH:MM"
-                />
+                <div className="relative w-full">
+                  <input
+                    type="text"
+                    className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={timingFrom}
+                    onChange={(e) => handleTimeChange(e, setTimingFrom)}
+                    placeholder="HH:MM"
+                    onFocus={() => setIsFromFocused(true)}
+                    onBlur={() => setIsFromFocused(false)}
+                  />
+                  {isFromFocused && (
+                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
+                      {timingFrom.length === 0 && "Type here"}
+                    </div>
+                  )}
+                </div>
                 <select
                   className="p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
                   value={fromPeriod}
@@ -323,19 +357,29 @@ const ClinicSlot = () => {
                   <option value="PM">PM</option>
                 </select>
               </div>
+              <p className="text-xs text-gray-500 mt-1">Enter time in 12-hour format (e.g., 09:30)</p>
             </div>
 
             {/* To Time Selection */}
             <div className="flex flex-col w-full">
               <label className="text-gray-700 font-medium mb-1">To</label>
               <div className="flex gap-2">
-                <input
-                  type="text"
-                  className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
-                  value={timingTo}
-                  onChange={(e) => handleTimeChange(e, setTimingTo)}
-                  placeholder="HH:MM"
-                />
+                <div className="relative w-full">
+                  <input
+                    type="text"
+                    className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={timingTo}
+                    onChange={(e) => handleTimeChange(e, setTimingTo)}
+                    placeholder="HH:MM"
+                    onFocus={() => setIsToFocused(true)}
+                    onBlur={() => setIsToFocused(false)}
+                  />
+                  {isToFocused && (
+                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
+                      {timingTo.length === 0 && "Type here"}
+                    </div>
+                  )}
+                </div>
                 <select
                   className="p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
                   value={toPeriod}
@@ -345,9 +389,10 @@ const ClinicSlot = () => {
                   <option value="PM">PM</option>
                 </select>
               </div>
+              <p className="text-xs text-gray-500 mt-1">Enter time in 12-hour format (e.g., 05:30)</p>
             </div>
           </div>
-          
+
           <input
             type="number"
             className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none mt-4"
@@ -402,12 +447,20 @@ const ClinicSlot = () => {
                     <p className={`text-sm ${overlappingSlots.some(overlap => overlap.doctorSlotId === slot.doctorSlotId) ? 'text-red-700' : 'text-gray-700'}`}>
                       🕒  {formatTime(slot.timingFrom)} - {formatTime(slot.timingTo)} <span className="text-gray-500">(Gap: {slot.slotGap} mins)</span>
                     </p>
-                    <button
-                      className="text-yellow-500 px-3 py-1 rounded-md text-xs hover:text-yellow-600"
-                      onClick={() => handleEdit(slot)}
-                    >
-                      Edit
-                    </button>
+                    <div>
+                      <button
+                        className="text-yellow-700 px-3 py-1 rounded-md text-xs hover:text-yellow-500"
+                        onClick={() => handleEdit(slot)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="text-red-500 px-3 py-1 rounded-md text-xs hover:text-red-600"
+                        onClick={() => handleDelete(slot.doctorSlotId)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
