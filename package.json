@@ -1,0 +1,46 @@
+{
+  "name": "medb-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mapbox/mapbox-gl-geocoder": "^5.0.3",
+    "@react-oauth/google": "^0.12.1",
+    "@reduxjs/toolkit": "^2.7.0",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "axios": "^1.8.4",
+    "crypto-js": "^4.2.0",
+    "framer-motion": "^12.8.0",
+    "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.503.0",
+    "react": "^19.1.0",
+    "react-datepicker": "^8.3.0",
+    "react-dom": "^19.1.0",
+    "react-hot-toast": "^2.5.2",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.5.1",
+    "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.8.1",
+    "sweetalert2": "^11.6.13",
+    "yup": "^1.6.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.25.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "vite": "^6.3.3"
+  }
+}
