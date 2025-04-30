@@ -235,7 +235,7 @@ function AppointmentsManagement() {
                 <Button variant="primary" onClick={applyFilters}>Search</Button>
                 <Button variant="secondary" onClick={resetFilters}>Reset</Button>
             </div>
-            <Button variant="primary" className="" onClick={() => navigate(`/appointments/book-appointment/${clinicId}`)}>
+            <Button variant="primary" className="" onClick={() => navigate(`/app/appointments/book-appointment/${clinicId}`)}>
                 Walk-In Appointment
             </Button>
             <div className="w-full overflow-x-auto rounded-lg border border-gray-200 mt-6">

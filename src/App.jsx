@@ -33,7 +33,7 @@ const App = () => {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/home" element={<PublicPages.LandingPage />} />
+      <Route path="/" element={<PublicPages.LandingPage />} />
       <Route path="/find-doctor-clinic" element={<PublicPages.FindDoctorClinicPage />} />
       <Route path="/find-doctor" element={<PublicPages.DoctorSearchPage />} />
       <Route path="/doctor-profile" element={<PublicPages.DoctorProfilePage />} />
@@ -55,7 +55,7 @@ const App = () => {
 
       {/* Protected routes */}
       <Route element={<ProtectedRoutes />}>
-        <Route path="/" element={<ControlPanel />} >
+        <Route path="/app" element={<ControlPanel />} >
           {/* Dashboard */}
           <Route index element={<Dashboard />} />
 

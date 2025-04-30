@@ -8,7 +8,7 @@ import { setUserAccess } from "../../redux/slices/userAccessSlice";
 import { doGoogleLogin, doLogin } from "../../services/auth";
 import useToken from "../../hooks/useToken";
 import Frame from "../../assets/images/frame.png";
-import Logo from "../../assets/images/logo.svg";
+import Logo from "../../assets/images/medb-logo-png.png";
 import EmailIcon from "../../assets/images/email-icon.svg";
 import PasswordIcon from "../../assets/images/password-icon.svg";
 import InputField from "../../components/Atoms/Login/InputField";
@@ -78,7 +78,7 @@ const LoginPage = () => {
         window.opener.postMessage("authenticated", window.location.origin);
         window.close();
       } else {
-        navigate("/");
+        navigate("/app");
       }
     } catch (error) {
       toast.error("Google login failed. Try again.");
@@ -141,7 +141,7 @@ const LoginPage = () => {
               <div className="mb-12 flex justify-center">
                 <img
                   src={Logo}
-                  onClick={() => navigate("/home")}
+                  onClick={() => navigate("/")}
                   alt="Medb Logo"
                   className="h-10 mt-5 w-auto cursor-pointer"
                 />

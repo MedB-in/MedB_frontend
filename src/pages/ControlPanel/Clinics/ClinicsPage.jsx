@@ -44,7 +44,7 @@ const ClinicsPage = () => {
   };
 
   const handleCardClick = (clinicId) => {
-    navigate(`/clinics/${clinicId}`);
+    navigate(`/app/clinics/${clinicId}`);
   };
 
   const handleSubmit = async (data, clinicId) => {

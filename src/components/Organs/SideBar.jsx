@@ -1,20 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import SidebarItem from '../Atoms/SideBar/SidebarItem';
-import { setAuthenticated } from '../../redux/slices/authSlice';
-import useAuth from '../../hooks/useAuth';
-import Logo from '../../assets/images/medb-logo-2.svg';
-import Logo1 from '../../assets/images/medb-logo-png.png';
+import Swal from 'sweetalert2';
 import AlertIcon from '../../assets/images/alert-icon.png';
 import LogoutIcon from '../../assets/images/logout-icon.png';
-import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
-import Swal from 'sweetalert2';
+import Logo from '../../assets/images/medb-logo-2.png';
+import Logo1 from '../../assets/images/medb-logo-png.png';
+import useAuth from '../../hooks/useAuth';
+import { setAuthenticated } from '../../redux/slices/authSlice';
+import { deleteAllNotifications, deleteNotification, getNotifications } from '../../services/notification';
+import socket, { reconnectSocketWithNewToken } from '../../utils/socket';
+import SidebarItem from '../Atoms/SideBar/SidebarItem';
 import MobileNumberModal from './MobileNumber';
-import { getNotifications, deleteNotification, deleteAllNotifications } from '../../services/notification';
-import socket from '../../utils/socket';
-import { reconnectSocketWithNewToken } from '../../utils/socket';
-import toast from 'react-hot-toast';
 
 const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const dispatch = useDispatch();
@@ -192,12 +191,12 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     return (
         <>
             <div className="lg:flex hidden">
-                {user?.contactNo && mobileModal === true && (
+                {/* {user?.contactNo && mobileModal === true && (
                     <MobileNumberModal setMobileModal={setMobileModalAction} />
-                )}
+                )} */}
                 <div className={`fixed z-30 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
                     <div className="flex justify-center items-center w-full py-6 cursor-pointer"
-                        onClick={() => navigate("/home")}>
+                        onClick={() => navigate("/")}>
                         <img
                             src={isSidebarOpen ? Logo1 : Logo}
                             alt="Logo"
@@ -341,7 +340,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         <img
                             src={isSidebarOpen ? Logo1 : Logo}
                             alt="Logo"
-                            onClick={() => navigate("/home")}
+                            onClick={() => navigate("/")}
                             className={`transition-all cursor-pointer duration-300 ease-in-out w-10 md:w-14 opacity-80`}
                         />
                     </div>
@@ -387,7 +386,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         <img
                             src={user?.profilePicture || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
                             alt="Profile"
-                            onClick={() => navigate("users/user-profile")}
+                            onClick={() => navigate("app/users/user-profile")}
                             className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
                         />
                         <button className="ml-2 flex items-center bg-transparent border-none" onClick={doLogout}>
@@ -403,7 +402,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             src={Logo}
                             alt="Logo"
                             className="w-24 transition-all duration-300 ease-in-out cursor-pointer"
-                            onClick={() => navigate("/home")}
+                            onClick={() => navigate("/")}
                         />
                     </div>
                     <button onClick={() => setIsSidebarOpen(false)} className="p-3 absolute top-2 right-1 rounded-full">

@@ -67,7 +67,7 @@ const ClinicDetailsPage = ({ idClinic }) => {
     };
 
     const handleSlots = (clinicId, doctorId) => {
-        navigate(`/clinics/slots/${clinicId}/${doctorId}`);
+        navigate(`/app/clinics/slots/${clinicId}/${doctorId}`);
     };
 
     const handleSubmit = async (data) => {
@@ -103,7 +103,7 @@ const ClinicDetailsPage = ({ idClinic }) => {
     };
 
     const handleClinicUsers = () => {
-        navigate(`/clinics/users/${clinicId}`);
+        navigate(`/app/clinics/users/${clinicId}`);
     };
 
     const toggleSelectedDay = (doctorId, dayId) => {

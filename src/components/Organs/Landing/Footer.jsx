@@ -30,7 +30,7 @@ const Footer = () => {
     }, []);
 
     const links = [
-        { name: "Home", path: "/home" },
+        { name: "Home", path: "/" },
         { name: "Features", path: "/for-doctor" },
         { name: "About Us", path: "" },
         { name: "For Doctor", path: "/for-doctor" },
