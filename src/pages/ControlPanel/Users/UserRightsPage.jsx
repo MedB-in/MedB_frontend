@@ -68,7 +68,7 @@ function UserRightsList() {
     <section className="flex flex-col items-center justify-center text-center bg-white">
       <div className="w-full flex items-center justify-center">
         <Button
-          onClick={() => navigate("/users/manage-user-rights")}
+          onClick={() => navigate("/app/users/manage-user-rights")}
         >
           Manage User Rights for new users
         </Button>

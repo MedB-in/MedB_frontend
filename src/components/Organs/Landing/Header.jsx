@@ -20,7 +20,7 @@ const Header = () => {
     }, [menuOpen]);
 
     const navItems = [
-        { name: "Home", path: "/home" },
+        { name: "Home", path: "/" },
         {
             name: "For Healthcare",
             dropdown: true,
@@ -34,7 +34,7 @@ const Header = () => {
 
     return (
         <header className="flex items-center justify-between p-4 lg:px-12 bg-transparent backdrop-blur fixed w-full top-0 z-50">
-            <div className="h-[16px] lg:h-[42px] lg:w-[140px] flex items-center justify-start cursor-pointer" onClick={() => navigate("/home")}>
+            <div className="h-[16px] lg:h-[42px] lg:w-[140px] flex items-center justify-start cursor-pointer" onClick={() => navigate("/")}>
                 <img src={MedBLogo} alt="Logo" className="h-full object-contain max-w-[100%]" />
             </div>
             <button
@@ -163,7 +163,7 @@ const Header = () => {
                             <motion.button
                                 className="mt-6 border border-[#6F64E7] text-[#573bff] px-6 py-3 rounded-md cursor-pointer transition hover:bg-[#6F64E7] hover:text-white w-full"
                                 onClick={() => {
-                                    navigate("/login");
+                                    navigate(authenticated ? "/app" : "/login");
                                     setMenuOpen(false);
                                 }}
                                 whileHover={{ scale: 1.05 }}
@@ -177,7 +177,7 @@ const Header = () => {
             </AnimatePresence>
             <motion.button
                 className="border border-[#6F64E7] text-[#573bff] px-6 py-3 rounded-md cursor-pointer ml-10 transition hover:bg-[#6F64E7] hover:text-white hidden lg:block"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate(authenticated ? "/app" : "/login")}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >

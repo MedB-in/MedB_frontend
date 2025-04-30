@@ -18,7 +18,7 @@ const ForgotPassword = () => {
 
     useEffect(() => {
         if (authenticated) {
-            navigate("/");
+            navigate("/app");
         }
     }, [authenticated, navigate]);
 

@@ -78,7 +78,7 @@ const LoginPage = () => {
         window.opener.postMessage("authenticated", window.location.origin);
         window.close();
       } else {
-        navigate("/");
+        navigate("/app");
       }
     } catch (error) {
       toast.error("Google login failed. Try again.");
@@ -141,7 +141,7 @@ const LoginPage = () => {
               <div className="mb-12 flex justify-center">
                 <img
                   src={Logo}
-                  onClick={() => navigate("/home")}
+                  onClick={() => navigate("/")}
                   alt="Medb Logo"
                   className="h-10 mt-5 w-auto cursor-pointer"
                 />

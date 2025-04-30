@@ -196,7 +196,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                 )}
                 <div className={`fixed z-30 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
                     <div className="flex justify-center items-center w-full py-6 cursor-pointer"
-                        onClick={() => navigate("/home")}>
+                        onClick={() => navigate("/")}>
                         <img
                             src={isSidebarOpen ? Logo1 : Logo}
                             alt="Logo"
@@ -340,7 +340,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         <img
                             src={isSidebarOpen ? Logo1 : Logo}
                             alt="Logo"
-                            onClick={() => navigate("/home")}
+                            onClick={() => navigate("/")}
                             className={`transition-all cursor-pointer duration-300 ease-in-out w-10 md:w-14 opacity-80`}
                         />
                     </div>
@@ -386,7 +386,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         <img
                             src={user?.profilePicture || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
                             alt="Profile"
-                            onClick={() => navigate("users/user-profile")}
+                            onClick={() => navigate("app/users/user-profile")}
                             className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
                         />
                         <button className="ml-2 flex items-center bg-transparent border-none" onClick={doLogout}>
@@ -402,7 +402,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             src={Logo}
                             alt="Logo"
                             className="w-24 transition-all duration-300 ease-in-out cursor-pointer"
-                            onClick={() => navigate("/home")}
+                            onClick={() => navigate("/")}
                         />
                     </div>
                     <button onClick={() => setIsSidebarOpen(false)} className="p-3 absolute top-2 right-1 rounded-full">

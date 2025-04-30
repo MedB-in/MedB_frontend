@@ -25,7 +25,7 @@ const DoctorList = ({ doctors, loading, clinicId }) => {
     }, [searchTerm, selectedDepartment, doctors]);
 
     const onSelect = (doctor) => {
-        navigate(`/doctor-profile/?clinicId=${clinicId}&doctorId=${doctor}`);
+        navigate(`/app/doctor-profile/?clinicId=${clinicId}&doctorId=${doctor}`);
     };
 
     const cardVariants = {

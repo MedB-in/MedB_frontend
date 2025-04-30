@@ -21,7 +21,7 @@ const VerifyEmailPage = () => {
 
     useEffect(() => {
         if (authenticated) {
-            navigate("/");
+            navigate("/app");
         }
     }, [authenticated, navigate]);
 

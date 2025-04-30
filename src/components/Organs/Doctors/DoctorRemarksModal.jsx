@@ -101,7 +101,7 @@ const DoctorRemarksModal = ({ appt, onClose, onCloseHard }) => {
                             <p className="text-lg text-gray-500">{appt?.patientDetails?.email}</p>
                         </div>
                     </div>
-                    <div className="flex text-right space-x-2 font-semibold cursor-pointer hover:text-violet-600 hover:underline" onClick={() => navigate(`/patients/prescriptions/${appt?.patientDetails?.userId}/${appt?.doctorId}/${appt?.clinicId}/${appt?.appointmentId}/${appt?.appointmentDate}`)}>Prescriptions</div>
+                    <div className="flex text-right space-x-2 font-semibold cursor-pointer hover:text-violet-600 hover:underline" onClick={() => navigate(`/app/patients/prescriptions/${appt?.patientDetails?.userId}/${appt?.doctorId}/${appt?.clinicId}/${appt?.appointmentId}/${appt?.appointmentDate}`)}>Prescriptions</div>
                 </div>
                 {new Date(appt.appointmentDate.split("-").reverse().join("-")) === new Date() && (
                     <form className="space-y-6" onSubmit={handleSubmit}>

@@ -138,7 +138,7 @@ function PatientAppointmentsPage() {
         />
       </div>
       {!isDoctor && (
-        <Button variant="primary" className="w-[200px] sm:w-[300px]" onClick={() => navigate("/appointments/book-appointment")}>
+        <Button variant="primary" className="w-[200px] sm:w-[300px]" onClick={() => navigate("/app/appointments/book-appointment")}>
           Book Appointment
         </Button>
       )}

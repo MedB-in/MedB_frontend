@@ -86,7 +86,7 @@ const UserProfilePage = () => {
             setUserDetails({ ...formData, profilePicture: lastSavedProfilePicture });
             localStorage.setItem("userDetails", JSON.stringify({ ...formData, profilePicture: lastSavedProfilePicture }));
             window.dispatchEvent(new Event("userDetailsUpdated"))
-            navigate("/");
+            navigate("/app");
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong.");
             setProfilePicturePreview(lastSavedProfilePicture);
