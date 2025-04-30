@@ -8,7 +8,7 @@ import { setUserAccess } from "../../redux/slices/userAccessSlice";
 import { doGoogleLogin, doLogin } from "../../services/auth";
 import useToken from "../../hooks/useToken";
 import Frame from "../../assets/images/frame.png";
-import Logo from "../../assets/images/logo.svg";
+import Logo from "../../assets/images/medb-logo-png.png";
 import EmailIcon from "../../assets/images/email-icon.svg";
 import PasswordIcon from "../../assets/images/password-icon.svg";
 import InputField from "../../components/Atoms/Login/InputField";

@@ -1,20 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import SidebarItem from '../Atoms/SideBar/SidebarItem';
-import { setAuthenticated } from '../../redux/slices/authSlice';
-import useAuth from '../../hooks/useAuth';
-import Logo from '../../assets/images/medb-logo-2.svg';
-import Logo1 from '../../assets/images/medb-logo-png.png';
+import Swal from 'sweetalert2';
 import AlertIcon from '../../assets/images/alert-icon.png';
 import LogoutIcon from '../../assets/images/logout-icon.png';
-import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
-import Swal from 'sweetalert2';
+import Logo from '../../assets/images/medb-logo-2.png';
+import Logo1 from '../../assets/images/medb-logo-png.png';
+import useAuth from '../../hooks/useAuth';
+import { setAuthenticated } from '../../redux/slices/authSlice';
+import { deleteAllNotifications, deleteNotification, getNotifications } from '../../services/notification';
+import socket, { reconnectSocketWithNewToken } from '../../utils/socket';
+import SidebarItem from '../Atoms/SideBar/SidebarItem';
 import MobileNumberModal from './MobileNumber';
-import { getNotifications, deleteNotification, deleteAllNotifications } from '../../services/notification';
-import socket from '../../utils/socket';
-import { reconnectSocketWithNewToken } from '../../utils/socket';
-import toast from 'react-hot-toast';
 
 const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const dispatch = useDispatch();
