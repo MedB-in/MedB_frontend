@@ -32,8 +32,9 @@ const Footer = () => {
     const links = [
         { name: "Home", path: "/" },
         { name: "Features", path: "/for-doctor" },
-        { name: "About Us", path: "" },
+        { name: "About Us", path: "/about-us" },
         { name: "For Doctor", path: "/for-doctor" },
+        { name: "For Clinic", path: "/for-clinic" },
         { name: "Contact Us", path: "" }
     ]
 
@@ -159,10 +160,14 @@ const Footer = () => {
                     <p className="text-gray-600 md:justify-self-start">
                         © 2025 MEDB India. All rights reserved.
                     </p>
-                    <div className="flex justify-center md:justify-center">
-                        <div className="text-[#6F64E7] hover:underline cursor-pointer">
+                    <div className="flex justify-center md:justify-center gap-2">
+                        <Link to="/privacy-policy" className="text-[#6F64E7] hover:underline cursor-pointer">
                             Privacy Policy
-                        </div>
+                        </Link>
+                        <div className="text-gray-600">|</div>
+                        <Link to="/terms-and-conditions" className="text-[#6F64E7] hover:underline cursor-pointer">
+                            Terms & Conditions
+                        </Link>
                     </div>
                     <div className="flex justify-center md:justify-end space-x-4 mt-3 md:mt-0">
                         <motion.a

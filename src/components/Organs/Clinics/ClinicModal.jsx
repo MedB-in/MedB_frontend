@@ -30,6 +30,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     state: "",
     country: "",
     postalCode: "",
+    clinicOverview: "",
     contact: "",
     email: "",
     website: "",
@@ -240,6 +241,9 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
           </div>
           <div className="mb-4">
             <InputField label="Clinic Name" name="name" value={formData.name} onChange={handleChange} required />
+          </div>
+          <div className="mb-4">
+            <InputField label="Clinic Overview" name="clinicOverview" value={formData.clinicOverview} onChange={handleChange} required />
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Select Location</label>
