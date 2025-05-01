@@ -238,8 +238,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
             >
                 <h2 className="text-3xl font-semibold text-indigo-500">Overview</h2>
                 <p className="mt-6 text-base font-light leading-6 text-neutral-800">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                    {doctor?.doctorOverview ? doctor?.doctorOverview : 'No overview available'}
                 </p>
             </section>
 
@@ -248,8 +247,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
             >
                 <h2 className="text-xl font-semibold text-indigo-500">Overview</h2>
                 <p className="mt-4 text-sm font-light leading-5 text-neutral-800">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                    {doctor?.doctorOverview ? doctor?.doctorOverview : 'No overview available'}
                 </p>
             </section>
             {isModalOpen && <DoctorSlotModal doctorId={doctorId} clinicId={clinicId} department={doctor?.speciality} onClose={closeModal} />}

@@ -8,19 +8,19 @@ const appointments = [
     {
         title: "SIMPLIFY YOUR APPOINTMENTS",
         subtitle: "We Value Your Time",
-        description: "Schedule your upcoming medical visit instantly with a simple click, from anywhere",
+        description: "Schedule Your Upcoming Medical Visit Instantly with a Simple Click, from Anywhere",
         image: Group1,
     },
     {
         title: "NO QUEUES, NO HASSLE",
-        subtitle: "We Value Your Stress-Free Solution!",
-        description: "'MedB' allows you to book your doctor's appointment seamlessly, avoiding long queues.",
+        subtitle: "We Value Your Stress-Free Experience!",
+        description: "'MedB' Lets You Book Your Doctor's Appointment Seamlessly, Skipping Long Queues.",
         image: Group2,
     },
     {
-        title: "FAMILY INTEGRATION",
-        subtitle: "Always Take Care Of Your Family",
-        description: "We prioritize the health and well-being of your family above all else.",
+        ttitle: "FAMILY INTEGRATION",
+        subtitle: "Always Take Care of Your Family",
+        description: "We Prioritize the Health and Well-Being of Your Family Above Everything Else.",
         image: Group3,
     },
 ];

@@ -21,12 +21,7 @@ const MedicalCompanion = () => {
                     YOUR COMPLETE <span className="text-[#573bff]">MEDICAL</span> COMPANION
                 </h2>
                 <p className="text-gray-700 text-base sm:text-lg md:text-xl font-light leading-relaxed tracking-wide">
-                    Experience the convenience of managing your health anytime, anywhere.
-                    Effortlessly book appointments, access medical records, and stay on
-                    top of your well-being with personalized health tools, all within the
-                    user-friendly MedB platform. Embrace a new era of accessible and
-                    proactive healthcare – MedB, where your health is truly at your
-                    fingertips.
+                    Experience the convenience of managing your health anytime, anywhere. Effortlessly book appointments, access medical records, and stay on top of your well-being with personalized health tools, all within the user-friendly MedB platform. Embrace a new era of accessible and proactive healthcare – MedB, where your health is always at your fingertips.
                 </p>
             </motion.div>
             <motion.div

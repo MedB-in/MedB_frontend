@@ -10,25 +10,25 @@ const steps = [
     {
         title: "Waitlist Management :",
         description:
-            "Efficiently manage waitlists and fill canceled slots quickly, ensuring no time is wasted and maximizing your clinic’s capacity.",
+            "Efficiently manage waitlists and quickly fill canceled slots, ensuring no time is wasted and maximizing your clinic's capacity.",
         image: ForDoc1,
     },
     {
         title: "Flexible Availability :",
         description:
-            "Customize your schedule based on your preferences, block out time for breaks or meetings, and adjust your availability with ease.",
+            "Customize your schedule according to your preferences, block out time for breaks or meetings, and adjust your availability with ease.",
         image: ForDoc2,
     },
     {
         title: "Reduced Admin Work :",
         description:
-            "Say goodbye to administrative tasks. Our app automates appointment reminders, reduces no-shows, and keeps your calendar organized.",
+            "Say goodbye to administrative tasks. Our app automates appointment reminders, reduces no-shows, and keeps your calendar organized effortlessly.",
         image: ForDoc3,
     },
     {
         title: "Security and Privacy :",
         description:
-            "We prioritize the security and privacy of your patient information.",
+            "We prioritize the security and privacy of your patients' information.",
         image: ForDoc4,
     },
 ];

@@ -18,7 +18,7 @@ const HeroSection = () => {
                     viewport={{ once: true }}
                 >
                     <h2 className="text-md md:text-5xl font-extrabold bg-gradient-to-r from-purple-600 to-teal-400 bg-clip-text text-transparent p-6">
-                        Welcome to Your Path to Wellness, Your Trusted Guide in the World of Health and Healing!
+                        Welcome to Your Path to Wellness — Your Trusted Guide in Health and Healing!
                     </h2>
                 </motion.div>
                 <motion.div

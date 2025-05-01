@@ -6,7 +6,7 @@ import NearbyDoctorsIcon from "../../../assets/images/location-feature.png";
 const features = [
     {
         title: "Health Records",
-        description: "Keep Your Health Records, Prescriptions, And Test Results Well-Organized And Securely Accessible Through MedB.",
+        description: "Keep Your Health Records, Prescriptions and Test Results Well-Organized And Securely Accessible Through MedB.",
         image: HealthRecordsIcon,
         bgColor: "bg-[#D2ECEA]",
         borderRadius: "rounded-[0px_30px_0px_30px]",
@@ -14,7 +14,7 @@ const features = [
     },
     {
         title: "Online Token Booking",
-        description: "Skip the queues and book your next doctor's appointment with ease through our online token booking system.",
+        description: "Skip the Queues and Book Your Next Doctor's Appointment with Ease Through Our Online Token Booking System.",
         image: TokenBookingIcon,
         bgColor: "bg-[#9289EC]",
         borderRadius: "rounded-[30px_0px_30px_0px]",
@@ -22,7 +22,7 @@ const features = [
     },
     {
         title: "Doctors And Clinics Near",
-        description: "Discover Hospitals And Clinics Nearby With Ease Through A Quick And Simple Process.",
+        description: "Discover Hospitals and Clinics Nearby with Ease Through a Quick and Simple Process.",
         image: NearbyDoctorsIcon,
         bgColor: "bg-[#D2ECEA]",
         borderRadius: "rounded-[0px_30px_0px_30px]",

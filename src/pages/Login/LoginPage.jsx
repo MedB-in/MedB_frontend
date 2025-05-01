@@ -32,7 +32,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (authenticated) {
-      state?.from ? navigate(state.from) : navigate("/");
+      state?.from ? navigate(state.from) : navigate("/app");
     }
   }, [authenticated, state]);
 
@@ -78,7 +78,7 @@ const LoginPage = () => {
         window.opener.postMessage("authenticated", window.location.origin);
         window.close();
       } else {
-        navigate("/app");
+        navigate("/");
       }
     } catch (error) {
       toast.error("Google login failed. Try again.");

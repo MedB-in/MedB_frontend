@@ -34,10 +34,7 @@ const AboutUs = () => {
                     ABOUT US
                 </h2>
                 <p className="text-gray-700 text-lg md:text-xl font-light leading-relaxed tracking-wide">
-                    MedB revolutionizes healthcare by integrating technology with
-                    compassionate care. Our app connects patients and providers, making it
-                    easy to manage appointments, access medical information, and maintain
-                    health records. Join us to transform your healthcare experience.
+                    MedB revolutionizes healthcare by seamlessly integrating technology with compassionate care. Our app connects patients and providers, making it simple to manage appointments, access medical information, and maintain health records. Join us in transforming your healthcare experience.
                 </p>
             </motion.div>
         </motion.section>
