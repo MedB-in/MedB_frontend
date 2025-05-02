@@ -203,7 +203,6 @@ function PatientAppointmentsPage() {
             <p className="text-center text-gray-500">No appointments found</p>
           )}
         </div>
-
         {totalPages > 1 && (
           <Pagination
             currentPage={currentPage}
@@ -211,7 +210,6 @@ function PatientAppointmentsPage() {
             setCurrentPage={setCurrentPage}
             generatePagination={generatePagination}
           />
-
         )}
       </div>
       {selectedAppt && (
