@@ -20,6 +20,7 @@ import RegisterPage from "./pages/Register/RegisterPage";
 import VerificationPage from "./pages/Verification/VerificationPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ErrorPage from "./pages/404Page/ErrorPage";
+import EnquiriesPage from "./pages/ControlPanel/Enquiries/EnquiriesPage";
 
 
 const App = () => {
@@ -113,6 +114,9 @@ const App = () => {
 
           {/* Subscriptions */}
           <Route path="subscriptions" element={< UserSubscriptionPage />} />
+
+          {/* Enquiries */}
+          <Route path="enquiries" element={< EnquiriesPage />} />
         </Route>
       </Route>
 
