@@ -7,6 +7,7 @@ import FloatingActionButtons from '../../components/Organs/Landing/FloatingButto
 import ClinicDetail from '../../components/Organs/Clinics/ClinicDetail';
 import DoctorList from '../../components/Organs/Doctors/DoctorList';
 import toast, { Toaster } from 'react-hot-toast';
+import ScrollToTop from '../../components/Atoms/ScrollToTop';
 
 const DoctorSearchPage = () => {
     const [clinicData, setClinicData] = useState(null);
@@ -41,6 +42,7 @@ const DoctorSearchPage = () => {
         <>
             <Toaster />
             <Header />
+            <ScrollToTop />
             <FloatingActionButtons />
             <ClinicDetail clinicData={clinicData} loading={loading} />
             <DoctorList doctors={doctors} clinicId={clinicId} loading={loading} />

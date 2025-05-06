@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import EmailIcon from "../../assets/images/email-icon.svg";
+import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
+import Frame from "../../assets/images/frame.png";
+import Logo from "../../assets/images/medb-logo-png.png";
+import PasswordIcon from "../../assets/images/password-icon.svg";
+import GoogleLoginButton from "../../components/Atoms/GoogleLogin/GoolgeLoginButton";
+import Button from "../../components/Atoms/Login/Button";
+import InputField from "../../components/Atoms/Login/InputField";
+import useToken from "../../hooks/useToken";
 import { setAuthenticated, setUserDetails } from "../../redux/slices/authSlice";
 import { setUserAccess } from "../../redux/slices/userAccessSlice";
 import { doGoogleLogin, doLogin } from "../../services/auth";
-import useToken from "../../hooks/useToken";
-import Frame from "../../assets/images/frame.png";
-import Logo from "../../assets/images/medb-logo-png.png";
-import EmailIcon from "../../assets/images/email-icon.svg";
-import PasswordIcon from "../../assets/images/password-icon.svg";
-import InputField from "../../components/Atoms/Login/InputField";
-import Button from "../../components/Atoms/Login/Button";
-import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
-import GoogleLoginButton from "../../components/Atoms/GoogleLogin/GoolgeLoginButton";
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -42,6 +42,8 @@ const LoginPage = () => {
 
     try {
       const { data } = await doLogin({ email: email, password });
+      dispatch(setUserAccess(null));
+      dispatch(setUserDetails(null));
       setToken(data.accessToken);
       dispatch(setUserDetails(data.userDetails));
       dispatch(setUserAccess(data.menuData));

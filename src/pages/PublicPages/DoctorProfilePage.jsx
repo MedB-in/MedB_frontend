@@ -7,6 +7,7 @@ import FloatingActionButtons from '../../components/Organs/Landing/FloatingButto
 import DoctorProfile from '../../components/Organs/Doctors/DoctorProfile';
 import { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import ScrollToTop from '../../components/Atoms/ScrollToTop';
 
 const DoctorProfilePage = () => {
     const location = useLocation();
@@ -38,6 +39,7 @@ const DoctorProfilePage = () => {
         <>
             <Toaster />
             <Header />
+            <ScrollToTop />
             <FloatingActionButtons />
             <DoctorProfile doctor={doctor} clinic={clinic} clinicId={clinicId} doctorId={doctorId} loading={loading} />
             <Footer />

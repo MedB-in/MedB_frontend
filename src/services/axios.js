@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
-import { persistor } from "../redux/store";
+import { setUserAccess } from "../redux/slices/userAccessSlice";
 
 const environment = import.meta.env.VITE_REACT_APP_ENVIRONMENT;
 const development = import.meta.env.VITE_REACT_APP_DEVELOPMENT_URL;
@@ -42,7 +42,8 @@ const uploadHeaders = () => {
         },
     };
 };
-const sessionExpired = async () => {
+
+const sessionExpired = (dispatch) => {
     Swal.fire({
         icon: 'warning',
         title: 'Session Expired',
@@ -51,21 +52,19 @@ const sessionExpired = async () => {
         confirmButtonColor: '#3085d6',
         allowOutsideClick: false,
         allowEscapeKey: false,
-    }).then(async () => {
+    }).then(() => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem("openModuleIndex");
         localStorage.removeItem("selectedMenu");
         localStorage.removeItem("userDetails");
+        localStorage.removeItem("persist:root");
+
+        if (dispatch) dispatch(setUserAccess(null));
+
         sessionStorage.clear();
-        try {
-            await persistor.purge();
-        } catch (error) {
-            console.error("Persistor purge error:", error);
-        }
         window.location.href = '/login';
     });
 };
-
 
 axiosInstance.interceptors.response.use(
     (response) => response,
@@ -87,10 +86,10 @@ axiosInstance.interceptors.response.use(
 
             // Try to refresh token and retry the original request
             try {
-                const { data } = await axios.post(`${environment === "dev" ? development : environment === "test" ? test : production}/api/auth/refreshToken`, {}, { withCredentials: true });
-
-                localStorage.setItem('accessToken', JSON.stringify(data.accessToken));
-                originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
+                sessionExpired();
+                // const { data } = await axios.post(`${environment === "dev" ? development : environment === "test" ? test : production}/api/auth/refreshToken`, {}, { withCredentials: true });
+                // localStorage.setItem('accessToken', JSON.stringify(data.accessToken));
+                // originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
 
                 return axiosInstance(originalRequest);
             } catch (refreshError) {
