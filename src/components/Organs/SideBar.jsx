@@ -42,7 +42,6 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     useEffect(() => {
         if (authenticated && userId) {
             reconnectSocketWithNewToken();
-
             const handleNotification = (newNotification) => {
                 setNotifications(prev => {
                     if (prev.some(n => n._id === newNotification._id)) return prev;
@@ -196,7 +195,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                 )} */}
                 <div className={`fixed z-30 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
                     <div className="flex justify-center items-center w-full py-6 cursor-pointer"
-                        onClick={() => navigate("/")}>
+                        onClick={() => window.open("/", "_blank")}>
                         <img
                             src={isSidebarOpen ? Logo1 : Logo}
                             alt="Logo"
@@ -213,8 +212,8 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                     >
                                         <img src={module.moduleIcon} alt={module.moduleName} className="w-6 h-6 transition-all duration-300 ease-in-out" />
                                         <span
-                                            className={`transition-all duration-300 ease-in-out transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "hidden"}`}>
-                                            {module.moduleName}
+                                            className={`transition-all duration-300 ease-in-out transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "hidden"} capitalize`}>
+                                            {module.moduleName === "Patient" ? `${user.firstName} ${user.middleName ? ` ${user.middleName}` : ""} ${user.lastName ? ` ${user.lastName}` : ""}` : module.moduleName}
                                         </span>
                                     </div>
 
@@ -340,7 +339,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         <img
                             src={isSidebarOpen ? Logo1 : Logo}
                             alt="Logo"
-                            onClick={() => navigate("/")}
+                            onClick={() => window.open("/", "_blank")}
                             className={`transition-all cursor-pointer duration-300 ease-in-out w-10 md:w-14 opacity-80`}
                         />
                     </div>
@@ -402,7 +401,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             src={Logo}
                             alt="Logo"
                             className="w-24 transition-all duration-300 ease-in-out cursor-pointer"
-                            onClick={() => navigate("/")}
+                            onClick={() => window.open("/", "_blank")}
                         />
                     </div>
                     <button onClick={() => setIsSidebarOpen(false)} className="p-3 absolute top-2 right-1 rounded-full">
