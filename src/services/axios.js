@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
+import { persistor } from "../redux/store";
 
 const environment = import.meta.env.VITE_REACT_APP_ENVIRONMENT;
 const development = import.meta.env.VITE_REACT_APP_DEVELOPMENT_URL;
@@ -41,20 +42,30 @@ const uploadHeaders = () => {
         },
     };
 };
-const sessionExpired = () => {
+const sessionExpired = async () => {
     Swal.fire({
-      icon: 'warning',
-      title: 'Session Expired',
-      text: 'Please log in again.',
-      confirmButtonText: 'OK',
-      confirmButtonColor: '#3085d6',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-    }).then(() => {
-      localStorage.removeItem('accessToken');
-      window.location.href = '/login';
+        icon: 'warning',
+        title: 'Session Expired',
+        text: 'Please log in again.',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+    }).then(async () => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem("openModuleIndex");
+        localStorage.removeItem("selectedMenu");
+        localStorage.removeItem("userDetails");
+        sessionStorage.clear();
+        try {
+            await persistor.purge();
+        } catch (error) {
+            console.error("Persistor purge error:", error);
+        }
+        window.location.href = '/login';
     });
-  };
+};
+
 
 axiosInstance.interceptors.response.use(
     (response) => response,
