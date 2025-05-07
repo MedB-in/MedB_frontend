@@ -1,10 +1,10 @@
 import { useState } from "react";
 import ShowPasswordIcon from "../../../assets/images/show-password-icon.svg";
 
-
 const InputField = ({
   id,
   type,
+  rows,
   name,
   placeholder,
   icon,
@@ -25,6 +25,8 @@ const InputField = ({
     setIsPasswordVisible((prev) => !prev);
   };
 
+  const inputType = toggleable && isPasswordVisible ? "text" : type;
+
   return (
     <div className="flex overflow-hidden gap-1 px-3 py-3.5 bg-white rounded-lg border border-solid border-zinc-300 text-black text-opacity-70">
       {icon && (
@@ -38,30 +40,47 @@ const InputField = ({
       <label htmlFor={id} className="sr-only">
         {ariaLabel || placeholder}
       </label>
-      <input
-        type={toggleable && isPasswordVisible ? "text" : type}
-        id={id}
-        name={name}
-        placeholder={placeholder}
-        title={title}
-        maxLength={maxLength}
-        pattern={pattern}
-        value={value}
-        onChange={onChange}
-        disabled={disabled}
-        required={required}
-        className={`flex-auto bg-transparent border-none outline-none ${className}`}
-        onKeyDown={(e) => {
-          if (
-            type === "tel" &&
-            !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key) &&
-            !/^[0-9]$/.test(e.key)
-          ) {
-            e.preventDefault();
-          }
-        }}
-      />
-      {toggleable && (
+
+      {type === "textarea" ? (
+        <textarea
+          id={id}
+          name={name}
+          placeholder={placeholder}
+          title={title}
+          rows={rows || 4}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          required={required}
+          className={`flex-auto bg-transparent border-none outline-none resize-none ${className}`}
+        />
+      ) : (
+        <input
+          type={inputType}
+          id={id}
+          name={name}
+          placeholder={placeholder}
+          title={title}
+          maxLength={maxLength}
+          pattern={pattern}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          required={required}
+          className={`flex-auto bg-transparent border-none outline-none ${className}`}
+          onKeyDown={(e) => {
+            if (
+              type === "tel" &&
+              !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key) &&
+              !/^[0-9]$/.test(e.key)
+            ) {
+              e.preventDefault();
+            }
+          }}
+        />
+      )}
+
+      {toggleable && type === "password" && (
         <button
           type="button"
           aria-label="Toggle password visibility"

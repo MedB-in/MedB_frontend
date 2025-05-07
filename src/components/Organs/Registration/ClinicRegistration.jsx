@@ -12,6 +12,7 @@ const ClinicRegistration = () => {
         name: "",
         location: "",
         address: "",
+        clinicOverview: "",
         city: "",
         district: "",
         state: "",
@@ -94,12 +95,10 @@ const ClinicRegistration = () => {
                         className="w-full h-auto rounded-xl object-cover"
                     />
                 </div>
-
                 <div className="w-full lg:w-2/3 p-10">
                     <form onSubmit={handleSubmitForm} className="space-y-8">
                         <h1 className="text-3xl font-bold text-gray-900">Register Your Clinic</h1>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
                             <FormInput
                                 type="text"
                                 placeholder="Clinic Name*"
@@ -108,8 +107,15 @@ const ClinicRegistration = () => {
                                 onChange={handleChange}
                                 required
                             />
+                            <FormInput
+                                type="textarea"
+                                rows="4"
+                                placeholder="Overview"
+                                name="clinicOverview"
+                                value={formData.clinicOverview}
+                                onChange={handleChange}
+                            />
                         </div>
-
                         <div className="flex flex-col w-full md:w-1/2 md:pr-4">
                             <LocationSelector onSelect={handleLocationSelect} />
                         </div>

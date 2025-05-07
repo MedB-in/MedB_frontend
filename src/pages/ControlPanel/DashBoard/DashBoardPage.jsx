@@ -2,8 +2,8 @@ import Logo from "../../../assets/images/medb-logo-png.png";
 
 const DashBoardPage = () => {
   return (
-    <section className="flex flex-col items-center min-h-[calc(100vh-80px)] justify-center text-center px-4">
-      <div className="flex flex-col items-center gap-4 rounded-2xl p-8 w-screen h-screen justify-center -mt-20">
+    <section className="flex flex-col items-center justify-center text-center px-4">
+      <div className="flex flex-col items-center gap-4 rounded-2xl p-8 w-screen justify-center">
         <img
           src={Logo}
           alt="MedB Logo"

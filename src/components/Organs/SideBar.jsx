@@ -202,52 +202,68 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? "w-32 opacity-100" : "w-16 opacity-80"}`}
                         />
                     </div>
-                    <div className="py-6 w-full">
-                        {modules?.length > 0 ? (
-                            modules.map((module, moduleIndex) => (
-                                <div key={moduleIndex} className="mb-2">
-                                    <div
-                                        onClick={() => toggleModule(moduleIndex)}
-                                        className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
-                                    >
-                                        <img src={module.moduleIcon} alt={module.moduleName} className="w-6 h-6 transition-all duration-300 ease-in-out" />
-                                        <span
-                                            className={`transition-all duration-300 ease-in-out transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "hidden"} capitalize`}>
-                                            {module.moduleName === "Patient" ? `${user.firstName} ${user.middleName ? ` ${user.middleName}` : ""} ${user.lastName ? ` ${user.lastName}` : ""}` : module.moduleName}
-                                        </span>
-                                    </div>
+                    <div className="flex flex-col h-full w-full py-6">
+                        <div className="flex-1 overflow-y-auto">
+                            {modules?.length > 0 ? (
+                                modules.map((module, moduleIndex) => (
+                                    <div key={moduleIndex} className="mb-2">
+                                        <div
+                                            onClick={() => toggleModule(moduleIndex)}
+                                            className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
+                                        >
+                                            <img
+                                                src={module.moduleIcon}
+                                                alt={module.moduleName}
+                                                className="w-6 h-6 transition-all duration-300 ease-in-out"
+                                            />
+                                            <span
+                                                className={`transition-all duration-300 ease-in-out transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "hidden"
+                                                    } capitalize`}
+                                            >
+                                                {module.moduleName === "Patient"
+                                                    ? `${user.firstName}${user.middleName ? ` ${user.middleName}` : ""}${user.lastName ? ` ${user.lastName}` : ""}`
+                                                    : module.moduleName}
+                                            </span>
+                                        </div>
 
-                                    <div
-                                        className={`overflow-hidden transition-all duration-300 ease-in-out ${openModuleIndex === moduleIndex ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
-                                    >
-                                        <div className="pl-4">
-                                            {module.menus.map((menu, menuIndex) => (
-                                                <SidebarItem
-                                                    key={menuIndex}
-                                                    icon={menu.menuIcon}
-                                                    label={menu.menuName}
-                                                    actionUrl={menu.controllerName}
-                                                    isSidebarOpen={isSidebarOpen}
-                                                    isSelected={
-                                                        selectedMenu === menu.controllerName || location.pathname.startsWith(`/${menu.controllerName}`)
-
-                                                    }
-                                                    onClick={() => handleMenuClick(menu)}
-                                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out 1
-                                                ${selectedMenu === menu.controllerName ? "bg-gray-200 font-semibold text-black shadow-md" : "hover:bg-gray-200 text-gray-600"}
-                                            `}
-                                                />
-                                            ))}
+                                        <div
+                                            className={`overflow-hidden transition-all duration-300 ease-in-out ${openModuleIndex === moduleIndex ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                                                }`}
+                                        >
+                                            <div className="pl-4">
+                                                {module.menus.map((menu, menuIndex) => (
+                                                    <SidebarItem
+                                                        key={menuIndex}
+                                                        icon={menu.menuIcon}
+                                                        label={menu.menuName}
+                                                        actionUrl={menu.controllerName}
+                                                        isSidebarOpen={isSidebarOpen}
+                                                        isSelected={
+                                                            selectedMenu === menu.controllerName ||
+                                                            location.pathname.startsWith(`/${menu.controllerName}`)
+                                                        }
+                                                        onClick={() => handleMenuClick(menu)}
+                                                        className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out ${selectedMenu === menu.controllerName
+                                                            ? "bg-gray-200 font-semibold text-black shadow-md"
+                                                            : "hover:bg-gray-200 text-gray-600"
+                                                            }`}
+                                                    />
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
+                                ))
+                            ) : (
+                                <div className="text-gray-500 text-sm text-center transition-all duration-300 ease-in-out">
+                                    No modules available
                                 </div>
-                            ))
-                        ) : (
-                            <div className="text-gray-500 text-sm text-center transition-all duration-300 ease-in-out">
-                                No modules available
-                            </div>
-                        )}
+                            )}
+                        </div>
+                        <div className="mt-auto">
+                            <p className="text-sm text-gray-500 text-center p-2">Version {__APP_VERSION__}</p>
+                        </div>
                     </div>
+
                 </div>
                 <header
                     className={`header fixed top-0 z-50 h-16 px-4 py-3 flex justify-between items-center bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm transition-all ${isSidebarOpen ? "ml-[290px] w-[calc(100%-290px)]" : "ml-[100px] w-[calc(100%-100px)]"}`}
@@ -328,9 +344,9 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
             {/* Sidebar for sm screens */}
             <div className="lg:hidden">
-                {user?.contactNo && mobileModal === true && (
+                {/* {user?.contactNo && mobileModal === true && (
                     <MobileNumberModal setMobileModal={setMobileModalAction} />
-                )}
+                )} */}
                 <header className="fixed w-screen z-40 h-16 px-6 py-3 bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm shadow-md grid grid-cols-3 items-center">
                     <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 w-10 transition-all duration-300">
                         <Menu size={24} />
@@ -385,7 +401,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         <img
                             src={user?.profilePicture || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
                             alt="Profile"
-                            onClick={() => navigate("app/users/user-profile")}
+                            onClick={() => navigate("users/user-profile")}
                             className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
                         />
                         <button className="ml-2 flex items-center bg-transparent border-none" onClick={doLogout}>
@@ -407,52 +423,66 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                     <button onClick={() => setIsSidebarOpen(false)} className="p-3 absolute top-2 right-1 rounded-full">
                         <ChevronLeft size={24} />
                     </button>
-                    <div className="py-6 w-full">
-                        {modules.length > 0 ? (
-                            modules.map((module, moduleIndex) => (
-                                <div key={moduleIndex} className="mb-2">
-                                    <div
-                                        onClick={() => toggleModule(moduleIndex)}
-                                        className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
-                                    >
-                                        <img src={module.moduleIcon} alt={module.moduleName} className="w-6 h-6 transition-all duration-300 ease-in-out" />
-                                        <span
-                                            className={`transition-all duration-300 ease-in-out delay-150 transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "opacity-0 -translate-x-2 absolute"
+                    <div className="flex flex-col justify-between h-full w-full py-6">
+                        <div className="flex-1 overflow-y-auto">
+                            {modules?.length > 0 ? (
+                                modules.map((module, moduleIndex) => (
+                                    <div key={moduleIndex} className="mb-2">
+                                        <div
+                                            onClick={() => toggleModule(moduleIndex)}
+                                            className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
+                                        >
+                                            <img
+                                                src={module.moduleIcon}
+                                                alt={module.moduleName}
+                                                className="w-6 h-6 transition-all duration-300 ease-in-out"
+                                            />
+                                            <span
+                                                className={`transition-all duration-300 ease-in-out transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "hidden"
+                                                    } capitalize`}
+                                            >
+                                                {module.moduleName === "Patient"
+                                                    ? `${user.firstName}${user.middleName ? ` ${user.middleName}` : ""}${user.lastName ? ` ${user.lastName}` : ""}`
+                                                    : module.moduleName}
+                                            </span>
+                                        </div>
+
+                                        <div
+                                            className={`overflow-hidden transition-all duration-300 ease-in-out ${openModuleIndex === moduleIndex ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
                                                 }`}
                                         >
-                                            {module.moduleName}
-                                        </span>
-                                    </div>
-
-                                    <div
-                                        className={`overflow-hidden transition-all duration-300 ease-in-out ${openModuleIndex === moduleIndex ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
-                                    >
-                                        <div className="pl-4">
-                                            {module.menus.map((menu, menuIndex) => (
-                                                <SidebarItem
-                                                    key={menuIndex}
-                                                    icon={menu.menuIcon}
-                                                    label={menu.menuName}
-                                                    actionUrl={menu.controllerName}
-                                                    isSidebarOpen={isSidebarOpen}
-                                                    isSelected={
-                                                        selectedMenu === menu.controllerName || location.pathname.startsWith(`/${menu.controllerName}`)
-                                                    }
-                                                    onClick={() => { handleMenuClick(menu); setIsSidebarOpen(false) }}
-                                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out 1
-                                                ${selectedMenu === menu.controllerName ? "bg-gray-200 font-semibold text-black shadow-md" : "hover:bg-gray-200 text-gray-600"}
-                                            `}
-                                                />
-                                            ))}
+                                            <div className="pl-4">
+                                                {module.menus.map((menu, menuIndex) => (
+                                                    <SidebarItem
+                                                        key={menuIndex}
+                                                        icon={menu.menuIcon}
+                                                        label={menu.menuName}
+                                                        actionUrl={menu.controllerName}
+                                                        isSidebarOpen={isSidebarOpen}
+                                                        isSelected={
+                                                            selectedMenu === menu.controllerName ||
+                                                            location.pathname.startsWith(`/${menu.controllerName}`)
+                                                        }
+                                                        onClick={() => handleMenuClick(menu)}
+                                                        className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out ${selectedMenu === menu.controllerName
+                                                            ? "bg-gray-200 font-semibold text-black shadow-md"
+                                                            : "hover:bg-gray-200 text-gray-600"
+                                                            }`}
+                                                    />
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
+                                ))
+                            ) : (
+                                <div className="text-gray-500 text-sm text-center transition-all duration-300 ease-in-out">
+                                    No modules available
                                 </div>
-                            ))
-                        ) : (
-                            <div className="text-gray-500 text-sm text-center transition-all duration-300 ease-in-out">
-                                No modules available
-                            </div>
-                        )}
+                            )}
+                        </div>
+                        <div className="absolute bottom-4 w-full text-center">
+                            <p className="text-sm text-gray-500">Version {__APP_VERSION__}</p>
+                        </div>
                     </div>
                 </div>
             </div>
