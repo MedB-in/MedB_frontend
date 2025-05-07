@@ -68,7 +68,7 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
                         <div
                             key={index}
                             className={`p-2.5 text-sm text-center rounded-md cursor-pointer transition-all duration-300 ${slot.booked || isPastSlot(slot.time)
-                                ? 'text-gray-500 bg-gray-300 cursor-not-allowed'
+                                ? 'text-red-500 bg-gray-300 cursor-not-allowed'
                                 : selectedSlot === slot.time
                                     ? 'bg-indigo-500 text-white border border-green-700'
                                     : 'bg-white border border-indigo-500 text-indigo-500 font-semibold hover:bg-indigo-50'
