@@ -86,10 +86,9 @@ axiosInstance.interceptors.response.use(
 
             // Try to refresh token and retry the original request
             try {
-                sessionExpired();
-                // const { data } = await axios.post(`${environment === "dev" ? development : environment === "test" ? test : production}/api/auth/refreshToken`, {}, { withCredentials: true });
-                // localStorage.setItem('accessToken', JSON.stringify(data.accessToken));
-                // originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
+                const { data } = await axios.post(`${environment === "dev" ? development : environment === "test" ? test : production}/api/auth/refreshToken`, {}, { withCredentials: true });
+                localStorage.setItem('accessToken', JSON.stringify(data.accessToken));
+                originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
 
                 return axiosInstance(originalRequest);
             } catch (refreshError) {
