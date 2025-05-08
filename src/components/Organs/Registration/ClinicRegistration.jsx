@@ -5,9 +5,11 @@ import { registerClinic } from "../../../services/publicApi";
 import registration from "../../../assets/images/registration.png";
 import toast from "react-hot-toast";
 import LocationSelector from "../../LocationSelector";
+import TermsModal from "../Clinics/TermsModal";
 
 const ClinicRegistration = () => {
     const [loading, setLoading] = useState(false);
+    const [showTermsModal, setShowTermsModal] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         location: "",
@@ -32,6 +34,12 @@ const ClinicRegistration = () => {
             [name]: type === "checkbox" ? checked : value,
         }));
     };
+
+    const handleAcceptTerms = () => {
+        setFormData((prev) => ({ ...prev, acceptTerms: true }));
+        setShowTermsModal(false);
+    };
+
 
     const handleSubmitForm = async (e) => {
         e.preventDefault();
@@ -207,10 +215,11 @@ const ClinicRegistration = () => {
                             />
                             <span className="text-gray-700">
                                 I have read, understood and accept the{" "}
-                                <span className="text-blue-600 underline cursor-pointer">terms and conditions</span>.
+                                <span className="text-blue-600 underline cursor-pointer" onClick={() => setShowTermsModal(true)}>
+                                    terms and conditions
+                                </span>.
                             </span>
                         </div>
-
                         <div className="flex gap-4 justify-end">
                             <FormButton type="button" variant="secondary" onClick={handleClear}>
                                 Clear
@@ -220,6 +229,12 @@ const ClinicRegistration = () => {
                     </form>
                 </div>
             </div>
+            {showTermsModal && (
+                <TermsModal
+                    onClose={() => setShowTermsModal(false)}
+                    onAccept={handleAcceptTerms}
+                />
+            )}
         </div>
     );
 };
