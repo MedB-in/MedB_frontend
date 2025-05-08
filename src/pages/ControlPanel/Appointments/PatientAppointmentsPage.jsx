@@ -40,14 +40,13 @@ function PatientAppointmentsPage() {
     const storageKey = `appointments_${doctor}_${currentPage}_${searchQuery}`;
 
     const cachedData = sessionStorage.getItem(storageKey);
-    if (!force || cachedData) {
+    if (!force && cachedData) {
       setLoading(false);
       const parsed = JSON.parse(cachedData);
       setAppointments(parsed.appointments);
       setTotalPages(parsed.totalPages);
       setCurrentPage(parsed.currentPage);
     } else if (!cachedData) {
-      console.log('hii');
       setLoading(true);
     }
     try {

@@ -42,6 +42,7 @@ const App = () => {
       <Route path="/for-doctor" element={<PublicPages.ForDoctorPage />} />
       <Route path="/for-clinic" element={<PublicPages.ForDoctorPage />} />
       <Route path="/register-clinic" element={<PublicPages.ClinicRegistrationPage />} />
+      <Route path="/register-doctor" element={<PublicPages.DoctorRegistrationPage />} />
       <Route path="/registration-status/:registrationId" element={<PublicPages.ClinicRegistrationStatusPage />} />
       <Route path="/about-us" element={<PublicPages.AboutUsPage />} />
       <Route path="/privacy-policy" element={<PublicPages.PrivacyPolicyPage />} />

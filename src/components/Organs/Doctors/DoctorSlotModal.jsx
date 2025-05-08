@@ -91,10 +91,10 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
             return;
         }
 
-        if (user.contactNo === null && mobileModal === true) {
-            setMobileModal(true);
-            return;
-        }
+        // if (user.contactNo === null && mobileModal === true) {
+        //     setMobileModal(true);
+        //     return;
+        // }
 
         setLoading(true);
         try {
@@ -108,10 +108,10 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
         }
     };
 
-    const setMobileModalAction = () => {
-        setMobileModal(false);
-        sessionStorage.setItem('mobileModal', false);
-    };
+    // const setMobileModalAction = () => {
+    //     setMobileModal(false);
+    //     sessionStorage.setItem('mobileModal', false);
+    // };
 
     return (
         <div className="fixed inset-0 z-50 p-5 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm">
@@ -176,11 +176,11 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
                     ✖
                 </button>
             </main>
-            {mobileModal && (
+            {/* {mobileModal && (
                 <MobileNumberModal
                     setMobileModal={setMobileModalAction}
                 />
-            )}
+            )} */}
         </div>
     );
 }
