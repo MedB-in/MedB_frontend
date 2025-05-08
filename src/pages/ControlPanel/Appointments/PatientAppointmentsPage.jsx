@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 import DoctorRemarksModal from "../../../components/Organs/Doctors/DoctorRemarksModal";
 import AppointmentActions from "../../../components/Organs/Appointments/AppointmentActions";
 import AppointmentCard from "../../../components/Atoms/Patient/AppointmentCard";
-import { formatTime } from "../../../utils/format";
 import Pagination from "../../../components/Atoms/Patient/Pagination";
 import LoadingRow from "../../../components/Atoms/Patient/LoadingRow";
 import AppointmentRow from "../../../components/Atoms/Patient/AppointmentsRow";
@@ -17,7 +16,7 @@ function PatientAppointmentsPage() {
   const isDoctor = !!doctor;
 
   const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -37,22 +36,20 @@ function PatientAppointmentsPage() {
     sessionStorage.setItem("appointment_search_query", searchQuery);
   }, [searchQuery]);
 
-
   const fetchData = async (force = false) => {
     const storageKey = `appointments_${doctor}_${currentPage}_${searchQuery}`;
 
-    if (!force) {
-      const cachedData = sessionStorage.getItem(storageKey);
-      if (cachedData) {
-        const parsed = JSON.parse(cachedData);
-        setAppointments(parsed.appointments);
-        setTotalPages(parsed.totalPages);
-        setCurrentPage(parsed.currentPage);
-        setLoading(false);
-        return;
-      }
+    const cachedData = sessionStorage.getItem(storageKey);
+    if (!force || cachedData) {
+      setLoading(false);
+      const parsed = JSON.parse(cachedData);
+      setAppointments(parsed.appointments);
+      setTotalPages(parsed.totalPages);
+      setCurrentPage(parsed.currentPage);
+    } else if (!cachedData) {
+      console.log('hii');
+      setLoading(true);
     }
-
     try {
       const response = await getAppointments(doctor, currentPage, searchQuery);
 
@@ -73,7 +70,6 @@ function PatientAppointmentsPage() {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     fetchData();
