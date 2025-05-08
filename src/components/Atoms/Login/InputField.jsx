@@ -17,7 +17,8 @@ const InputField = ({
   title,
   ariaLabel,
   className,
-  required
+  required,
+  options = [] // ✅ Accept options for dropdown
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -54,6 +55,22 @@ const InputField = ({
           required={required}
           className={`flex-auto bg-transparent border-none outline-none resize-none ${className}`}
         />
+      ) : type === "select" ? (
+        <select
+          id={id}
+          name={name}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          required={required}
+          className={`flex-auto bg-transparent border-none outline-none ${className}`}
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       ) : (
         <input
           type={inputType}

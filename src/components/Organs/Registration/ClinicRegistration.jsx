@@ -23,6 +23,7 @@ const ClinicRegistration = () => {
         contact: "",
         email: "",
         website: "",
+        registrationNumber: "",
         clinicPicture: "",
         acceptTerms: false,
     });
@@ -62,6 +63,7 @@ const ClinicRegistration = () => {
     const handleClear = () => {
         setFormData({
             name: "",
+            clinicOverview: "",
             location: "",
             address: "",
             city: "",
@@ -72,6 +74,7 @@ const ClinicRegistration = () => {
             contact: "",
             email: "",
             website: "",
+            registrationNumber: "",
             clinicPicture: "",
             acceptTerms: false,
         });
@@ -193,6 +196,14 @@ const ClinicRegistration = () => {
                                 placeholder="Email*"
                                 name="email"
                                 value={formData.email}
+                                onChange={handleChange}
+                                required
+                            />
+                            <FormInput
+                                type="text"
+                                placeholder="Registration Number*"
+                                name="registrationNumber"
+                                value={formData.registrationNumber}
                                 onChange={handleChange}
                                 required
                             />
