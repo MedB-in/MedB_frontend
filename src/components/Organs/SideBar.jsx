@@ -161,7 +161,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         if (!result.isConfirmed) return;
         dispatch(setAuthenticated(false));
         await logout();
-        navigate('/');
+        navigate('/login');
     };
 
     const handleClearNotification = async (notificationId) => {
@@ -186,6 +186,10 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         setMobileModal(false);
         sessionStorage.setItem('mobileModal', false);
     };
+
+    if (!userAccess || !userAccess.length || userAccess.length === 0) {
+        return null;
+    }
 
     return (
         <>
