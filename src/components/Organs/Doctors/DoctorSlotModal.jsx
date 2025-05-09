@@ -100,7 +100,7 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
         try {
             await bookSlot({ clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
             toast.success("Slot booked successfully!");
-            navigate('/app/appointments');
+            window.location.href = '/app/appointments';
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to book slot.");
         } finally {
