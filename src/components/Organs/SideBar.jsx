@@ -187,10 +187,6 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         sessionStorage.setItem('mobileModal', false);
     };
 
-    if (!userAccess || !userAccess.length || userAccess.length === 0) {
-        return null;
-    }
-
     return (
         <>
             <div className="lg:flex hidden">
