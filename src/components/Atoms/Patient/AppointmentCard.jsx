@@ -53,7 +53,6 @@ const AppointmentCard = ({ appt, isDoctor, handleOpenModal, handleAppointmentMod
                 >
                     {appt.appointmentStatus}
                 </p>
-                <p className="font-medium text-gray-800">💬 Reason:</p>
                 <p className="text-gray-700">
                     {appt.reasonForVisit || "N/A"}
                     {appt.isEmergency && appt.appointmentStatus !== "Scheduled" && (

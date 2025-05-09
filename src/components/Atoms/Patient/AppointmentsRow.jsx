@@ -81,7 +81,7 @@ const AppointmentRow = ({ appt, isDoctor, handleOpenModal, handleAppointmentModa
                 {appt.appointmentStatus}
                 {appt.appointmentStatus === "Cancelled" && (
                     <div className="text-sm font-normal text-gray-500 mt-1">
-                        Reason: <span className="italic">{appt.cancellationReason}</span>
+                       <span className="italic">{appt.cancellationReason}</span>
                     </div>
                 )}
             </td>

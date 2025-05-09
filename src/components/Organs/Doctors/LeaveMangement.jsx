@@ -16,6 +16,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
     const [loading, setLoading] = useState(false);
     const [updating, setUpdating] = useState(false);
     const [selectedLeave, setSelectedLeave] = useState(null);
+    const isPastLeave = selectedLeave && new Date(selectedLeave.leaveDate) < new Date(new Date().toDateString())
 
     useEffect(() => {
         if (!clinics) {
@@ -149,17 +150,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
         try {
             setUpdating(true);
             const result = await updateDoctorLeave(useDoctorId, idClinic, leave, status);
-            setLeaveList((prev) =>
-                prev.map((l) => {
-                    if (l.doctorLeaveId === leave) {
-                        return {
-                            ...l,
-                            ...result.data.leave
-                        };
-                    }
-                    return l;
-                })
-            );
+            fetchDoctorLeaves();
             toast.success(`Leave ${status === 'approved' ? 'approved' : 'rejected'}`);
             setSelectedLeave(null);
         } catch (error) {
@@ -219,7 +210,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                         }
                     </>
                 )}
-                {clinics && location.pathname.startsWith('/doctors') && (
+                {clinics && location.pathname.startsWith('/app/doctors') && (
                     <>
                         <h2 className="text-md md:text-2xl text-center font-bold text-gray-800">Leave Management</h2>
                         <p className="text-gray-600 text-sm text-center">You can add your leave request here.</p>
@@ -238,7 +229,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                         </select>
                     </>
                 )}
-                {clinicId && location.pathname.startsWith('/clinics') && (
+                {clinicId && location.pathname.startsWith('/app/clinics') && (
                     <>
                         <p className="text-gray-600 text-sm text-center">You can cancel <span className='font-bold capitalize'>{doctor?.firstName} {doctor?.middleName ? `${doctor?.middleName} ` : ''}{doctor?.lastName}{doctor?.firstName} {doctor?.middleName ? `${doctor?.middleName} ` : ''}{doctor?.lastName}'s</span> consultation here.</p>
                     </>
@@ -252,7 +243,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                     <div className="w-full">
                         <input
                             type="text"
-                            placeholder={clinics && location.pathname.startsWith('/doctors') ? "Reason for leave" : "Reason for cancellation"}
+                            placeholder={clinics && location.pathname.startsWith('/app/doctors') ? "Reason for leave" : "Reason for cancellation"}
                             className="w-full px-4 py-3 mt-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
                             value={leaveReason}
                             onChange={(e) => setLeaveReason(e.target.value)}
@@ -261,18 +252,26 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                     <div className="w-full">
                         <button
                             className="w-full px-6 py-3 mt-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none cursor-pointer"
-                            onClick={clinics && location.pathname.startsWith('/doctors') ? handleAddLeave : handleCancelConsultation}
-                            disabled={loading}
+                            onClick={clinics && location.pathname.startsWith('/app/doctors') ? handleAddLeave : handleCancelConsultation}
+                            disabled={updating}
                         >
-                            {clinics && location.pathname.startsWith('/doctors')
-                                ? (loading ? 'Request in progress...' : 'Post Leave Request')
-                                : (loading ? 'Cancellation in progress...' : 'Cancel Consultation')}
+                            {clinics && location.pathname.startsWith('/app/doctors')
+                                ? (updating ? 'Request in progress...' : 'Post Leave Request')
+                                : (updating ? 'Cancellation in progress...' : 'Cancel Consultation')}
                         </button>
                     </div>
                 </div>
                 {/* Leave List */}
                 <div>
-                    <h3 className="text-xl font-semibold mb-4">📝 Existing Leaves</h3>
+                    <div className="flex justify-between items-center mx-auto p-6">
+                        <h3 className="text-xl font-semibold">📝 Existing Leaves</h3>
+                        <p
+                            className="text-gray-600 text-sm cursor-pointer font-bold underline hover:no-underline"
+                            onClick={fetchDoctorLeaves}
+                        >
+                            {idClinic && 'Click to Refresh'}
+                        </p>
+                    </div>
                     {leaveList.length > 0 ? (
                         <ul className="space-y-3">
                             {leaveList
@@ -314,49 +313,48 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                 </div>
             </div>
             {/* Modal for Approve/Reject */}
-            {
-                selectedLeave && (
-                    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                        <div className="bg-white p-6 rounded-xl w-[90%] max-w-md shadow-lg">
-                            <h4 className="text-xl font-semibold mb-2">
-                                Leave on {selectedLeave.leaveDate}
-                            </h4>
-                            <p className="mb-4 text-gray-600">Reason: {selectedLeave.reason ? selectedLeave.reason : 'No reason provided'}</p>
-                            <div className="flex justify-end gap-3">
-                                {(!selectedLeave.isApproved || selectedLeave.isRejected) && (
-                                    <button
-                                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                                        onClick={() => handleApproveReject(selectedLeave.doctorLeaveId, 'approved')}
-                                        disabled={updating}
-                                    >
-                                        {updating ? 'Approving...' : 'Approve'}
-                                    </button>
-                                )}
-                                {(!selectedLeave.isRejected || selectedLeave.isApproved) && (
-                                    <button
-                                        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                                        onClick={() => handleApproveReject(selectedLeave.doctorLeaveId, 'rejected')}
-                                        disabled={updating}
-                                    >
-                                        {updating ? 'Rejecting...' : 'Reject'}
-                                    </button>
-                                )}
+            {selectedLeave && (
+                < div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-xl w-[90%] max-w-md shadow-lg">
+                        <h4 className="text-xl font-semibold mb-2">
+                            Leave on {selectedLeave.leaveDate}
+                        </h4>
+                        <p className="mb-4 text-gray-600">Reason: {selectedLeave.reason ? selectedLeave.reason : 'No reason provided'}</p>
+                        <div className="flex justify-end gap-3">
+                            {(!selectedLeave.isApproved || selectedLeave.isRejected) && !isPastLeave && (
                                 <button
-                                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
-                                    onClick={() => setSelectedLeave(null)}
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                                    onClick={() => handleApproveReject(selectedLeave.doctorLeaveId, 'approved')}
+                                    disabled={updating}
                                 >
-                                    Cancel
+                                    {updating ? 'Approving...' : 'Approve'}
                                 </button>
-                            </div>
-                            {updating && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 rounded-xl z-10">
-                                    <div className="w-8 h-8 border-t-2 border-blue-500 border-solid rounded-full animate-spin"></div>
-                                </div>
                             )}
+                            {(!selectedLeave.isRejected || selectedLeave.isApproved) && !isPastLeave && (
+                                <button
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                                    onClick={() => handleApproveReject(selectedLeave.doctorLeaveId, 'rejected')}
+                                    disabled={updating}
+                                >
+                                    {updating ? 'Rejecting...' : 'Reject'}
+                                </button>
+                            )}
+                            <button
+                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                                onClick={() => setSelectedLeave(null)}
+                            >
+                                Cancel
+                            </button>
                         </div>
+                        {updating && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 rounded-xl z-10">
+                                <div className="w-8 h-8 border-t-2 border-blue-500 border-solid rounded-full animate-spin"></div>
+                            </div>
+                        )}
                     </div>
+                </div>
 
-                )
+            )
             }
         </div >
     );
