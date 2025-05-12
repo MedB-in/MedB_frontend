@@ -36,7 +36,7 @@ const DoctorCard = ({
                         <p className="text-gray-600">{doctor.qualifications}</p>
                     </div>
                 </div>
-                {(!idClinic || menuRights?.editAllowed) && (
+                {(!idClinic) && (
                     <button
                         className="text-gray-500 hover:text-gray-700 transition"
                         onClick={() => handleEditDoctor(doctor.doctorId)}

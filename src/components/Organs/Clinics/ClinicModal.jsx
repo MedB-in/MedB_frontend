@@ -25,6 +25,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     clinicId: "",
     name: "",
     address: "",
+    registrationNumber: "",
     city: "",
     district: "",
     state: "",
@@ -283,6 +284,9 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
           </div>
           <div className="mb-4">
             <InputField label="Website" type="url" name="website" value={formData.website} onChange={handleChange} />
+          </div>
+          <div className="mb-4">
+            <InputField label="Clinic Registration" name="registrationNumber" value={formData.registrationNumber} onChange={handleChange} />
           </div>
           {/* Opening Hours */}
           <div className="mb-4">
