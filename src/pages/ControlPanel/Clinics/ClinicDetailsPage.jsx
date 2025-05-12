@@ -217,37 +217,41 @@ const ClinicDetailsPage = ({ idClinic }) => {
                         onClick={() => handleClinicUsers()}
                     >Manage Clinic Users
                     </button>
-                    <button
-                        title="Add New Doctor"
-                        className="bg-blue-500 my-5 mr-5 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                        onClick={() => openModal()}
-                    >
-                        Add New Doctor
-                    </button>
-                    <button
-                        title="Add a Doctor from a List of Doctors"
-                        className="bg-blue-500 my-5  text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                        onClick={handleAddDoctorToClinic}
-                    >
-                        Add Doctor From List
-                    </button>
+                    {!idClinic && (
+                        <>
+                            <button
+                                title="Add New Doctor"
+                                className="bg-blue-500 my-5 mr-5 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                                onClick={() => openModal()}
+                            >
+                                Add New Doctor
+                            </button>
+                            <button
+                                title="Add a Doctor from a List of Doctors"
+                                className="bg-blue-500 my-5  text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                                onClick={handleAddDoctorToClinic}
+                            >
+                                Add Doctor From List
+                            </button>
+                        </>
+                    )}
                 </>
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
                 {doctors.map((doctor) => (
                     <DoctorCard
-                    key={doctor.doctorId}
-                    doctor={doctor}
-                    days={days}
-                    clinicId={clinicId}
-                    idClinic={idClinic}
-                    selectedDays={selectedDays}
-                    menuRights={menuRights}
-                    toggleSelectedDay={toggleSelectedDay}
-                    handleEditDoctor={handleEditDoctor}
-                    handleDoctorClinicStatus={handleDoctorClinicStatus}
-                    handleSlots={handleSlots}
-                  />
+                        key={doctor.doctorId}
+                        doctor={doctor}
+                        days={days}
+                        clinicId={clinicId}
+                        idClinic={idClinic}
+                        selectedDays={selectedDays}
+                        menuRights={menuRights}
+                        toggleSelectedDay={toggleSelectedDay}
+                        handleEditDoctor={handleEditDoctor}
+                        handleDoctorClinicStatus={handleDoctorClinicStatus}
+                        handleSlots={handleSlots}
+                    />
                 ))}
             </div>
             {/* Doctor Modal */}

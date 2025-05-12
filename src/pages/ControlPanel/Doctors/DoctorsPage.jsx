@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getDoctors, addDoctor, editDoctor } from "../../../services/doctors";
 import toast, { Toaster } from "react-hot-toast";
 import DoctorModal from "../../../components/Organs/Doctors/DoctorModal";
+import Pagination from "../../../components/Atoms/Patient/Pagination";
 
 const DoctorsPage = () => {
   const [doctors, setDoctors] = useState([]);
@@ -9,13 +10,17 @@ const DoctorsPage = () => {
   const [error, setError] = useState(null);
   const [isDoctorModalOpen, setIsDoctorModalOpen] = useState(false);
   const [doctorData, setDoctorData] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchDoctors = async () => {
     setLoading(true);
     setError(null);
     try {
-      const doctorData = await getDoctors();
-      setDoctors(doctorData.data?.data || []);
+      const doctorData = await getDoctors(currentPage, searchQuery);
+      setTotalPages(doctorData?.data?.data.totalPages || 1);
+      setDoctors(doctorData?.data?.data.doctors || []);
     } catch (err) {
       setError("Failed to fetch doctors");
       toast.error("Failed to fetch doctors");
@@ -26,7 +31,7 @@ const DoctorsPage = () => {
 
   useEffect(() => {
     fetchDoctors();
-  }, []);
+  }, [currentPage, searchQuery]);
 
   const handleAddDoctor = () => {
     setDoctorData(null);
@@ -56,18 +61,53 @@ const DoctorsPage = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    const newQuery = e.target.value;
+    setSearchQuery(newQuery);
+    if (currentPage !== 1) setCurrentPage(1);
+  };
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const generatePagination = useMemo(() => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    if (currentPage <= 4) {
+      return [1, 2, 3, 4, "...", totalPages];
+    } else if (currentPage >= totalPages - 3) {
+      return [1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    } else {
+      return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages];
+    }
+  }, [totalPages, currentPage]);
+
   return (
     <section className="p-4">
       <Toaster />
-      <div className="flex justify-center gap-5 items-center py-4 px-4">
+      <div className="flex flex-col items-center py-4 px-4 gap-4">
         <button
           className="py-2 px-4 border rounded hover:bg-blue-500 hover:text-white"
           onClick={handleAddDoctor}
         >
           Add Doctor
         </button>
+        <div className="w-full max-w-md">
+          <input
+            type="text"
+            placeholder="Search by Doctor or location..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+          />
+        </div>
       </div>
-
       {loading ? (
         <p className="text-center py-4">Loading doctors...</p>
       ) : error === !null ? (
@@ -84,11 +124,17 @@ const DoctorsPage = () => {
                 className="bg-white shadow-lg rounded-lg overflow-hidden p-5 border hover:shadow-xl transition flex flex-col h-full"
               >
                 <div className="flex items-center gap-4">
-                  <img
-                    className="w-16 h-16 rounded-full object-cover border border-gray-300"
-                    src={doctor?.profilePicture || "/default-avatar.png"}
-                    alt={doctor?.doctorName}
-                  />
+                  {doctor?.profilePicture ? (
+                    <img
+                      className="w-16 h-16 rounded-full object-cover border border-gray-300"
+                      src={doctor.profilePicture}
+                      alt={doctor.doctorName}
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-sm text-white">
+                      {doctor?.doctorName?.[0]?.toUpperCase() || "N/A"}
+                    </div>
+                  )}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800">
                       Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}
@@ -128,6 +174,16 @@ const DoctorsPage = () => {
             ))}
           </div>
         )}
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          generatePagination={generatePagination}
+          setCurrentPage={setCurrentPage}
+          handlePrev={handlePrev}
+          handleNext={handleNext}
+        />
+      )}
       {/* Doctor Modal */}
       {isDoctorModalOpen && (
         <DoctorModal

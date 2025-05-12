@@ -2,8 +2,8 @@ import axios, { uploadHeaders } from "./axios";
 import { getHeaders } from "./axios";
 
 // API to get all clinics
-export const getAllClinics = () => {
-    return axios.get("/api/clinic", getHeaders());
+export const getAllClinics = (page, search) => {
+    return axios.get(`/api/clinic?page=${page}&search=${search}`, getHeaders());
 };
 
 // API to get a specific clinic by ID

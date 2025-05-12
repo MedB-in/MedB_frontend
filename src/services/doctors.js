@@ -2,8 +2,8 @@ import axios, { uploadHeaders } from "./axios";
 import { getHeaders } from "./axios";
 
 //API to handle get Doctors.
-export const getDoctors = () =>
-    axios.get("/api/doctor/", getHeaders());
+export const getDoctors = (page, search) =>
+    axios.get(`/api/doctor?search=${search}&page=${page}`, getHeaders());
 
 //API to handle analytics.
 export const getAnalytics = (doctorId, clinicId) =>
