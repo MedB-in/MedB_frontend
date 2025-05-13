@@ -2,10 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+html, #root {
+  height: 100%;
+}
+
 body {
   height: 100%;
   width: 100%;
   font-family: 'Lato', sans-serif;
+  overflow-y: auto;
 }
 
 h1, h2 {
