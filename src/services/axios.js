@@ -46,8 +46,8 @@ const uploadHeaders = () => {
 const sessionExpired = (dispatch) => {
     Swal.fire({
         icon: 'warning',
-        title: 'Session Expired',
-        text: 'Please log in again.',
+        title: 'Session Expired !',
+        text: 'Session has expired due to inactivity or timeout. Please log in again.',
         confirmButtonText: 'OK',
         confirmButtonColor: '#3085d6',
         allowOutsideClick: false,

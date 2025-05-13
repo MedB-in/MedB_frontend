@@ -83,7 +83,9 @@ const LoginPage = () => {
         navigate("/");
       }
     } catch (error) {
-      toast.error("Google login failed. Try again.");
+      toast.error(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
     } finally {
       setGoogleLoading(false);
     }
