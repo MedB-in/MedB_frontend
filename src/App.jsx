@@ -74,6 +74,8 @@ const App = () => {
             <Route path="clinic-registrations" element={<Clinics.ClinicRegistrations />} />
             <Route path="leave-management/:doctorId/:clinicId" element={<DoctorsPage.MangeDoctorPage />} />
             <Route path="fee-management" element={<Clinics.FeeManagement />} />
+            <Route path="clinicUserMenus" element={<Clinics.ClinicUserMenus />} />
+            <Route path="clinicUserAddRights/:clinicId" element={<EnquiriesPage />} />
             <Route path="reports" element={<Clinics.Reports />} />
           </Route>
 

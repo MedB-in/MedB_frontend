@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { getUserRightsList } from "../../../services/user";
+import { getClinicUserRightsList } from "../../../services/clinics";
 import toast from "react-hot-toast";
 import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";
 import EditUserRightsModal from "../../../components/Organs/Users/EditUserRightsModal";
 
-function UserRightsList() {
+function UserRightsList(clinic) {
   const [usersWithRights, setUsersWithRights] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,16 +32,22 @@ function UserRightsList() {
     );
   };
 
-
   const fetchUsersWithRights = useCallback(async (page) => {
     setLoading(true);
     try {
-      const response = await getUserRightsList(page);
-      setUsersWithRights(response.data.userRightsList || []);
-      setTotalPages(response.data.totalPages || 1);
-      setCurrentPage(response.data.currentPage || 1);
+      if (clinic.clinicId) {
+        const response = await getClinicUserRightsList(page, clinic.clinicId);
+        setUsersWithRights(response.data.data.userRightsList || []);
+        setTotalPages(response.data.data.totalPages || 1);
+        setCurrentPage(response.data.data.currentPage || 1);
+      } else {
+        const response = await getUserRightsList(page);
+        setUsersWithRights(response.data.userRightsList || []);
+        setTotalPages(response.data.totalPages || 1);
+        setCurrentPage(response.data.currentPage || 1);
+      }
     } catch (error) {
-      toast.error("Error fetching user rights list");
+      toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -68,9 +75,9 @@ function UserRightsList() {
     <section className="flex flex-col items-center justify-center text-center bg-white">
       <div className="w-full flex items-center justify-center">
         <Button
-          onClick={() => navigate("/app/users/manage-user-rights")}
+          onClick={() => navigate(`/app/users/manage-user-rights?clinicId=${clinic.clinicId}`)}
         >
-          Manage User Rights for new users
+          Add User Rights for Menu
         </Button>
       </div>
       <div className="w-full mx-auto p-6 mt-5">
@@ -299,6 +306,7 @@ function UserRightsList() {
         </div>
       )}
       <EditUserRightsModal
+        clinicId={clinic.clinicId}
         showModal={showModal}
         setShowModal={setShowModal}
         rights={selectedRights}

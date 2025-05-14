@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { getUserList } from "../../../services/user";
+import { getClinicUsers } from "../../../services/clinics";
+import { useSearchParams } from 'react-router-dom';
 import toast from "react-hot-toast";
 import UserRightsModal from "../../../components/Organs/Users/UserRightsModal";
 import { ArrowLeft } from "lucide-react";
@@ -12,6 +14,8 @@ function UserList() {
     const [totalPages, setTotalPages] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [searchParams] = useSearchParams();
+    const clinicId = searchParams.get('clinicId');
 
     const fetchUsers = useCallback(async (query, page) => {
         setLoading(true);
@@ -21,13 +25,32 @@ function UserList() {
             setTotalPages(response.data.data.totalPages);
             setCurrentPage(response.data.data.currentPage);
         } catch (error) {
-            toast.error("Error fetching users");
+            toast.error(error?.response?.data?.message || "Something went wrong");
         } finally {
             setLoading(false);
         }
     }, []);
 
     useEffect(() => {
+        const fetchClinicUsers = async () => {
+            if (!clinicId) return;
+            try {
+                setLoading(true);
+                const response = await getClinicUsers(clinicId);
+                setUsers(response.data.data || []);
+            } catch (error) {
+                toast.error(error?.response?.data?.message || "Something went wrong");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchClinicUsers();
+    }, [clinicId]);
+
+    useEffect(() => {
+        if (clinicId) return;
+
         const delayDebounce = setTimeout(() => {
             const trimmedQuery = searchQuery.trim();
             if (currentPage && (trimmedQuery.length > 0 || currentPage !== 1)) {
@@ -38,7 +61,7 @@ function UserList() {
         }, 500);
 
         return () => clearTimeout(delayDebounce);
-    }, [searchQuery, currentPage, fetchUsers]);
+    }, [searchQuery, currentPage, fetchUsers, clinicId]);
 
 
     const handleSearch = (e) => {
@@ -72,15 +95,18 @@ function UserList() {
                     Back
                 </button>
             </div>
-            <div className="mb-4 w-full max-w-md mt-5">
-                <input
-                    type="text"
-                    placeholder="Search by name, email, or phone..."
-                    value={searchQuery}
-                    onChange={handleSearch}
-                    className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
-                />
-            </div>
+            {!clinicId &&
+
+                <div className="mb-4 w-full max-w-md mt-5">
+                    <input
+                        type="text"
+                        placeholder="Search by name, email, or phone..."
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    />
+                </div>
+            }
             <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
                 {loading ? (
                     <div className="mt-28">
@@ -197,7 +223,7 @@ function UserList() {
                 ) : searchQuery ? (
                     <div className="text-gray-500 text-center py-10">No users found</div>
                 ) : (
-                    <div className="text-gray-500 text-center py-10">Search for users</div>
+                    <div className="text-gray-500 text-center py-10">{clinicId ? "" : "Search for users"}</div>
                 )}
             </div>
             {/* Pagination */}
@@ -233,6 +259,7 @@ function UserList() {
                 </div>
             )}
             <UserRightsModal
+                clinicId={clinicId}
                 showModal={showModal}
                 setShowModal={setShowModal}
                 user={selectedUser}
