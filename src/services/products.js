@@ -20,3 +20,7 @@ export const getMenuList = () =>
 //API to handle add menu to product.
 export const addMenuToProduct = (data) =>
     axios.post("/api/product/menu", data, getHeaders());
+
+//API to change product menu status.
+export const productMenuStatus = (id, data) =>
+    axios.put(`/api/product/status/${id}`, data, getHeaders());

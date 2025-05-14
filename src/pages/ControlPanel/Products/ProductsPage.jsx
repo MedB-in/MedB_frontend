@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getProduct, addProduct, editProduct } from "../../../services/products";
+import { getProduct, addProduct, editProduct, productMenuStatus } from "../../../services/products";
 import toast, { Toaster } from "react-hot-toast";
 import ProductModal from "../../../components/Organs/Products/ProductModal";
 import MenuToProductModal from "../../../components/Organs/Products/ProductMenuModal";
+import Swal from "sweetalert2";
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -70,6 +71,44 @@ const ProductPage = () => {
     setExpandedProductId((prevId) => (prevId === productId ? null : productId));
   };
 
+  const handleStatusChange = async (menuId, newStatus) => {
+    const statusText = newStatus === 'active' ? 'activate' : 'deactivate';
+    const result = await Swal.fire({
+      title: `Are you sure?`,
+      text: `Do you want to ${statusText} this menu?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: `Yes, ${statusText} it!`,
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await productMenuStatus(menuId, { isActive: newStatus === 'active' });
+        setProducts((prevProducts) =>
+          prevProducts.map((product) => {
+            if (product.modules) {
+              const updatedModules = product.modules.map((module) => ({
+                ...module,
+                menus: module.menus.map((menu) =>
+                  menu.productMenuId === menuId
+                    ? { ...menu, isActive: newStatus === "active" }
+                    : menu
+                ),
+              }));
+
+              return { ...product, modules: updatedModules };
+            }
+            return product;
+          })
+        );
+        toast.success(`Menu ${statusText}d successfully`);
+      } catch (error) {
+        toast.error(error.message || 'Something went wrong');
+      }
+    }
+  };
 
   return (
     <section className="p-4">
@@ -142,28 +181,42 @@ const ProductPage = () => {
 
                 {expandedProductId === product?.productId && product.modules && product.modules.length > 0 && (
                   <tr>
-                    <td colSpan="4" className="px-4 py-2">
-                      <ul>
+                    <td colSpan="8" className="px-4 py-2">
+                      <div className="space-y-4">
                         {product.modules.map((module) => (
-                          <li key={module.moduleId} className="mb-2 py-2">
-                            <strong>{module.moduleName}</strong>
-                            <ul className="ml-4 mt-2">
+                          <div key={module.moduleId} className="border rounded-lg p-4 shadow-sm bg-gray-50">
+                            <h3 className="font-semibold text-lg mb-2">{module.moduleName}</h3>
+                            <ul className="space-y-3">
                               {module.menus.map((menu) => (
-                                <li key={menu.menuId}>
-                                  <img
-                                    src={menu.menuIcon}
-                                    alt={menu.menuName}
-                                    className="w-6 h-6 inline-block mr-2"
-                                  />
-                                  {menu.menuName} ({menu.actionName})
+                                <li key={menu.productMenuId} className="flex items-center justify-between bg-white p-3 rounded-md shadow-sm">
+                                  <div className="flex items-center space-x-3">
+                                    <img
+                                      src={menu.menuIcon}
+                                      alt={menu.menuName}
+                                      className="w-6 h-6"
+                                    />
+                                    <span className="font-medium">{menu.menuName}</span>
+                                    <span className="text-sm text-gray-500">({menu.actionName})</span>
+                                  </div>
+                                  <div>
+                                    <select
+                                      value={menu.isActive ? "active" : "inactive"}
+                                      onChange={(e) => handleStatusChange(menu.productMenuId, e.target.value)}
+                                      className="border rounded px-2 py-1 text-sm bg-white"
+                                    >
+                                      <option value="active">Active</option>
+                                      <option value="inactive">Inactive</option>
+                                    </select>
+                                  </div>
                                 </li>
                               ))}
                             </ul>
-                          </li>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </td>
                   </tr>
+
                 )}
               </React.Fragment>
             ))}
