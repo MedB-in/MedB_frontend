@@ -19,7 +19,7 @@ const DoctorsList = ({ doctors = [] }) => {
                         <div
                             key={index}
                             className="flex items-center hover:bg-slate-100 cursor-pointer justify-between p-[15px] border-b border-[rgba(0,0,0,0.1)]"
-                            onClick={() => navigate('/clinics/clinic-profile')}
+                            onClick={() => navigate('/app/clinics/clinic-profile')}
                         >
                             <div>
                                 <div className="text-base font-medium capitalize">Dr. {doctor.doctorName}</div>
