@@ -103,6 +103,11 @@ const BookSlots = () => {
         setBooking(true);
         try {
             const formattedDate = format(selectedDate, "yyyy-MM-dd");
+            const isPast = isPastSlot(selectedSlot);
+            if (isPast) {
+                toast.error('Selected slot is Expired. Please select another slot.');
+                return;
+            }
             if (isClinicBooking) {
                 await bookFromClinic({ clinicId, doctorId, date: formattedDate, time: selectedSlot, reason, patientId: selectedPatient.userId, isEmergency });
             } else {
@@ -137,6 +142,16 @@ const BookSlots = () => {
         setIsEmergency(event.target.checked);
     };
 
+    const isPastSlot = (slotTime) => {
+        const nowUTC = new Date();
+        const nowIST = new Date(nowUTC.getTime() + (5.5 * 60 * 60 * 1000));
+        const [slotHour, slotMinute] = slotTime.split(':').map(Number);
+        const slotDateIST = new Date(selectedDate);
+        slotDateIST.setHours(slotHour, slotMinute, 0, 0);
+        const slotDateISTAdjusted = new Date(slotDateIST.getTime() - (slotDateIST.getTimezoneOffset() * 60000));
+        return slotDateISTAdjusted < nowIST;
+    };
+
     return (
         <section className="p-8 flex flex-col min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl">
             <p className="text-sm self-start pl-5 underline font-bold text-[#7a5fd3] cursor-pointer" onClick={() => window.history.back()}> {'<'} Back</p>
@@ -154,7 +169,7 @@ const BookSlots = () => {
                         <p className="text-gray-700 text-lg font-medium">{doctor.speciality}</p>
                         <p className="text-gray-500 text-sm">{doctor.qualifications}</p>
                         <p className="text-gray-500 text-sm">Experience: {doctor.experience} years</p>
-                        <p className="text-gray-500 text-md mt-2 font-semibold">Consultation fee: {doctor.consultationFee ? `Rs. ${doctor.consultationFee} /-` : "N/A" } </p>
+                        <p className="text-gray-500 text-md mt-2 font-semibold">Consultation fee: {doctor.consultationFee ? `Rs. ${doctor.consultationFee} /-` : "N/A"} </p>
                     </div>
                 </div>
             ) : (
@@ -230,23 +245,19 @@ const BookSlots = () => {
                 ) : slots.length > 0 ? (
                     <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {slots.map((slot, index) => {
-                            const [slotHour, slotMinute] = slot.time.split(":").map(Number);
-                            const nowUTC = new Date();
-                            const nowIST = new Date(nowUTC.getTime() + (5.5 * 60 * 60 * 1000));
-                            const slotDateTime = new Date(selectedDate);
-                            slotDateTime.setHours(slotHour, slotMinute, 0, 0);
-                            const slotDateTimeIST = new Date(slotDateTime.getTime() - (slotDateTime.getTimezoneOffset() * 60000));
-                            const isSameDay = nowIST.toDateString() === slotDateTimeIST.toDateString();
-                            const isPastTime = isSameDay && slotDateTimeIST < nowIST;
-
+                            const isPastTime = isPastSlot(slot.time);
                             const isSelected = selectedSlot === slot.time;
                             const isDisabled = slot.booked || isPastTime;
+
+                            const [slotHour, slotMinute] = slot.time.split(":").map(Number);
+                            const slotDateTime = new Date(selectedDate);
+                            slotDateTime.setHours(slotHour, slotMinute, 0, 0);
 
                             return (
                                 <li
                                     key={index}
                                     className={`p-2.5 text-sm text-center rounded-md cursor-pointer transition-all duration-300 ${isDisabled
-                                        ? "text-red-400 bg-gray-300 cursor-not-allowed"
+                                        ? "text-red-400 bg-gray-300 cursor-no-drop"
                                         : isSelected
                                             ? "bg-indigo-500 text-white border border-green-700"
                                             : "bg-black bg-opacity-10 text-neutral-800 hover:bg-indigo-50"

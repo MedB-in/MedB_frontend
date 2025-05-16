@@ -113,14 +113,6 @@ const DoctorCard = ({
                     />
                     <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
                 </div>
-                <div>
-                    <span
-                        className="text-gray-500 text-md underline hover:text-red-500 cursor-pointer"
-                        onClick={() => navigate(`/app/clinics/leave-management/${doctor.doctorId}/${clinicId}`)}
-                    >
-                        Manage Doctor
-                    </span>
-                </div>
             </div>
 
             {(!idClinic || menuRights?.editAllowed) && (
