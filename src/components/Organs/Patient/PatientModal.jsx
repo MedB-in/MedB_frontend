@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { addPatient, updatePatient } from "../../../services/patient";
 import InputField from "../../Atoms/Login/InputField";
 import Button from "../../Atoms/Login/Button";
+import { isValidPhone, isValidPincode } from "../../../validation/validations";
 
 const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, patient, isUpdate }) => {
     const [formData, setFormData] = useState({
@@ -58,6 +59,14 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
         e.preventDefault();
         if (!formData.firstName || !formData.email || !formData.contactNo) {
             toast.error("All required fields must be filled.");
+            return;
+        }
+        if (!isValidPhone(formData.contactNo)) {
+            toast.error("Please enter a valid phone number.");
+            return;
+        }
+        if (!isValidPincode(formData.postalCode)) {
+            toast.error("Please enter a valid pincode.");
             return;
         }
         setLoading(true);

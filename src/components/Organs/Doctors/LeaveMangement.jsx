@@ -275,7 +275,6 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                     {leaveList.length > 0 ? (
                         <ul className="space-y-3">
                             {leaveList
-                                .sort((a, b) => new Date(a.leaveDate) - new Date(b.leaveDate))
                                 .map((leave, index) => (
                                     <li
                                         key={index}

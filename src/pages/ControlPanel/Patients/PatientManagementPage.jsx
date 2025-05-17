@@ -58,6 +58,7 @@ const PatientManagement = () => {
           type="text"
           value={patientQuery}
           onChange={(e) => setPatientQuery(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearchPatient()}
           placeholder="Enter First Name, Last Name, Email or Contact Number"
           className="w-full px-4 py-2 border rounded-md bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-400"
         />
@@ -79,7 +80,7 @@ const PatientManagement = () => {
               onClick={() => setSelectedPatient(patient)}
             >
               <div className="flex-1">
-                <p className="font-semibold text-gray-800">
+                <p className="font-semibold text-gray-800 capitalize">
                   {patient.firstName} {patient.middleName ? ` ${patient.middleName}` : ''} {patient.lastName || ''}
                 </p>
                 <p className="text-sm text-gray-600">{patient.contactNo || "Contact Not Available"} • {patient.email}</p>

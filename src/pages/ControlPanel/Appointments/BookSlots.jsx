@@ -207,21 +207,24 @@ const BookSlots = () => {
                             type="text"
                             value={patientQuery}
                             onChange={(e) => setPatientQuery(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleSearchPatient();
+                            }}
                             placeholder="Enter First Name, Last Name, email or contact number"
                             className="w-full px-4 py-2 border rounded-md bg-white text-gray-800"
                         />
                         <button onClick={handleSearchPatient} className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-purple-700">Search</button>
                     </div>
                     {patients.length > 0 ? (
-                        <div className="mt-2 bg-white text-black">
+                        <div className="mt-5 text-black">
                             {patients.map((patient, index) => (
                                 <div
                                     key={index}
-                                    className={`flex items-center p-3 cursor-pointer transition duration-300 m-2 hover:bg-gray-100 rounded-md ${selectedPatient?.userId === patient.userId ? "bg-purple-100 border-l-4 border-purple-500" : "border-l-4 bg-gray-100"}`}
+                                    className={`flex items-center bg-white p-3 cursor-pointer transition duration-300 m-2 hover:bg-gray-100 rounded-md ${selectedPatient?.userId === patient.userId ? "bg-purple-100 border-l-8 border-purple-500" : "border-l-4 bg-gray-100"}`}
                                     onClick={() => setSelectedPatient(patient)}
                                 >
                                     <div className="flex-1">
-                                        <p className="font-semibold text-gray-800">{patient.firstName}{patient.middleName ? ` ${patient.middleName}` : ''} {patient.lastName ? `${patient.lastName}` : ''}</p>
+                                        <p className="font-semibold text-gray-800 capitalize">{patient.firstName}{patient.middleName ? ` ${patient.middleName}` : ''} {patient.lastName ? `${patient.lastName}` : ''}</p>
                                         <p className="text-sm text-gray-600">{patient.contactNo || "Contact Not Available"} • {patient.email}</p>
                                     </div>
                                 </div>
