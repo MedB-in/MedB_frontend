@@ -205,7 +205,7 @@ const ClinicDetailsPage = ({ idClinic }) => {
                     )}
                 </>
             )}
-            {(!idClinic || menuRights.createAllowed === true) && (
+            {(!idClinic || menuRights?.createAllowed === true) && (
                 <>
                     <button
                         title="Add New Doctor"
