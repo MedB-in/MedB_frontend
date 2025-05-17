@@ -58,7 +58,7 @@ const sessionExpired = (dispatch) => {
         localStorage.removeItem("selectedMenu");
         localStorage.removeItem("userDetails");
         localStorage.removeItem("persist:root");
-
+        sessionStorage.setItem('navStack', JSON.stringify([]));
         if (dispatch) dispatch(setUserAccess(null));
 
         sessionStorage.clear();
