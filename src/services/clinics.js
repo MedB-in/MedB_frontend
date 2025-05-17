@@ -2,14 +2,12 @@ import axios, { uploadHeaders } from "./axios";
 import { getHeaders } from "./axios";
 
 // API to get all clinics
-export const getAllClinics = () => {
-    return axios.get("/api/clinic", getHeaders());
-};
+export const getAllClinics = (page, search) =>
+    axios.get(`/api/clinic?page=${page}&search=${search}`, getHeaders());
 
 // API to get a specific clinic by ID
-export const getClinicById = (id) => {
-    return axios.get(`/api/clinic/byId/${id}`, getHeaders());
-};
+export const getClinicById = (id) =>
+    axios.get(`/api/clinic/byId/${id}`, getHeaders());
 
 //API to get active cliniics.
 export const getActiveClinics = (page, search) =>
@@ -66,6 +64,22 @@ export const deleteSlot = (id) =>
 //API to fetch Users of a specific Clinic.
 export const getClinicUsers = (clinicId) =>
     axios.get(`/api/clinic/users/${clinicId}`, getHeaders());
+
+// API to get users with user rights.
+export const getClinicUserRightsList = (page, clinicId) =>
+    axios.get(`/api/clinic/user/userRights?page=${page}&clinicId=${clinicId}`, getHeaders());
+
+//API to edit clinic user rights.
+export const editClinicUserRights = (data) =>
+    axios.put("/api/clinic/user/userRights", data, getHeaders());
+
+//API to get clinic menus.
+export const getClinicMenus = () =>
+    axios.get(`/api/clinic/menus`, getHeaders());
+
+//API to add clinic user rights.
+export const addClinicUserRights = (data) =>
+    axios.post("/api/clinic/user/userRights", data, getHeaders());
 
 //API to add Users to a specific Clinic.
 export const addClinicUser = (clinicId, data) =>

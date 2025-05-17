@@ -28,6 +28,16 @@ export const getDoctorSlots = (clinicId, doctorId, date, day) =>
 export const registerClinic = (data) =>
     axios.post("/api/public/register", data);
 
+//API to register a new Doctor.
+export const registerDoctor = (data) =>
+    axios.post("/api/public/doctorRegister", data);
+
 //API to get the registration details of the Clinic.
 export const getRegistrationDetails = (id) =>
     axios.get(`/api/public/registrationStatus/${id}`);
+
+//API to send enquiry.
+export const sendEnquiry = (data) => axios.post("/api/public/enquiry", data);
+
+//API to subscribe to newsletter.
+export const subscribeNewsletter = (data) => axios.post("/api/public/subscribe", data);

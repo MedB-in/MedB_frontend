@@ -73,7 +73,9 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
             } else {
                 const response = await updateAppointmentStatus(appointment.appointmentId, status, reason);
                 if (response.data.data === 1) {
-                    updateAppointment({ ...appointment, appointmentStatus: status });
+                    updateAppointment({ ...appointment, appointmentStatus: status, cancellationReason: reason });
+                    setStatus('');
+                    setReason('');
                     toast.success("Appointment status updated successfully.");
                     onClose();
                 } else {
@@ -158,7 +160,7 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
 
 
                 <div className="flex justify-end mt-5 gap-2">
-                    <button onClick={handleClose} className="px-4 py-2 bg-gray-300 rounded">Close</button>
+                    <button onClick={handleClose} className="px-4 py-2 bg-gray-300 text-red-400 hover:bg-gray-600 hover:text-white rounded">Close</button>
                     <button onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">{loading ? "Saving..." : "Confirm"}</button>
                 </div>
             </div>

@@ -9,12 +9,14 @@ import DoctorTestimonials from '../../components/Organs/Landing/DoctorTestimonia
 import Footer from '../../components/Organs/Landing/Footer';
 import FloatingActionButtons from '../../components/Organs/Landing/FloatingButtons';
 import { Toaster } from 'react-hot-toast';
+import ScrollToTop from '../../components/Atoms/ScrollToTop';
 
 const LandingPage = () => {
     return (
         <>
             <Toaster />
             <Header />
+            <ScrollToTop />
             <FloatingActionButtons />
             <Hero />
             <FeatureSection />

@@ -36,7 +36,7 @@ const DoctorCard = ({
                         <p className="text-gray-600">{doctor.qualifications}</p>
                     </div>
                 </div>
-                {(!idClinic || menuRights?.editAllowed) && (
+                {(!idClinic) && (
                     <button
                         className="text-gray-500 hover:text-gray-700 transition"
                         onClick={() => handleEditDoctor(doctor.doctorId)}
@@ -112,14 +112,6 @@ const DoctorCard = ({
                         className="form-checkbox"
                     />
                     <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
-                </div>
-                <div>
-                    <span
-                        className="text-gray-500 text-md underline hover:text-red-500 cursor-pointer"
-                        onClick={() => navigate(`/clinics/leave-management/${doctor.doctorId}/${clinicId}`)}
-                    >
-                        Manage Doctor
-                    </span>
                 </div>
             </div>
 

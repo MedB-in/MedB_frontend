@@ -5,6 +5,7 @@ import { ArrowLeft, Upload } from "lucide-react";
 import toast from "react-hot-toast";
 import PrescriptionPreviewModal from "../../../components/Organs/Patient/PrescriptionPreviewModal";
 import UploadPrescriptionModal from "../../../components/Organs/Patient/UploadPrescriptionModal";
+import BackButton from "../../../components/Atoms/BackButton";
 
 
 const Prescriptions = () => {
@@ -98,12 +99,7 @@ const Prescriptions = () => {
 
     return (
         <div className="bg-white p-6 rounded-xl shadow-md">
-            <button
-                className="bg-gray-200 text-gray-700 px-4 py-2 my-5 rounded-md hover:bg-gray-300"
-                onClick={() => window.history.back()}
-            >
-                ← Back
-            </button>
+            <BackButton />
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold">Prescriptions</h2>
                 <button

@@ -6,9 +6,9 @@ const AppointmentCard = ({ appt, title }) => {
 
     const handleClick = () => {
         if (title === "Upcoming Appointments") {
-            navigate("/appointments/appointments-management?status=upcoming");
+            navigate("/app/appointments/appointments-management?status=upcoming");
         } else if (title === "Today's Appointments") {
-            navigate("/appointments/appointments-management");
+            navigate("/app/appointments/appointments-management");
         }
     };
 
@@ -30,7 +30,7 @@ const AppointmentCard = ({ appt, title }) => {
                 aria-label="View appointments"
                 onClick={handleClick}
             >
-                {title === "Today's Appointments" || title === "Upcoming Appointments" &&
+                {title === "Today's Appointments" || title === "Upcoming Appointments" ? (
                     <svg
                         width="30"
                         height="25"
@@ -54,6 +54,7 @@ const AppointmentCard = ({ appt, title }) => {
                             strokeLinejoin="round"
                         />
                     </svg>
+                ) : <></>
                 }
             </button>
         </article >

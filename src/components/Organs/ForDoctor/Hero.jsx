@@ -13,7 +13,7 @@ const Hero = () => {
             <div
                 className="fixed top-[60dvh] md:top-[65dvh] right-2 z-[100] flex items-center gap-[14px] px-3 py-2 bg-[#6F64E7] text-white text-[16px] font-poppins rounded-[30px] cursor-pointer"
                 title="Send us a message"
-                onClick={() => navigate("/register-clinic")}
+                onClick={() => navigate(!isClinicPage ? '/register-doctor' : '/register-clinic')}
             >
                 <span>Register Now</span>
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">

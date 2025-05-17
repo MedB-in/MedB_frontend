@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getActiveClinics } from "../../../services/clinics";
 import toast from "react-hot-toast";
+import BackButton from "../../../components/Atoms/BackButton";
 
 const BookFromClinic = () => {
   const [clinics, setClinics] = useState([]);
@@ -49,12 +50,12 @@ const BookFromClinic = () => {
   };
 
   const handleClinicSelect = (clinicId) => {
-    navigate(`/appointments/book-appointment/${clinicId}`);
+    navigate(`/app/appointments/book-appointment/${clinicId}`);
   };
 
   return (
     <section className="p-4 flex flex-col items-center min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl md:mr-4">
-      <p className="text-sm self-start pl-5 underline font-bold text-[#7a5fd3] cursor-pointer" onClick={() => window.history.back()}> {'<'} Back</p>
+      <BackButton />
       <div className="flex flex-col w-full p-5">
         <div className="text-center text-white bg-[#7a5fd3] py-3 rounded-lg text-lg font-semibold">
           Clinics List

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { doRegister } from "../../services/auth";
-import Logo from "../../assets/images/logo.svg";
+import Logo from "../../assets/images/medb-logo-png.png";
 import InputField from "../../components/Atoms/Login/InputField";
 import Button from "../../components/Atoms/Login/Button";
 import { useSelector } from "react-redux";
@@ -50,6 +50,11 @@ const RegisterPage = () => {
             toast.error("Passwords do not match");
             return;
         }
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (!phoneRegex.test(formData.contactNo)) {
+            toast.error("Please enter a valid Indian contact number.");
+            return;
+        }
         setLoading(true);
         try {
             if (!formData.firstName || !formData.email || !formData.password || !formData.confirmPassword) {
@@ -92,7 +97,7 @@ const RegisterPage = () => {
                                     <InputField type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
                                 </div>
                                 <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-                                {/*<InputField type="text" name="contactNo" placeholder="Contact Number" value={formData.contactNo} onChange={handleChange} required />*/}
+                                <InputField type="text" name="contactNo" placeholder="Contact Number" value={formData.contactNo} onChange={handleChange} required />
                                 <InputField type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} toggleable required />
                                 <InputField type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} toggleable required />
                                 <div className="min-h-[1.5rem]">

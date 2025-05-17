@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { getActiveDoctors } from "../../../services/doctors";
 import { useNavigate, useParams } from "react-router-dom";
 import DoctorCard from "../../../components/Atoms/Doctor/DoctorCard";
+import BackButton from "../../../components/Atoms/BackButton";
 
 const DoctorSelectionList = () => {
     const { clinicId } = useParams();
@@ -49,12 +50,12 @@ const DoctorSelectionList = () => {
     };
 
     const onSelect = (doctorId) => {
-        navigate(`/appointments/book-slots/${clinicId}/${doctorId}`);
+        navigate(`/app/appointments/book-slots/${clinicId}/${doctorId}`);
     };
 
     return (
         <section className="p-4 flex flex-col items-center min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl">
-            <p className="text-sm self-start pl-5 underline font-bold text-[#7a5fd3] cursor-pointer" onClick={() => window.history.back()}> {'<'} Back</p>
+            <BackButton />
             <div className="flex flex-col w-full p-5">
                 <div className="text-center text-white bg-[#7a5fd3] py-3 rounded-lg text-lg font-semibold">
                     Doctor List
@@ -77,7 +78,7 @@ const DoctorSelectionList = () => {
                 ) : doctors.length === 0 ? (
                     <p className="text-center text-gray-500 text-lg">No doctors available.</p>
                 ) : (
-                    doctors.map((doctor, index ) => (
+                    doctors.map((doctor, index) => (
                         <DoctorCard doctor={doctor} key={index} onSelect={onSelect} />
                     ))
                 )}

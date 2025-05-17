@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { editUserRights } from "../../../services/user";
+import { editClinicUserRights } from "../../../services/clinics";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 
-const EditUserRightsModal = ({ showModal, setShowModal, rights, setNewRights }) => {
+const EditUserRightsModal = ({ clinicId, showModal, setShowModal, rights, setNewRights }) => {
     const [permissions, setPermissions] = useState({
         viewAllowed: false,
         editAllowed: false,
@@ -44,7 +45,11 @@ const EditUserRightsModal = ({ showModal, setShowModal, rights, setNewRights }) 
                 userRightId: rights.userRightId,
                 ...permissions,
             };
-            await editUserRights(data);
+            if (clinicId) {
+                await editClinicUserRights(data);
+            } else {
+                await editUserRights(data);
+            }
 
             toast.success(
                 isAllUnchecked
@@ -79,7 +84,11 @@ const EditUserRightsModal = ({ showModal, setShowModal, rights, setNewRights }) 
                     createAllowed: false,
                     deleteAllowed: false,
                 };
-                await editUserRights(data);
+                if (clinicId) {
+                    await editClinicUserRights(data);
+                } else {
+                    await editUserRights(data);
+                }
                 toast.success("User rights removed");
                 setNewRights(null);
                 setShowModal(false);

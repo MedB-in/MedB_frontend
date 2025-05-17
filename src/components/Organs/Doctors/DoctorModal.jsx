@@ -5,6 +5,7 @@ import LocationSelector from "../../LocationSelector";
 import { UploadIcon } from "lucide-react";
 import Swal from "sweetalert2";
 import { medicalDepartments } from "../../../lib/medicalDepartments";
+import { isValidPhone, isValidPincode } from "../../../validation/validations";
 
 const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onSubmit }) => {
   const [loading, setLoading] = useState(false);
@@ -37,6 +38,8 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     lastName: "",
     age: '',
     registration: "",
+    doctorOverview: "",
+    clinicOverview: "",
     speciality: "",
     email: "",
     phone: "",
@@ -122,7 +125,18 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
         formDataToSend.append(key, value);
       }
     });
-
+    if (!isValidPhone(formData.phone)) {
+      setError("Please enter a valid phone number.");
+      toast.error("Please enter a valid phone number.");
+      setLoading(false);
+      return;
+    }
+    if (!isValidPincode(formData.postalCode)) {
+      setError("Please enter a valid pincode.");
+      toast.error("Please enter a valid pincode.");
+      setLoading(false);
+      return;
+    }
     if (doctorPictureFile) {
       formDataToSend.append("image", doctorPictureFile);
     }
@@ -231,10 +245,16 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
             </div>
           )}
           {selfClinic && (
-            <div className="mb-4">
-              <label className="block text-sm font-medium">Website for Clinic</label>
-              <input type="text" name="website" value={formData.website} onChange={handleChange} className="w-full p-2 border rounded-md" />
-            </div>
+            <>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Website for Clinic</label>
+                <input type="text" name="website" value={formData.website} onChange={handleChange} className="w-full p-2 border rounded-md" />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Clinic Overview</label>
+                <input type="text" name="clinicOverview" value={formData.clinicOverview} onChange={handleChange} className="w-full p-2 border rounded-md" />
+              </div>
+            </>
           )}
           <div className="mb-4 grid grid-cols-3 gap-2">
             <div>
@@ -290,6 +310,10 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
           <div className="mb-4">
             <label className="block text-sm font-medium">Qualifications</label>
             <input type="text" name="qualifications" value={formData.qualifications} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Doctor Overview</label>
+            <input type="text" name="doctorOverview" value={formData.doctorOverview} onChange={handleChange} className="w-full p-2 border rounded-md" />
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Experience (Years)</label>

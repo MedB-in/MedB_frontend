@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import EmailIcon from "../../assets/images/email-icon.svg";
+import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
+import Frame from "../../assets/images/frame.png";
+import Logo from "../../assets/images/medb-logo-png.png";
+import PasswordIcon from "../../assets/images/password-icon.svg";
+import GoogleLoginButton from "../../components/Atoms/GoogleLogin/GoolgeLoginButton";
+import Button from "../../components/Atoms/Login/Button";
+import InputField from "../../components/Atoms/Login/InputField";
+import useToken from "../../hooks/useToken";
 import { setAuthenticated, setUserDetails } from "../../redux/slices/authSlice";
 import { setUserAccess } from "../../redux/slices/userAccessSlice";
 import { doGoogleLogin, doLogin } from "../../services/auth";
-import useToken from "../../hooks/useToken";
-import Frame from "../../assets/images/frame.png";
-import Logo from "../../assets/images/logo.svg";
-import EmailIcon from "../../assets/images/email-icon.svg";
-import PasswordIcon from "../../assets/images/password-icon.svg";
-import InputField from "../../components/Atoms/Login/InputField";
-import Button from "../../components/Atoms/Login/Button";
-import ForgotPasswordIcon from "../../assets/images/forgotpassword-icon.svg";
-import GoogleLoginButton from "../../components/Atoms/GoogleLogin/GoolgeLoginButton";
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -32,7 +32,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (authenticated) {
-      state?.from ? navigate(state.from) : navigate("/");
+      state?.from ? navigate(state.from) : navigate("/app");
     }
   }, [authenticated, state]);
 
@@ -42,6 +42,8 @@ const LoginPage = () => {
 
     try {
       const { data } = await doLogin({ email: email, password });
+      dispatch(setUserAccess(null));
+      dispatch(setUserDetails(null));
       setToken(data.accessToken);
       dispatch(setUserDetails(data.userDetails));
       dispatch(setUserAccess(data.menuData));
@@ -81,7 +83,9 @@ const LoginPage = () => {
         navigate("/");
       }
     } catch (error) {
-      toast.error("Google login failed. Try again.");
+      toast.error(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
     } finally {
       setGoogleLoading(false);
     }
@@ -141,7 +145,7 @@ const LoginPage = () => {
               <div className="mb-12 flex justify-center">
                 <img
                   src={Logo}
-                  onClick={() => navigate("/home")}
+                  onClick={() => navigate("/")}
                   alt="Medb Logo"
                   className="h-10 mt-5 w-auto cursor-pointer"
                 />

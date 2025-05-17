@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 const Hero = () => {
     const tabs = ["Doctors", "Clinic", "Lab"];
     const images = { Doctors: DoctorIcon, Clinic: ClinicIcon, Lab: LabIcon };
-    const redirects = { Doctors: "/find-doctor-clinic", Clinic: "/find-doctor-clinic", Lab: "/labs" };
+    const redirects = { Doctors: "/find-doctor-clinic", Clinic: "/find-doctor-clinic", Lab: "" };
 
     const [activeTab, setActiveTab] = useState("Doctors");
     const [clinicSearch, setClinicSearch] = useState("");

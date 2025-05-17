@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import DoctorDetails from '../../components/Organs/Doctors/DoctorDetails';
 import { getDoctorClinics } from '../../services/publicApi';
 import ClinicCard from '../../components/Organs/Clinics/ClinicCard';
+import ScrollToTop from '../../components/Atoms/ScrollToTop';
 
 const DoctorClinicPage = () => {
     const location = useLocation();
@@ -45,6 +46,7 @@ const DoctorClinicPage = () => {
         <>
             <Toaster />
             <Header />
+            <ScrollToTop />
             <FloatingActionButtons />
             <>
                 <DoctorDetails doctor={doctor} />

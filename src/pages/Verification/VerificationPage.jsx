@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { verifyEmail } from "../../services/auth";
-import Logo from "../../assets/images/logo.svg";
+import Logo from "../../assets/images/medb-logo-png.png";
 import Button from "../../components/Atoms/Login/Button";
 import { useSelector } from "react-redux";
 
@@ -21,7 +21,7 @@ const VerifyEmailPage = () => {
 
     useEffect(() => {
         if (authenticated) {
-            navigate("/");
+            navigate("/app");
         }
     }, [authenticated, navigate]);
 

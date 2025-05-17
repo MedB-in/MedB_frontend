@@ -6,6 +6,10 @@ import CryptoJS from 'crypto-js';
 export const encryptTransform = createTransform(
     (inboundState) => {
         const encryptionKey = import.meta.env.VITE_ENCRYPTION_KEY;
+        if (!inboundState || Object.keys(inboundState).length === 0) {
+            localStorage.removeItem("persist:root"); // full purge
+            return null;
+        }
         const encryptedState = CryptoJS.AES.encrypt(
             JSON.stringify(inboundState),
             encryptionKey

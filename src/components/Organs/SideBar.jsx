@@ -1,20 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import SidebarItem from '../Atoms/SideBar/SidebarItem';
-import { setAuthenticated } from '../../redux/slices/authSlice';
-import useAuth from '../../hooks/useAuth';
-import Logo from '../../assets/images/medb-logo-2.svg';
-import Logo1 from '../../assets/images/medb-logo-png.png';
+import Swal from 'sweetalert2';
 import AlertIcon from '../../assets/images/alert-icon.png';
 import LogoutIcon from '../../assets/images/logout-icon.png';
-import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
-import Swal from 'sweetalert2';
+import Logo from '../../assets/images/medb-logo-2.png';
+import Logo1 from '../../assets/images/medb-logo-png.png';
+import useAuth from '../../hooks/useAuth';
+import { setAuthenticated } from '../../redux/slices/authSlice';
+import { deleteAllNotifications, deleteNotification, getNotifications } from '../../services/notification';
+import socket, { reconnectSocketWithNewToken } from '../../utils/socket';
+import SidebarItem from '../Atoms/SideBar/SidebarItem';
 import MobileNumberModal from './MobileNumber';
-import { getNotifications, deleteNotification, deleteAllNotifications } from '../../services/notification';
-import socket from '../../utils/socket';
-import { reconnectSocketWithNewToken } from '../../utils/socket';
-import toast from 'react-hot-toast';
 
 const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const dispatch = useDispatch();
@@ -43,7 +42,6 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     useEffect(() => {
         if (authenticated && userId) {
             reconnectSocketWithNewToken();
-
             const handleNotification = (newNotification) => {
                 setNotifications(prev => {
                     if (prev.some(n => n._id === newNotification._id)) return prev;
@@ -163,7 +161,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         if (!result.isConfirmed) return;
         dispatch(setAuthenticated(false));
         await logout();
-        navigate('/');
+        navigate('/login');
     };
 
     const handleClearNotification = async (notificationId) => {
@@ -192,64 +190,80 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     return (
         <>
             <div className="lg:flex hidden">
-                {user?.contactNo && mobileModal === true && (
+                {/* {user?.contactNo && mobileModal === true && (
                     <MobileNumberModal setMobileModal={setMobileModalAction} />
-                )}
+                )} */}
                 <div className={`fixed z-30 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
                     <div className="flex justify-center items-center w-full py-6 cursor-pointer"
-                        onClick={() => navigate("/home")}>
+                        onClick={() => window.open("/", "_blank")}>
                         <img
                             src={isSidebarOpen ? Logo1 : Logo}
                             alt="Logo"
                             className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? "w-32 opacity-100" : "w-16 opacity-80"}`}
                         />
                     </div>
-                    <div className="py-6 w-full">
-                        {modules?.length > 0 ? (
-                            modules.map((module, moduleIndex) => (
-                                <div key={moduleIndex} className="mb-2">
-                                    <div
-                                        onClick={() => toggleModule(moduleIndex)}
-                                        className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
-                                    >
-                                        <img src={module.moduleIcon} alt={module.moduleName} className="w-6 h-6 transition-all duration-300 ease-in-out" />
-                                        <span
-                                            className={`transition-all duration-300 ease-in-out transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "hidden"}`}>
-                                            {module.moduleName}
-                                        </span>
-                                    </div>
+                    <div className="flex flex-col h-full w-full py-6">
+                        <div className="flex-1 overflow-y-auto">
+                            {modules?.length > 0 ? (
+                                modules.map((module, moduleIndex) => (
+                                    <div key={moduleIndex} className="mb-2">
+                                        <div
+                                            onClick={() => toggleModule(moduleIndex)}
+                                            className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
+                                        >
+                                            <img
+                                                src={module.moduleIcon}
+                                                alt={module.moduleName}
+                                                className="w-6 h-6 transition-all duration-300 ease-in-out"
+                                            />
+                                            <span
+                                                className={`transition-all duration-300 ease-in-out transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "hidden"
+                                                    } capitalize`}
+                                            >
+                                                {module.moduleName === "Patient"
+                                                    ? `${user.firstName}${user.middleName ? ` ${user.middleName}` : ""}${user.lastName ? ` ${user.lastName}` : ""}`
+                                                    : module.moduleName}
+                                            </span>
+                                        </div>
 
-                                    <div
-                                        className={`overflow-hidden transition-all duration-300 ease-in-out ${openModuleIndex === moduleIndex ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
-                                    >
-                                        <div className="pl-4">
-                                            {module.menus.map((menu, menuIndex) => (
-                                                <SidebarItem
-                                                    key={menuIndex}
-                                                    icon={menu.menuIcon}
-                                                    label={menu.menuName}
-                                                    actionUrl={menu.controllerName}
-                                                    isSidebarOpen={isSidebarOpen}
-                                                    isSelected={
-                                                        selectedMenu === menu.controllerName || location.pathname.startsWith(`/${menu.controllerName}`)
-
-                                                    }
-                                                    onClick={() => handleMenuClick(menu)}
-                                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out 1
-                                                ${selectedMenu === menu.controllerName ? "bg-gray-200 font-semibold text-black shadow-md" : "hover:bg-gray-200 text-gray-600"}
-                                            `}
-                                                />
-                                            ))}
+                                        <div
+                                            className={`overflow-hidden transition-all duration-300 ease-in-out ${openModuleIndex === moduleIndex ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                                                }`}
+                                        >
+                                            <div className="pl-4">
+                                                {module.menus.map((menu, menuIndex) => (
+                                                    <SidebarItem
+                                                        key={menuIndex}
+                                                        icon={menu.menuIcon}
+                                                        label={menu.menuName}
+                                                        actionUrl={menu.controllerName}
+                                                        isSidebarOpen={isSidebarOpen}
+                                                        isSelected={
+                                                            selectedMenu === menu.controllerName ||
+                                                            location.pathname.startsWith(`/${menu.controllerName}`)
+                                                        }
+                                                        onClick={() => handleMenuClick(menu)}
+                                                        className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out ${selectedMenu === menu.controllerName
+                                                            ? "bg-gray-200 font-semibold text-black shadow-md"
+                                                            : "hover:bg-gray-200 text-gray-600"
+                                                            }`}
+                                                    />
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
+                                ))
+                            ) : (
+                                <div className="text-gray-500 text-sm text-center transition-all duration-300 ease-in-out">
+                                    No modules available
                                 </div>
-                            ))
-                        ) : (
-                            <div className="text-gray-500 text-sm text-center transition-all duration-300 ease-in-out">
-                                No modules available
-                            </div>
-                        )}
+                            )}
+                        </div>
+                        <div className="mt-auto">
+                            <p className="text-sm text-gray-500 text-center p-2">Version {__APP_VERSION__}</p>
+                        </div>
                     </div>
+
                 </div>
                 <header
                     className={`header fixed top-0 z-50 h-16 px-4 py-3 flex justify-between items-center bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm transition-all ${isSidebarOpen ? "ml-[290px] w-[calc(100%-290px)]" : "ml-[100px] w-[calc(100%-100px)]"}`}
@@ -330,9 +344,9 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
             {/* Sidebar for sm screens */}
             <div className="lg:hidden">
-                {user?.contactNo && mobileModal === true && (
+                {/* {user?.contactNo && mobileModal === true && (
                     <MobileNumberModal setMobileModal={setMobileModalAction} />
-                )}
+                )} */}
                 <header className="fixed w-screen z-40 h-16 px-6 py-3 bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm shadow-md grid grid-cols-3 items-center">
                     <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 w-10 transition-all duration-300">
                         <Menu size={24} />
@@ -341,7 +355,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         <img
                             src={isSidebarOpen ? Logo1 : Logo}
                             alt="Logo"
-                            onClick={() => navigate("/home")}
+                            onClick={() => window.open("/", "_blank")}
                             className={`transition-all cursor-pointer duration-300 ease-in-out w-10 md:w-14 opacity-80`}
                         />
                     </div>
@@ -403,58 +417,72 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             src={Logo}
                             alt="Logo"
                             className="w-24 transition-all duration-300 ease-in-out cursor-pointer"
-                            onClick={() => navigate("/home")}
+                            onClick={() => window.open("/", "_blank")}
                         />
                     </div>
                     <button onClick={() => setIsSidebarOpen(false)} className="p-3 absolute top-2 right-1 rounded-full">
                         <ChevronLeft size={24} />
                     </button>
-                    <div className="py-6 w-full">
-                        {modules.length > 0 ? (
-                            modules.map((module, moduleIndex) => (
-                                <div key={moduleIndex} className="mb-2">
-                                    <div
-                                        onClick={() => toggleModule(moduleIndex)}
-                                        className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
-                                    >
-                                        <img src={module.moduleIcon} alt={module.moduleName} className="w-6 h-6 transition-all duration-300 ease-in-out" />
-                                        <span
-                                            className={`transition-all duration-300 ease-in-out delay-150 transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "opacity-0 -translate-x-2 absolute"
+                    <div className="flex flex-col justify-between h-full w-full py-6">
+                        <div className="flex-1 overflow-y-auto">
+                            {modules?.length > 0 ? (
+                                modules.map((module, moduleIndex) => (
+                                    <div key={moduleIndex} className="mb-2">
+                                        <div
+                                            onClick={() => toggleModule(moduleIndex)}
+                                            className="cursor-pointer flex items-center gap-3 text-lg font-semibold mb-3 p-2 ml-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-300"
+                                        >
+                                            <img
+                                                src={module.moduleIcon}
+                                                alt={module.moduleName}
+                                                className="w-6 h-6 transition-all duration-300 ease-in-out"
+                                            />
+                                            <span
+                                                className={`transition-all duration-300 ease-in-out transform ${isSidebarOpen ? "opacity-100 translate-x-0 relative" : "hidden"
+                                                    } capitalize`}
+                                            >
+                                                {module.moduleName === "Patient"
+                                                    ? `${user.firstName}${user.middleName ? ` ${user.middleName}` : ""}${user.lastName ? ` ${user.lastName}` : ""}`
+                                                    : module.moduleName}
+                                            </span>
+                                        </div>
+
+                                        <div
+                                            className={`overflow-hidden transition-all duration-300 ease-in-out ${openModuleIndex === moduleIndex ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
                                                 }`}
                                         >
-                                            {module.moduleName}
-                                        </span>
-                                    </div>
-
-                                    <div
-                                        className={`overflow-hidden transition-all duration-300 ease-in-out ${openModuleIndex === moduleIndex ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
-                                    >
-                                        <div className="pl-4">
-                                            {module.menus.map((menu, menuIndex) => (
-                                                <SidebarItem
-                                                    key={menuIndex}
-                                                    icon={menu.menuIcon}
-                                                    label={menu.menuName}
-                                                    actionUrl={menu.controllerName}
-                                                    isSidebarOpen={isSidebarOpen}
-                                                    isSelected={
-                                                        selectedMenu === menu.controllerName || location.pathname.startsWith(`/${menu.controllerName}`)
-                                                    }
-                                                    onClick={() => { handleMenuClick(menu); setIsSidebarOpen(false) }}
-                                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out 1
-                                                ${selectedMenu === menu.controllerName ? "bg-gray-200 font-semibold text-black shadow-md" : "hover:bg-gray-200 text-gray-600"}
-                                            `}
-                                                />
-                                            ))}
+                                            <div className="pl-4">
+                                                {module.menus.map((menu, menuIndex) => (
+                                                    <SidebarItem
+                                                        key={menuIndex}
+                                                        icon={menu.menuIcon}
+                                                        label={menu.menuName}
+                                                        actionUrl={menu.controllerName}
+                                                        isSidebarOpen={isSidebarOpen}
+                                                        isSelected={
+                                                            selectedMenu === menu.controllerName ||
+                                                            location.pathname.startsWith(`/${menu.controllerName}`)
+                                                        }
+                                                        onClick={() => handleMenuClick(menu)}
+                                                        className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out ${selectedMenu === menu.controllerName
+                                                            ? "bg-gray-200 font-semibold text-black shadow-md"
+                                                            : "hover:bg-gray-200 text-gray-600"
+                                                            }`}
+                                                    />
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
+                                ))
+                            ) : (
+                                <div className="text-gray-500 text-sm text-center transition-all duration-300 ease-in-out">
+                                    No modules available
                                 </div>
-                            ))
-                        ) : (
-                            <div className="text-gray-500 text-sm text-center transition-all duration-300 ease-in-out">
-                                No modules available
-                            </div>
-                        )}
+                            )}
+                        </div>
+                        <div className="absolute bottom-4 w-full text-center">
+                            <p className="text-sm text-gray-500">Version {__APP_VERSION__}</p>
+                        </div>
                     </div>
                 </div>
             </div>

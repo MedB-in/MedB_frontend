@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { getUserList } from "../../../services/user";
+import { getClinicUsers } from "../../../services/clinics";
+import { useParams } from 'react-router-dom';
 import toast from "react-hot-toast";
 import UserRightsModal from "../../../components/Organs/Users/UserRightsModal";
 import { ArrowLeft } from "lucide-react";
+import BackButton from "../../../components/Atoms/BackButton";
 
 function UserList() {
     const [users, setUsers] = useState([]);
@@ -12,6 +15,7 @@ function UserList() {
     const [totalPages, setTotalPages] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const { clinicId } = useParams('clinicId');
 
     const fetchUsers = useCallback(async (query, page) => {
         setLoading(true);
@@ -21,13 +25,32 @@ function UserList() {
             setTotalPages(response.data.data.totalPages);
             setCurrentPage(response.data.data.currentPage);
         } catch (error) {
-            toast.error("Error fetching users");
+            toast.error(error?.response?.data?.message || "Something went wrong");
         } finally {
             setLoading(false);
         }
     }, []);
 
     useEffect(() => {
+        const fetchClinicUsers = async () => {
+            if (!clinicId) return;
+            try {
+                setLoading(true);
+                const response = await getClinicUsers(clinicId);
+                setUsers(response.data.data || []);
+            } catch (error) {
+                toast.error(error?.response?.data?.message || "Something went wrong");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchClinicUsers();
+    }, [clinicId]);
+
+    useEffect(() => {
+        if (clinicId) return;
+
         const delayDebounce = setTimeout(() => {
             const trimmedQuery = searchQuery.trim();
             if (currentPage && (trimmedQuery.length > 0 || currentPage !== 1)) {
@@ -38,7 +61,7 @@ function UserList() {
         }, 500);
 
         return () => clearTimeout(delayDebounce);
-    }, [searchQuery, currentPage, fetchUsers]);
+    }, [searchQuery, currentPage, fetchUsers, clinicId]);
 
 
     const handleSearch = (e) => {
@@ -64,23 +87,20 @@ function UserList() {
     return (
         <section className="flex flex-col items-center justify-center text-center bg-white">
             <div className="p-4 self-start">
-                <button
-                    onClick={() => window.history.back()}
-                    className="flex items-center gap-2 px-4 py-2  bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-200 shadow-sm"
-                >
-                    <ArrowLeft className="w-4 h-4" />
-                    Back
-                </button>
+                <BackButton />
             </div>
-            <div className="mb-4 w-full max-w-md mt-5">
-                <input
-                    type="text"
-                    placeholder="Search by name, email, or phone..."
-                    value={searchQuery}
-                    onChange={handleSearch}
-                    className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
-                />
-            </div>
+            {!clinicId &&
+
+                <div className="mb-4 w-full max-w-md mt-5">
+                    <input
+                        type="text"
+                        placeholder="Search by name, email, or phone..."
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    />
+                </div>
+            }
             <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
                 {loading ? (
                     <div className="mt-28">
@@ -197,7 +217,7 @@ function UserList() {
                 ) : searchQuery ? (
                     <div className="text-gray-500 text-center py-10">No users found</div>
                 ) : (
-                    <div className="text-gray-500 text-center py-10">Search for users</div>
+                    <div className="text-gray-500 text-center py-10">{clinicId ? "" : "Search for users"}</div>
                 )}
             </div>
             {/* Pagination */}
@@ -233,6 +253,7 @@ function UserList() {
                 </div>
             )}
             <UserRightsModal
+                clinicId={clinicId}
                 showModal={showModal}
                 setShowModal={setShowModal}
                 user={selectedUser}

@@ -20,3 +20,11 @@ export const addMenu = (data) =>
 // API to handle edit menu.
 export const editMenu = (id, data) =>
   axios.put(`/api/controlPanel/menu/${id}`, data, getHeaders());
+
+//API to get Enquiry List
+export const getEnquiries = (page) =>
+  axios.get(`/api/controlPanel/enquiry?page=${page}`, getHeaders());
+
+//API to resolve Enquiry
+export const updateEnquiryStatus = (id, status) =>
+  axios.put(`/api/controlPanel/enquiry?id=${id}`, { status }, getHeaders());

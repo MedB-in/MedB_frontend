@@ -4,6 +4,7 @@ import LocationSelector from "../../LocationSelector";
 import InputField from "../../Atoms/Input";
 import Button from "../../Atoms/Button1";
 import { UploadIcon } from "lucide-react";
+import { isValidPhone, isValidPincode } from "../../../validation/validations";
 
 const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
   const [loading, setLoading] = useState(false);
@@ -25,11 +26,13 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     clinicId: "",
     name: "",
     address: "",
+    registrationNumber: "",
     city: "",
     district: "",
     state: "",
     country: "",
     postalCode: "",
+    clinicOverview: "",
     contact: "",
     email: "",
     website: "",
@@ -158,7 +161,19 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
         formDataToSend.append(key, value);
       }
     });
+    if (!isValidPhone(formData.contact)) {
+      setError("Please enter a valid phone number.");
+      toast.error("Please enter a valid phone number.");
+      setLoading(false);
+      return;
+    }
 
+    if (!isValidPincode(formData.postalCode)) {
+      setError("Please enter a valid pincode.");
+      toast.error("Please enter a valid pincode.");
+      setLoading(false);
+      return;
+    }
     if (clinicPictureFile) {
       formDataToSend.append("image", clinicPictureFile);
     }
@@ -242,6 +257,9 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
             <InputField label="Clinic Name" name="name" value={formData.name} onChange={handleChange} required />
           </div>
           <div className="mb-4">
+            <InputField label="Clinic Overview" name="clinicOverview" value={formData.clinicOverview} onChange={handleChange} required />
+          </div>
+          <div className="mb-4">
             <label className="block text-sm font-medium">Select Location</label>
             <LocationSelector onSelect={handleLocationSelect} />
           </div>
@@ -279,6 +297,9 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
           </div>
           <div className="mb-4">
             <InputField label="Website" type="url" name="website" value={formData.website} onChange={handleChange} />
+          </div>
+          <div className="mb-4">
+            <InputField label="Clinic Registration" name="registrationNumber" value={formData.registrationNumber} onChange={handleChange} />
           </div>
           {/* Opening Hours */}
           <div className="mb-4">

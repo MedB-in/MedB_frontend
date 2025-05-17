@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getAllClinics, addClinic, editClinic } from "../../../services/clinics";
 import toast, { Toaster } from "react-hot-toast";
 import ClinicModal from "../../../components/Organs/Clinics/ClinicModal";
 import Button from "../../../components/Atoms/Login/Button";
+import Pagination from "../../../components/Atoms/Patient/Pagination";
 
 const ClinicsPage = () => {
   const [clinics, setClinics] = useState([]);
@@ -11,14 +12,18 @@ const ClinicsPage = () => {
   const [error, setError] = useState(null);
   const [isClinicModalOpen, setIsClinicModalOpen] = useState(false);
   const [clinicData, setClinicData] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   const fetchClinics = async () => {
     setLoading(true);
     setError(null);
     try {
-      const clinicData = await getAllClinics();
-      setClinics(clinicData.data.clinics || []);
+      const clinicData = await getAllClinics(currentPage, searchQuery);
+      setClinics(clinicData?.data.clinics.clinics || []);
+      setTotalPages(clinicData?.data.clinics.totalPages || 1);
     } catch (err) {
       setError("Failed to fetch clinics");
       toast.error("Failed to fetch clinics");
@@ -29,7 +34,7 @@ const ClinicsPage = () => {
 
   useEffect(() => {
     fetchClinics();
-  }, []);
+  }, [currentPage, searchQuery]);
 
   const handleAddClinic = () => {
     setClinicData(null);
@@ -44,13 +49,11 @@ const ClinicsPage = () => {
   };
 
   const handleCardClick = (clinicId) => {
-    navigate(`/clinics/${clinicId}`);
+    navigate(`/app/clinics/${clinicId}`);
   };
 
   const handleSubmit = async (data, clinicId) => {
     try {
-      const formDataObject = Object.fromEntries(data.entries());
-
       if (clinicId) {
         const response = await editClinic(clinicId, data);
         const editedClinic = response.data.data
@@ -65,11 +68,7 @@ const ClinicsPage = () => {
         toast.success(response.data.message);
       } else {
         const response = await addClinic(data);
-
-        const newClinic = {
-          ...formDataObject,
-          clinicId: response.data.data.clinicId,
-        };
+        const newClinic = response.data.data
 
         setClinics(prevClinics => [...prevClinics, newClinic]);
 
@@ -83,29 +82,62 @@ const ClinicsPage = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    const newQuery = e.target.value;
+    setSearchQuery(newQuery);
+    if (currentPage !== 1) setCurrentPage(1);
+  };
 
   const handleCloseModal = () => {
     setIsClinicModalOpen(false);
     setClinicData(null);
   };
 
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const generatePagination = useMemo(() => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    if (currentPage <= 4) {
+      return [1, 2, 3, 4, "...", totalPages];
+    } else if (currentPage >= totalPages - 3) {
+      return [1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    } else {
+      return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages];
+    }
+  }, [totalPages, currentPage]);
+
   return (
     <section className="p-4">
       <Toaster />
-      <div className="flex justify-center gap-5 items-center py-4">
-        <Button
-          onClick={handleAddClinic}
-        >
-          Add Clinic
-        </Button>
-        <Button
-          onClick={() => navigate("clinic-registrations")}
-          variant="secondary"
-        >
-          Clinic Registrations
-        </Button>
-      </div>
+      <div className="flex flex-col items-center py-4">
+        <div className="flex justify-center gap-5 items-center">
+          <Button onClick={handleAddClinic}>Add Clinic</Button>
+          <Button
+            onClick={() => navigate("clinic-registrations")}
+            variant="secondary"
+          >
+            Clinic Registrations
+          </Button>
+        </div>
 
+        <div className="mt-5 w-full max-w-md">
+          <input
+            type="text"
+            placeholder="Search by name, email, or phone..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+          />
+        </div>
+      </div>
       {loading && <p className="text-center">Loading clinics...</p>}
       {error && <p className="text-red-500 text-center">{error}</p>}
 
@@ -121,8 +153,17 @@ const ClinicsPage = () => {
               onClick={() => handleCardClick(clinic?.clinicId)}
             >
               <div className="flex items-center gap-4">
-                <img className="w-16 h-16 rounded-full object-cover" src={clinic?.clinicPicture} alt={clinic?.name} />
-                <div>
+                {clinic?.clinicPicture ? (
+                  <img
+                    className="w-16 h-16 rounded-full object-cover"
+                    src={clinic.clinicPicture}
+                    alt={clinic.name}
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-sm text-white">
+                    N/A
+                  </div>
+                )} <div>
                   <h2 className="text-lg font-semibold">{clinic.name}</h2>
                   <p className="text-gray-600">{clinic.city}, {clinic.country}</p>
                 </div>
@@ -159,7 +200,16 @@ const ClinicsPage = () => {
             </div>
           ))}
       </div>
-
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          generatePagination={generatePagination}
+          setCurrentPage={setCurrentPage}
+          handlePrev={handlePrev}
+          handleNext={handleNext}
+        />
+      )}
       {/* Clinic Modal */}
       <ClinicModal
         isOpen={isClinicModalOpen}

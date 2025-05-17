@@ -9,7 +9,7 @@ import QuoteImage from "../../Atoms/Landingpage/QuoteImage";
 const testimonials = [
     {
         quote:
-            "The MedB platform is truly innovative, especially its online appointment feature, which has streamlined my practice. It's user-friendly and efficient, saving time for both me and my patients.",
+            "The MedB platform is truly innovative, particularly its online appointment feature, which has streamlined my practice. It's user-friendly and efficient, saving time for both me and my patients.",
         doctorName: "Dr. Sanin Haneef",
         credentials: "(MBBS)",
         image:
@@ -17,7 +17,7 @@ const testimonials = [
     },
     {
         quote:
-            "MedB is revolutionizing healthcare accessibility with its online appointment system. It has not only improved my interaction with patients but also made managing schedules incredibly easy.",
+            "MedB is revolutionizing healthcare accessibility with its online appointment system. It has not only enhanced my interaction with patients but also made managing schedules incredibly easy.",
         doctorName: "Dr. Shehanas",
         credentials: "(MBBS)",
         image:
@@ -25,7 +25,7 @@ const testimonials = [
     },
     {
         quote:
-            "The convenience MedB offers through its online appointments is commendable. It allows me to focus on providing quality care rather than managing logistics.",
+            "The convenience that MedB offers through its online appointments is commendable. It allows me to focus on providing quality care instead of managing logistics.",
         doctorName: "Dr. Shas Hussain A P",
         credentials: "(BDS)",
         image:
@@ -33,7 +33,7 @@ const testimonials = [
     },
     {
         quote:
-            "MedB has significantly improved my practice efficiency. The seamless appointment scheduling is a game-changer for both doctors and patients.",
+            "MedB has significantly improved the efficiency of my practice. The seamless appointment scheduling is a game-changer for both doctors and patients.",
         doctorName: "Dr. Aisha Khan",
         credentials: "(MD)",
         image:
@@ -41,7 +41,7 @@ const testimonials = [
     },
     {
         quote:
-            "With MedB, my clinic operations have become much more organized. I appreciate the ease of use and the continuous improvements in the platform.",
+            "With MedB, my clinic operations are much more organized. I appreciate its ease of use and the continuous improvements to the platform.",
         doctorName: "Dr. Rohan Patel",
         credentials: "(MBBS, MD)",
         image:
@@ -49,7 +49,7 @@ const testimonials = [
     },
     {
         quote:
-            "MedB's innovative features have enhanced patient engagement. The online consultation system is extremely useful, and I highly recommend it to fellow doctors.",
+            "MedB's innovative features have significantly enhanced patient engagement. The online consultation system is incredibly useful, and I highly recommend it to my fellow doctors.",
         doctorName: "Dr. Meera Joshi",
         credentials: "(BDS)",
         image:

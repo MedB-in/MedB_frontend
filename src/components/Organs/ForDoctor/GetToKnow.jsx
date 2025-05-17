@@ -43,22 +43,22 @@ const GetToKnow = () => {
                             <strong>Seamless Practice Management</strong> – Simplifies appointment scheduling, patient records, and consultations.
                         </li>
                         <li>
-                            <strong>Enhanced Patient Engagement</strong> – Provides tools for better communication and follow-ups with patients.
+                            <strong>Enhanced Patient Engagement</strong> – Offers tools to improve communication and follow-ups with patients.
                         </li>
                         <li>
                             <strong>Digital Health Solutions</strong> – Enables telemedicine, e-prescriptions, and AI-driven diagnostics.
                         </li>
                         <li>
-                            <strong>Streamlined Workflow</strong> – Reduces administrative burdens, allowing doctors to focus on patient care.
+                            <strong>Streamlined Workflow</strong> – Reduces administrative tasks, allowing doctors to focus more on patient care.
                         </li>
                         <li>
                             <strong>Secure & Compliant</strong> – Ensures data security and compliance with healthcare regulations.
                         </li>
                         <li>
-                            <strong>Professional Growth</strong> – Offers access to medical insights, peer networking, and continued learning.
+                            <strong>Professional Growth</strong> – Provides access to medical insights, peer networking, and continuous learning.
                         </li>
                         <li>
-                            <strong>Scalable for All Practices</strong> – Suitable for individual practitioners, clinics, and large hospitals.
+                            <strong>Scalable for All Practices</strong> – Perfect for individual practitioners, clinics, and large hospitals.
                         </li>
                     </ul>
                 </motion.div>

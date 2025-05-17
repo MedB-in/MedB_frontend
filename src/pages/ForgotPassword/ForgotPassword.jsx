@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/images/logo.svg";
+import Logo from "../../assets/images/medb-logo-png.png";
 import toast, { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import InputField from "../../components/Atoms/Login/InputField";
@@ -18,7 +18,7 @@ const ForgotPassword = () => {
 
     useEffect(() => {
         if (authenticated) {
-            navigate("/");
+            navigate("/app");
         }
     }, [authenticated, navigate]);
 

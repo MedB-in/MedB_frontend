@@ -66,7 +66,7 @@ const ClinicDetail = ({ clinicData, loading }) => {
                 <img src={back} alt="Back" className="cursor-pointer" onClick={() => window.history.back()} />
             </div>
 
-            <section className="bg-white p-4 md:p-12 rounded-xl shadow-xl flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-8">
+            <section className="bg-white p-4 lg:p-12 rounded-xl shadow-xl flex flex-col lg:flex-row items-center lg:items-start gap-2 lg:gap-8">
                 <motion.figure
                     className="w-full md:w-1/3 max-w-[300px] md:max-w-[411px] rounded-xl md:rounded-3xl shadow-lg overflow-hidden"
                     initial={{ opacity: 0, y: 50 }}
@@ -104,6 +104,18 @@ const ClinicDetail = ({ clinicData, loading }) => {
                                 Closed on: {closedDays.join(", ")}
                             </motion.p>
                         )}
+                    </div>
+                </motion.article>
+                <motion.article
+                    className="w-full md:w-[630px] text-center md:text-left px-4 md:mt-2 md:p-8 md:rounded-3xl"
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                >
+                    <h1 className="text-lg md:text-2xl font-semibold text-gray-900 capitalize">Overview</h1>
+                    <div className="w-full flex flex-col items-center md:items-start gap-3 mt-4 md:mt-6">
+                        <h3 className="text-sm md:text-base font-medium text-gray-600">{clinicData?.clinicOverview || 'N/A'}</h3>
                     </div>
                 </motion.article>
             </section>

@@ -20,6 +20,8 @@ import RegisterPage from "./pages/Register/RegisterPage";
 import VerificationPage from "./pages/Verification/VerificationPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ErrorPage from "./pages/404Page/ErrorPage";
+import EnquiriesPage from "./pages/ControlPanel/Enquiries/EnquiriesPage";
+import { NavigationProvider } from "./utils/Navigation";
 
 
 const App = () => {
@@ -31,92 +33,104 @@ const App = () => {
   }, [isAuthenticated, dispatch]);
 
   return (
-    <Routes>
-      {/* Public routes */}
-      <Route path="/home" element={<PublicPages.LandingPage />} />
-      <Route path="/find-doctor-clinic" element={<PublicPages.FindDoctorClinicPage />} />
-      <Route path="/find-doctor" element={<PublicPages.DoctorSearchPage />} />
-      <Route path="/doctor-profile" element={<PublicPages.DoctorProfilePage />} />
-      <Route path="/doctor-clinic" element={<PublicPages.DoctorClinicPage />} />
-      <Route path="/for-doctor" element={<PublicPages.ForDoctorPage />} />
-      <Route path="/for-clinic" element={<PublicPages.ForDoctorPage />} />
-      <Route path="/register-clinic" element={<PublicPages.ClinicRegistrationPage />} />
-      <Route path="/registration-status/:registrationId" element={<PublicPages.ClinicRegistrationStatusPage />} />
+    <NavigationProvider>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<PublicPages.LandingPage />} />
+        <Route path="/find-doctor-clinic" element={<PublicPages.FindDoctorClinicPage />} />
+        <Route path="/find-doctor" element={<PublicPages.DoctorSearchPage />} />
+        <Route path="/doctor-profile" element={<PublicPages.DoctorProfilePage />} />
+        <Route path="/doctor-clinic" element={<PublicPages.DoctorClinicPage />} />
+        <Route path="/for-doctor" element={<PublicPages.ForDoctorPage />} />
+        <Route path="/for-clinic" element={<PublicPages.ForDoctorPage />} />
+        <Route path="/register-clinic" element={<PublicPages.ClinicRegistrationPage />} />
+        <Route path="/register-doctor" element={<PublicPages.DoctorRegistrationPage />} />
+        <Route path="/registration-status/:registrationId" element={<PublicPages.ClinicRegistrationStatusPage />} />
+        <Route path="/about-us" element={<PublicPages.AboutUsPage />} />
+        <Route path="/privacy-policy" element={<PublicPages.PrivacyPolicyPage />} />
+        <Route path="/terms-and-conditions" element={<PublicPages.TermsAndConditionsPage />} />
 
+        {/* Login page */}
+        <Route path="/login" element={<LoginPage />} />
+        {/* Register page */}
+        <Route path="/register" element={<RegisterPage />} />
+        {/* Verification page */}
+        <Route path="/verify-email" element={<VerificationPage />} />
+        {/* Forgot password page */}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
-      {/* Login page */}
-      <Route path="/login" element={<LoginPage />} />
-      {/* Register page */}
-      <Route path="/register" element={<RegisterPage />} />
-      {/* Verification page */}
-      <Route path="/verify-email" element={<VerificationPage />} />
-      {/* Forgot password page */}
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/* Protected routes */}
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/app" element={<ControlPanel />} >
+            {/* Dashboard */}
+            <Route index element={<Dashboard />} />
 
-      {/* Protected routes */}
-      <Route element={<ProtectedRoutes />}>
-        <Route path="/" element={<ControlPanel />} >
-          {/* Dashboard */}
-          <Route index element={<Dashboard />} />
+            {/* Clinics */}
+            <Route path="clinics">
+              <Route index element={<Clinics.ClinicsPage />} />
+              <Route path="overview" element={<Clinics.Overview />} />
+              <Route path=":clinicId" element={<Clinics.ClinicDetails />} />
+              <Route path="slots/:clinicId/:doctorId" element={<Clinics.ClinicSlot />} />
+              <Route path="users/:clinicId" element={<Clinics.ClinicUsers />} />
+              <Route path="clinic-profile" element={<Clinics.ClinicProfile />} />
+              <Route path="clinic-registrations" element={<Clinics.ClinicRegistrations />} />
+              <Route path="leave-management/:doctorId/:clinicId" element={<DoctorsPage.MangeDoctorPage />} />
+              <Route path="fee-management" element={<Clinics.FeeManagement />} />
+              <Route path="clinicUserMenus" element={<Clinics.ClinicUserMenus />} />
+              <Route path="clinicUserAddRights/:clinicId" element={<EnquiriesPage />} />
+              <Route path="reports" element={<Clinics.Reports />} />
+            </Route>
 
-          {/* Clinics */}
-          <Route path="clinics">
-            <Route index element={<Clinics.ClinicsPage />} />
-            <Route path="overview" element={<Clinics.Overview />} />
-            <Route path=":clinicId" element={<Clinics.ClinicDetails />} />
-            <Route path="slots/:clinicId/:doctorId" element={<Clinics.ClinicSlot />} />
-            <Route path="users/:clinicId" element={<Clinics.ClinicUsers />} />
-            <Route path="clinic-profile" element={<Clinics.ClinicProfile />} />
-            <Route path="clinic-registrations" element={<Clinics.ClinicRegistrations />} />
-            <Route path="leave-management/:doctorId/:clinicId" element={<DoctorsPage.MangeDoctorPage />} />
-            <Route path="fee-management" element={<Clinics.FeeManagement />} />
-            <Route path="reports" element={<Clinics.Reports />} />
+            {/* Appointments */}
+            <Route path="appointments">
+              <Route index element={<Appointments.PatientAppointmentsPage />} />
+              <Route path="book-appointment" element={<Appointments.BookFromClinic />} />
+              <Route path="appointments-management" element={<Clinics.AppointmentsManagement />} />
+              <Route path="book-appointment/:clinicId" element={<Appointments.DoctorSelection />} />
+              <Route path="book-slots/:clinicId/:doctorId" element={<Appointments.BookSlots />} />
+            </Route>
+
+            {/* Patients */}
+            <Route path="patients">
+              <Route index element={<Patients.PatientManagementPage />} />
+              <Route path="prescriptions/:patientId/:doctorId/:clinicId/:appointmentId/:appointmentDate" element={<Patients.Prescriptions />} />
+              <Route path="prescriptions/:patientId" element={<Patients.PrescriptionPage />} />
+            </Route>
+
+            {/* User profile */}
+            <Route path="users">
+              <Route path="user-profile" element={< Users.UserProfilePage />} />
+              <Route path="user-rights" element={<Users.UserRightsPage />} />
+              <Route path="manage-user-rights" element={<Users.ManageUserRightsPage />} />
+              <Route path="manage-user-rights/:clinicId" element={<Users.ManageUserRightsPage />} />
+            </Route>
+
+            {/* Menu details */}
+            <Route path="menu-management" element={<MenuManagementPage />} />
+
+            {/* Products */}
+            <Route path="products" element={< ProductsPage />} />
+
+            {/* Doctors */}
+            <Route path="doctors" >
+              <Route index element={< DoctorsPage.DoctorsPage />} />
+              <Route path="leave-management/:doctorId/:clinicId" element={<DoctorsPage.MangeDoctorPage />} />
+              <Route path="manage-consultation" element={<DoctorsPage.ManageConsultation />} />
+              <Route path="overview" element={<DoctorsPage.Overview />} />
+            </Route>
+
+            {/* Subscriptions */}
+            <Route path="subscriptions" element={< UserSubscriptionPage />} />
+
+            {/* Enquiries */}
+            <Route path="enquiries" element={< EnquiriesPage />} />
           </Route>
-
-          {/* Appointments */}
-          <Route path="appointments">
-            <Route index element={<Appointments.PatientAppointmentsPage />} />
-            <Route path="book-appointment" element={<Appointments.BookFromClinic />} />
-            <Route path="appointments-management" element={<Clinics.AppointmentsManagement />} />
-            <Route path="book-appointment/:clinicId" element={<Appointments.DoctorSelection />} />
-            <Route path="book-slots/:clinicId/:doctorId" element={<Appointments.BookSlots />} />
-          </Route>
-
-          {/* Patients */}
-          <Route path="patients">
-            <Route index element={<Patients.PatientManagementPage />} />
-            <Route path="prescriptions/:patientId/:doctorId/:clinicId/:appointmentId/:appointmentDate" element={<Patients.Prescriptions />} />
-          </Route>
-
-          {/* User profile */}
-          <Route path="users">
-            <Route path="user-profile" element={< Users.UserProfilePage />} />
-            <Route path="user-rights" element={<Users.UserRightsPage />} />
-            <Route path="manage-user-rights" element={<Users.ManageUserRightsPage />} />
-          </Route>
-
-          {/* Menu details */}
-          <Route path="menu-management" element={<MenuManagementPage />} />
-
-          {/* Products */}
-          <Route path="products" element={< ProductsPage />} />
-
-          {/* Doctors */}
-          <Route path="doctors" >
-            <Route index element={< DoctorsPage.DoctorsPage />} />
-            <Route path="leave-management/:doctorId/:clinicId" element={<DoctorsPage.MangeDoctorPage />} />
-            <Route path="manage-consultation" element={<DoctorsPage.ManageConsultation />} />
-            <Route path="overview" element={<DoctorsPage.Overview />} />
-          </Route>
-
-          {/* Subscriptions */}
-          <Route path="subscriptions" element={< UserSubscriptionPage />} />
         </Route>
-      </Route>
 
-      {/* 404 page */}
-      <Route path="*" element={<ErrorPage />} />
-    </Routes>
+        {/* 404 page */}
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+    </NavigationProvider>
   );
 };
 

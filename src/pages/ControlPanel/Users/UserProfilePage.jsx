@@ -79,6 +79,11 @@ const UserProfilePage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (!phoneRegex.test(formData.contactNo)) {
+            toast.error("Please enter a valid Indian contact number.");
+            return;
+        }
         setLoading(true);
         try {
             const response = await updateProfile(formData);
@@ -86,7 +91,7 @@ const UserProfilePage = () => {
             setUserDetails({ ...formData, profilePicture: lastSavedProfilePicture });
             localStorage.setItem("userDetails", JSON.stringify({ ...formData, profilePicture: lastSavedProfilePicture }));
             window.dispatchEvent(new Event("userDetailsUpdated"))
-            navigate("/");
+            navigate("/app");
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong.");
             setProfilePicturePreview(lastSavedProfilePicture);

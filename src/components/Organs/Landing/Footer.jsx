@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import logo from "../../../assets/images/medb-logo-png.png";
 import emailIcon from "../../../assets/images/email-icon.png";
 import phoneIcon from "../../../assets/images/phone-icon2.png";
@@ -7,16 +9,19 @@ import locationIcon from "../../../assets/images/location-06.png";
 import facebookIcon from "../../../assets/images/facebook-logo.png";
 import linkedInIcon from "../../../assets/images/linkedin-icon.png";
 import instagramIcon from "../../../assets/images/instagram-icon.png";
-import { Link } from "react-router-dom";
+import { subscribeNewsletter, sendEnquiry } from "../../../services/publicApi";
 
 const Footer = () => {
 
     const contactRef = useRef(null);
     const [email, setEmail] = useState("");
+    const [newsletterLoading, setNewsletterLoading] = useState(false);
+    const [enquiryLoading, setEnquiryLoading] = useState(false);
     const [formData, setFormData] = useState({
         role: "Doctor",
         name: "",
         phone: "",
+        email: "",
         message: ""
     });
 
@@ -29,11 +34,68 @@ const Footer = () => {
         return () => window.removeEventListener("scroll-to-contact", handleScroll);
     }, []);
 
+    const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const isValidIndianMobile = (mobile) => {
+        const mobileRegex = /^[6-9]\d{9}$/;
+        return mobileRegex.test(mobile);
+    };
+
+    const handleNewsletterSubmit = async () => {
+        if (!email.trim()) return toast.error("Please enter an email address");
+        if (!isValidEmail(email)) return toast.error("Please enter a valid email");
+
+        try {
+            setNewsletterLoading(true);
+            await subscribeNewsletter(email);
+            toast.success("Subscribed successfully!");
+            setEmail("");
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong.");
+        } finally {
+            setNewsletterLoading(false);
+        }
+    };
+
+
+    const handleEnquirySubmit = async (e) => {
+        e.preventDefault();
+        const { role, name, phone, email, message } = formData;
+        if (!role || !name || !phone || !email || !message) {
+            return toast.error("Please fill in all fields.");
+        }
+        if (!isValidIndianMobile(phone)) {
+            return toast.error("Please enter a valid mobile number.");
+        }
+
+        try {
+            setEnquiryLoading(true);
+            await sendEnquiry(formData);
+            toast.success("Enquiry sent successfully!");
+            setFormData({
+                role: "Doctor",
+                name: "",
+                phone: "",
+                email: "",
+                message: ""
+            });
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong.");
+        } finally {
+            setEnquiryLoading(false);
+        }
+    };
+
+
     const links = [
-        { name: "Home", path: "/home" },
+        { name: "Home", path: "/" },
         { name: "Features", path: "/for-doctor" },
-        { name: "About Us", path: "" },
+        { name: "About Us", path: "/about-us" },
         { name: "For Doctor", path: "/for-doctor" },
+        { name: "For Clinic", path: "/for-clinic" },
         { name: "Contact Us", path: "" }
     ]
 
@@ -126,8 +188,9 @@ const Footer = () => {
                             className="bg-[#6F64E7] text-white px-4 py-2 rounded-full hover:bg-[#554cd4] transition text-sm sm:text-base ml-2"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
+                            onClick={handleNewsletterSubmit}
                         >
-                            Send
+                            Subscribe
                         </motion.button>
                     </div>
                     <motion.form
@@ -135,16 +198,19 @@ const Footer = () => {
                         viewport={{ once: true, amount: 0.3 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.5 }}
+                        onSubmit={handleEnquirySubmit}
                         className="bg-white shadow-md p-4 mt-6 rounded-md space-y-4">
                         <select className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#6F64E7]" value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value })}>
                             <option>Doctor</option>
+                            <option>Clinic</option>
                             <option>Patient</option>
                             <option>Other</option>
                         </select>
-                        <input type="text" placeholder="Name" className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#6F64E7]" onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-                        <input type="text" placeholder="Phone Number" className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#6F64E7]" onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-                        <input type="text" placeholder="Message" className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#6F64E7]" onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
-                        <button type="submit" className="w-full bg-[#6F64E7] text-white p-2 rounded-md hover:bg-[#554cd4] transition">Send</button>
+                        <input type="text" placeholder="Name" value={formData.name} className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#6F64E7]" onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                        <input type="text" placeholder="Phone Number" value={formData.phone} className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#6F64E7]" onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+                        <input type="email" placeholder="Email" value={formData.email} className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#6F64E7]" onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                        <input type="text" placeholder="Message" value={formData.message} className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#6F64E7]" onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
+                        <button type="submit" className="w-full bg-[#6F64E7] text-white p-2 rounded-md hover:bg-[#554cd4] transition">Send Enquiry</button>
                     </motion.form>
                 </motion.div>
             </div>
@@ -159,10 +225,14 @@ const Footer = () => {
                     <p className="text-gray-600 md:justify-self-start">
                         © 2025 MEDB India. All rights reserved.
                     </p>
-                    <div className="flex justify-center md:justify-center">
-                        <div className="text-[#6F64E7] hover:underline cursor-pointer">
+                    <div className="flex justify-center md:justify-center gap-2">
+                        <Link to="/privacy-policy" className="text-[#6F64E7] hover:underline cursor-pointer">
                             Privacy Policy
-                        </div>
+                        </Link>
+                        <div className="text-gray-600">|</div>
+                        <Link to="/terms-and-conditions" className="text-[#6F64E7] hover:underline cursor-pointer">
+                            Terms & Conditions
+                        </Link>
                     </div>
                     <div className="flex justify-center md:justify-end space-x-4 mt-3 md:mt-0">
                         <motion.a

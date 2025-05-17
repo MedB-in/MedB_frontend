@@ -74,10 +74,7 @@ const DoctorDetails = ({ doctor }) => {
                                 </motion.div>
                                 <section className="hidden md:flex mt-8 flex-col px-7 py-6 w-full md:w-[50%] border border-black border-opacity-50 rounded-3xl self-start">
                                     <h2 className="text-3xl font-semibold text-indigo-500">Overview</h2>
-                                    <p className="mt-6 text-base font-light leading-6 text-neutral-800">
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                                    </p>
+                                    <p className="mt-6 text-base font-light leading-6 text-neutral-800">{doctor?.doctorOverview ? doctor?.doctorOverview : 'No overview available'}</p>
                                 </section>
                             </motion.div>
                         </section>

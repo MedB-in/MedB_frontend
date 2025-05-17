@@ -1,7 +1,7 @@
 {
   "name": "medb-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.9.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -41,6 +41,6 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
-    "vite": "^6.3.3"
+    "vite": "^6.3.4"
   }
 }
