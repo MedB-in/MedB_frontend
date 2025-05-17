@@ -4,6 +4,7 @@ import ClinicRow from "../../../components/Atoms/Clinic/ClinicRow";
 import toast from "react-hot-toast";
 import ClinicDetails from "../../../components/Atoms/Clinic/ClinicDetails";
 import Swal from "sweetalert2";
+import BackButton from "../../../components/Atoms/BackButton";
 
 const ClinicRegistrations = () => {
     const [clinics, setClinics] = useState([]);
@@ -125,12 +126,7 @@ const ClinicRegistrations = () => {
 
     return (
         <div className="bg-white px-6">
-            <button
-                className="bg-gray-200 text-gray-700 px-4 py-2 my-8 rounded-md hover:bg-gray-300"
-                onClick={() => window.history.back()}
-            >
-                ← Back
-            </button>
+            <BackButton />
             <div className="mx-auto w-full">
                 <h1 className="text-3xl font-bold text-gray-900 mb-8">Clinic Registrations</h1>
 

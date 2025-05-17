@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { getUserList } from "../../../services/user";
 import { getClinicUsers } from "../../../services/clinics";
-import { useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import toast from "react-hot-toast";
 import UserRightsModal from "../../../components/Organs/Users/UserRightsModal";
 import { ArrowLeft } from "lucide-react";
+import BackButton from "../../../components/Atoms/BackButton";
 
 function UserList() {
     const [users, setUsers] = useState([]);
@@ -14,8 +15,7 @@ function UserList() {
     const [totalPages, setTotalPages] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [searchParams] = useSearchParams();
-    const clinicId = searchParams.get('clinicId');
+    const { clinicId } = useParams('clinicId');
 
     const fetchUsers = useCallback(async (query, page) => {
         setLoading(true);
@@ -87,13 +87,7 @@ function UserList() {
     return (
         <section className="flex flex-col items-center justify-center text-center bg-white">
             <div className="p-4 self-start">
-                <button
-                    onClick={() => window.history.back()}
-                    className="flex items-center gap-2 px-4 py-2  bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-200 shadow-sm"
-                >
-                    <ArrowLeft className="w-4 h-4" />
-                    Back
-                </button>
+                <BackButton />
             </div>
             {!clinicId &&
 

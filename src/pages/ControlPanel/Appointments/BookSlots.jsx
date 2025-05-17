@@ -10,6 +10,7 @@ import { getDoctorClinic, bookFromClinic, getPatients } from "../../../services/
 import visitReasons from "../../../lib/reasonOptions";
 import { getDoctorSlots, bookSlot } from "../../../services/doctors";
 import AddPatientModal from "../../../components/Organs/Patient/PatientModal";
+import BackButton from "../../../components/Atoms/BackButton";
 
 const BookSlots = () => {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -154,7 +155,7 @@ const BookSlots = () => {
 
     return (
         <section className="p-8 flex flex-col min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl">
-            <p className="text-sm self-start pl-5 underline font-bold text-[#7a5fd3] cursor-pointer" onClick={() => window.history.back()}> {'<'} Back</p>
+            <BackButton />
             {doctor ? (
                 <div className="flex items-center gap-4 mb-6 p-5">
                     <img

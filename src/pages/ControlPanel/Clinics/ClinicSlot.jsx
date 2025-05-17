@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import days from "../../../lib/slotDays";
 import { addSlots, getDoctorClinic, getSlots, editSlot, deleteSlot } from "../../../services/clinics";
 import Swal from "sweetalert2";
+import BackButton from "../../../components/Atoms/BackButton";
 
 const ClinicSlot = () => {
   const { clinicId, doctorId } = useParams();
@@ -259,12 +260,7 @@ const ClinicSlot = () => {
 
   return (
     <div className="p-5">
-      <button
-        className="bg-gray-200 text-gray-700 px-4 py-2 my-5 rounded-md hover:bg-gray-300"
-        onClick={() => window.history.back()}
-      >
-        ← Back
-      </button>
+      <BackButton />
       {doctorClinic && (
         <div className="flex-1 bg-white/70 backdrop-blur-md p-6 rounded-xl shadow-md border border-gray-200 flex items-center gap-6">
           <div className="flex items-center gap-4 w-1/2">
