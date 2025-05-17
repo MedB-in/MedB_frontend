@@ -203,7 +203,7 @@ const ClinicSlot = () => {
               slot.doctorSlotId === editingSlot.doctorSlotId ? { ...newSlot, doctorSlotId: editingSlot.doctorSlotId } : slot
             );
           } else {
-            return [...prevSlots, { ...newSlot, doctorSlotId: response?.data?.data?.doctorSlotId }];
+            return [...prevSlots, { ...newSlot, doctorSlotId: response?.data?.doctorSlotId }];
           }
         });
 
