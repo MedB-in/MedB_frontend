@@ -10,6 +10,7 @@ import days from "../../../lib/slotDays";
 import { editClinic, getClinicById, setIsDoctorClinicStatus } from "../../../services/clinics";
 import { addDoctor, editDoctor } from "../../../services/doctors";
 import DoctorCard from "../../../components/Organs/Doctors/DoctorCard";
+import BackButton from "../../../components/Atoms/BackButton";
 
 const ClinicDetailsPage = ({ idClinic }) => {
     let { clinicId } = useParams();
@@ -143,12 +144,7 @@ const ClinicDetailsPage = ({ idClinic }) => {
 
     return (
         <div className="p-4">
-            <button
-                className="bg-gray-200 text-gray-700 px-4 py-2 my-5 rounded-md hover:bg-gray-300"
-                onClick={() => window.history.back()}
-            >
-                ← Back
-            </button>
+            <BackButton />
             {loading ? (<>
                 <div className="animate-pulse bg-gradient-to-r from-blue-50 to-indigo-50 shadow-xl p-6 rounded-2xl w-full flex flex-col md:flex-row items-center md:items-start gap-6 border border-gray-200">
                     <div className="w-full md:w-1/3 h-48 md:h-56 bg-gray-300 rounded-lg shadow-md border border-gray-300" />

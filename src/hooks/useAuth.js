@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { doLogout } from "../services/auth";
 import { persistor } from "../redux/store";
+import { useNavigation } from "../utils/Navigation";
 
 function useAuth() {
     const [user, setUser] = useState(null);
@@ -22,6 +23,7 @@ function useAuth() {
         localStorage.removeItem("openModuleIndex");
         localStorage.removeItem("selectedMenu");
         localStorage.removeItem("userDetails");
+        clearRouteStack();
         sessionStorage.clear();
         await persistor.purge();
         setUser(null);

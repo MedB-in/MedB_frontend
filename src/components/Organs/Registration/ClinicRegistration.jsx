@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import FormInput from "../../Atoms/Login/InputField";
 import FormButton from "../../Atoms/Login/Button";
 import { registerClinic } from "../../../services/publicApi";
@@ -10,6 +10,7 @@ import TermsModal from "../Clinics/TermsModal";
 const ClinicRegistration = () => {
     const [loading, setLoading] = useState(false);
     const [showTermsModal, setShowTermsModal] = useState(false);
+    const [locationKey, setLocationKey] = useState(0);
     const [formData, setFormData] = useState({
         name: "",
         location: "",
@@ -78,6 +79,7 @@ const ClinicRegistration = () => {
             clinicPicture: "",
             acceptTerms: false,
         });
+        setLocationKey(prev => prev + 1);
     };
 
     const handleLocationSelect = (lat, lng, address, city, district, state, country, postalCode) => {
@@ -128,7 +130,7 @@ const ClinicRegistration = () => {
                             />
                         </div>
                         <div className="flex flex-col w-full md:w-1/2 md:pr-4">
-                            <LocationSelector onSelect={handleLocationSelect} />
+                            <LocationSelector key={locationKey} onSelect={handleLocationSelect} />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <FormInput
@@ -190,7 +192,6 @@ const ClinicRegistration = () => {
                                 maxLength={10}
                                 title="Enter a valid 10-digit mobile number"
                             />
-
                             <FormInput
                                 type="email"
                                 placeholder="Email*"
@@ -215,7 +216,6 @@ const ClinicRegistration = () => {
                                 onChange={handleChange}
                             />
                         </div>
-
                         <div className="flex items-center gap-3 text-sm">
                             <input
                                 type="checkbox"

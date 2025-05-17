@@ -75,7 +75,7 @@ function UserRightsList(clinic) {
     <section className="flex flex-col items-center justify-center text-center bg-white">
       <div className="w-full flex items-center justify-center">
         <Button
-          onClick={() => navigate(`/app/users/manage-user-rights?clinicId=${clinic.clinicId}`)}
+          onClick={() => { clinic.clinicId ? navigate(`/app/users/manage-user-rights/${clinic.clinicId}`) : navigate(`/app/users/manage-user-rights`) }}
         >
           Add User Rights for Menu
         </Button>

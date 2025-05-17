@@ -4,6 +4,7 @@ import LocationSelector from "../../LocationSelector";
 import InputField from "../../Atoms/Input";
 import Button from "../../Atoms/Button1";
 import { UploadIcon } from "lucide-react";
+import { isValidPhone, isValidPincode } from "../../../validation/validations";
 
 const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
   const [loading, setLoading] = useState(false);
@@ -160,7 +161,19 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
         formDataToSend.append(key, value);
       }
     });
+    if (!isValidPhone(formData.contact)) {
+      setError("Please enter a valid phone number.");
+      toast.error("Please enter a valid phone number.");
+      setLoading(false);
+      return;
+    }
 
+    if (!isValidPincode(formData.postalCode)) {
+      setError("Please enter a valid pincode.");
+      toast.error("Please enter a valid pincode.");
+      setLoading(false);
+      return;
+    }
     if (clinicPictureFile) {
       formDataToSend.append("image", clinicPictureFile);
     }

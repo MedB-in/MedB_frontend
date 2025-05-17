@@ -3,6 +3,7 @@ import { getClinicUsers } from "../../../services/clinics";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import ClinicUserModal from "../../../components/Organs/Clinics/ClinicUserModal";
+import BackButton from "../../../components/Atoms/BackButton";
 
 function ClinicUsers() {
     const { clinicId } = useParams();
@@ -37,12 +38,7 @@ function ClinicUsers() {
 
     return (
         <div className="p-4">
-            <button
-                className="bg-gray-200 text-gray-700 px-4 py-2 my-5 rounded-md hover:bg-gray-300"
-                onClick={() => window.history.back()}
-            >
-                ← Back
-            </button>
+            <BackButton />
             <section className="flex flex-col items-center justify-center text-center bg-white">
                 <button
                     className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"

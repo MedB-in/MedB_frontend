@@ -5,6 +5,7 @@ import LocationSelector from "../../LocationSelector";
 import { UploadIcon } from "lucide-react";
 import Swal from "sweetalert2";
 import { medicalDepartments } from "../../../lib/medicalDepartments";
+import { isValidPhone, isValidPincode } from "../../../validation/validations";
 
 const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onSubmit }) => {
   const [loading, setLoading] = useState(false);
@@ -124,7 +125,18 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
         formDataToSend.append(key, value);
       }
     });
-
+    if (!isValidPhone(formData.phone)) {
+      setError("Please enter a valid phone number.");
+      toast.error("Please enter a valid phone number.");
+      setLoading(false);
+      return;
+    }
+    if (!isValidPincode(formData.postalCode)) {
+      setError("Please enter a valid pincode.");
+      toast.error("Please enter a valid pincode.");
+      setLoading(false);
+      return;
+    }
     if (doctorPictureFile) {
       formDataToSend.append("image", doctorPictureFile);
     }
