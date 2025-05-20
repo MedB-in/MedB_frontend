@@ -30,8 +30,11 @@ const DoctorsPage = () => {
   };
 
   useEffect(() => {
-    fetchDoctors();
-  }, [currentPage, searchQuery]);
+    const delayDebounce = setTimeout(() => {
+      fetchDoctors();
+    }, 500);
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery, currentPage]);
 
   const handleAddDoctor = () => {
     setDoctorData(null);
@@ -129,6 +132,7 @@ const DoctorsPage = () => {
                       className="w-16 h-16 rounded-full object-cover border border-gray-300"
                       src={doctor.profilePicture}
                       alt={doctor.doctorName}
+                      loading="lazy"
                     />
                   ) : (
                     <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-sm text-white">
