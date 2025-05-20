@@ -9,7 +9,7 @@ const FloatingActionButtons = () => {
         <>
             <div
                 className="fixed right-0 md:top-[73dvh] top-[70dvh] flex items-center bg-[#6F64E7] text-white rounded-l-lg p-1 md:p-2 z-50 cursor-pointer hover:opacity-90"
-                title="Send us a message"
+                title="Book An Appointment"
             >
                 <img src={notebook} alt="Message" className="w-6 h-6 md:w-8 md:h-8 object-contain" onClick={() => navigate('/find-doctor-clinic')} />
             </div>

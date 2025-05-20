@@ -325,7 +325,19 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Phone</label>
-            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+            <input type="tel" name="phone" value={formData.phone} onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d{0,10}$/.test(value)) {
+                  handleChange(e);
+                }
+              }}
+              maxLength={10}
+              pattern="\d{10}"
+              inputMode="numeric"
+              className="w-full p-2 border rounded-md"
+              required
+              title="Phone number must be 10 digits"
+            />
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Location</label>
@@ -333,34 +345,42 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">Address</label>
-            <input type="text" name="address" value={formData.address} onChange={handleChange} className="w-full p-2 border rounded-md" />
+            <input type="text" name="address" value={formData.address} onChange={handleChange} className="w-full p-2 border rounded-md" required />
           </div>
           <div className="mb-4 grid grid-cols-2 gap-2">
             <div>
               <label className="block text-sm font-medium">City</label>
-              <input type="text" name="city" value={formData.city} className="w-full p-2 border rounded-md cursor-default" readOnly />
+              <input type="text" name="city" value={formData.city} className="w-full p-2 border rounded-md cursor-default" />
             </div>
             <div>
               <label className="block text-sm font-medium">District</label>
-              <input type="text" name="district" value={formData.district} className="w-full p-2 border rounded-md cursor-default" readOnly />
+              <input type="text" name="district" value={formData.district} className="w-full p-2 border rounded-md cursor-default" required />
             </div>
           </div>
           <div className="mb-4 grid grid-cols-2 gap-2">
             <div>
               <label className="block text-sm font-medium">State</label>
-              <input type="text" name="state" value={formData.state} className="w-full p-2 border rounded-md cursor-default" readOnly />
+              <input type="text" name="state" value={formData.state} className="w-full p-2 border rounded-md cursor-default" required />
             </div>
             <div>
               <label className="block text-sm font-medium">Country</label>
-              <input type="text" name="country" value={formData.country} className="w-full p-2 border rounded-md cursor-default" readOnly />
+              <input type="text" name="country" value={formData.country} className="w-full p-2 border rounded-md cursor-default" required />
             </div>
             <div>
               <label className="block text-sm font-medium">Postal Code</label>
-              <input type="text" name="postalCode" value={formData.postalCode} className="w-full p-2 border rounded-md cursor-default" readOnly />
+              <input type="text" name="postalCode" value={formData.postalCode} maxLength={6} pattern="\d{6}" inputMode="numeric" onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d{0,6}$/.test(value)) {
+                  setFormData(prev => ({ ...prev, postalCode: value }));
+                }
+              }}
+                className="w-full p-2 border rounded-md cursor-default"
+                required
+              />
             </div>
             <div>
               <label className="block text-sm font-medium"></label>
-              <input type="text" name="" value="" className="" readOnly />
+              <input type="text" name="" value="" className="" />
             </div>
             <div className="mb-4 flex items-center space-x-2">
               <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleChange} className="form-checkbox" />

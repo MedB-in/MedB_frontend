@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import logo from "../../../assets/images/medb-logo-png.png";
 import emailIcon from "../../../assets/images/email-icon.png";
@@ -14,6 +14,8 @@ import { subscribeNewsletter, sendEnquiry } from "../../../services/publicApi";
 const Footer = () => {
 
     const contactRef = useRef(null);
+    const location = useLocation();
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [newsletterLoading, setNewsletterLoading] = useState(false);
     const [enquiryLoading, setEnquiryLoading] = useState(false);
@@ -60,6 +62,13 @@ const Footer = () => {
         }
     };
 
+    const goToHome = () => {
+        if (location.pathname === '/') {
+            window.dispatchEvent(new Event("scroll-to-home"));
+        } else {
+            navigate('/');
+        }
+    };
 
     const handleEnquirySubmit = async (e) => {
         e.preventDefault();
@@ -91,7 +100,6 @@ const Footer = () => {
 
 
     const links = [
-        { name: "Home", path: "/" },
         { name: "Features", path: "/for-doctor" },
         { name: "About Us", path: "/about-us" },
         { name: "For Doctor", path: "/for-doctor" },
@@ -127,6 +135,9 @@ const Footer = () => {
                 >
                     <h3 className="text-xl font-semibold text-[#6F64E7] mb-4">Quick Links</h3>
                     <ul className="space-y-3 text-gray-700 text-sm md:text-base">
+                        <div onClick={goToHome} className="hover:text-[#6F64E7] transition cursor-pointer">
+                            Home
+                        </div>
                         {links.map(link => (
                             <li key={link.name}>
                                 <Link to={link.path} className="hover:text-[#6F64E7] transition">

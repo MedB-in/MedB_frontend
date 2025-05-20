@@ -221,7 +221,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                                     } capitalize`}
                                             >
                                                 {module.moduleName === "Patient"
-                                                    ? `${user.firstName}${user.middleName ? ` ${user.middleName}` : ""}${user.lastName ? ` ${user.lastName}` : ""}`
+                                                    ? `${user?.firstName}${user?.middleName ? ` ${user?.middleName}` : ""}${user?.lastName ? ` ${user?.lastName}` : ""}`
                                                     : module.moduleName}
                                             </span>
                                         </div>
@@ -442,7 +442,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                                     } capitalize`}
                                             >
                                                 {module.moduleName === "Patient"
-                                                    ? `${user.firstName}${user.middleName ? ` ${user.middleName}` : ""}${user.lastName ? ` ${user.lastName}` : ""}`
+                                                    ? `${user?.firstName}${user?.middleName ? ` ${user?.middleName}` : ""}${user?.lastName ? ` ${user?.lastName}` : ""}`
                                                     : module.moduleName}
                                             </span>
                                         </div>
