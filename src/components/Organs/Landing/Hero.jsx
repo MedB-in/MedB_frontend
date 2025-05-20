@@ -9,6 +9,7 @@ import { getActiveClinics } from "../../../services/publicApi";
 import toast from "react-hot-toast";
 
 const Hero = () => {
+    const homeRef = useRef(null);
     const tabs = ["Doctors", "Clinic", "Lab"];
     const images = { Doctors: DoctorIcon, Clinic: ClinicIcon, Lab: LabIcon };
     const redirects = { Doctors: "/find-doctor-clinic", Clinic: "/find-doctor-clinic", Lab: "" };
@@ -53,6 +54,15 @@ const Hero = () => {
             input?.removeEventListener("keydown", handleKeyDown);
         };
     }, [clinicResults, selectedIndex]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            homeRef.current?.scrollIntoView({ behavior: "smooth" });
+        };
+
+        window.addEventListener("scroll-to-home", handleScroll);
+        return () => window.removeEventListener("scroll-to-home", handleScroll);
+    }, []);
 
 
     useEffect(() => {
@@ -107,7 +117,7 @@ const Hero = () => {
     };
 
     return (
-        <section className="flex flex-col lg:flex-row items-center px-6 py-12 lg:px-16 bg-gradient-to-r from-white to-[#d9f1f2] mt-16 md:mt-20 cursor-default">
+        <section ref={homeRef} className="flex flex-col lg:flex-row items-center px-6 py-12 lg:px-16 bg-gradient-to-r from-white to-[#d9f1f2] mt-16 md:mt-20 cursor-default">
             <div className="w-full lg:w-1/2 text-center lg:text-left">
                 <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-[40px] lg:text-[80px] font-black text-[#6F64E7] leading-tight">
                     Do <span className="bold">MedB</span>

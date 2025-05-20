@@ -1,4 +1,4 @@
-const ClinicDetails = ({ clinic, onClose, onApprove, onReject, loading }) => {
+const ClinicDetails = ({ clinic, onClose, onApprove, onReject, approveLoading, rejectLoading }) => {
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -36,17 +36,18 @@ const ClinicDetails = ({ clinic, onClose, onApprove, onReject, loading }) => {
                     <button
                         onClick={() => onApprove(clinic.registrationId)}
                         className="mt-6 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded mr-10"
+                        disabled={approveLoading || rejectLoading}
                     >
-                        {loading ? 'Approving...' : 'Approve Clinic'}
+                        {approveLoading ? 'Approving...' : 'Approve Clinic'}
                     </button>
                 )}
                 {!clinic.isRejected && !clinic.isApproved && (
                     <button
                         onClick={() => onReject(clinic.registrationId)}
                         className="mt-6 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
-                        disabled={loading}
+                        disabled={approveLoading || rejectLoading}
                     >
-                        {loading ? 'Rejecting...' : 'Reject'}
+                        {rejectLoading ? 'Rejecting...' : 'Reject'}
                     </button>
                 )}
             </div>

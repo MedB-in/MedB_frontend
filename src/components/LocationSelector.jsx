@@ -41,7 +41,9 @@ const LocationSelector = ({ onSelect }) => {
                     const types = component.types;
 
                     if (types.includes("locality")) city = component.long_name;
-                    if (types.includes("administrative_area_level_2")) district = component.long_name;
+                    if (types.includes("administrative_area_level_2") || types.includes("administrative_area_level_3")) {
+                        district = component.long_name;
+                    }
                     if (types.includes("administrative_area_level_1")) state = component.long_name;
                     if (types.includes("country")) country = component.long_name;
                     if (types.includes("postal_code")) postalCode = component.long_name;
