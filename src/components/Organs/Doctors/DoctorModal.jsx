@@ -10,7 +10,6 @@ import { isValidPhone, isValidPincode } from "../../../validation/validations";
 const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onSubmit }) => {
   const [loading, setLoading] = useState(false);
   const [clinics, setClinics] = useState([]);
-  const [error, setError] = useState(null);
   const [selfClinic, setSelfClinic] = useState(false);
   const [doctorPictureFile, setDoctorPictureFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -72,7 +71,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     } else {
       setFormData(defaultFormData);
     }
-    setError(null);
   }, [doctorData, clinicId]);
 
   const handleSelfClinicChange = (e) => {
@@ -82,7 +80,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
       ...prev,
       isOwnClinic: checked,
     }));
-    setError(null);
   };
 
   const handleChange = (e) => {
@@ -91,7 +88,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-    setError(null);
   };
 
   const handleFileChange = (e) => {
@@ -114,7 +110,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     const formDataToSend = new FormData();
 
@@ -126,13 +121,11 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
       }
     });
     if (!isValidPhone(formData.phone)) {
-      setError("Please enter a valid phone number.");
       toast.error("Please enter a valid phone number.");
       setLoading(false);
       return;
     }
     if (!isValidPincode(formData.postalCode)) {
-      setError("Please enter a valid pincode.");
       toast.error("Please enter a valid pincode.");
       setLoading(false);
       return;
@@ -144,7 +137,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     try {
       await onSubmit(formDataToSend, formData.doctorId);
     } catch (error) {
-      setError(error.response?.data?.message || "Something went wrong");
       toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -165,11 +157,10 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
       country,
       postalCode,
     }));
-    setError(null);
   };
 
   const handleCloseModal = () => {
-    if (!error && JSON.stringify(formData) !== JSON.stringify(defaultFormData)) {
+    if (JSON.stringify(formData) !== JSON.stringify(defaultFormData)) {
       Swal.fire({
         title: "Are you sure?",
         text: "Any unsaved changes will be lost!",
@@ -179,13 +170,11 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          setError(null);
           setFormData(defaultFormData);
           closeModal();
         }
       });
     } else {
-      setError(null);
       setFormData(defaultFormData);
       closeModal();
     }
@@ -195,7 +184,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
-      <Toaster />
       <div className="bg-white p-6 rounded-md shadow-lg w-[400px] max-h-[90vh] overflow-auto">
         <h3 className="text-xl font-semibold mb-4">
           {doctorData ? "Edit Doctor" : "Add New Doctor"}

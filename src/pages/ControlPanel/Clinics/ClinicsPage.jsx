@@ -33,8 +33,12 @@ const ClinicsPage = () => {
   };
 
   useEffect(() => {
-    fetchClinics();
-  }, [currentPage, searchQuery]);
+    const delayDebounce = setTimeout(() => {
+      fetchClinics();
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery, currentPage]);
 
   const handleAddClinic = () => {
     setClinicData(null);
@@ -158,6 +162,7 @@ const ClinicsPage = () => {
                     className="w-16 h-16 rounded-full object-cover"
                     src={clinic.clinicPicture}
                     alt={clinic.name}
+                    loading="lazy"
                   />
                 ) : (
                   <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-sm text-white">
@@ -211,12 +216,14 @@ const ClinicsPage = () => {
         />
       )}
       {/* Clinic Modal */}
-      <ClinicModal
-        isOpen={isClinicModalOpen}
-        closeModal={handleCloseModal}
-        clinicData={clinicData}
-        onSubmit={handleSubmit}
-      />
+      {isClinicModalOpen && (
+        <ClinicModal
+          isOpen={isClinicModalOpen}
+          closeModal={handleCloseModal}
+          clinicData={clinicData}
+          onSubmit={handleSubmit}
+        />
+      )}
     </section>
   );
 };
