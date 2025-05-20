@@ -19,11 +19,11 @@ export const getClinicRegistrations = (page) =>
 
 //API to approve clinic registration
 export const approveClinic = (id) =>
-    axios.put(`/api/clinic/registration/approve/${id}`, getHeaders());
+    axios.put(`/api/clinic/registration/approve/${id}`, {}, getHeaders());
 
 //API to reject clinic registration
 export const rejectClinic = (id) =>
-    axios.put(`/api/clinic/registration/reject/${id}`, getHeaders());
+    axios.put(`/api/clinic/registration/reject/${id}`, {}, getHeaders());
 
 //API to handle get Clinics list.
 export const getClinicList = () =>

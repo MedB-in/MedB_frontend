@@ -12,19 +12,24 @@ const ClinicRegistrations = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [selectedId, setSelectedId] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [approveLoading, setApproveLoading] = useState(false);
+    const [rejectLoading, setRejectLoading] = useState(false);
+
+    const fetchClinics = async () => {
+        try {
+            setLoading(true);
+            const { data } = await getClinicRegistrations(currentPage);
+            setClinics(data.clinics);
+            setCurrentPage(data.currentPage);
+            setTotalPages(data.totalPages);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchClinics = async () => {
-            try {
-                const { data } = await getClinicRegistrations(currentPage);
-                setClinics(data.clinics);
-                setCurrentPage(data.currentPage);
-                setTotalPages(data.totalPages);
-            } catch (error) {
-                toast.error(error.response?.data?.message || "Something went wrong");
-            }
-        };
-
         fetchClinics();
     }, [currentPage]);
 
@@ -44,28 +49,15 @@ const ClinicRegistrations = () => {
 
         if (result.isConfirmed) {
             try {
-                setLoading(true);
-                const result = await approveClinic(id);
-                setClinics((prevClinics) =>
-                    prevClinics.map((clinic) =>
-                        clinic.registrationId === id
-                            ? {
-                                ...clinic,
-                                isApproved: result.data.isApproved,
-                                isRejected: result.data.isRejected,
-                                approvedBy: "Super Admin",
-                                approvedOn: result.data.approvedOn,
-                            }
-                            : clinic
-                    )
-                );
-
+                setApproveLoading(true);
+                await approveClinic(id);
                 toast.success("Clinic approved successfully");
                 setSelectedId(null);
+                fetchClinics();
             } catch (error) {
                 toast.error(error.response?.data?.message || "Something went wrong");
             } finally {
-                setLoading(false);
+                setApproveLoading(false);
             }
         }
     };
@@ -82,30 +74,15 @@ const ClinicRegistrations = () => {
 
         if (result.isConfirmed) {
             try {
-                setLoading(true);
-                const result = await rejectClinic(id);
-
-                setClinics((prevClinics) =>
-                    prevClinics.map((clinic) =>
-                        clinic.registrationId === id
-                            ? {
-                                ...clinic,
-                                isApproved: result.data.isApproved,
-                                isRejected: result.data.isRejected,
-                                rejectedBy: "Super Admin",
-                                rejectedOn: result.data.rejectedOn,
-                                rejectedReason: result.data.rejectedReason,
-                            }
-                            : clinic
-                    )
-                );
-
+                setRejectLoading(true);
+                await rejectClinic(id);
                 toast.success("Clinic rejected successfully");
                 setSelectedId(null);
+                fetchClinics();
             } catch (error) {
                 toast.error(error.response?.data?.message || "Something went wrong");
             } finally {
-                setLoading(false);
+                setRejectLoading(false);
             }
         }
     };
@@ -153,7 +130,8 @@ const ClinicRegistrations = () => {
                                                     onApprove={onApprove}
                                                     onReject={onReject}
                                                     onClose={() => setSelectedId(null)}
-                                                    loading={loading}
+                                                    approveLoading={approveLoading}
+                                                    rejectLoading={rejectLoading}
                                                 />
                                             </td>
                                         </tr>
