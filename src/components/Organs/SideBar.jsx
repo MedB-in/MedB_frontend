@@ -14,6 +14,7 @@ import { deleteAllNotifications, deleteNotification, getNotifications } from '..
 import socket, { reconnectSocketWithNewToken } from '../../utils/socket';
 import SidebarItem from '../Atoms/SideBar/SidebarItem';
 import MobileNumberModal from './MobileNumber';
+import { setUserAccess } from '../../redux/slices/userAccessSlice';
 
 const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const dispatch = useDispatch();
@@ -160,6 +161,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         });
         if (!result.isConfirmed) return;
         dispatch(setAuthenticated(false));
+        dispatch(setUserAccess(null));
         await logout();
         navigate('/login');
     };
