@@ -1,20 +1,22 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
-import { setUserAccess } from "../redux/slices/userAccessSlice";
 
 const environment = import.meta.env.VITE_REACT_APP_ENVIRONMENT;
 const development = import.meta.env.VITE_REACT_APP_DEVELOPMENT_URL;
 const test = import.meta.env.VITE_REACT_APP_TEST_URL;
 const production = import.meta.env.VITE_REACT_APP_PRODUCTION_URL;
 
+const baseURL = environment === "dev" ? development :
+    environment === "test" ? test :
+        production;
+
+
 const axiosInstance = axios.create({
-    baseURL:
-        environment === "dev" ? development :
-            environment === "test" ? test :
-                production,
+    baseURL: baseURL,
     withCredentials: true,
 });
+
 
 const getToken = () => {
     return JSON.parse(localStorage.getItem("accessToken"));
@@ -43,8 +45,25 @@ const uploadHeaders = () => {
     };
 };
 
-const sessionExpired = (dispatch) => {
-    Swal.fire({
+const sessionExpired = async () => {
+    for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        if (key && /[a-zA-Z]/.test(key)) {
+            sessionStorage.removeItem(key);
+            i--;
+        }
+    }
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && /[a-zA-Z]/.test(key)) {
+            localStorage.removeItem(key);
+            i--;
+        }
+    }
+    sessionStorage.setItem('navStack', JSON.stringify([]));
+    localStorage.clear();
+    sessionStorage.clear();
+    await Swal.fire({
         icon: 'warning',
         title: 'Session Expired !',
         text: 'Session has expired due to inactivity or timeout. Please log in again.',
@@ -53,15 +72,6 @@ const sessionExpired = (dispatch) => {
         allowOutsideClick: false,
         allowEscapeKey: false,
     }).then(() => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem("openModuleIndex");
-        localStorage.removeItem("selectedMenu");
-        localStorage.removeItem("userDetails");
-        localStorage.removeItem("persist:root");
-        sessionStorage.setItem('navStack', JSON.stringify([]));
-        if (dispatch) dispatch(setUserAccess(null));
-
-        sessionStorage.clear();
         window.location.href = '/login';
     });
 };
@@ -92,7 +102,7 @@ axiosInstance.interceptors.response.use(
 
                 return axiosInstance(originalRequest);
             } catch (refreshError) {
-                sessionExpired();
+                await sessionExpired();
                 return Promise.reject(refreshError);
             }
         }

@@ -27,3 +27,15 @@ export const getPrescriptions = (patientId, doctorId) =>
 //API to upload prescription of a patient.
 export const uploadPrescription = (patientId, doctorId, data) =>
     axios.post(`/api/patient/prescription/${patientId}/${doctorId}`, data, uploadHeaders());
+
+//API to fetch prescription data for a doctor of a patient.
+export const getPrescriptionData = (appointmentId) =>
+    axios.get(`/api/patient/prescriptionData/${appointmentId}`, getHeaders());
+
+//API to post prescription data for a doctor of a patient.
+export const postPrescriptionData = (appointmentId, data) =>
+    axios.post(`/api/patient/prescriptionData/${appointmentId}`, data, getHeaders());
+
+//API to update appointment status of a patient.
+export const markAppointmentCompleted = (appointmentId, data) =>
+    axios.post(`/api/patient/appointment/status/${appointmentId}`, data, getHeaders());

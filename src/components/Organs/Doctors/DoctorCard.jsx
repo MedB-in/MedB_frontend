@@ -102,26 +102,35 @@ const DoctorCard = ({
                 </div>
             </div>
 
-            <div className="flex items-center justify-between mt-5">
-                <div className="space-x-2">
-                    <input
-                        type="checkbox"
-                        name="isActive"
-                        checked={doctor.isActiveDoctorClinic}
-                        onChange={(e) => handleDoctorClinicStatus(doctor.doctorId, e.target.checked)}
-                        className="form-checkbox"
-                    />
-                    <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
-                </div>
-            </div>
-
-            {(!idClinic || menuRights?.editAllowed) && (
-                <button
-                    className="w-full bg-blue-500 mt-2 text-white py-2 rounded-md hover:bg-blue-600 transition"
-                    onClick={() => handleSlots(clinicId, doctor.doctorId)}
-                >
-                    Edit Slots
-                </button>
+            {(!idClinic || menuRights?.editAllowed || menuRights?.createAllowed) && (
+                <>
+                    <div className="flex items-center justify-between mt-5">
+                        <div className="space-x-2">
+                            <input
+                                type="checkbox"
+                                name="isActive"
+                                checked={doctor.isActiveDoctorClinic}
+                                onChange={(e) => handleDoctorClinicStatus(doctor.doctorId, e.target.checked)}
+                                className="form-checkbox"
+                            />
+                            <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
+                        </div>
+                        <div>
+                            <span
+                                className="text-gray-500 text-md underline hover:text-red-500 cursor-pointer"
+                                onClick={() => navigate(`/app/clinics/leave-management/${doctor.doctorId}/${clinicId}`)}
+                            >
+                                Manage Doctor
+                            </span>
+                        </div>
+                    </div>
+                    <button
+                        className="w-full bg-blue-500 mt-2 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                        onClick={() => handleSlots(clinicId, doctor.doctorId)}
+                    >
+                        Edit Slots
+                    </button>
+                </>
             )}
         </div>
     );

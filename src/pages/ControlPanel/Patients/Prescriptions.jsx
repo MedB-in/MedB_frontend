@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPrescriptions, uploadPrescription } from "../../../services/patient";
 import { ArrowLeft, Upload } from "lucide-react";
