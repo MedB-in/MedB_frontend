@@ -41,6 +41,10 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
+      if (!email || !password) {
+        toast.error("All fields are required.");
+        return;
+      }
       const { data } = await doLogin({ email: email, password });
       dispatch(setUserAccess(null));
       dispatch(setUserDetails(null));

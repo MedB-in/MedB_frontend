@@ -94,7 +94,8 @@ const App = () => {
             <Route path="patients">
               <Route index element={<Patients.PatientManagementPage />} />
               <Route path="prescriptions/:patientId/:doctorId/:clinicId/:appointmentId/:appointmentDate" element={<Patients.Prescriptions />} />
-              <Route path="prescriptions-new/:patientId/:doctorId/:clinicId/:appointmentId/:appointmentDate" element={<Patients.PrescriptionPage />} />
+              <Route path="prescriptions-new/:patientId/:doctorId/:clinicId/:appointmentId/:appointmentDate/:appointmentStatus" element={<Patients.PrescriptionPage />} />
+              <Route path="prescriptions" element={<Patients.PatientPrescription />} />
             </Route>
 
             {/* User profile */}

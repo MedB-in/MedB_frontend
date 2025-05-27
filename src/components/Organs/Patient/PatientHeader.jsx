@@ -8,7 +8,6 @@ const PatientHeader = ({ timer, patient, healthFiles }) => {
     const today = new Date();
     const formattedDate = today.toLocaleDateString("en-GB").split("/").join("-");
 
-    // Format appointment date nicely
     const formatDate = (dateStr) => {
         if (!dateStr) return "N/A";
         const d = new Date(dateStr);
@@ -115,7 +114,7 @@ const PatientHeader = ({ timer, patient, healthFiles }) => {
                                     </div>
 
                                     <div className="mb-2">
-                                        <div className="font-medium mb-1">Complaints:</div>
+                                        <div className="font-medium mb-1">Problems/Issues:</div>
                                         {file.complaints && file.complaints.length > 0 ? (
                                             <ul className="list-disc list-inside text-gray-700">
                                                 {file.complaints.map((complaint, i) => (
@@ -136,7 +135,7 @@ const PatientHeader = ({ timer, patient, healthFiles }) => {
                                                 {file.prescriptions.map((med, i) => (
                                                     <li key={i}>
                                                         <span className="font-semibold">{med.medicineName}</span> — Dosage: {med.dosage}, Frequency: {med.frequency}, Duration: {med.duration}
-                                                        {med.remarks ? `, Remarks: ${med.remarks}` : ""}
+                                                        {med.remarks ? `, Remarks: ${med.remarks}` : "Nil"}
                                                     </li>
                                                 ))}
                                             </ul>

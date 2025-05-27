@@ -56,7 +56,7 @@ const ProductMenuModal = ({ isOpen, closeModal, productId, fetchProducts }) => {
   return (
     isOpen && (
       <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white p-6 rounded-md shadow-lg w-96">
+        <div className="bg-white p-6 rounded-md shadow-lg w-xl">
           <h3 className="text-xl font-semibold mb-4">Add Menu to Product</h3>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -75,7 +75,7 @@ const ProductMenuModal = ({ isOpen, closeModal, productId, fetchProducts }) => {
                   <option value="">Select a menu</option>
                   {menuList.map((menu) => (
                     <option key={menu.menuId} value={menu.menuId}>
-                      {menu.menuName}
+                      {menu.menuName} - {menu.actionName}
                     </option>
                   ))}
                 </select>
