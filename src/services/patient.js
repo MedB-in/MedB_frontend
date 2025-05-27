@@ -32,6 +32,10 @@ export const uploadPrescription = (patientId, doctorId, data) =>
 export const getPrescriptionData = (appointmentId) =>
     axios.get(`/api/patient/prescriptionData/${appointmentId}`, getHeaders());
 
+//API for fetching prescription data for patient.
+export const getPrescriptionDataForPatient = (patientId) =>
+    axios.get(`/api/patient/prescriptionDataForPatient/${patientId}`, getHeaders());
+
 //API to post prescription data for a doctor of a patient.
 export const postPrescriptionData = (appointmentId, data) =>
     axios.post(`/api/patient/prescriptionData/${appointmentId}`, data, getHeaders());

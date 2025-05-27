@@ -13,7 +13,13 @@ import { getPrescriptionData, postPrescriptionData, markAppointmentCompleted } f
 
 
 const PrescriptionPage = () => {
-    const { patientId, doctorId, clinicId, appointmentId, appointmentDate } = useParams();
+    const { patientId, doctorId, clinicId, appointmentId, appointmentDate, appointmentStatus } = useParams();
+
+    const today = new Date();
+    const todayString = today.toLocaleDateString('en-GB');
+    const formattedAppointmentDate = appointmentDate.replace(/-/g, '/');
+    const isToday = formattedAppointmentDate === todayString;
+    const isAllowed = appointmentStatus === "Scheduled";
 
     const navigate = useNavigate();
 
@@ -92,7 +98,7 @@ const PrescriptionPage = () => {
         if (medicinesData.length === 1 && validMeds.length === 0) {
             Swal.fire({
                 title: "No medicines added?",
-                text: "This will mark the appointment as completed without any prescription.",
+                text: "This will mark the appointment as completed without any Medicine.",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -101,7 +107,7 @@ const PrescriptionPage = () => {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        await markAppointmentCompleted(appointmentId, { notes, diagnosis });
+                        await markAppointmentCompleted(appointmentId, { complaints, notes, diagnosis });
                         toast.success("Appointment marked as completed");
                         navigate('/app/appointments');
                     } catch (error) {
@@ -114,20 +120,31 @@ const PrescriptionPage = () => {
 
         if (validMeds.length > 0) {
             try {
-                await postPrescriptionData(appointmentId, {
-                    medicines: validMeds,
-                    complaints,
-                    notes,
-                    diagnosis
-                });
-                toast.success("Prescription saved successfully");
-                navigate('/app/appointments');
+                Swal.fire({
+                    title: "Save prescription?",
+                    text: "Once saved, you won't be able to edit it.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, save it!",
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await postPrescriptionData(appointmentId, {
+                            medicines: validMeds,
+                            complaints,
+                            notes,
+                            diagnosis
+                        });
+                        toast.success("Prescription saved successfully");
+                        navigate('/app/appointments');
+                    }
+                })
             } catch (error) {
                 toast.error(error.response?.data?.message || "Something went wrong.");
             }
         }
     };
-
 
     return (
         <div className="p-6 w-full">
@@ -135,7 +152,7 @@ const PrescriptionPage = () => {
             <div className="flex w-full flex-col items-stretch">
                 <div className="flex flex-col items-stretch mt-2 max-md:max-w-full">
                     <div className="flex gap-5 max-md:flex-col">
-                        <div className="text-xs min-w-[20%] max-w-[20%] text-black font-normal whitespace-nowrap">
+                        {/* <div className="text-xs min-w-[20%] max-w-[20%] text-black font-normal whitespace-nowrap">
                             <CardComponent title="Referred by">
                                 <p>Test.</p>
                                 <p>test test</p>
@@ -164,16 +181,21 @@ const PrescriptionPage = () => {
                                     View Details
                                 </button>
                             </CardComponent>
-                        </div>
+                        </div> */}
                         <div className="w-full">
                             <PatientHeader timer={slotGap} patient={patient} healthFiles={healthFiles} />
-                            <div className="mt-5">
-                                <Complaints complaints={complaints} setComplaints={setComplaints} />
-                            </div>
-                            <div className="mt-5">
-                                <Medicines medicinesData={medicinesData} setMedicinesData={setMedicinesData} onChange={handleMedicinesChange} />
-                            </div>
-                            <div className="flex flex-col justify-end py-2 mt-4 sm:flex-row gap-4">
+
+                            {isToday && isAllowed && (
+                                <>
+                                    <div className="mt-5">
+                                        <Complaints complaints={complaints} setComplaints={setComplaints} />
+                                    </div>
+                                    <div className="mt-5">
+                                        <Medicines medicinesData={medicinesData} setMedicinesData={setMedicinesData} onChange={handleMedicinesChange} />
+                                    </div>
+                                </>
+                            )}
+                            {/* <div className="flex flex-col justify-end py-2 mt-4 sm:flex-row gap-4">
                                 <div className="flex flex-col">
                                     <label htmlFor="nextReview" className="mb-1 text-sm font-medium text-gray-700">
                                         Next Review
@@ -195,7 +217,7 @@ const PrescriptionPage = () => {
                                         placeholder="Enter details"
                                     />
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="w-full mt-4">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <TextAreaCard
@@ -204,28 +226,34 @@ const PrescriptionPage = () => {
                                         value={reasonForVisit}
                                         disabled
                                     />
-                                    <TextAreaCard
-                                        label="Diagnosis"
-                                        placeholder="Enter diagnosis"
-                                        value={diagnosis}
-                                        onChange={(e) => setDiagnosis(e.target.value)}
-                                    />
-                                    <TextAreaCard
-                                        label="Special Notes"
-                                        placeholder="Enter special notes"
-                                        value={notes}
-                                        onChange={(e) => setNotes(e.target.value)}
-                                    />
+                                    {isToday && isAllowed && (
+                                        <>
+                                            <TextAreaCard
+                                                label="Diagnosis"
+                                                placeholder="Enter diagnosis"
+                                                value={diagnosis}
+                                                onChange={(e) => setDiagnosis(e.target.value)}
+                                            />
+                                            <TextAreaCard
+                                                label="Special Notes"
+                                                placeholder="Enter special notes"
+                                                value={notes}
+                                                onChange={(e) => setNotes(e.target.value)}
+                                            />
+                                        </>
+                                    )}
                                 </div>
                             </div>
-                            <div className="flex justify-end gap-4 mt-12">
-                                <Button variant="secondary" onClick={handleClearData}>
-                                    Clear
-                                </Button>
-                                <Button variant="primary" onClick={handleSubmit}>
-                                    Submit
-                                </Button>
-                            </div>
+                            {isToday && isAllowed && (
+                                <div className="flex justify-end gap-4 mt-12">
+                                    <Button variant="secondary" onClick={handleClearData}>
+                                        Clear
+                                    </Button>
+                                    <Button variant="primary" onClick={handleSubmit}>
+                                        Submit
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
