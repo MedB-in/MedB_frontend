@@ -10,7 +10,7 @@ import Logo from '../../assets/images/medb-logo-2.png';
 import Logo1 from '../../assets/images/medb-logo-png.png';
 import useAuth from '../../hooks/useAuth';
 import { setAuthenticated } from '../../redux/slices/authSlice';
-import { deleteAllNotifications, deleteNotification, getNotifications } from '../../services/notification';
+import { deleteAllNotifications, deleteNotification, getNotifications, readAllNotifications, readNotification } from '../../services/notification';
 import socket, { reconnectSocketWithNewToken } from '../../utils/socket';
 import SidebarItem from '../Atoms/SideBar/SidebarItem';
 import MobileNumberModal from './MobileNumber';
@@ -76,7 +76,6 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
 
     const handleNotificationModal = () => {
-        setNewNotificationCount(0);
         setShowNotifications(!showNotifications);
     };
 
@@ -84,19 +83,28 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         setUser(JSON.parse(localStorage.getItem('userDetails')) || {});
     };
 
-    useEffect(() => {
-        const fetchNotifications = async () => {
-            if (showNotifications) {
-                try {
-                    const response = await getNotifications();
-                    setNotifications(response.data.data);
-                } catch (error) {
-                    console.error('Error fetching notifications:', error);
-                }
-            }
-        };
+    const fetchAndSetNotifications = async () => {
+        try {
+            const response = await getNotifications();
+            const notifs = response.data.data;
+            setNotifications(notifs);
+            const unreadCount = notifs.filter(notif => !notif.read).length;
+            setNewNotificationCount(unreadCount);
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    };
 
-        fetchNotifications();
+    useEffect(() => {
+        if (authenticated && userId) {
+            fetchAndSetNotifications();
+        }
+    }, [authenticated, userId]);
+
+    useEffect(() => {
+        if (showNotifications) {
+            fetchAndSetNotifications();
+        }
     }, [showNotifications]);
 
     useEffect(() => {
@@ -183,6 +191,37 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
             toast.error(error.response?.data?.message || "Something went wrong");
         }
     }
+
+    const handleReadAllNotifications = async () => {
+        try {
+            await readAllNotifications();
+            setNotifications(prev =>
+                prev.map(notification => ({
+                    ...notification,
+                    read: true,
+                }))
+            );
+            setNewNotificationCount(0);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong");
+        }
+    }
+
+    const handleReadNotification = async (notificationId) => {
+        try {
+            await readNotification(notificationId);
+            setNotifications(prev =>
+                prev.map(notification =>
+                    notification._id === notificationId
+                        ? { ...notification, read: true }
+                        : notification
+                )
+            );
+            setNewNotificationCount(prev => prev - 1)
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong");
+        }
+    };
 
     const setMobileModalAction = () => {
         setMobileModal(false);
@@ -295,26 +334,47 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                 >
                                     <div className="flex justify-between items-center p-4 border-b font-semibold text-gray-700">
                                         <span>Notifications</span>
-
-                                        {notifications.length > 0 && <button
-                                            onClick={handleClearAllNotifications}
-                                            className="text-sm text-red-500 hover:text-red-700"
-                                        >
-                                            Clear All
-                                        </button>
+                                        {notifications.length > 0 &&
+                                            <div className="flex items-center gap-1 justify-center mt-2">
+                                                {notifications.some(n => !n.read) && (
+                                                    <>
+                                                        <button
+                                                            onClick={handleReadAllNotifications}
+                                                            className="text-xs text-blue-500 hover:text-blue-700 transition"
+                                                        >
+                                                            Mark All Read
+                                                        </button>
+                                                        <span className="text-gray-300">|</span>
+                                                    </>
+                                                )}
+                                                <button
+                                                    onClick={handleClearAllNotifications}
+                                                    className="text-xs text-red-500 hover:text-red-700 transition"
+                                                >
+                                                    Clear All
+                                                </button>
+                                            </div>
                                         }
                                     </div>
                                     <ul className="max-h-60 overflow-y-auto">
                                         {notifications.length > 0 ? (
                                             notifications.map((n) => (
-                                                <li key={n._id} className="px-4 py-2 hover:bg-gray-100 border-b flex justify-between items-center">
-                                                    <div className={`${n.link ? 'cursor-pointer' : ''}`} {...n.link && { onClick: () => navigate(n.link) }} >
+                                                <li key={n._id} className={`px-4 py-2 hover:bg-gray-100 ${n.read ? 'bg-gray-200' : ''} border-b flex justify-between items-center`}>
+                                                    <div className={`${n.link ? 'cursor-pointer' : ''}`} {...n.link && { onClick: () =>{ navigate(n.link); handleReadNotification(n._id) } }} >
                                                         <div className="font-medium text-sm">{n.title}</div>
                                                         <div className="text-xs text-gray-500">{n.message}</div>
                                                     </div>
+                                                    {!n.read &&
+                                                        <button
+                                                            onClick={() => handleReadNotification(n._id)}
+                                                            className="text-xs text-green-400 hover:text-green-600 pr-2"
+                                                        >
+                                                            ✔
+                                                        </button>
+                                                    }
                                                     <button
                                                         onClick={() => handleClearNotification(n._id)}
-                                                        className="text-xs text-gray-400 hover:text-gray-600"
+                                                        className="text-xs text-red-400 hover:text-red-600"
                                                     >
                                                         X
                                                     </button>
@@ -370,25 +430,47 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             >
                                 <div className="flex justify-between items-center p-4 border-b font-semibold text-gray-700">
                                     <span>Notifications</span>
-                                    {notifications.length > 0 && <button
-                                        onClick={handleClearAllNotifications}
-                                        className="text-sm text-red-500 hover:text-red-700"
-                                    >
-                                        Clear All
-                                    </button>
+                                    {notifications.length > 0 &&
+                                        <div className="flex items-center gap-1 justify-center mt-2">
+                                            {notifications.some(n => !n.read) && (
+                                                <>
+                                                    <button
+                                                        onClick={handleReadAllNotifications}
+                                                        className="text-xs text-blue-500 hover:text-blue-700 transition"
+                                                    >
+                                                        Mark All Read
+                                                    </button>
+                                                    <span className="text-gray-300">|</span>
+                                                </>
+                                            )}
+                                            <button
+                                                onClick={handleClearAllNotifications}
+                                                className="text-xs text-red-500 hover:text-red-700 transition"
+                                            >
+                                                Clear All
+                                            </button>
+                                        </div>
                                     }
                                 </div>
                                 <ul className="max-h-60 overflow-y-auto">
                                     {notifications.length > 0 ? (
                                         notifications.map((n) => (
-                                            <li key={n._id} className="px-4 py-2 hover:bg-gray-100 border-b flex justify-between items-center">
-                                                <div>
+                                            <li key={n._id} className={`px-4 py-2 hover:bg-gray-100 ${n.read ? 'bg-gray-200' : ''} border-b flex justify-between items-center`}>
+                                                    <div className={`${n.link ? 'cursor-pointer' : ''}`} {...n.link && { onClick: () =>{ navigate(n.link); handleReadNotification(n._id) } }} >
                                                     <div className="font-medium text-sm">{n.title}</div>
                                                     <div className="text-xs text-gray-500">{n.message}</div>
                                                 </div>
+                                                {!n.read &&
+                                                    <button
+                                                        onClick={() => handleReadNotification(n._id)}
+                                                        className="text-xs text-green-400 hover:text-green-600 pr-2"
+                                                    >
+                                                        ✔
+                                                    </button>
+                                                }
                                                 <button
                                                     onClick={() => handleClearNotification(n._id)}
-                                                    className="text-xs text-gray-400 hover:text-gray-600"
+                                                    className="text-xs text-red-400 hover:text-red-600"
                                                 >
                                                     X
                                                 </button>

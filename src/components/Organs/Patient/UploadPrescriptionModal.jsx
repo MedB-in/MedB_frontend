@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 
-const UploadPrescriptionModal = ({ showUploadModal, handleCloseModal, handleFileChange, handleUpload, previewImage, selectedFile, uploadError, uploading }) => {
-    
+const UploadPrescriptionModal = ({ showUploadModal, handleCloseModal, handleFileChange, handleUpload, previewImage, selectedFile, uploadError, uploading, fileName, setFileName }) => {
+
     if (!showUploadModal) return null;
 
     return (
@@ -47,11 +47,20 @@ const UploadPrescriptionModal = ({ showUploadModal, handleCloseModal, handleFile
                 {uploadError && (
                     <div className="text-sm text-red-500 mt-2">{uploadError}</div>
                 )}
-
+                <label htmlFor="fileNameInput" className="block mt-4 mb-1 text-sm font-medium text-gray-700">
+                    File Name
+                </label>
+                <input
+                    id="fileNameInput"
+                    type="text"
+                    value={fileName}
+                    onChange={(e) => setFileName(e.target.value)}
+                    className="border border-gray-300 rounded-md p-2 w-full"
+                />
                 <button
                     onClick={handleUpload}
                     className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md transition"
-                    disabled={!selectedFile}
+                    disabled={!selectedFile || uploading}
                 >
                     {uploading ? "Uploading..." : "Upload"}
                 </button>

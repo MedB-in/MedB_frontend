@@ -39,7 +39,7 @@ const PrescriptionPreviewModal = ({ selectedImage, handleZoom, setSelectedImage,
                 </button>
 
                 <div className="flex justify-between items-center p-4 border-b">
-                    <h3 className="text-lg font-semibold">Prescription Preview</h3>
+                    <h3 className="text-lg font-semibold">Preview</h3>
                 </div>
 
                 <div className="flex justify-end items-center p-4 border-b">

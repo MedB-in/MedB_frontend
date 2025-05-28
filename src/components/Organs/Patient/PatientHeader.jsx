@@ -2,7 +2,7 @@ import { useState } from "react";
 import CountdownTimer from "../../Atoms/Patient/CountdownTimer";
 import HistoryIcon from "../../../assets/images/prescritpion/history-icon.svg";
 
-const PatientHeader = ({ timer, patient, healthFiles }) => {
+const PatientHeader = ({ timer, patient, healthFiles, isAllowed, isToday }) => {
     const [showModal, setShowModal] = useState(false);
 
     const today = new Date();
@@ -57,7 +57,9 @@ const PatientHeader = ({ timer, patient, healthFiles }) => {
                     <div className="flex flex-col justify-center gap-6 items-end min-w-[250px]">
                         <div className="flex items-center gap-4 cursor-pointer" onClick={() => setShowModal(true)}>
                             <div className="flex flex-col items-center gap-4">
-                                <CountdownTimer initialMinutes={timer} initialSeconds={0} />
+                                {isToday && isAllowed && (
+                                    <CountdownTimer initialMinutes={timer} initialSeconds={0} />
+                                )}
                                 <div className="bg-gray-100 text-gray-600 font-bold text-md px-2 py-1 rounded-md whitespace-nowrap">
                                     {formattedDate}
                                 </div>

@@ -104,7 +104,7 @@ const Footer = () => {
         { name: "About Us", path: "/about-us" },
         { name: "For Doctor", path: "/for-doctor" },
         { name: "For Clinic", path: "/for-clinic" },
-        { name: "Contact Us", path: "" }
+        // { name: "Contact Us", path: "" }
     ]
 
     return (
