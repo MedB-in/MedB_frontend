@@ -356,34 +356,50 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                             </div>
                                         }
                                     </div>
-                                    <ul className="max-h-60 overflow-y-auto">
+                                    <ul className="max-h-60 overflow-y-auto divide-y">
                                         {notifications.length > 0 ? (
                                             notifications.map((n) => (
-                                                <li key={n._id} className={`px-4 py-2 hover:bg-gray-100 ${n.read ? 'bg-gray-200' : ''} border-b flex justify-between items-center`}>
-                                                    <div className={`${n.link ? 'cursor-pointer' : ''}`} {...n.link && { onClick: () =>{ navigate(n.link); handleReadNotification(n._id) } }} >
-                                                        <div className="font-medium text-sm">{n.title}</div>
+                                                <li
+                                                    key={n._id}
+                                                    className={`px-4 py-2 flex items-start justify-between gap-2 ${n.read ? 'bg-gray-100' : 'bg-white hover:bg-gray-50'}`}
+                                                >
+                                                    <div
+                                                        className={`flex-1 ${n.link ? 'cursor-pointer' : ''}`}
+                                                        {...(n.link && {
+                                                            onClick: () => {
+                                                                navigate(n.link);
+                                                                handleReadNotification(n._id);
+                                                            },
+                                                        })}
+                                                    >
+                                                        <div className="font-medium text-sm text-gray-800">{n.title}</div>
                                                         <div className="text-xs text-gray-500">{n.message}</div>
                                                     </div>
-                                                    {!n.read &&
+                                                    <div className="flex items-center gap-2 pl-2 pt-1">
+                                                        {!n.read && (
+                                                            <button
+                                                                onClick={() => handleReadNotification(n._id)}
+                                                                className="text-xs text-green-500 hover:text-green-700"
+                                                                title="Mark as read"
+                                                            >
+                                                                ✔
+                                                            </button>
+                                                        )}
                                                         <button
-                                                            onClick={() => handleReadNotification(n._id)}
-                                                            className="text-xs text-green-400 hover:text-green-600 pr-2"
+                                                            onClick={() => handleClearNotification(n._id)}
+                                                            className="text-xs text-red-500 hover:text-red-700"
+                                                            title="Clear notification"
                                                         >
-                                                            ✔
+                                                            ✕
                                                         </button>
-                                                    }
-                                                    <button
-                                                        onClick={() => handleClearNotification(n._id)}
-                                                        className="text-xs text-red-400 hover:text-red-600"
-                                                    >
-                                                        X
-                                                    </button>
+                                                    </div>
                                                 </li>
                                             ))
                                         ) : (
                                             <li className="p-4 my-5 text-center text-gray-500">No notifications</li>
                                         )}
                                     </ul>
+
                                 </div>
                             )}
                         </div>
@@ -452,28 +468,43 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                         </div>
                                     }
                                 </div>
-                                <ul className="max-h-60 overflow-y-auto">
+                                <ul className="max-h-60 overflow-y-auto divide-y">
                                     {notifications.length > 0 ? (
                                         notifications.map((n) => (
-                                            <li key={n._id} className={`px-4 py-2 hover:bg-gray-100 ${n.read ? 'bg-gray-200' : ''} border-b flex justify-between items-center`}>
-                                                    <div className={`${n.link ? 'cursor-pointer' : ''}`} {...n.link && { onClick: () =>{ navigate(n.link); handleReadNotification(n._id) } }} >
-                                                    <div className="font-medium text-sm">{n.title}</div>
+                                            <li
+                                                key={n._id}
+                                                className={`px-4 py-2 flex items-start justify-between gap-2 ${n.read ? 'bg-gray-100' : 'bg-white hover:bg-gray-50'}`}
+                                            >
+                                                <div
+                                                    className={`flex-1 ${n.link ? 'cursor-pointer' : ''}`}
+                                                    {...(n.link && {
+                                                        onClick: () => {
+                                                            navigate(n.link);
+                                                            handleReadNotification(n._id);
+                                                        },
+                                                    })}
+                                                >
+                                                    <div className="font-medium text-sm text-gray-800">{n.title}</div>
                                                     <div className="text-xs text-gray-500">{n.message}</div>
                                                 </div>
-                                                {!n.read &&
+                                                <div className="flex items-center gap-2 pl-2 pt-1">
+                                                    {!n.read && (
+                                                        <button
+                                                            onClick={() => handleReadNotification(n._id)}
+                                                            className="text-xs text-green-500 hover:text-green-700"
+                                                            title="Mark as read"
+                                                        >
+                                                            ✔
+                                                        </button>
+                                                    )}
                                                     <button
-                                                        onClick={() => handleReadNotification(n._id)}
-                                                        className="text-xs text-green-400 hover:text-green-600 pr-2"
+                                                        onClick={() => handleClearNotification(n._id)}
+                                                        className="text-xs text-red-500 hover:text-red-700"
+                                                        title="Clear notification"
                                                     >
-                                                        ✔
+                                                        ✕
                                                     </button>
-                                                }
-                                                <button
-                                                    onClick={() => handleClearNotification(n._id)}
-                                                    className="text-xs text-red-400 hover:text-red-600"
-                                                >
-                                                    X
-                                                </button>
+                                                </div>
                                             </li>
                                         ))
                                     ) : (
