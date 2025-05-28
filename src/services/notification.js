@@ -23,8 +23,8 @@ export const deleteNotification = (id) =>
 
 // Read all notifications
 export const readAllNotifications = () =>
-    axios.patch("/api/notification/markAllRead", getHeaders());
+    axios.patch("/api/notification/markAllRead", {}, getHeaders());
 
 //Read a single notification
 export const readNotification = (id) =>
-    axios.patch(`/api/notification/${id}`, getHeaders());
+    axios.patch(`/api/notification/${id}`, {}, getHeaders());
