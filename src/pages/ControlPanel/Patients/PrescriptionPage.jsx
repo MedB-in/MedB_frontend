@@ -183,7 +183,7 @@ const PrescriptionPage = () => {
                             </CardComponent>
                         </div> */}
                         <div className="w-full">
-                            <PatientHeader timer={slotGap} patient={patient} healthFiles={healthFiles} />
+                            <PatientHeader timer={slotGap} patient={patient} isAllowed={isAllowed} isToday={isToday} healthFiles={healthFiles} />
 
                             {isToday && isAllowed && (
                                 <>

@@ -63,6 +63,10 @@ const SearchSection = () => {
         }
     }, [results]);
 
+    useEffect(() => {
+        setResults([]);
+    }, [searchType]);
+
     const handleCardClick = (item) => {
         if (searchType === 'Doctor') {
             navigate(`/doctor-clinic/?doctorId=${item.doctorid}`);
@@ -85,7 +89,7 @@ const SearchSection = () => {
                 <div className="flex justify-between mt-4 px-5 w-full md:w-1/3 relative z-10">
                     <input
                         type="text"
-                        placeholder={`${searchType === 'Doctor' ? 'Search Doctors' : 'Enter Location/Clinic'}`}
+                        placeholder={`${searchType === 'Doctor' ? 'Enter Location/Doctor' : 'Enter Location/Clinic'}`}
                         className="flex-1 px-3 py-2 border w-1/2 border-white rounded-lg mr-3 box-border focus:outline-none bg-white"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -138,7 +142,7 @@ const SearchSection = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex md:hidden flex-col items-center p-5 w-full">
+                <div className="flex lg:hidden flex-col items-center p-5 w-full">
                     <button className="mt-4 bg-[#6F64E7] text-white px-6 py-2 rounded-full flex items-center justify-center shadow-md w-full max-w-sm" onClick={handleSearch}>
                         {isLoading ? 'Searching...' : 'Search'}
                         <img src={searchIcon} alt="Search Icon" className="w-5 h-5 ml-2" />

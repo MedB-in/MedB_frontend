@@ -12,14 +12,6 @@ export const addPatient = (data) =>
 export const updatePatient = (data) =>
     axios.put("/api/patient/", data, getHeaders());
 
-//API to fetch medical history of a patient.
-export const getPatientMedHistory = (patientId, doctorId) =>
-    axios.get(`/api/patient/medicalHistory/${patientId}?doctorId=${doctorId}`, getHeaders());
-
-//API to add medical history of a patient.
-export const updatePatientMedHistory = (patientId, doctorId, date, appointmentId, data) =>
-    axios.post(`/api/patient/medicalHistory/${patientId}?doctorId=${doctorId}&appointmentDate=${date}&appointmentId=${appointmentId}`, data, getHeaders());
-
 //API to get prescription of a patient.
 export const getPrescriptions = (patientId, doctorId) =>
     axios.get(`/api/patient/prescription/${patientId}/${doctorId}`, getHeaders());
