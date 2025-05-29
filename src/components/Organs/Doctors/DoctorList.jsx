@@ -63,10 +63,10 @@ const DoctorList = ({ doctors, loading, clinicId }) => {
                 </div>
             </section>
             {filteredDoctors?.map((doctor, index) => (
-                <motion.div 
-                    key={index} 
-                    variants={cardVariants} 
-                    initial="hidden" 
+                <motion.div
+                    key={index}
+                    variants={cardVariants}
+                    initial="hidden"
                     animate="visible"
                 >
                     <DoctorCard doctor={doctor} loading={loading} onSelect={onSelect} />

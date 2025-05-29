@@ -1,4 +1,3 @@
-import React from 'react';
 import DefaultImage from '../../../assets/images/default-doctor.png';
 
 const DoctorCard = ({ doctor, onSelect, loading }) => {

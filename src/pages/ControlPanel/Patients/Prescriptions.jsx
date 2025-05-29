@@ -41,7 +41,7 @@ const Prescriptions = () => {
         setUploadError("");
         if (!file) return;
 
-        const maxSize = 5 * 1024 * 1024;
+        const maxSize = 2 * 1024 * 1024;
         const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
 
         if (!allowedTypes.includes(file.type)) {
@@ -53,7 +53,7 @@ const Prescriptions = () => {
         }
 
         if (file.size > maxSize) {
-            const errMsg = "File size should not exceed 5MB.";
+            const errMsg = "File size should not exceed 2MB.";
             setUploadError(errMsg);
             toast.error(errMsg);
             setSelectedFile(null);

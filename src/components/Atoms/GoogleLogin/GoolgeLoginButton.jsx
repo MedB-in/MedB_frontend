@@ -1,4 +1,3 @@
-import React from 'react';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { toast } from 'react-hot-toast';
 import { jwtDecode } from "jwt-decode";

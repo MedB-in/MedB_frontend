@@ -62,7 +62,6 @@ const DoctorToClinicModal = ({ isOpen, closeModal, clinicId, onDoctorAdded }) =>
                 <div className="bg-white p-6 rounded-md shadow-lg w-96 max-h-[90vh] overflow-y-auto">
                     <h3 className="text-xl font-semibold mb-4">Add Doctor to Clinic</h3>
                     <form onSubmit={handleSubmit}>
-                        {/* Doctor Selection Dropdown */}
                         <div className="mb-4">
                             <label className="block text-sm font-medium">Select Doctor</label>
                             <select
@@ -90,7 +89,6 @@ const DoctorToClinicModal = ({ isOpen, closeModal, clinicId, onDoctorAdded }) =>
                             <span>Active</span>
                         </div> */}
 
-                        {/* Action Buttons */}
                         <div className="flex justify-end gap-4">
                             <button
                                 type="button"
@@ -114,7 +112,7 @@ const DoctorToClinicModal = ({ isOpen, closeModal, clinicId, onDoctorAdded }) =>
                 </div>
             </div>
         )
-    );
+    )
 };
 
 export default DoctorToClinicModal;
