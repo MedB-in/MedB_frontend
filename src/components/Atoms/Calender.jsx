@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import days from '../../lib/slotDays';
 import { format } from 'date-fns';
 import dropdown from '../../assets/images/dropdown.png';

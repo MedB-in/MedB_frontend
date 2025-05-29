@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { getClinicList } from "../../../services/clinics";
 import LocationSelector from "../../LocationSelector";
 import { UploadIcon } from "lucide-react";
@@ -314,11 +314,11 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
           <div className="mb-4">
             <label className="block text-sm font-medium">Phone</label>
             <input type="tel" name="phone" value={formData.phone} onChange={(e) => {
-                const value = e.target.value;
-                if (/^\d{0,10}$/.test(value)) {
-                  handleChange(e);
-                }
-              }}
+              const value = e.target.value;
+              if (/^\d{0,10}$/.test(value)) {
+                handleChange(e);
+              }
+            }}
               maxLength={10}
               pattern="\d{10}"
               inputMode="numeric"

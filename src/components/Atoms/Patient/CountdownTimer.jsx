@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const DigitBox = ({ digit }) => (
   <div className="bg-black text-white w-10 h-14 rounded-lg flex items-center justify-center text-4xl font-mono shadow-lg relative overflow-auto">

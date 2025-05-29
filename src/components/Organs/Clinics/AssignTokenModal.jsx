@@ -12,7 +12,7 @@ const AssignTokenModal = ({ appointment, isOpen, onClose }) => {
         try {
             const response = await assignPatientToken(appointment.appointmentId, tokenNo);
             if (response.data) {
-                toast.success( response.data.message || "Token assigned successfully.");
+                toast.success(response.data.message || "Token assigned successfully.");
                 onClose();
             } else {
                 throw new Error("Failed to assign token.");

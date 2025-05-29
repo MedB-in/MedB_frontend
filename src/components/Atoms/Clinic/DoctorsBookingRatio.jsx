@@ -8,7 +8,6 @@ const DoctorsBookingRatio = ({ doctorRatios = [], modal = false, todaySlots }) =
             <h2 className="text-sm mb-5 text-center">Doctor's Booking Ratio (Weekly)</h2>
 
             <div className="flex">
-                {/* Y-Axis */}
                 <div className="flex flex-col justify-between pr-2 text-[10px] text-gray-600 h-[200px]">
                     {[45, 40, 35, 30, 25, 20, 15, 10, 5, 0].map((val) => (
                         <div key={val} className="h-[25px] flex items-center justify-end pr-1">
@@ -17,18 +16,15 @@ const DoctorsBookingRatio = ({ doctorRatios = [], modal = false, todaySlots }) =
                     ))}
                 </div>
 
-                {/* Bars Section */}
                 <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300">
                     <div className="flex justify-start items-end h-[200px] space-x-3">
                         {doctorRatios.map((data, index) => (
                             <div key={index} className="flex flex-col items-center">
                                 <div className="flex items-end space-x-[2px] h-[200px]">
-                                    {/* Scheduled */}
                                     <div
                                         className="w-[10px] bg-[#6F64E7]"
                                         style={{ height: `${data.scheduledForWeek}px` }}
                                     />
-                                    {/* Completed */}
                                     <div
                                         className="w-[10px] bg-[#86CFC3]"
                                         style={{ height: `${data.completedInTheWeek}px` }}
@@ -45,7 +41,6 @@ const DoctorsBookingRatio = ({ doctorRatios = [], modal = false, todaySlots }) =
                     </div>
                 </div>
 
-                {/* Legend */}
                 <div className="ml-6 flex flex-col justify-center space-y-2 text-[10px]">
                     <div className="flex items-center space-x-1">
                         <div className="w-3 h-3 bg-[#6F64E7] rounded-sm" />

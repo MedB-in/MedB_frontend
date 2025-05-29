@@ -18,7 +18,7 @@ const InputField = ({
   ariaLabel,
   className,
   required,
-  options = [] // ✅ Accept options for dropdown
+  options = []
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
