@@ -451,8 +451,19 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         />
                     </div>
                     <div ref={notificationRef2} className="flex items-center justify-end gap-x-2 md:gap-x-4">
-                        <img src={AlertIcon} alt="Alert" className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover shadow-sm cursor-pointer"
-                            onClick={handleNotificationModal} />
+                        <div className="relative">
+                            <img
+                                src={AlertIcon}
+                                alt="Alert"
+                                className="w-10 h-10 rounded-full object-cover shadow-sm cursor-pointer"
+                                onClick={handleNotificationModal}
+                            />
+                            {newNotificationCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full shadow-md">
+                                    {newNotificationCount > 9 ? '9+' : newNotificationCount}
+                                </span>
+                            )}
+                        </div>
                         {showNotifications && (
                             <div
                                 className="absolute right-5 mt-64  w-80 bg-white shadow-lg rounded-xl border border-gray-200 z-50 overflow-hidden"
@@ -530,7 +541,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             src={user?.profilePicture || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
                             alt="Profile"
                             onClick={() => navigate("users/user-profile")}
-                            className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
+                            className="w-10 h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
                         />
                         <button className="ml-2 flex items-center bg-transparent border-none" onClick={doLogout}>
                             <span className="drop-shadow-md">Logout</span>
