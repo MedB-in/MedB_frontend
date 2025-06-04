@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getClinicsList } from "../../../services/user";
 import { getMenu } from "../../../services/controlPanel";
-import { getClinicMenus,addClinicUserRights } from "../../../services/clinics";
+import { getClinicMenus, addClinicUserRights } from "../../../services/clinics";
 import { addUserRights } from "../../../services/user";
 import Swal from "sweetalert2";
 
@@ -51,7 +51,7 @@ const UserRightsModal = ({ clinicId, showModal, setShowModal, user }) => {
 
 
     const handleSubmit = async () => {
-        if (!selectedClinic || !selectedMenu) {
+        if (!selectedMenu) {
             return Swal.fire("Required", "Select both clinic and menu", "warning");
         }
 
@@ -86,7 +86,7 @@ const UserRightsModal = ({ clinicId, showModal, setShowModal, user }) => {
     };
 
     const handleClinicSubmit = async () => {
-        if ( !selectedMenu) {
+        if (!selectedMenu) {
             return Swal.fire("Required", "Select menu", "warning");
         }
 

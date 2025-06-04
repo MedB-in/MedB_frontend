@@ -5,6 +5,7 @@ import InputField from "../../../components/Atoms/Login/InputField";
 import Button from "../../../components/Atoms/Login/Button";
 import { setUserDetails } from "../../../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
+import { isValidAddress, isValidAge, isValidDesignation, isValidEmail, isValidName, isValidPhone } from "../../../validation/validations";
 
 const UserProfilePage = () => {
     const storedUser = JSON.parse(localStorage.getItem("userDetails")) || {};
@@ -79,17 +80,98 @@ const UserProfilePage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const phoneRegex = /^[6-9]\d{9}$/;
-        if (!phoneRegex.test(formData.contactNo)) {
+        const {
+            firstName,
+            middleName,
+            lastName,
+            age,
+            gender,
+            email,
+            contactNo,
+            designation,
+            address,
+            city,
+            district,
+            state,
+            country,
+            postalCode
+        } = formData;
+
+        if (!firstName || !isValidName(firstName.trim())) {
+            toast.error("First name must contain only letters.");
+            return;
+        }
+        if (middleName && !isValidName(middleName.trim())) {
+            toast.error("Middle name must contain only letters.");
+            return;
+        }
+        if (lastName && !isValidName(lastName.trim())) {
+            toast.error("Last name must contain only letters.");
+            return;
+        }
+
+        if (!age || !isValidAge(age)) {
+            toast.error("Please enter a valid age between 1 and 120.");
+            return;
+        }
+
+        if (!gender || !["Male", "Female", "Other"].includes(gender)) {
+            toast.error("Please select a valid gender.");
+            return;
+        }
+
+        if (!email || !isValidEmail(email)) {
+            toast.error("Please enter a valid email address.");
+            return;
+        }
+
+        if (!contactNo || !isValidPhone(contactNo)) {
             toast.error("Please enter a valid Indian contact number.");
+            return;
+        }
+
+        if (!designation || !isValidDesignation(designation)) {
+            toast.error("Designation must start with a letter and contain only letters, dots, or spaces.");
+            return;
+        }
+
+        const addressFields = { address, city, district };
+
+        for (const [key, value] of Object.entries(addressFields)) {
+            if (!value.trim()) {
+                toast.error(`${key[0].toUpperCase() + key.slice(1)} cannot be empty.`);
+                return;
+            }
+
+            if (value.trim().length < 2 || value.trim().length > 100 || !isValidAddress(value.trim())) {
+                toast.error(`Please enter a valid ${key} (2–100 characters, letters, numbers, basic symbols).`);
+                return;
+            }
+        }
+
+        const stateRegex = /^[A-Za-z][A-Za-z\s]{0,34}$/;
+        if (!state.trim() || !stateRegex.test(state.trim())) {
+            toast.error("State must start with a letter and contain only letters and spaces (max 35 characters).");
+            return;
+        }
+
+        const countryRegex = /^[A-Za-z][A-Za-z\s]{0,34}$/;
+        if (!country.trim() || !countryRegex.test(country.trim())) {
+            toast.error("Country must start with a letter and contain only letters and spaces (max 35 characters).");
+            return;
+        }
+
+        const pincodeRegex = /^[0-9]{6}$/;
+        if (!postalCode || !pincodeRegex.test(postalCode.trim())) {
+            toast.error("Please enter a valid 6-digit Indian pincode.");
             return;
         }
         setLoading(true);
         try {
             const response = await updateProfile(formData);
             toast.success(response.data.message || "Profile updated successfully");
-            setUserDetails({ ...formData, profilePicture: lastSavedProfilePicture });
-            localStorage.setItem("userDetails", JSON.stringify({ ...formData, profilePicture: lastSavedProfilePicture }));
+            setUserDetails({ ...storedUser, ...formData, });
+            localStorage.setItem("userDetails", JSON.stringify({ ...storedUser, ...formData, }));
             window.dispatchEvent(new Event("userDetailsUpdated"))
             navigate("/app");
         } catch (error) {

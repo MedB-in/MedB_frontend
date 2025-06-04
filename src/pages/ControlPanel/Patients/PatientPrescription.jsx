@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ImageIcon } from "lucide-react";
+import { FileText, ImageIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import PrescriptionModal from "../../../components/Organs/Patient/PrescriptionModal";
@@ -127,29 +127,44 @@ const PatientPrescription = () => {
                         >
                             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {healthFiles.length > 0 ? (
-                                    healthFiles.map((item, index) => (
-                                        <div
-                                            key={index}
-                                            onClick={() => {
-                                                setSelectedImage(item.fileUrl);
-                                                setZoomLevel(1);
-                                                setImagePos({ x: 0, y: 0 });
-                                            }}
-                                            className="cursor-pointer border rounded-xl p-4 hover:shadow-md transition group"
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                <ImageIcon className="text-indigo-500 group-hover:scale-110 transition" />
-                                                <div>
-                                                    <div className="text-sm text-gray-600 capitalize">{item?.fileName}</div>
-                                                    <div className="text-sm text-gray-600">Uploaded on</div>
-                                                    <div className="font-semibold text-gray-900">{item.appointmentDate}</div>
+                                    healthFiles.map((item, index) => {
+                                        const isPDF = item.fileUrl?.endsWith(".pdf");
+
+                                        return (
+                                            <div
+                                                key={index}
+                                                onClick={() => {
+                                                    setSelectedImage(item.fileUrl);
+                                                    setZoomLevel(1);
+                                                    setImagePos({ x: 0, y: 0 });
+                                                }}
+                                                className="cursor-pointer border rounded-xl p-4 hover:shadow-md transition group"
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    {isPDF ? (
+                                                        <FileText className="text-indigo-500 w-6 h-6 group-hover:scale-110 transition" />
+                                                    ) : (
+                                                        <ImageIcon className="text-indigo-500 w-6 h-6 group-hover:scale-110 transition" />
+                                                    )}
+                                                    <div>
+                                                        <div className="text-sm text-gray-600 capitalize">{item?.fileName}</div>
+                                                        <div className="text-sm text-gray-600">Uploaded on</div>
+                                                        <div className="font-semibold text-gray-900">
+                                                            {new Date(item.createdOn).toLocaleDateString('en-GB', {
+                                                                day: '2-digit',
+                                                                month: 'short',
+                                                                year: 'numeric',
+                                                            })}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))
+                                        );
+                                    })
                                 ) : (
                                     <div className="col-span-full text-sm text-gray-500">No health files uploaded yet.</div>
                                 )}
+
                             </div>
                         </motion.div>
                     )}

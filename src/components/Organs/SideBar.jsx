@@ -57,9 +57,17 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         }
     }, [authenticated, userId]);
 
-    if (userDetails) {
-        localStorage.setItem('userDetails', JSON.stringify(userDetails));
-    }
+    useEffect(() => {
+        if (userDetails) {
+            localStorage.setItem('userDetails', JSON.stringify(userDetails));
+        }
+    }, [userDetails]);
+
+    useEffect(() => {
+        if (userDetails) {
+            setUser(userDetails);
+        }
+    }, [userDetails]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -80,7 +88,11 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     };
 
     const updateUserDetails = () => {
-        setUser(JSON.parse(localStorage.getItem('userDetails')) || {});
+        const updatedUser = JSON.parse(localStorage.getItem('userDetails')) || {};
+        setUser((prevUser) => {
+            const isChanged = JSON.stringify(prevUser) !== JSON.stringify(updatedUser);
+            return isChanged ? updatedUser : prevUser;
+        });
     };
 
     const fetchAndSetNotifications = async () => {
@@ -178,6 +190,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         try {
             await deleteNotification(notificationId);
             setNotifications(prev => prev.filter(notification => notification._id !== notificationId));
+            setNewNotificationCount(prev => prev - 1)
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong");
         }

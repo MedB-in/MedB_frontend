@@ -41,8 +41,12 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      if (!email || !password) {
-        toast.error("All fields are required.");
+      if (!email) {
+        toast.error("Please enter your email.");
+        return;
+      }
+      if (!password) {
+        toast.error("Please enter your password.");
         return;
       }
       const { data } = await doLogin({ email: email, password });
