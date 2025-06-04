@@ -8,19 +8,19 @@ const appointments = [
     {
         title: "SIMPLIFY YOUR APPOINTMENTS",
         subtitle: "We Value Your Time",
-        description: "Schedule Your Upcoming Medical Visit Instantly with a Simple Click, from Anywhere",
+        description: "Schedule your next medical visit instantly with a single click. Anytime, Anywhere.",
         image: Group1,
     },
     {
         title: "NO QUEUES, NO HASSLE",
         subtitle: "We Value Your Stress-Free Experience!",
-        description: "'MedB' Lets You Book Your Doctor's Appointment Seamlessly, Skipping Long Queues.",
+        description: "'MedB' lets you book your doctor’s appointment seamlessly, No long queues.",
         image: Group2,
     },
     {
-        ttitle: "FAMILY INTEGRATION",
+        title: "FAMILY INTEGRATION",
         subtitle: "Always Take Care of Your Family",
-        description: "We Prioritize the Health and Well-Being of Your Family Above Everything Else.",
+        description: "We prioritize your family’s health and well-being above all.",
         image: Group3,
     },
 ];
@@ -39,7 +39,6 @@ const AppointmentsScroll = () => {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + appointments.length) % appointments.length);
     };
 
-    // Touch Events (Mobile)
     const handleTouchStart = (e) => {
         touchStartX.current = e.touches[0].clientX;
         touchEndX.current = e.touches[0].clientX;
@@ -97,8 +96,8 @@ const AppointmentsScroll = () => {
                         duration-500 ease-in-out transform hover:scale-105"
                     >
                         <h2 className="text-2xl font-bold">{appointment.title}</h2>
-                        <p className="text-lg opacity-75">{appointment.subtitle}</p>
-                        <p className="text-lg leading-relaxed">{appointment.description}</p>
+                        <p className="text-lg opacity-75 capita">{appointment.subtitle}</p>
+                        <p className="text-lg leading-relaxed capitalize">{appointment.description}</p>
                         <img
                             src={appointment.image}
                             alt="Appointments"

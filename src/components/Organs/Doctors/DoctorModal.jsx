@@ -5,7 +5,7 @@ import LocationSelector from "../../LocationSelector";
 import { UploadIcon } from "lucide-react";
 import Swal from "sweetalert2";
 import { medicalDepartments } from "../../../lib/medicalDepartments";
-import { isValidPhone, isValidPincode } from "../../../validation/validations";
+import { isValidAge, isValidName, isValidPhone, isValidPincode } from "../../../validation/validations";
 
 const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onSubmit }) => {
   const [loading, setLoading] = useState(false);
@@ -120,6 +120,18 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
         formDataToSend.append(key, value);
       }
     });
+    if (!isValidName(formData.firstName.trim())) {
+      toast.error("First name must contain only letters.");
+      return;
+    }
+    if (formData.middleName && !isValidName(formData.middleName.trim())) {
+      toast.error("Middle name must contain only letters.");
+      return;
+    }
+    if (formData.lastName && !isValidName(formData.lastName.trim())) {
+      toast.error("Last name must contain only letters.");
+      return;
+    }
     if (!isValidPhone(formData.phone)) {
       toast.error("Please enter a valid phone number.");
       setLoading(false);
@@ -127,6 +139,16 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     }
     if (!isValidPincode(formData.postalCode)) {
       toast.error("Please enter a valid pincode.");
+      setLoading(false);
+      return;
+    }
+    if(!formData.age || !isValidAge(formData.age)){
+      toast.error("Please enter a valid age.");
+      setLoading(false);
+      return;
+    }
+    if(!formData.experience || !isValidAge(formData.experience)){
+      toast.error("Please enter a valid experience.");
       setLoading(false);
       return;
     }

@@ -76,6 +76,20 @@ const sessionExpired = async () => {
     });
 };
 
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+    failedQueue = [];
+};
+
 axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
@@ -94,18 +108,40 @@ axiosInstance.interceptors.response.use(
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
-            // Try to refresh token and retry the original request
+            if (isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({
+                        resolve: (token) => {
+                            originalRequest.headers['Authorization'] = 'Bearer ' + token;
+                            resolve(axiosInstance(originalRequest));
+                        },
+                        reject: (err) => reject(err)
+                    });
+                });
+            }
+
+            isRefreshing = true;
+
             try {
                 const { data } = await axios.post(`${environment === "dev" ? development : environment === "test" ? test : production}/api/auth/refreshToken`, {}, { withCredentials: true });
+
                 localStorage.setItem('accessToken', JSON.stringify(data.accessToken));
                 originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
-
+                processQueue(null, data.accessToken);
                 return axiosInstance(originalRequest);
-            } catch (refreshError) {
+            } catch (err) {
+                processQueue(err, null);
                 await sessionExpired();
-                return Promise.reject(refreshError);
+                return Promise.reject(err);
+            } finally {
+                isRefreshing = false;
             }
         }
+
+        if (error.response?.status === 403) {
+            toast.error(error.response.data?.message || 'Access denied');
+        }
+
         return Promise.reject(error);
     }
 );
@@ -113,3 +149,48 @@ axiosInstance.interceptors.response.use(
 
 export default axiosInstance;
 export { uploadHeaders, getHeaders, getToken };
+
+
+
+
+
+
+
+
+
+
+
+
+// axiosInstance.interceptors.response.use(
+//     (response) => response,
+//     async (error) => {
+//         const originalRequest = error.config;
+
+//         // make sure the status code is not 401 and url isn't the login or logout url
+//         if (error.response.status !== 401 || originalRequest.url === '/api/auth/login' || originalRequest.url === '/api/auth/logout') {
+//             if (error.response.status === 403) {
+//                 const errorMessage = error.response.data?.message || 'Access denied';
+//                 toast.error(errorMessage);
+//                 return Promise.reject(error);
+//             }
+//             return Promise.reject(error);
+//         }
+
+//         if (error.response?.status === 401 && !originalRequest._retry) {
+//             originalRequest._retry = true;
+
+//             // Try to refresh token and retry the original request
+//             try {
+//                 const { data } = await axios.post(`${environment === "dev" ? development : environment === "test" ? test : production}/api/auth/refreshToken`, {}, { withCredentials: true });
+//                 localStorage.setItem('accessToken', JSON.stringify(data.accessToken));
+//                 originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
+
+//                 return axiosInstance(originalRequest);
+//             } catch (refreshError) {
+//                 await sessionExpired();
+//                 return Promise.reject(refreshError);
+//             }
+//         }
+//         return Promise.reject(error);
+//     }
+// );

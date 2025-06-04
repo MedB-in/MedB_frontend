@@ -3,7 +3,7 @@ import { getAppointments } from "../../../services/patient";
 import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import DoctorRemarksModal from "../../../components/Organs/Doctors/DoctorRemarksModal";
+import DoctorRemarksModal from "../../../components/Organs/Doctors/DoctorActionModal";
 import AppointmentActions from "../../../components/Organs/Appointments/AppointmentActions";
 import AppointmentCard from "../../../components/Atoms/Patient/AppointmentCard";
 import Pagination from "../../../components/Atoms/Patient/Pagination";

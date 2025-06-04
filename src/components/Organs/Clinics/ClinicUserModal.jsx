@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { addClinicUser } from "../../../services/clinics";
 import InputField from "../../Atoms/Login/InputField";
 import Button from "../../Atoms/Login/Button";
+import { isValidName } from "../../../validation/validations";
 
 const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
 
@@ -45,6 +46,18 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
                 toast.error("All fields are required.");
                 return;
             }
+            if (!isValidName(formData.firstName.trim())) {
+                toast.error("First name must contain only letters.");
+                return;
+            }
+            if (formData.middleName && !isValidName(formData.middleName.trim())) {
+                toast.error("Middle name must contain only letters.");
+                return;
+            }
+            if (formData.lastName && !isValidName(formData.lastName.trim())) {
+                toast.error("Last name must contain only letters.");
+                return;
+            }
             const response = await addClinicUser(clinicId, formData);
             toast.success(response.data.message);
             onUserAdded(response.data.data);
@@ -57,8 +70,8 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <div className="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50  px-4">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full overflow-y-auto max-w-md mt-12 mb-8">
                 <h2 className="text-xl font-semibold text-center mb-4">Add Clinic User</h2>
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <InputField type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
@@ -67,14 +80,17 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
                     <InputField type="email" name="email" placeholder="Email (Username)" value={formData.email} onChange={handleChange} required />
                     <InputField type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} toggleable required />
                     <InputField type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} toggleable required />
+
                     <div className="min-h-[1.5rem]">
                         {!passwordMatch && <p className="text-red-500 text-sm">Passwords do not match</p>}
                     </div>
-                    <div className="mb-4 flex items-center space-x-2">
+
+                    <div className="flex items-center space-x-2">
                         <input type="checkbox" name="isVerified" checked={formData.isVerified} onChange={handleChange} className="form-checkbox" />
                         <span>Verified</span>
                     </div>
-                    <div className="flex justify-end space-x-4">
+
+                    <div className="flex justify-end space-x-4 pt-2">
                         <Button type="button" className="bg-gray-500 text-white" onClick={onClose}>Cancel</Button>
                         <Button type="submit" className="bg-violet-600 text-white" disabled={loading}>
                             {loading ? "Adding..." : "Add User"}
@@ -83,6 +99,7 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
                 </form>
             </div>
         </div>
+
     );
 };
 

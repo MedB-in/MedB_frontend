@@ -4,7 +4,7 @@ import LocationSelector from "../../LocationSelector";
 import InputField from "../../Atoms/Input";
 import Button from "../../Atoms/Button1";
 import { UploadIcon } from "lucide-react";
-import { isValidPhone, isValidPincode } from "../../../validation/validations";
+import { isValidName, isValidPhone, isValidPincode } from "../../../validation/validations";
 
 const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
   const [loading, setLoading] = useState(false);
@@ -130,6 +130,35 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     setError(null);
   };
 
+  const convertTo24Hour = (time, period) => {
+    let [hour, minute] = time.split(":").map(Number);
+    if (period === "PM" && hour !== 12) hour += 12;
+    if (period === "AM" && hour === 12) hour = 0;
+    return hour * 60 + minute;
+  };
+
+  const validateOpeningHours = () => {
+    for (const [day, value] of Object.entries(timeInputs)) {
+      if (value?.isClosed) continue;
+
+      const { startTime, startPeriod, endTime, endPeriod } = value;
+      if (!startTime || !startPeriod || !endTime || !endPeriod) {
+        setError(`Please complete opening hours for ${day}.`);
+        toast.error(`Incomplete time entry for ${day}.`);
+        return false;
+      }
+
+      const start = convertTo24Hour(startTime, startPeriod);
+      const end = convertTo24Hour(endTime, endPeriod);
+      if (start >= end) {
+        setError(`${day}: Opening time must be earlier than closing time.`);
+        toast.error(`${day}: Opening time must be earlier than closing time.`);
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -164,19 +193,25 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     if (!isValidPhone(formData.contact)) {
       setError("Please enter a valid phone number.");
       toast.error("Please enter a valid phone number.");
-      setLoading(false);
       return;
     }
-
     if (!isValidPincode(formData.postalCode)) {
       setError("Please enter a valid pincode.");
       toast.error("Please enter a valid pincode.");
-      setLoading(false);
       return;
     }
     if (clinicPictureFile) {
       formDataToSend.append("image", clinicPictureFile);
     }
+    if (!isValidName(formData.name)) {
+      setError("Please enter a valid name.");
+      toast.error("Please enter a valid name.");
+      return;
+    }
+    if (!validateOpeningHours()) {
+      return;
+    }
+
     try {
       await onSubmit(formDataToSend, formData.clinicId);
       setClinicPictureFile(null);
@@ -290,7 +325,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
             </div>
           </div>
           <div className="mb-4">
-            <InputField label="Phone" type="number" name="contact" value={formData.contact} onChange={handleChange} required />
+            <InputField label="Phone" type="text" name="contact" value={formData.contact} onChange={handleChange} required />
           </div>
           <div className="mb-4">
             <InputField label="Email" type="email" name="email" value={formData.email} onChange={handleChange} required />

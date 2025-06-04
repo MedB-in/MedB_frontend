@@ -33,8 +33,8 @@ const DoctorRemarksModal = ({ appt, onCloseHard }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="border rounded-xl hover:shadow-md transition h-full flex flex-col">
                         <div className="p-4 flex flex-col h-full">
-                            <h3 className="text-lg font-semibold mb-2 text-violet-700">Upload Prescription or Health Files</h3>
-                            <p className="text-sm text-gray-500 mb-4">Upload images of prescriptions, lab reports, or test files.</p>
+                            <h3 className="text-lg font-semibold mb-2 text-violet-700">Upload/View Prescription or Health Files</h3>
+                            <p className="text-sm text-gray-500 mb-4">Upload/View prescriptions, lab reports, or test files.</p>
                             <div className="mt-auto">
                                 <button
                                     onClick={() =>
@@ -42,7 +42,7 @@ const DoctorRemarksModal = ({ appt, onCloseHard }) => {
                                     }
                                     className="w-full bg-violet-600 text-white py-2 rounded-lg hover:bg-violet-700 transition"
                                 >
-                                    Upload Image / File
+                                    Upload/View File
                                 </button>
                             </div>
                         </div>
