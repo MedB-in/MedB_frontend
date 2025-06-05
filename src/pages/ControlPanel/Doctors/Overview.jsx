@@ -10,7 +10,28 @@ const Overview = () => {
 
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
     const doctorId = userDetails?.doctorId;
-    const clinics = userDetails?.doctorClinics || [];
+
+    useEffect(() => {
+        const handleClinicChange = (e) => {
+            const newClinicId = e.detail;
+            setSelectedClinicId(newClinicId);
+        };
+        window.addEventListener('clinicIdChanged', handleClinicChange);
+        return () => {
+            window.removeEventListener('clinicIdChanged', handleClinicChange);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (selectedClinicId) {
+            fetchAnalytics(selectedClinicId);
+        }
+    }, [selectedClinicId]);
+
+    useEffect(() => {
+        const storedClinicId = JSON.parse(localStorage.getItem('selectedClinicId'));
+        if (storedClinicId) setSelectedClinicId(storedClinicId);
+    }, []);
 
     const fetchAnalytics = async (clinicId) => {
         try {
@@ -27,28 +48,8 @@ const Overview = () => {
         }
     }, [selectedClinicId]);
 
-    const handleClinicChange = (e) => {
-        const value = parseInt(e.target.value);
-        setSelectedClinicId(value);
-    };
-
     return (
         <div className="p-4">
-            <div className="mb-6">
-                <label className="block text-lg font-semibold capitalize mb-2">Select Clinic</label>
-                <select
-                    value={selectedClinicId || ''}
-                    onChange={handleClinicChange}
-                    className="w-full max-w-md bg-white p-3 capitalize rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    <option value="" disabled className="text-gray-500 capitalize">Select a clinic</option>
-                    {clinics.map((clinic) => (
-                        <option className="text-black capitalize" key={clinic.clinicId} value={clinic.clinicId}>
-                            {clinic.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
             {analyticsData ? (
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">

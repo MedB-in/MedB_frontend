@@ -70,8 +70,8 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50  px-4">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full overflow-y-auto max-w-md mt-12 mb-8">
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 px-4 overflow-y-auto">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-h-[90vh] w-full max-w-md overflow-y-auto my-4">
                 <h2 className="text-xl font-semibold text-center mb-4">Add Clinic User</h2>
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <InputField type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />

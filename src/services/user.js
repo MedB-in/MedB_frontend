@@ -17,8 +17,8 @@ export const getUserList = (search, page) =>
     axios.get(`/api/user/userList?search=${search}&page=${page}`, getHeaders());
 
 // API to get users with user rights.
-export const getUserRightsList = (page) =>
-    axios.get(`/api/user/userRights?page=${page}`, getHeaders());
+export const getUserRightsList = (page, search) =>
+    axios.get(`/api/user/userRights?page=${page}&search=${search}`, getHeaders());
 
 //API to add user rights.
 export const addUserRights = (data) =>

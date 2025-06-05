@@ -19,6 +19,8 @@ function PatientAppointmentsPage() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [selectedClinicId, setSelectedClinicId] = useState(null);
+  const [clinicIdInitialized, setClinicIdInitialized] = useState(false);
 
   const cachedSearchQuery = sessionStorage.getItem("appointment_search_query") || "";
   const [searchQuery, setSearchQuery] = useState(cachedSearchQuery);
@@ -31,6 +33,26 @@ function PatientAppointmentsPage() {
   const [selectedApptAction, setSelectedApptAction] = useState(null);
   const [actionModalOpen, setActionModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClinicChange = (e) => {
+      const newClinicId = e.detail;
+      setSelectedClinicId(newClinicId);
+    };
+    window.addEventListener('clinicIdChanged', handleClinicChange);
+    return () => {
+      window.removeEventListener('clinicIdChanged', handleClinicChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    const storedClinicId = JSON.parse(localStorage.getItem("selectedClinicId"));
+    if (storedClinicId) setSelectedClinicId(storedClinicId);
+    setClinicIdInitialized(true);
+  }, []);
+
+  console.log(selectedClinicId, "selectedClinicId");
+
 
   useEffect(() => {
     sessionStorage.setItem("appointment_search_query", searchQuery);
@@ -50,7 +72,7 @@ function PatientAppointmentsPage() {
       setLoading(true);
     }
     try {
-      const response = await getAppointments(doctor, currentPage, searchQuery);
+      const response = await getAppointments(doctor, currentPage, searchQuery, selectedClinicId);
 
       const result = {
         appointments: response.data.appointments.appointments,
@@ -71,8 +93,10 @@ function PatientAppointmentsPage() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [currentPage, searchQuery]);
+    if (clinicIdInitialized) {
+      fetchData();
+    }
+  }, [currentPage, searchQuery, selectedClinicId, clinicIdInitialized]);
 
   const generatePagination = useMemo(() => {
     if (totalPages <= 7) {
@@ -111,7 +135,7 @@ function PatientAppointmentsPage() {
     setSelectedAppt(null);
     setSelectedApptAction(null);
     setActionModalOpen(false);
-    fetchData(true);
+    fetchData();
   }, []);
 
 

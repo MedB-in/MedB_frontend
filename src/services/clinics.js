@@ -66,8 +66,8 @@ export const getClinicUsers = (clinicId) =>
     axios.get(`/api/clinic/users/${clinicId}`, getHeaders());
 
 // API to get users with user rights.
-export const getClinicUserRightsList = (page, clinicId) =>
-    axios.get(`/api/clinic/user/userRights?page=${page}&clinicId=${clinicId}`, getHeaders());
+export const getClinicUserRightsList = (page, clinicId, search) =>
+    axios.get(`/api/clinic/user/userRights?page=${page}&clinicId=${clinicId}&search=${search}`, getHeaders());
 
 //API to edit clinic user rights.
 export const editClinicUserRights = (data) =>
