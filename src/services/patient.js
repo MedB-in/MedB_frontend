@@ -1,8 +1,8 @@
 import axios, { uploadHeaders, getHeaders } from "./axios";
 
 //API to handle get appointments.
-export const getAppointments = (doctor, page, search) =>
-    axios.get(`/api/patient/appointment/${page}?search=${search}&doctor=${doctor}`, getHeaders());
+export const getAppointments = (doctor, page, search, clinicId) =>
+    axios.get(`/api/patient/appointment/${page}?search=${search}&doctor=${doctor}&clinicId=${clinicId}`, getHeaders());
 
 //API to add patient from clinic.
 export const addPatient = (data) =>

@@ -28,6 +28,9 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const notificationRef2 = useRef(null);
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('userDetails')));
+    const userId = user?.userId;
+    const doctorId = user?.doctorId;
+    const clinics = user?.doctorClinics || [];
     const [mobileModal, setMobileModal] = useState(() => {
         const storedValue = sessionStorage.getItem('mobileModal');
         return storedValue ? JSON.parse(storedValue) : true;
@@ -37,8 +40,34 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
     const [newNotificationCount, setNewNotificationCount] = useState(0);
+    const [selectedClinicId, setSelectedClinicId] = useState(() => {
+        return JSON.parse(localStorage.getItem('selectedClinicId'));
+    });
 
-    const userId = user?.userId;
+    useEffect(() => {
+        if (clinics.length > 0) {
+            const storedClinicId = JSON.parse(localStorage.getItem('selectedClinicId'));
+
+            const isStoredClinicValid = clinics.some(
+                (clinic) => clinic.clinicId === storedClinicId
+            );
+
+            if (!isStoredClinicValid) {
+                const firstClinicId = clinics[0].clinicId;
+                setSelectedClinicId(firstClinicId);
+                localStorage.setItem('selectedClinicId', JSON.stringify(firstClinicId));
+            }
+        }
+    }, [clinics]);
+
+    const handleClinicChange = (e) => {
+        const value = parseInt(e.target.value);
+        setSelectedClinicId(value);
+        localStorage.setItem('selectedClinicId', JSON.stringify(value));
+        window.dispatchEvent(new CustomEvent('clinicIdChanged', {
+            detail: value
+        }));
+    };
 
     useEffect(() => {
         if (authenticated && userId) {
@@ -256,6 +285,24 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? "w-32 opacity-100" : "w-16 opacity-80"}`}
                         />
                     </div>
+                    {doctorId && clinics.length > 1 && (
+                        <div className="p-2">
+                            <select
+                                value={selectedClinicId || ''}
+                                onChange={handleClinicChange}
+                                className="w-full max-w-md mt-5 bg-white p-2 capitalize rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 -mb-5"
+                            >
+                                <option value="" disabled className="text-gray-500 capitalize">Select a clinic</option>
+                                {clinics.map((clinic) => (
+                                    <option className="text-black capitalize" key={clinic.clinicId} value={clinic.clinicId}>
+                                        {clinic.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )
+                    }
+
                     <div className="flex flex-col h-full w-full py-6">
                         <div className="flex-1 overflow-y-auto">
                             {modules?.length > 0 ? (
@@ -562,6 +609,23 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                     <button onClick={() => setIsSidebarOpen(false)} className="p-3 absolute top-2 right-1 rounded-full">
                         <ChevronLeft size={24} />
                     </button>
+                    {doctorId && clinics.length > 1 && (
+                        <div className="p-2">
+                            <select
+                                value={selectedClinicId || ''}
+                                onChange={handleClinicChange}
+                                className="w-full max-w-md mt-5 bg-white p-2 capitalize rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="" disabled className="text-gray-500 capitalize">Select a clinic</option>
+                                {clinics.map((clinic) => (
+                                    <option className="text-black capitalize" key={clinic.clinicId} value={clinic.clinicId}>
+                                        {clinic.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )
+                    }
                     <div className="flex flex-col justify-between h-full w-full py-6">
                         <div className="flex-1 overflow-y-auto">
                             {modules?.length > 0 ? (
