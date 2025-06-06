@@ -6,28 +6,41 @@ import { UploadIcon } from "lucide-react";
 import Swal from "sweetalert2";
 import { medicalDepartments } from "../../../lib/medicalDepartments";
 import { isValidAge, isValidName, isValidPhone, isValidPincode } from "../../../validation/validations";
+import { getActiveClinics } from "../../../services/publicApi";
 
 const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onSubmit }) => {
   const [loading, setLoading] = useState(false);
-  const [clinics, setClinics] = useState([]);
+  const [clinicSearch, setClinicSearch] = useState("");
+  const [clinicResults, setClinicResults] = useState([]);
   const [selfClinic, setSelfClinic] = useState(false);
   const [doctorPictureFile, setDoctorPictureFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedFromDropdown, setSelectedFromDropdown] = useState(false);
 
   useEffect(() => {
-    if (!fromClinic) {
+    if (selectedFromDropdown) {
+      setSelectedFromDropdown(false);
+      return;
+    }
+
+    if (clinicSearch.trim() && !clinicId) {
       const fetchClinics = async () => {
         try {
-          const data = await getClinicList();
-          setClinics(data.data.clinics || []);
+          const response = await getActiveClinics(clinicSearch);
+          const clinics = response?.data?.clinics || [];
+          setClinicResults(clinics);
+          setShowDropdown(true);
         } catch (error) {
-          toast.error(error.response?.data?.message || "Failed to fetch clinics");
+          toast.error(error.response?.data?.message || "Something went wrong.");
         }
       };
-
       fetchClinics();
+    } else {
+      setClinicResults([]);
+      setShowDropdown(false);
     }
-  }, [isOpen]);
+  }, [clinicSearch]);
 
   const defaultFormData = {
     doctorId: "",
@@ -76,6 +89,9 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
   const handleSelfClinicChange = (e) => {
     const { checked } = e.target;
     setSelfClinic(checked);
+    setFormData({ ...formData, clinicId: "" });
+    setClinicSearch("");
+    setClinicResults([]);
     setFormData((prev) => ({
       ...prev,
       isOwnClinic: checked,
@@ -109,7 +125,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     const formDataToSend = new FormData();
 
@@ -120,6 +135,10 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
         formDataToSend.append(key, value);
       }
     });
+    if (!selfClinic && !formData.clinicId) {
+      toast.error("Please select a clinic.");
+      return;
+    }
     if (!isValidName(formData.firstName.trim())) {
       toast.error("First name must contain only letters.");
       return;
@@ -134,22 +153,22 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     }
     if (!isValidPhone(formData.phone)) {
       toast.error("Please enter a valid phone number.");
-      setLoading(false);
       return;
     }
     if (!isValidPincode(formData.postalCode)) {
       toast.error("Please enter a valid pincode.");
-      setLoading(false);
       return;
     }
-    if(!formData.age || !isValidAge(formData.age)){
+    if (!formData.age || !isValidAge(formData.age)) {
       toast.error("Please enter a valid age.");
-      setLoading(false);
       return;
     }
-    if(!formData.experience || !isValidAge(formData.experience)){
+    if (!formData.experience || !isValidAge(formData.experience)) {
       toast.error("Please enter a valid experience.");
-      setLoading(false);
+      return;
+    }
+    if (!doctorPictureFile) {
+      toast.error("Please upload a profile picture.");
       return;
     }
     if (doctorPictureFile) {
@@ -157,6 +176,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
     }
 
     try {
+      setLoading(true);
       await onSubmit(formDataToSend, formData.doctorId);
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
@@ -230,22 +250,61 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
             </div>
           </div>
           {!clinicId && !doctorData && !selfClinic && (
-            <div className="mb-4">
-              <label className="block text-sm font-medium">Clinic</label>
-              <select
-                name="clinicId"
-                value={formData.clinicId}
-                onChange={handleChange}
-                className="w-full p-2 border rounded-md"
-                required
-              >
-                <option value="">Select Clinic</option>
-                {clinics.map((clinic) => (
-                  <option key={clinic.clinicId} value={clinic.clinicId}>
-                    {clinic.name}
-                  </option>
-                ))}
-              </select>
+            <div className="mb-4 relative">
+              <label className="block text-sm font-medium mb-1 text-gray-700">Clinic</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={clinicSearch}
+                  onChange={(e) => {
+                    setClinicSearch(e.target.value);
+                    setFormData({ ...formData, clinicId: "" });
+                  }}
+                  onFocus={() => {
+                    if (clinicResults.length > 0) setShowDropdown(true);
+                  }}
+                  placeholder="Search clinic by name or address"
+                  className="w-full p-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                {clinicSearch && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setClinicSearch("");
+                      setFormData({ ...formData, clinicId: "" });
+                      setClinicResults([]);
+                      setShowDropdown(false);
+                    }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-red-500 focus:outline-none"
+                  >
+                    ✖
+                  </button>
+                )}
+              </div>
+              {showDropdown && clinicResults.length > 0 && (
+                <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                  {clinicResults.map((clinic) => (
+                    <li
+                      key={clinic.clinicId}
+                      onClick={() => {
+                        setFormData({ ...formData, clinicId: clinic.clinicId });
+                        setClinicSearch(clinic.name);
+                        setClinicResults([]);
+                        setShowDropdown(false);
+                        setSelectedFromDropdown(true);
+                      }}
+                      className="px-4 py-2 cursor-pointer hover:bg-indigo-100"
+                    >
+                      {clinic.name}{clinic.address ? `, ${clinic.address}` : ""}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {showDropdown && clinicSearch.trim() && clinicResults.length === 0 && (
+                <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-md px-4 py-2 text-sm text-gray-500">
+                  No matching clinics found.
+                </div>
+              )}
             </div>
           )}
           {!doctorData && (

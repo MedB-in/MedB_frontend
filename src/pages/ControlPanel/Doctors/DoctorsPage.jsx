@@ -3,6 +3,7 @@ import { getDoctors, addDoctor, editDoctor } from "../../../services/doctors";
 import toast, { Toaster } from "react-hot-toast";
 import DoctorModal from "../../../components/Organs/Doctors/DoctorModal";
 import Pagination from "../../../components/Atoms/Patient/Pagination";
+import Button from "../../../components/Atoms/Login/Button";
 
 const DoctorsPage = () => {
   const [doctors, setDoctors] = useState([]);
@@ -95,12 +96,11 @@ const DoctorsPage = () => {
     <section className="p-4">
       <Toaster />
       <div className="flex flex-col items-center py-4 px-4 gap-4">
-        <button
-          className="py-2 px-4 border rounded hover:bg-blue-500 hover:text-white"
+        <Button
           onClick={handleAddDoctor}
         >
           Add Doctor
-        </button>
+        </Button>
         <div className="w-full max-w-md">
           <input
             type="text"
@@ -168,7 +168,7 @@ const DoctorsPage = () => {
                     </p>
                   </div>
                   <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                    className="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
                     onClick={() => handleEditDoctor(doctor?.doctorId)}
                   >
                     Edit

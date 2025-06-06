@@ -117,7 +117,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
 
         try {
             setLoading(true);
-            const response = await postDoctorLeave(useDoctorId, idClinic, { leaveDate: selectedDate, reason: leaveReason });
+            const response = await postDoctorLeave(useDoctorId, clinicId || idClinic, { leaveDate: selectedDate, reason: leaveReason });
             setLeaveList((prev) => [...prev, response.data.leave]);
             toast.success('Leave posted successfully.');
             setLeaveReason('');
@@ -135,7 +135,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
         }
         try {
             setUpdating(true);
-            const result = await postConsultCancellation(useDoctorId, idClinic, { leaveDate: selectedDate, reason: leaveReason });
+            const result = await postConsultCancellation(useDoctorId, clinicId || idClinic, { leaveDate: selectedDate, reason: leaveReason });
             setLeaveList(prev => {
                 const filtered = prev.filter(item => item.doctorLeaveId !== result.data.leave.doctorLeaveId);
                 return [result.data.leave, ...filtered];
@@ -177,7 +177,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
 
         try {
             setUpdating(true);
-            const result = await updateDoctorLeave(useDoctorId, idClinic, leave, status);
+            const result = await updateDoctorLeave(useDoctorId, clinicId || idClinic, leave, status);
             fetchDoctorLeaves();
             toast.success(`Leave ${status === 'approved' ? 'approved' : 'rejected'}`);
             setSelectedLeave(null);
@@ -187,10 +187,6 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
             setUpdating(false);
         }
     };
-
-
-
-
 
     return (
         <div className="min-h-screen p-6 pt-8">

@@ -178,7 +178,6 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
     const formDataToSend = new FormData();
@@ -213,6 +212,7 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
     }
 
     try {
+      setLoading(true);
       await onSubmit(formDataToSend, formData.clinicId);
       setClinicPictureFile(null);
       setPreviewImage(null);

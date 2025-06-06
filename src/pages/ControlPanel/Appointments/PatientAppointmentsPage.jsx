@@ -51,9 +51,6 @@ function PatientAppointmentsPage() {
     setClinicIdInitialized(true);
   }, []);
 
-  console.log(selectedClinicId, "selectedClinicId");
-
-
   useEffect(() => {
     sessionStorage.setItem("appointment_search_query", searchQuery);
   }, [searchQuery]);
