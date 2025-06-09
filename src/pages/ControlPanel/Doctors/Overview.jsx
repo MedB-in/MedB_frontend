@@ -86,7 +86,7 @@ const Overview = () => {
                     <WeeklyBookingOverview bookingRatio={analyticsData.weeklyBookingRatio} />
                 </>
             ) : (
-                <p className="text-gray-500">Please select a clinic to view analytics.</p>
+                <p className="text-gray-500">Loading.</p>
             )}
         </div>
     );
