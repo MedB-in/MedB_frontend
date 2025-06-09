@@ -591,7 +591,8 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             className="w-10 h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
                         />
                         <button className="ml-2 flex items-center bg-transparent border-none" onClick={doLogout}>
-                            <span className="drop-shadow-md">Logout</span>
+                            {/* <span className="drop-shadow-md">Logout</span> */}
+                            <img src={LogoutIcon} alt="Logout" className="" title='Logout' />
                         </button>
                     </div>
                 </header>

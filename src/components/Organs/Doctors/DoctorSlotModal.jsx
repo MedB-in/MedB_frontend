@@ -6,7 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { bookSlot } from '../../../services/doctors';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { setAuthenticated } from '../../../redux/slices/authSlice';
+import { setAuthenticated, setUserDetails } from "../../../redux/slices/authSlice";
+import { setUserAccess } from "../../../redux/slices/userAccessSlice";
 import visitReasons from '../../../lib/reasonOptions';
 import MobileNumberModal from '../MobileNumber';
 
@@ -69,10 +70,13 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
             }
 
             const messageListener = (event) => {
-                if (event.origin === window.location.origin && event.data === 'authenticated') {
+                if (event.origin === window.location.origin && event.data?.type === 'authenticated') {
                     clearInterval(popupCheckInterval);
                     loginPopup.close();
                     window.removeEventListener('message', messageListener);
+                    const { userDetails } = event.data.payload;
+                    dispatch(setUserDetails(userDetails));
+                    localStorage.setItem("userDetails", JSON.stringify(userDetails));
                     dispatch(setAuthenticated(true));
                     toast.success("Login successful!");
                 }
