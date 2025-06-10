@@ -1,6 +1,7 @@
 import { formatTime } from '../../../utils/format';
+import ProfileAvatar from '../ProfileAvatar';
 
-const AppointmentRow = ({ appt, isDoctor, handleOpenModal, handleAppointmentModal }) => {
+const AppointmentRow = ({ appt, isDoctor, today, handleOpenModal, handleAppointmentModal }) => {
 
     return (
         <tr
@@ -12,11 +13,7 @@ const AppointmentRow = ({ appt, isDoctor, handleOpenModal, handleAppointmentModa
                 <td className="px-4 py-3 text-left rounded-l-lg">
                     <div className="flex justify-start">
                         <div className="flex items-center justify-start gap-4">
-                            <img
-                                src={appt.profilePicture}
-                                alt={appt.firstName}
-                                className="w-12 h-12 rounded-full object-cover"
-                            />
+                            <ProfileAvatar imageUrl={appt.profilePicture} name={appt.firstName} size="w-12 h-12" />
                             <div className="flex flex-col">
                                 <p className="text-lg font-semibold">
                                     {appt?.firstName} {appt.middleName || ""} {appt.lastName || ""}
@@ -33,11 +30,7 @@ const AppointmentRow = ({ appt, isDoctor, handleOpenModal, handleAppointmentModa
                 <td className="px-4 py-3 text-left rounded-l-lg">
                     <div className="flex justify-start">
                         <div className="flex items-center justify-start gap-4">
-                            <img
-                                src={appt.patientDetails?.profilePicture}
-                                alt={appt.patientDetails?.firstName}
-                                className="w-12 h-12 rounded-full object-cover"
-                            />
+                            <ProfileAvatar imageUrl={appt.profilePicture} name={appt.firstName} size="w-12 h-12" />
                             <div className="flex-1">
                                 <p className="text-lg font-semibold">
                                     {appt.patientDetails?.firstName} {appt.patientDetails?.middleName || ""} {appt.patientDetails?.lastName || ""}
@@ -54,11 +47,7 @@ const AppointmentRow = ({ appt, isDoctor, handleOpenModal, handleAppointmentModa
             <td className="px-4 py-3">
                 <div className="flex justify-start">
                     <div className="flex items-center justify-start gap-4">
-                        <img
-                            src={appt.clinicPicture}
-                            alt={appt.clinicName}
-                            className="w-12 h-12 rounded-full object-cover"
-                        />
+                        <ProfileAvatar imageUrl={appt.clinicPicture} name={appt.clinicName} size="w-12 h-12" />
                         <div className="flex flex-col">
                             <p className="text-lg font-semibold">{appt.clinicName}</p>
                             <p className="text-sm text-gray-600">{appt.address}</p>
@@ -93,7 +82,7 @@ const AppointmentRow = ({ appt, isDoctor, handleOpenModal, handleAppointmentModa
                 {appt.isEmergency && " (Emergency)"}
             </td>
 
-            {!isDoctor && new Date(appt.appointmentDate.split("-").reverse().join("-")) >= new Date() && appt.appointmentStatus === "Scheduled" ? (
+            {!isDoctor && appt.appointmentDate.split("-").reverse().join("-") >= today && appt.appointmentStatus === "Scheduled" ? (
                 <td className="px-4 py-3 text-center">
                     <button
                         className="hover:bg-gray-200 bg-gray-100 text-indigo-400 font-semibold py-2 px-4 rounded-full"
@@ -106,7 +95,7 @@ const AppointmentRow = ({ appt, isDoctor, handleOpenModal, handleAppointmentModa
                 <td className="px-4 py-3 text-center">-</td>
             )}
         </tr>
-    );
+    )
 };
 
 export default AppointmentRow;

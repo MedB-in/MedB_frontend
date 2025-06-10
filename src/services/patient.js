@@ -32,10 +32,6 @@ export const getPrescriptionDataForPatient = (patientId) =>
 export const postPrescriptionData = (appointmentId, data) =>
     axios.post(`/api/patient/prescriptionData/${appointmentId}`, data, getHeaders());
 
-//API to get signed url for health file upload of a patient.
-// export const getSignedUrl = (url) =>
-//     axios.post(`/api/patient/signedUrl`, { url }, getHeaders());
-
 //API to update appointment status of a patient.
 export const markAppointmentCompleted = (appointmentId, data) =>
     axios.post(`/api/patient/appointment/status/${appointmentId}`, data, getHeaders());

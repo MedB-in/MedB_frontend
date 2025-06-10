@@ -1,6 +1,7 @@
 import { Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import DefaultImage from "../../../assets/images/default-doctor.png";
+import ProfileAvatar from "../../Atoms/ProfileAvatar";
 
 const DoctorCard = ({
     doctor,
@@ -23,11 +24,7 @@ const DoctorCard = ({
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <img
-                        src={doctor.profilePicture || DefaultImage}
-                        alt={doctor.doctorName}
-                        className="w-16 h-16 rounded-full object-cover border"
-                    />
+                    <ProfileAvatar imageUrl={doctor.profilePicture} name={doctor.firstName} size="w-16 h-16" />
                     <div>
                         <h3 className="text-lg font-semibold">
                             Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}

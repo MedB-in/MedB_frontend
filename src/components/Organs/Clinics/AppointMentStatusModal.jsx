@@ -113,7 +113,7 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                     disabled={loading}
                 >
                     <option value="">Select Status</option>
-                    {today === appointment?.appointmentDate && <option value="Completed">Completed</option>}
+                    {today === appointment?.appointmentDate.split("-").reverse().join("-") && <option value="Completed">Completed</option>}
                     <option value="Cancelled">Cancel</option>
                     <option value="Reschedule">Reschedule</option>
                 </select>

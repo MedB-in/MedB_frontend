@@ -94,7 +94,16 @@ const LoginPage = () => {
       dispatch(setUserAccess(data.menuData));
       dispatch(setAuthenticated(true));
       if (window.opener) {
-        window.opener.postMessage("authenticated", window.location.origin);
+        window.opener.postMessage(
+          {
+            type: "authenticated",
+            payload: {
+              userDetails: data.userDetails,
+              menuData: data.menuData,
+            },
+          },
+          window.location.origin
+        );
         window.close();
       } else {
         navigate("/");
