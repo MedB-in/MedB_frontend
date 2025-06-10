@@ -66,11 +66,11 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
                     clearInterval(popupCheckInterval);
                     loginPopup.close();
                     window.removeEventListener('message', messageListener);
-                    const { userDetails } = event.data.payload;
+                    const { userDetails, menuData } = event.data.payload;
                     dispatch(setUserDetails(userDetails));
                     localStorage.setItem("userDetails", JSON.stringify(userDetails));
-                    dispatch(setUserAccess(data.menuData));
-                    localStorage.setItem("userAccess", JSON.stringify(data.menuData));
+                    dispatch(setUserAccess(menuData));
+                    localStorage.setItem("userAccess", JSON.stringify(menuData));
                     dispatch(setAuthenticated(true));
                     toast.success("Login successful!");
                 }
