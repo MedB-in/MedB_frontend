@@ -6,6 +6,7 @@ import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";
 import EditUserRightsModal from "../../../components/Organs/Users/EditUserRightsModal";
 import UserRightsSkeleton from "../../../components/Atoms/Users/UserRightSkeleton";
+import ProfileAvatar from "../../../components/Atoms/ProfileAvatar";
 
 function UserRightsList(clinic) {
   const [usersWithRights, setUsersWithRights] = useState([]);
@@ -125,17 +126,7 @@ function UserRightsList(clinic) {
                     <td className="px-4 py-3 text-center font-medium">{index + 1}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        {user.userProfileImage ? (
-                          <img
-                            src={user.userProfileImage}
-                            alt="user"
-                            className="w-10 h-10 rounded-full object-cover border border-gray-300"
-                          />
-                        ) : (
-                          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-white text-xs">
-                            {user.userName?.[0] || "U"}
-                          </div>
-                        )}
+                        <ProfileAvatar imageUrl={user.userProfileImage} name={user.userName} />
                         <span className="font-semibold">{user.userName}</span>
                       </div>
                     </td>

@@ -9,11 +9,13 @@ import AppointmentCard from "../../../components/Atoms/Patient/AppointmentCard";
 import Pagination from "../../../components/Atoms/Patient/Pagination";
 import LoadingRow from "../../../components/Atoms/Patient/LoadingRow";
 import AppointmentRow from "../../../components/Atoms/Patient/AppointmentsRow";
+import { getISTDate } from "../../../utils/time";
 
 function PatientAppointmentsPage() {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const doctor = userDetails?.doctorId ?? null;
   const isDoctor = !!doctor;
+  const today = getISTDate();
 
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -187,6 +189,7 @@ function PatientAppointmentsPage() {
                       key={index}
                       appt={appt}
                       isDoctor={isDoctor}
+                      today={today}
                       handleOpenModal={handleOpenModal}
                       handleAppointmentModal={handleAppointmentModal}
                     />
@@ -210,6 +213,7 @@ function PatientAppointmentsPage() {
               <AppointmentCard
                 key={index}
                 appt={appt}
+                today={today}
                 isDoctor={isDoctor}
                 handleOpenModal={handleOpenModal}
                 handleAppointmentModal={handleAppointmentModal}

@@ -34,7 +34,7 @@ const DoctorProfilePage = () => {
         };
         fetchDoctorData();
     }, [clinicId, doctorId]);
-    
+
     return (
         <>
             <Toaster />

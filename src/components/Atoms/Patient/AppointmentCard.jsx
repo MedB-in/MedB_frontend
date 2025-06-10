@@ -1,15 +1,14 @@
 import { formatTime } from '../../../utils/format';
+import ProfileAvatar from '../ProfileAvatar';
 
-const AppointmentCard = ({ appt, isDoctor, handleOpenModal, handleAppointmentModal }) => {
+const AppointmentCard = ({ appt, isDoctor, today, handleOpenModal, handleAppointmentModal }) => {
     return (
         <div
             onClick={() => {
                 if (isDoctor) {
                     handleOpenModal(appt);
                 } else {
-                    const apptDate = new Date(appt.appointmentDate.split("-").reverse().join("-"));
-                    const today = new Date();
-                    if (apptDate >= today && appt.appointmentStatus === "Scheduled") {
+                    if (appt.appointmentDate.split("-").reverse().join("-") >= today && appt.appointmentStatus === "Scheduled") {
                         handleAppointmentModal(appt);
                     }
                 }
@@ -17,11 +16,7 @@ const AppointmentCard = ({ appt, isDoctor, handleOpenModal, handleAppointmentMod
             className="bg-white shadow-lg rounded-2xl p-5 border border-gray-200 flex flex-col gap-4 transform transition-all duration-300 ease-in-out hover:bg-gray-200 hover:shadow-xl cursor-pointer"
         >
             <div className="flex items-center text-left gap-4 border-b pb-3">
-                <img
-                    src={isDoctor ? appt.patientDetails.profilePicture : appt.profilePicture}
-                    alt={isDoctor ? appt.patientDetails.firstName : appt.firstName}
-                    className="w-14 h-14 rounded-full object-cover border border-gray-300"
-                />
+                <ProfileAvatar imageUrl={isDoctor ? appt.patientDetails.profilePicture : appt.profilePicture} name={isDoctor ? appt.patientDetails.firstName : appt.firstName} />
                 <div>
                     <p className="text-lg font-semibold">
                         {isDoctor

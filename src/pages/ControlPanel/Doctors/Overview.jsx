@@ -68,12 +68,12 @@ const Overview = () => {
                                 {analyticsData?.bookedAppointmentsToday?.map((appt, index) => (
                                     <li
                                         key={index}
-                                        className="p-4 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-sm"
+                                        className="p-4 rounded-xl bg-gray-200 border border-gray-200  shadow-sm"
                                     >
-                                        <p className="text-lg font-medium text-gray-800 dark:text-gray-200">
+                                        <p className="text-lg font-medium text-gray-800 capitalize">
                                             {appt.firstName} {appt.middleName || ''} {appt.lastName}
                                         </p>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        <p className="text-sm text-gray-600 ">
                                             Reason: {appt.reasonForVisit || 'N/A'}
                                         </p>
                                     </li>

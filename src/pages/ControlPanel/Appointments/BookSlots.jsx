@@ -11,12 +11,14 @@ import visitReasons from "../../../lib/reasonOptions";
 import { getDoctorSlots, bookSlot } from "../../../services/doctors";
 import AddPatientModal from "../../../components/Organs/Patient/PatientModal";
 import BackButton from "../../../components/Atoms/BackButton";
+import { getISTDate, isPastSlot } from "../../../utils/time";
 
 const BookSlots = () => {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
     const clinic = userDetails?.clinicId;
     const isClinicBooking = !!clinic;
     const navigate = useNavigate();
+    const today = getISTDate();
 
     const { doctorId, clinicId } = useParams();
     const [doctor, setDoctor] = useState(null);
@@ -104,7 +106,7 @@ const BookSlots = () => {
         setBooking(true);
         try {
             const formattedDate = format(selectedDate, "yyyy-MM-dd");
-            const isPast = isPastSlot(selectedSlot);
+            const isPast = isPastSlot(selectedSlot, selectedDate);
             if (isPast) {
                 toast.error('Selected slot is Expired. Please select another slot.');
                 return;
@@ -136,21 +138,11 @@ const BookSlots = () => {
     }
 
     const handleEmergencyChange = (event) => {
-        if (format(selectedDate, "yyyy-MM-dd") !== format(new Date(), "yyyy-MM-dd")) {
+        if (format(selectedDate, "yyyy-MM-dd") !== today) {
             toast.error("Emergency appointments can only be booked for today.");
             return;
         }
         setIsEmergency(event.target.checked);
-    };
-
-    const isPastSlot = (slotTime) => {
-        const nowUTC = new Date();
-        const nowIST = new Date(nowUTC.getTime() + (5.5 * 60 * 60 * 1000));
-        const [slotHour, slotMinute] = slotTime.split(':').map(Number);
-        const slotDateIST = new Date(selectedDate);
-        slotDateIST.setHours(slotHour, slotMinute, 0, 0);
-        const slotDateISTAdjusted = new Date(slotDateIST.getTime() - (slotDateIST.getTimezoneOffset() * 60000));
-        return slotDateISTAdjusted < nowIST;
     };
 
     return (
@@ -194,7 +186,7 @@ const BookSlots = () => {
                             name="isActive"
                             checked={isEmergency}
                             onChange={handleEmergencyChange}
-                            disabled={format(selectedDate, "yyyy-MM-dd") !== format(new Date(), "yyyy-MM-dd")}
+                            disabled={format(selectedDate, "yyyy-MM-dd") !== today}
                             className="form-checkbox w-6 h-6 text-red-500 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                         <span className={`font-semibold text-lg ${isEmergency ? "text-red-600" : "text-gray-800"}`}>

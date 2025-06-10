@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Calendar from '../../Atoms/Calender';
 import TimeSlots from '../../Atoms/TImeSlots';
 import { motion } from 'framer-motion';
 import { useSelector, useDispatch } from "react-redux";
 import { bookSlot } from '../../../services/doctors';
+import { isPastSlot } from '../../../utils/time';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { setAuthenticated, setUserDetails } from "../../../redux/slices/authSlice";
 import { setUserAccess } from "../../../redux/slices/userAccessSlice";
+
 import visitReasons from '../../../lib/reasonOptions';
 import MobileNumberModal from '../MobileNumber';
 
@@ -36,18 +38,8 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
         setSelectedSlot(slot);
     };
 
-    const isPastSlot = (slotTime) => {
-        const nowUTC = new Date();
-        const nowIST = new Date(nowUTC.getTime() + (5.5 * 60 * 60 * 1000));
-        const [slotHour, slotMinute] = slotTime.split(':').map(Number);
-        const slotDateIST = new Date(selectedDate);
-        slotDateIST.setHours(slotHour, slotMinute, 0, 0);
-        const slotDateISTAdjusted = new Date(slotDateIST.getTime() - (slotDateIST.getTimezoneOffset() * 60000));
-        return slotDateISTAdjusted < nowIST;
-    };
-
     const handleSubmit = async () => {
-        const isPast = isPastSlot(selectedSlot);
+        const isPast = isPastSlot(selectedSlot, selectedDate);
         if (isPast) {
             toast.error('Selected slot is Expired. Please select another slot.');
             return;
@@ -77,6 +69,8 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
                     const { userDetails } = event.data.payload;
                     dispatch(setUserDetails(userDetails));
                     localStorage.setItem("userDetails", JSON.stringify(userDetails));
+                    dispatch(setUserAccess(data.menuData));
+                    localStorage.setItem("userAccess", JSON.stringify(data.menuData));
                     dispatch(setAuthenticated(true));
                     toast.success("Login successful!");
                 }
