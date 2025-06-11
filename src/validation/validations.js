@@ -1,6 +1,6 @@
 // Validate Indian contact number (starts with 6-9, total 10 digits)
 export const isValidPhone = (phone) => {
-    const phoneRegex = /^[6-9]\d{9}$/;
+    const phoneRegex = /^[5-9]\d{9}$/;
     return phoneRegex.test(phone);
 };
 
