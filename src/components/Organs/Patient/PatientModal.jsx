@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { addPatient, updatePatient } from "../../../services/patient";
 import InputField from "../../Atoms/Login/InputField";
 import Button from "../../Atoms/Login/Button";
-import { isValidPhone, isValidPincode } from "../../../validation/validations";
+import { isValidAge, isValidEmail, isValidName, isValidPhone, isValidPincode } from "../../../validation/validations";
 
 const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, patient, isUpdate }) => {
     const [formData, setFormData] = useState({
@@ -61,8 +61,28 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
             toast.error("All required fields must be filled.");
             return;
         }
+        if (!isValidName(formData.firstName.trim())) {
+            toast.error("First name must contain only letters.");
+            return;
+        }
+        if (formData.middleName && !isValidName(formData.middleName.trim())) {
+            toast.error("Middle name must contain only letters.");
+            return;
+        }
+        if (formData.lastName && !isValidName(formData.lastName.trim())) {
+            toast.error("Last name must contain only letters.");
+            return;
+        }
+        if(!isValidAge(formData.age)) {
+            toast.error("Please enter a valid age.");
+            return;
+        }
+        if (!isValidEmail(formData.email)) {
+            toast.error("Please enter a valid email address.");
+            return;
+        }
         if (!isValidPhone(formData.contactNo)) {
-            toast.error("Please enter a valid phone number.");
+            toast.error("Please enter a valid Indian phone number.");
             return;
         }
         if (!isValidPincode(formData.postalCode)) {
