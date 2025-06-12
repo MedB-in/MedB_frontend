@@ -668,7 +668,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                                             selectedMenu === menu.controllerName ||
                                                             location.pathname.startsWith(`/${menu.controllerName}`)
                                                         }
-                                                        onClick={() => handleMenuClick(menu)}
+                                                        onClick={() =>{ handleMenuClick(menu); setIsSidebarOpen(!isSidebarOpen) }}
                                                         className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out ${selectedMenu === menu.controllerName
                                                             ? "bg-gray-200 font-semibold text-black shadow-md"
                                                             : "hover:bg-gray-200 text-gray-600"

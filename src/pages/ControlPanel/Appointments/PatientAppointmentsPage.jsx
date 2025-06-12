@@ -145,8 +145,8 @@ function PatientAppointmentsPage() {
   };
 
   return (
-    <section className="p-4 flex flex-col items-center justify-center text-center min-h-[calc(100vh-80px)] md:mr-4 bg-[#f0f0ff] rounded-3xl">
-      <div className="w-full max-w-md flex justify-between items-center">
+    <section className="p-4 flex flex-col items-center justify-center text-center min-h-[calc(100vh-80px)] mt-5 md:mt-0 md:mr-4 bg-[#f0f0ff] rounded-3xl">
+      <div className="w-full max-w-md flex justify-between items-center mt-5">
         <input
           type="text"
           placeholder={isDoctor ? "Search by Patient name / Date" : "Search by Doctor name, clinic or date"}
@@ -215,6 +215,7 @@ function PatientAppointmentsPage() {
                 appt={appt}
                 today={today}
                 isDoctor={isDoctor}
+                page={currentPage}
                 handleOpenModal={handleOpenModal}
                 handleAppointmentModal={handleAppointmentModal}
               />

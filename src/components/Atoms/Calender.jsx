@@ -76,7 +76,7 @@ const Calendar = ({ onDateSelect }) => {
     const allowedMonths = Array.from({ length: 4 }, (_, i) => new Date(today.getFullYear(), today.getMonth() + i));
 
     return (
-        <div className="w-full max-w-[334px] mx-auto border rounded-xl drop-shadow-lg">
+        <div className="w-full max-w-[334px] mx-auto border rounded-xl drop-shadow-lg bg-white">
             <header className="flex justify-between items-center mb-5 rounded-t-xl bg-indigo-500 p-4 sm:p-2">
                 <div className="relative" ref={dropdownRef}>
                     <button onClick={() => setShowDropdown((prev) => !prev)} className="flex items-center gap-2 text-lg text-white rounded">
