@@ -1,17 +1,17 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 import DefaultImage from "../../../assets/images/default-doctor.png";
-import days from "../../../lib/slotDays";
 import { getDoctorClinic, bookFromClinic, getPatients } from "../../../services/clinics";
 import visitReasons from "../../../lib/reasonOptions";
 import { getDoctorSlots, bookSlot } from "../../../services/doctors";
 import AddPatientModal from "../../../components/Organs/Patient/PatientModal";
 import BackButton from "../../../components/Atoms/BackButton";
 import { getISTDate, isPastSlot } from "../../../utils/time";
+import Calendar from "../../../components/Atoms/Calender";
+import days from "../../../lib/slotDays";
 
 const BookSlots = () => {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -23,6 +23,7 @@ const BookSlots = () => {
     const { doctorId, clinicId } = useParams();
     const [doctor, setDoctor] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedDay, setSelectedDay] = useState(null);
     const [slots, setSlots] = useState([]);
     const [loading, setLoading] = useState(false);
     const [selectedSlot, setSelectedSlot] = useState(null);
@@ -34,6 +35,17 @@ const BookSlots = () => {
     const [patients, setPatients] = useState([]);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [isEmergency, setIsEmergency] = useState(false);
+
+    useEffect(() => {
+        if (selectedDay) {
+            return;
+        }
+        if (selectedDate instanceof Date && !isNaN(selectedDate)) {
+            const dayLabel = selectedDate.toLocaleDateString("en-US", { weekday: "long" });
+            const dayMatch = days.find(day => day.label === dayLabel);
+            if (dayMatch) setSelectedDay(dayMatch.id);
+        }
+    }, [selectedDate]);
 
     useEffect(() => {
         const fetchDoctorDetails = async () => {
@@ -50,16 +62,10 @@ const BookSlots = () => {
     useEffect(() => {
         const fetchSlots = async () => {
             setLoading(true);
+            if (!selectedDay) return;
             try {
                 const formattedDate = format(selectedDate, "yyyy-MM-dd");
-                const selectedDayLabel = selectedDate.toLocaleDateString("en-US", { weekday: "long" });
-                const selectedDay = days.find(day => day.label === selectedDayLabel);
-
-                if (!selectedDay) {
-                    toast.error("Invalid day selection.");
-                    return;
-                }
-                const response = await getDoctorSlots(clinicId, doctorId, formattedDate, selectedDay.id);
+                const response = await getDoctorSlots(clinicId, doctorId, formattedDate, selectedDay);
                 setSlots(response.data.slots || []);
                 setSelectedSlot(null);
                 setReason("");
@@ -122,7 +128,7 @@ const BookSlots = () => {
             setSelectedSlot(null);
             setReason("");
             setSelectedPatient(null);
-            isClinicBooking ?? navigate(`/app/appointments/appointments-management`)
+            isClinicBooking ? navigate(`/app/appointments/appointments-management`) : navigate(`/app/appointments`);
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to book slot.");
         } finally {
@@ -145,42 +151,46 @@ const BookSlots = () => {
         setIsEmergency(event.target.checked);
     };
 
+    const handleDateSelect = ({ date, day }) => {
+        setSelectedDate(date);
+        setSelectedDay(day);
+    };
+
     return (
-        <section className="p-8 flex flex-col min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl">
+        <section className="p-8 flex flex-col min-h-[calc(100vh-80px)] mt-5 md:mt-0 bg-[#f0f0ff] rounded-3xl">
             <BackButton />
             {doctor ? (
-                <div className="flex items-center gap-4 mb-6 p-5">
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 mb-6 p-5 rounded-xl shadow-sm">
                     <img
                         src={doctor.profilePicture || DefaultImage}
                         alt={doctor.firstName}
                         className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
                     />
-                    <div>
+
+                    <div className="text-center sm:text-left flex-1">
                         <h2 className="text-xl font-semibold text-purple-900 bg-purple-100 px-4 py-2 rounded-lg inline-block capitalize">
                             Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}
                         </h2>
-                        <p className="text-gray-700 text-lg font-medium">{doctor.speciality}</p>
-                        <p className="text-gray-500 text-sm">{doctor.qualifications}</p>
-                        <p className="text-gray-500 text-sm">Experience: {doctor.experience} years</p>
-                        <p className="text-gray-500 text-md mt-2 font-semibold">Consultation fee: {doctor.consultationFee ? `Rs. ${doctor.consultationFee} /-` : "N/A"} </p>
+
+                        <div className="mt-2 space-y-1">
+                            <p className="text-gray-700 text-base font-medium">{doctor.speciality}</p>
+                            <p className="text-gray-500 text-sm">{doctor.qualifications}</p>
+                            <p className="text-gray-500 text-sm">Experience: {doctor.experience} years</p>
+                            <p className="text-gray-600 text-base mt-2 font-semibold">
+                                Consultation Fee:{' '}
+                                {doctor.consultationFee ? `Rs. ${doctor.consultationFee} /-` : 'N/A'}
+                            </p>
+                        </div>
                     </div>
                 </div>
+
             ) : (
                 <p className="text-center text-gray-500 text-lg">Loading doctor details...</p>
             )}
-            <div className="mb-4 relative px-5">
-                <label className="block text-gray-700 font-semibold mb-2">Select Date:</label>
-                <DatePicker
-                    selected={selectedDate}
-                    onChange={(date) => setSelectedDate(date)}
-                    minDate={new Date()}
-                    dateFormat="dd-MM-yyyy"
-                    className="px-4 py-2 border rounded-md shadow-sm bg-white text-gray-800 w-full"
-                />
-            </div>
+            <Calendar onDateSelect={handleDateSelect} />
             {isClinicBooking && (
-                <div className="mb-4 px-5">
-                    <div className="mb-4 flex items-center space-x-3 p-3 border rounded-md bg-gray-100">
+                <div className="my-4 px-5">
+                    <div className="mb-4 flex items-center space-x-3 p-3 rounded-md">
                         <input
                             type="checkbox"
                             name="isActive"
@@ -231,7 +241,7 @@ const BookSlots = () => {
                 </div>
             )}
             <div className="px-5">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Available Slots</h3>
+                <h3 className="text-lg font-semibold text-gray-800 my-5 ">Available Slots</h3>
                 {loading ? (
                     <ul className="grid grid-cols-2 h-32 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {[...Array(8)].map((_, index) => (
@@ -241,7 +251,7 @@ const BookSlots = () => {
                 ) : slots.length > 0 ? (
                     <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {slots.map((slot, index) => {
-                            const isPastTime = isPastSlot(slot.time);
+                            const isPastTime = isPastSlot(slot.time, selectedDate);
                             const isSelected = selectedSlot === slot.time;
                             const isDisabled = slot.booked || isPastTime;
 
@@ -256,7 +266,7 @@ const BookSlots = () => {
                                         ? "text-red-400 bg-gray-300 cursor-no-drop"
                                         : isSelected
                                             ? "bg-indigo-500 text-white border border-green-700"
-                                            : "bg-black bg-opacity-10 text-neutral-800 hover:bg-indigo-50"
+                                            : "bg-white text-neutral-800 hover:bg-indigo-50"
                                         }`}
                                     onClick={() => {
                                         if (!isDisabled) {

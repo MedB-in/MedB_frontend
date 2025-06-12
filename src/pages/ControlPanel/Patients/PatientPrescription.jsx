@@ -51,7 +51,7 @@ const PatientPrescription = () => {
     const handlePrint = () => window.print();
 
     return (
-        <div className="min-h-screen px-4 py-8 bg-gray-50">
+        <div className="min-h-screen px-4 py-8 bg-[#f0f0ff] rounded-3xl mt-5 md:mt-0">
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-3xl font-bold text-center mb-6">My Records</h1>
 
@@ -138,7 +138,7 @@ const PatientPrescription = () => {
                                                     setZoomLevel(1);
                                                     setImagePos({ x: 0, y: 0 });
                                                 }}
-                                                className="cursor-pointer border rounded-xl p-4 hover:shadow-md transition group"
+                                                className="cursor-pointer border rounded-xl bg-white p-4 hover:shadow-md transition group"
                                             >
                                                 <div className="flex items-center gap-3">
                                                     {isPDF ? (

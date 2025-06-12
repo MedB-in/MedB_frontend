@@ -6,6 +6,7 @@ import PatientFeedback from '../../../components/Atoms/Overview/PatientFeedback'
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { getAnalytics } from '../../../services/clinics';
+import BackButton from '../../../components/Atoms/BackButton';
 
 const Overview = () => {
 
@@ -67,6 +68,7 @@ const Overview = () => {
 
     return (
         <>
+            <BackButton />
             <div className="flex gap-4 w-full mb-6">
                 <div className="flex-1">
                     <AppointmentCard appt={todaysAppointments} title={"Today's Appointments"} />

@@ -1,8 +1,7 @@
-
 const WeeklyBookingOverview = ({ weeklyAppointments = [], days = [] }) => {
     return (
         <div className="relative bg-[rgba(210,236,234,0.3)] p-6 rounded-2xl">
-            <h2 className="text-sm mb-5 text-center">Clinic's Booking Overview(Weekly)</h2>
+            <h2 className="text-sm mb-5 text-center">Clinic's Booking Overview (Weekly)</h2>
             <div className="flex">
                 <div className="flex flex-col justify-between pr-2 text-[10px] text-gray-600 h-[200px]">
                     {[45, 40, 35, 30, 25, 20, 15, 10, 5, 0].map((val) => (
@@ -20,9 +19,11 @@ const WeeklyBookingOverview = ({ weeklyAppointments = [], days = [] }) => {
 
                             return (
                                 <div key={index} className="flex flex-col items-center">
-                                    <div className="flex items-end space-x-[1px] h-[200px]">
+                                    <div
+                                        title={`Bookings: ${data.count}`}
+                                        className="flex items-end space-x-[1px] h-[200px]">
                                         <div
-                                            className="w-[20px] rounded-t-md bg-[#6F64E7]"
+                                            className="w-[20px] rounded-t-md bg-[#6F64E7] transition-all duration-200 hover:bg-[#574fd1]"
                                             style={{ height: `${data.count}px` }}
                                         />
                                     </div>

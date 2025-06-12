@@ -54,14 +54,16 @@ const BookFromClinic = () => {
   };
 
   return (
-    <section className="p-4 flex flex-col items-center min-h-[calc(100vh-80px)] bg-[#f0f0ff] rounded-3xl md:mr-4">
-      <BackButton />
+    <section className="p-4 flex flex-col items-center min-h-[calc(100vh-80px)] mt-5 md:mt-0 bg-[#f0f0ff] rounded-3xl md:mr-4">
+      <div className="flex justify-start w-full">
+        <BackButton />
+      </div>
       <div className="flex flex-col w-full p-5">
         <div className="text-center text-white bg-[#7a5fd3] py-3 rounded-lg text-lg font-semibold">
           Clinics List
         </div>
       </div>
-      <div className="mb-4 w-full max-w-md">
+      <div className="mb-4 px-5 w-full max-w-md">
         <input
           type="text"
           placeholder="Search clinics..."

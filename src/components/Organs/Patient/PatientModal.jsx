@@ -89,6 +89,10 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
             toast.error("Please enter a valid pincode.");
             return;
         }
+        if(!isValidName(formData.country)) {
+            toast.error("Please enter a valid country.");
+            return;
+        }
         setLoading(true);
         try {
             let response;

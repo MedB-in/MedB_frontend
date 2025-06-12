@@ -190,7 +190,7 @@ function AppointmentsManagement() {
                     <div className="w-full sm:w-auto md:w-[300px]">
                         <input
                             type="text"
-                            placeholder="Search by doctor, patient, or date..."
+                            placeholder="Search by Doctor or Patient"
                             value={searchQuery}
                             onChange={handleSearch}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-gray-500 focus:border-gray-600 placeholder-gray-600 text-gray-800"
