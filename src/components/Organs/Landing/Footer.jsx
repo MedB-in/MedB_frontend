@@ -10,6 +10,7 @@ import facebookIcon from "../../../assets/images/facebook-logo.png";
 import linkedInIcon from "../../../assets/images/linkedin-icon.png";
 import instagramIcon from "../../../assets/images/instagram-icon.png";
 import { subscribeNewsletter, sendEnquiry } from "../../../services/publicApi";
+import { isValidEmail, isValidName, isValidPhone,  } from "../../../validation/validations";
 
 const Footer = () => {
 
@@ -17,6 +18,7 @@ const Footer = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
+    const [formError, setFormError] = useState("");
     const [newsletterLoading, setNewsletterLoading] = useState(false);
     const [enquiryLoading, setEnquiryLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -35,16 +37,6 @@ const Footer = () => {
         window.addEventListener("scroll-to-contact", handleScroll);
         return () => window.removeEventListener("scroll-to-contact", handleScroll);
     }, []);
-
-    const isValidEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-
-    const isValidIndianMobile = (mobile) => {
-        const mobileRegex = /^[6-9]\d{9}$/;
-        return mobileRegex.test(mobile);
-    };
 
     const handleNewsletterSubmit = async () => {
         if (!email.trim()) return toast.error("Please enter an email address");
@@ -73,11 +65,37 @@ const Footer = () => {
     const handleEnquirySubmit = async (e) => {
         e.preventDefault();
         const { role, name, phone, email, message } = formData;
+
+        const setError = (msg) => {
+            setFormError(msg);
+            toast.error(msg);
+            setTimeout(() => setFormError(""), 5000);
+        };
+
         if (!role || !name || !phone || !email || !message) {
-            return toast.error("Please fill in all fields.");
+            return setError("Please fill in all fields.");
         }
-        if (!isValidIndianMobile(phone)) {
-            return toast.error("Please enter a valid mobile number.");
+
+        if (!isValidName(name)) {
+            return setError("Name can only contain alphabets and spaces.");
+        }
+
+        if (!isValidPhone(phone)) {
+            return setError("Please enter a valid Indian mobile number.");
+        }
+
+        if (!isValidEmail(email)) {
+            return setError("Please enter a valid email address.");
+        }
+
+        const messageRegex = /^[a-zA-Z][a-zA-Z0-9\s.,!?'"()@#\-_:;]*$/;
+        if (!messageRegex.test(message)) {
+            return setError("Message must start with alphabets and contain only valid characters.");
+        }
+
+        const wordCount = message.trim().split(/\s+/).length;
+        if (wordCount < 2) {
+            return setError("Message must contain at least two words.");
         }
 
         try {
@@ -92,19 +110,18 @@ const Footer = () => {
                 message: ""
             });
         } catch (error) {
-            toast.error(error.response?.data?.message || "Something went wrong.");
+            setError(error.response?.data?.message || "Something went wrong.");
         } finally {
             setEnquiryLoading(false);
         }
     };
 
-
     const links = [
-        { name: "Features", path: "/for-doctor" },
+        // { name: "Features", path: "/for-doctor" },
         { name: "About Us", path: "/about-us" },
         { name: "For Doctor", path: "/for-doctor" },
         { name: "For Clinic", path: "/for-clinic" },
-        { name: "Contact Us", path: "" }
+        // { name: "Contact Us", path: "" }
     ]
 
     return (
@@ -171,12 +188,21 @@ const Footer = () => {
                         <div className="flex">
                             <img src={locationIcon} className="mr-2 w-5 h-5 object-contain self-start" alt="" />
                             <p>
-                                Mizone / Malabar Innovation <br />
-                                Entrepreneurship Zone,<br />
-                                Dharmasala, Kannur,<br />
-                                Kerala 670567
+                                <a
+                                    href="https://www.google.com/maps/place/Mizone+%2F+Malabar+Innovation+Entrepreneurship+Zone/@11.9840889,75.364086,1070m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3ba43f54946f7cdd:0x20d73d44cd69f732!8m2!3d11.9840837!4d75.3666609!16s%2Fg%2F11h3nn3bmp?entry=ttu&g_ep=EgoyMDI1MDYwMS4wIKXMDSoASAFQAw%3D%3D"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hover:underline"
+                                >
+                                    Medb connected care LLP <br />
+                                    Mizone / Malabar Innovation <br />
+                                    Entrepreneurship Zone,<br />
+                                    Dharmasala, Kannur,<br />
+                                    Kerala 670567
+                                </a>
                             </p>
                         </div>
+
                     </div>
                 </motion.div>
                 <motion.div
@@ -201,7 +227,7 @@ const Footer = () => {
                             whileTap={{ scale: 0.95 }}
                             onClick={handleNewsletterSubmit}
                         >
-                            Subscribe
+                            {newsletterLoading ? "Subscribing..." : "Subscribe"}
                         </motion.button>
                     </div>
                     <motion.form
@@ -221,7 +247,14 @@ const Footer = () => {
                         <input type="text" placeholder="Phone Number" value={formData.phone} className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#6F64E7]" onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
                         <input type="email" placeholder="Email" value={formData.email} className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#6F64E7]" onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                         <input type="text" placeholder="Message" value={formData.message} className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#6F64E7]" onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
-                        <button type="submit" className="w-full bg-[#6F64E7] text-white p-2 rounded-md hover:bg-[#554cd4] transition">Send Enquiry</button>
+                        <div className="min-h-[1rem]">
+                            {formError ? (
+                                <p className="text-red-600 text-sm text-center">{formError}</p>
+                            ) : (
+                                <p className="invisible text-sm">placeholder</p>
+                            )}
+                        </div>
+                        <button type="submit" className="w-full bg-[#6F64E7] text-white p-2 rounded-md hover:bg-[#554cd4] transition">{enquiryLoading ? "Sending..." : "Submit"}</button>
                     </motion.form>
                 </motion.div>
             </div>

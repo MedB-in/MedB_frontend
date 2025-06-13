@@ -39,6 +39,11 @@ const MenuModal = ({ isOpen, closeModal, menuData, onSubmit, modules }) => {
 
         if (data.menuName && data.actionName && data.controllerName && data.moduleId) {
             try {
+                const menuNameRegex = /^[A-Za-z][A-Za-z0-9\s]{1,49}$/;
+                if (!menuNameRegex.test(data.menuName)) {
+                    toast.error("Menu name must start with a letter and be 2-50 characters long (letters, numbers, spaces).");
+                    return;
+                }
                 if (data.menuId) {
                     const response = await editMenu(data.menuId, data);
                     toast.success(response.data.message);

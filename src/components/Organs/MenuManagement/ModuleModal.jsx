@@ -27,6 +27,12 @@ const ModuleModal = ({ isOpen, closeModal, moduleData, onSubmit }) => {
 
         if (data && data.moduleName) {
             try {
+                const moduleNameRegex = /^[A-Za-z][A-Za-z0-9\s]{1,49}$/;
+                if (!moduleNameRegex.test(data.moduleName)) {
+                    toast.error("Module name must start with a letter and be 2-50 characters long (letters, numbers, spaces).");
+                    return;
+                }
+
                 if (data.moduleId) {
                     await editModule(data.moduleId, data);
                     toast.success("Module updated successfully");

@@ -1,6 +1,7 @@
 import { Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import DefaultImage from "../../../assets/images/default-doctor.png";
+import ProfileAvatar from "../../Atoms/ProfileAvatar";
 
 const DoctorCard = ({
     doctor,
@@ -23,11 +24,7 @@ const DoctorCard = ({
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <img
-                        src={doctor.profilePicture || DefaultImage}
-                        alt={doctor.doctorName}
-                        className="w-16 h-16 rounded-full object-cover border"
-                    />
+                    <ProfileAvatar imageUrl={doctor.profilePicture} name={doctor.firstName} size="w-16 h-16" />
                     <div>
                         <h3 className="text-lg font-semibold">
                             Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}
@@ -102,26 +99,35 @@ const DoctorCard = ({
                 </div>
             </div>
 
-            <div className="flex items-center justify-between mt-5">
-                <div className="space-x-2">
-                    <input
-                        type="checkbox"
-                        name="isActive"
-                        checked={doctor.isActiveDoctorClinic}
-                        onChange={(e) => handleDoctorClinicStatus(doctor.doctorId, e.target.checked)}
-                        className="form-checkbox"
-                    />
-                    <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
-                </div>
-            </div>
-
-            {(!idClinic || menuRights?.editAllowed) && (
-                <button
-                    className="w-full bg-blue-500 mt-2 text-white py-2 rounded-md hover:bg-blue-600 transition"
-                    onClick={() => handleSlots(clinicId, doctor.doctorId)}
-                >
-                    Edit Slots
-                </button>
+            {(!idClinic || menuRights?.editAllowed || menuRights?.createAllowed) && (
+                <>
+                    <div className="flex items-center justify-between mt-5">
+                        <div className="space-x-2">
+                            <input
+                                type="checkbox"
+                                name="isActive"
+                                checked={doctor.isActiveDoctorClinic}
+                                onChange={(e) => handleDoctorClinicStatus(doctor.doctorId, e.target.checked)}
+                                className="form-checkbox"
+                            />
+                            <span>{doctor.isActiveDoctorClinic ? "Consultation Active" : "Consultation Inactive"}</span>
+                        </div>
+                        <div>
+                            <span
+                                className="text-gray-500 text-md underline hover:text-red-500 cursor-pointer"
+                                onClick={() => navigate(`/app/clinics/leave-management/${doctor.doctorId}/${clinicId}`)}
+                            >
+                                Manage Doctor
+                            </span>
+                        </div>
+                    </div>
+                    <button
+                        className="w-full bg-blue-500 mt-2 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                        onClick={() => handleSlots(clinicId, doctor.doctorId)}
+                    >
+                        Edit Slots
+                    </button>
+                </>
             )}
         </div>
     );

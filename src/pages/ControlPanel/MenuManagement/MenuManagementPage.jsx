@@ -90,7 +90,11 @@ const MenuManagementPage = () => {
                                     onClick={() => handleModuleClick(module?.moduleId)}
                                 >
                                     <td className="flex items-center gap-4">
-                                        <img className="w-6 h-6" src={module?.moduleIcon} alt={module?.moduleName} />
+                                        {module?.moduleIcon ? (
+                                            <img className="w-6 h-6" src={module.moduleIcon} alt={module.moduleName} />
+                                        ) : (
+                                            <div className="w-6 h-6 bg-gray-300 rounded" />
+                                        )}
                                         <span>{module?.moduleName}</span>
                                     </td>
                                     <td className="flex items-center gap-4">
@@ -130,7 +134,11 @@ const MenuManagementPage = () => {
                                                                 <tr key={menu.menuId} className="border-b hover:bg-gray-50 transition-colors">
                                                                     <td className="py-2 px-4">{menu.menuId}</td>
                                                                     <td className="py-2 px-4">
-                                                                        <img className="w-6 h-6" src={menu.menuIcon} alt={menu.menuName} />
+                                                                        {module?.moduleIcon ? (
+                                                                            <img className="w-6 h-6" src={menu.menuIcon} alt={menu.menuName} />
+                                                                        ) : (
+                                                                            <div className="w-6 h-6 bg-gray-300 rounded" />
+                                                                        )}
                                                                     </td>
                                                                     <td className="py-2 px-4">{menu.menuName}</td>
                                                                     <td className="py-2 px-4">{menu.controllerName}</td>

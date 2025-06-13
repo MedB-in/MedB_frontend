@@ -138,25 +138,29 @@ const Hero = () => {
                             onFocus={(e) => e.target.previousSibling.classList.add('hidden')}
                             onBlur={(e) => !e.target.value && e.target.previousSibling.classList.remove('hidden')}
                         />
-                        <motion.button
-                            key={clinicId}
-                            whileHover={{ scale: 1.05 }}
-                            initial={{ x: -20, opacity: 0, scale: 0.9 }}
-                            animate={clinicId ? {
-                                x: [-80, 55, 0],
-                                scale: [0.9, 1.2, 0.9],
-                                opacity: 1
-                            } : { x: -100, opacity: 0, scale: 0.9 }}
-                            transition={clinicId ? {
-                                x: { repeat: Infinity, duration: 1, ease: "easeInOut" },
-                                scale: { repeat: Infinity, duration: 1, ease: "easeInOut" }
-                            } : { duration: 0.05 }}
-                            className="bg-[#d9f1f2] p-2 mr-3 rounded-full shadow-md transition"
-                            disabled={!clinicId}
-                            onClick={() => navigate(`/find-doctor/?clinicId=${clinicId}`)}
+                        <div className={clinicId ? `cursor-pointer` : ``}
+                            onClick={() => { clinicId && navigate(`/find-doctor/?clinicId=${clinicId}`) }}
                         >
-                            <img src={ArrowRight} alt="Arrow" className="w-6" />
-                        </motion.button>
+                            <motion.button
+                                key={clinicId}
+                                whileHover={{ scale: 1.05 }}
+                                initial={{ x: -20, opacity: 0, scale: 0.9 }}
+                                animate={clinicId ? {
+                                    x: [-80, 55, 0],
+                                    scale: [0.9, 1.2, 0.9],
+                                    opacity: 1
+                                } : { x: -100, opacity: 0, scale: 0.9 }}
+                                transition={clinicId ? {
+                                    x: { repeat: Infinity, duration: 1, ease: "easeInOut" },
+                                    scale: { repeat: Infinity, duration: 1, ease: "easeInOut" }
+                                } : { duration: 0.05 }}
+                                className="bg-[#d9f1f2] p-2 mr-3 rounded-full shadow-md transition"
+                                disabled={!clinicId}
+                                onClick={() => navigate(`/find-doctor/?clinicId=${clinicId}`)}
+                            >
+                                <img src={ArrowRight} alt="Arrow" className="w-6" />
+                            </motion.button>
+                        </div>
                         {clinicSearch.trim() && !clinicId && (
                             <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg shadow-md mt-2 max-h-64 overflow-y-auto z-10">
                                 {isNoResults ? (

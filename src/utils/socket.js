@@ -50,16 +50,16 @@ export const reconnectSocketWithNewToken = async () => {
         if (!token) return;
     }
 
-    if (socket.auth.token === token && socket.connected) {
-        return;
-    }
+    try {
+        if (socket.connected) {
+            socket.disconnect();
+        }
 
-    if (socket.connected) {
-        socket.disconnect();
+        socket.auth = { token };
+        socket.connect();
+    } catch (err) {
+        console.error("Reconnect error:", err);
     }
-
-    socket.auth = { token };
-    socket.connect();
 };
 
 // Auto attempt reconnect on token error

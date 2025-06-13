@@ -5,6 +5,7 @@ import Button from "../../../components/Atoms/Login/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
+import { getISTDate } from "../../../utils/time";
 import AppointMentStatusModal from "../../../components/Organs/Clinics/AppointMentStatusModal";
 import AssignTokenModal from "../../../components/Organs/Clinics/AssignTokenModal";
 import AppointmentTable from "../../../components/Organs/Appointments/AppointmentsTable";
@@ -12,7 +13,7 @@ import AppointmentTable from "../../../components/Organs/Appointments/Appointmen
 function AppointmentsManagement() {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
     const clinicId = userDetails?.clinicId;
-    const today = format(new Date(), "yyyy-MM-dd");
+    const today = getISTDate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const status = queryParams.get("status");
@@ -189,7 +190,7 @@ function AppointmentsManagement() {
                     <div className="w-full sm:w-auto md:w-[300px]">
                         <input
                             type="text"
-                            placeholder="Search by doctor, patient, or date..."
+                            placeholder="Search by Doctor or Patient"
                             value={searchQuery}
                             onChange={handleSearch}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-gray-500 focus:border-gray-600 placeholder-gray-600 text-gray-800"
@@ -236,7 +237,7 @@ function AppointmentsManagement() {
                 <Button variant="secondary" onClick={resetFilters}>Reset</Button>
             </div>
             <Button variant="primary" className="" onClick={() => navigate(`/app/appointments/book-appointment/${clinicId}`)}>
-                Walk-In Appointment
+                Walk-In/On-request Appointment
             </Button>
             <div className="w-full overflow-x-auto rounded-lg border border-gray-200 mt-6">
                 <AppointmentTable

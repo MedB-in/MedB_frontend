@@ -41,6 +41,14 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
+      if (!email) {
+        toast.error("Please enter your email.");
+        return;
+      }
+      if (!password) {
+        toast.error("Please enter your password.");
+        return;
+      }
       const { data } = await doLogin({ email: email, password });
       dispatch(setUserAccess(null));
       dispatch(setUserDetails(null));
@@ -49,7 +57,16 @@ const LoginPage = () => {
       dispatch(setUserAccess(data.menuData));
       dispatch(setAuthenticated(true));
       if (window.opener) {
-        window.opener.postMessage("authenticated", window.location.origin);
+        window.opener.postMessage(
+          {
+            type: "authenticated",
+            payload: {
+              userDetails: data.userDetails,
+              menuData: data.menuData,
+            },
+          },
+          window.location.origin
+        );
         window.close();
       } else {
         navigate("/");
@@ -77,7 +94,16 @@ const LoginPage = () => {
       dispatch(setUserAccess(data.menuData));
       dispatch(setAuthenticated(true));
       if (window.opener) {
-        window.opener.postMessage("authenticated", window.location.origin);
+        window.opener.postMessage(
+          {
+            type: "authenticated",
+            payload: {
+              userDetails: data.userDetails,
+              menuData: data.menuData,
+            },
+          },
+          window.location.origin
+        );
         window.close();
       } else {
         navigate("/");

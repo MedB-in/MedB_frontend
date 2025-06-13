@@ -6,6 +6,7 @@ import Logo from "../../assets/images/medb-logo-png.png";
 import InputField from "../../components/Atoms/Login/InputField";
 import Button from "../../components/Atoms/Login/Button";
 import { useSelector } from "react-redux";
+import { isValidEmail, isValidName, isValidPhone } from "../../validation/validations";
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ const RegisterPage = () => {
         confirmPassword: "",
     });
 
+    const [formError, setFormError] = useState("");
     const [loading, setLoading] = useState(false);
     const [passwordMatch, setPasswordMatch] = useState(true);
     const [registrationSuccess, setRegistrationSuccess] = useState(false);
@@ -46,31 +48,53 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!passwordMatch) {
-            toast.error("Passwords do not match");
-            return;
+
+        const setError = (msg) => {
+            setFormError?.(msg);
+            toast.error(msg);
+            setTimeout(() => setFormError?.(""), 5000);
+        };
+
+        const { firstName, middleName, lastName, email, contactNo, password, confirmPassword } = formData;
+
+        if (!firstName || !email || !contactNo || !password || !confirmPassword) {
+            return setError("All fields are required.");
         }
-        const phoneRegex = /^[6-9]\d{9}$/;
-        if (!phoneRegex.test(formData.contactNo)) {
-            toast.error("Please enter a valid Indian contact number.");
-            return;
+
+        if (!isValidName(firstName)) {
+            return setError("Name can only contain alphabets.");
+        }
+        if (formData.middleName && !isValidName(middleName)) {
+            return setError("Name can only contain alphabets.");
+        } if (formData.lastName && !isValidName(lastName)) {
+            return setError("Name can only contain alphabets.");
+        }
+        if (!isValidEmail(email)) {
+            return setError("Please enter a valid email address.");
+        }
+        if (!isValidPhone(contactNo)) {
+            return setError("Please enter a valid Indian contact number.");
+        }
+        const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!?])[A-Za-z\d@#$%^&*!?]{8,}$/;
+        if (!strongPasswordRegex.test(password)) {
+            return setError("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+        }
+        if (password !== confirmPassword) {
+            return setError("Passwords do not match.");
         }
         setLoading(true);
         try {
-            if (!formData.firstName || !formData.email || !formData.password || !formData.confirmPassword) {
-                toast.error("All fields are required.");
-                return;
-            }
             const response = await doRegister(formData);
             toast.success(response.data.message);
             setRegistrationSuccess(true);
             setEmailSent(true);
         } catch (error) {
-            toast.error(error.response?.data?.message || "Something went wrong.");
+            setError(error.response?.data?.message || "Something went wrong.");
         } finally {
             setLoading(false);
         }
     };
+
 
     return (
         <>
@@ -93,15 +117,22 @@ const RegisterPage = () => {
                             <>
                                 <InputField type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <InputField type="text" name="MiddleName" placeholder="Middle Name" value={formData.middleName} onChange={handleChange} />
+                                    <InputField type="text" name="middleName" placeholder="Middle Name" value={formData.middleName} onChange={handleChange} />
                                     <InputField type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
                                 </div>
                                 <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
                                 <InputField type="text" name="contactNo" placeholder="Contact Number" value={formData.contactNo} onChange={handleChange} required />
                                 <InputField type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} toggleable required />
                                 <InputField type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} toggleable required />
-                                <div className="min-h-[1.5rem]">
+                                <div className="min-h-[1rem]">
                                     {!passwordMatch && <p className="text-red-500 text-sm">Passwords do not match</p>}
+                                </div>
+                                <div className="min-h-[1rem]">
+                                    {formError ? (
+                                        <p className="text-red-600 text-sm text-center">{formError}</p>
+                                    ) : (
+                                        <p className="invisible text-sm">placeholder</p>
+                                    )}
                                 </div>
                                 <Button type="submit" className="h-12 w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800" disabled={loading}>
                                     {loading ? "Registering..." : "Register"}

@@ -10,10 +10,11 @@ import Logo from '../../assets/images/medb-logo-2.png';
 import Logo1 from '../../assets/images/medb-logo-png.png';
 import useAuth from '../../hooks/useAuth';
 import { setAuthenticated } from '../../redux/slices/authSlice';
-import { deleteAllNotifications, deleteNotification, getNotifications } from '../../services/notification';
+import { deleteAllNotifications, deleteNotification, getNotifications, readAllNotifications, readNotification } from '../../services/notification';
 import socket, { reconnectSocketWithNewToken } from '../../utils/socket';
 import SidebarItem from '../Atoms/SideBar/SidebarItem';
 import MobileNumberModal from './MobileNumber';
+import { setUserAccess } from '../../redux/slices/userAccessSlice';
 
 const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const dispatch = useDispatch();
@@ -27,6 +28,9 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const notificationRef2 = useRef(null);
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('userDetails')));
+    const userId = user?.userId;
+    const doctorId = user?.doctorId;
+    const clinics = user?.doctorClinics || [];
     const [mobileModal, setMobileModal] = useState(() => {
         const storedValue = sessionStorage.getItem('mobileModal');
         return storedValue ? JSON.parse(storedValue) : true;
@@ -36,8 +40,34 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
     const [newNotificationCount, setNewNotificationCount] = useState(0);
+    const [selectedClinicId, setSelectedClinicId] = useState(() => {
+        return JSON.parse(localStorage.getItem('selectedClinicId'));
+    });
 
-    const userId = user?.userId;
+    useEffect(() => {
+        if (clinics.length > 0) {
+            const storedClinicId = JSON.parse(localStorage.getItem('selectedClinicId'));
+
+            const isStoredClinicValid = clinics.some(
+                (clinic) => clinic.clinicId === storedClinicId
+            );
+
+            if (!isStoredClinicValid) {
+                const firstClinicId = clinics[0].clinicId;
+                setSelectedClinicId(firstClinicId);
+                localStorage.setItem('selectedClinicId', JSON.stringify(firstClinicId));
+            }
+        }
+    }, [clinics]);
+
+    const handleClinicChange = (e) => {
+        const value = parseInt(e.target.value);
+        setSelectedClinicId(value);
+        localStorage.setItem('selectedClinicId', JSON.stringify(value));
+        window.dispatchEvent(new CustomEvent('clinicIdChanged', {
+            detail: value
+        }));
+    };
 
     useEffect(() => {
         if (authenticated && userId) {
@@ -56,9 +86,17 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         }
     }, [authenticated, userId]);
 
-    if (userDetails) {
-        localStorage.setItem('userDetails', JSON.stringify(userDetails));
-    }
+    useEffect(() => {
+        if (userDetails) {
+            localStorage.setItem('userDetails', JSON.stringify(userDetails));
+        }
+    }, [userDetails]);
+
+    useEffect(() => {
+        if (userDetails) {
+            setUser(userDetails);
+        }
+    }, [userDetails]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -75,27 +113,39 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
 
     const handleNotificationModal = () => {
-        setNewNotificationCount(0);
         setShowNotifications(!showNotifications);
     };
 
     const updateUserDetails = () => {
-        setUser(JSON.parse(localStorage.getItem('userDetails')) || {});
+        const updatedUser = JSON.parse(localStorage.getItem('userDetails')) || {};
+        setUser((prevUser) => {
+            const isChanged = JSON.stringify(prevUser) !== JSON.stringify(updatedUser);
+            return isChanged ? updatedUser : prevUser;
+        });
+    };
+
+    const fetchAndSetNotifications = async () => {
+        try {
+            const response = await getNotifications();
+            const notifs = response.data.data;
+            setNotifications(notifs);
+            const unreadCount = notifs.filter(notif => !notif.read).length;
+            setNewNotificationCount(unreadCount);
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
     };
 
     useEffect(() => {
-        const fetchNotifications = async () => {
-            if (showNotifications) {
-                try {
-                    const response = await getNotifications();
-                    setNotifications(response.data.data);
-                } catch (error) {
-                    console.error('Error fetching notifications:', error);
-                }
-            }
-        };
+        if (authenticated && userId) {
+            fetchAndSetNotifications();
+        }
+    }, [authenticated, userId]);
 
-        fetchNotifications();
+    useEffect(() => {
+        if (showNotifications) {
+            fetchAndSetNotifications();
+        }
     }, [showNotifications]);
 
     useEffect(() => {
@@ -160,6 +210,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         });
         if (!result.isConfirmed) return;
         dispatch(setAuthenticated(false));
+        dispatch(setUserAccess(null));
         await logout();
         navigate('/login');
     };
@@ -168,6 +219,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         try {
             await deleteNotification(notificationId);
             setNotifications(prev => prev.filter(notification => notification._id !== notificationId));
+            setNewNotificationCount(prev => prev - 1)
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong");
         }
@@ -177,10 +229,42 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         try {
             await deleteAllNotifications();
             setNotifications([]);
+            setNewNotificationCount(0);
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong");
         }
     }
+
+    const handleReadAllNotifications = async () => {
+        try {
+            await readAllNotifications();
+            setNotifications(prev =>
+                prev.map(notification => ({
+                    ...notification,
+                    read: true,
+                }))
+            );
+            setNewNotificationCount(0);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong");
+        }
+    }
+
+    const handleReadNotification = async (notificationId) => {
+        try {
+            await readNotification(notificationId);
+            setNotifications(prev =>
+                prev.map(notification =>
+                    notification._id === notificationId
+                        ? { ...notification, read: true }
+                        : notification
+                )
+            );
+            setNewNotificationCount(prev => prev - 1)
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong");
+        }
+    };
 
     const setMobileModalAction = () => {
         setMobileModal(false);
@@ -202,6 +286,24 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? "w-32 opacity-100" : "w-16 opacity-80"}`}
                         />
                     </div>
+                    {doctorId && clinics.length > 1 && (
+                        <div className="p-2">
+                            <select
+                                value={selectedClinicId || ''}
+                                onChange={handleClinicChange}
+                                className="w-full max-w-md mt-5 bg-white p-2 capitalize rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 -mb-5"
+                            >
+                                <option value="" disabled className="text-gray-500 capitalize">Select a clinic</option>
+                                {clinics.map((clinic) => (
+                                    <option className="text-black capitalize" key={clinic.clinicId} value={clinic.clinicId}>
+                                        {clinic.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )
+                    }
+
                     <div className="flex flex-col h-full w-full py-6">
                         <div className="flex-1 overflow-y-auto">
                             {modules?.length > 0 ? (
@@ -293,35 +395,72 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                 >
                                     <div className="flex justify-between items-center p-4 border-b font-semibold text-gray-700">
                                         <span>Notifications</span>
-
-                                        {notifications.length > 0 && <button
-                                            onClick={handleClearAllNotifications}
-                                            className="text-sm text-red-500 hover:text-red-700"
-                                        >
-                                            Clear All
-                                        </button>
+                                        {notifications.length > 0 &&
+                                            <div className="flex items-center gap-1 justify-center mt-2">
+                                                {notifications.some(n => !n.read) && (
+                                                    <>
+                                                        <button
+                                                            onClick={handleReadAllNotifications}
+                                                            className="text-xs text-blue-500 hover:text-blue-700 transition"
+                                                        >
+                                                            Mark All Read
+                                                        </button>
+                                                        <span className="text-gray-300">|</span>
+                                                    </>
+                                                )}
+                                                <button
+                                                    onClick={handleClearAllNotifications}
+                                                    className="text-xs text-red-500 hover:text-red-700 transition"
+                                                >
+                                                    Clear All
+                                                </button>
+                                            </div>
                                         }
                                     </div>
-                                    <ul className="max-h-60 overflow-y-auto">
+                                    <ul className="max-h-60 overflow-y-auto divide-y">
                                         {notifications.length > 0 ? (
                                             notifications.map((n) => (
-                                                <li key={n._id} className="px-4 py-2 hover:bg-gray-100 border-b flex justify-between items-center">
-                                                    <div className={`${n.link ? 'cursor-pointer' : ''}`} {...n.link && { onClick: () => navigate(n.link) }} >
-                                                        <div className="font-medium text-sm">{n.title}</div>
+                                                <li
+                                                    key={n._id}
+                                                    className={`px-4 py-2 flex items-start justify-between gap-2 ${n.read ? 'bg-gray-100' : 'bg-white hover:bg-gray-50'}`}
+                                                >
+                                                    <div
+                                                        className={`flex-1 ${n.link ? 'cursor-pointer' : ''}`}
+                                                        {...(n.link && {
+                                                            onClick: () => {
+                                                                navigate(n.link);
+                                                                handleReadNotification(n._id);
+                                                            },
+                                                        })}
+                                                    >
+                                                        <div className="font-medium text-sm text-gray-800">{n.title}</div>
                                                         <div className="text-xs text-gray-500">{n.message}</div>
                                                     </div>
-                                                    <button
-                                                        onClick={() => handleClearNotification(n._id)}
-                                                        className="text-xs text-gray-400 hover:text-gray-600"
-                                                    >
-                                                        X
-                                                    </button>
+                                                    <div className="flex items-center gap-2 pl-2 pt-1">
+                                                        {!n.read && (
+                                                            <button
+                                                                onClick={() => handleReadNotification(n._id)}
+                                                                className="text-xs text-green-500 hover:text-green-700"
+                                                                title="Mark as read"
+                                                            >
+                                                                ✔
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            onClick={() => handleClearNotification(n._id)}
+                                                            className="text-xs text-red-500 hover:text-red-700"
+                                                            title="Clear notification"
+                                                        >
+                                                            ✕
+                                                        </button>
+                                                    </div>
                                                 </li>
                                             ))
                                         ) : (
                                             <li className="p-4 my-5 text-center text-gray-500">No notifications</li>
                                         )}
                                     </ul>
+
                                 </div>
                             )}
                         </div>
@@ -360,36 +499,84 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         />
                     </div>
                     <div ref={notificationRef2} className="flex items-center justify-end gap-x-2 md:gap-x-4">
-                        <img src={AlertIcon} alt="Alert" className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover shadow-sm cursor-pointer"
-                            onClick={handleNotificationModal} />
+                        <div className="relative">
+                            <img
+                                src={AlertIcon}
+                                alt="Alert"
+                                className="w-10 h-10 rounded-full object-cover shadow-sm cursor-pointer"
+                                onClick={handleNotificationModal}
+                            />
+                            {newNotificationCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full shadow-md">
+                                    {newNotificationCount > 9 ? '9+' : newNotificationCount}
+                                </span>
+                            )}
+                        </div>
                         {showNotifications && (
                             <div
                                 className="absolute right-5 mt-64  w-80 bg-white shadow-lg rounded-xl border border-gray-200 z-50 overflow-hidden"
                             >
                                 <div className="flex justify-between items-center p-4 border-b font-semibold text-gray-700">
                                     <span>Notifications</span>
-                                    {notifications.length > 0 && <button
-                                        onClick={handleClearAllNotifications}
-                                        className="text-sm text-red-500 hover:text-red-700"
-                                    >
-                                        Clear All
-                                    </button>
+                                    {notifications.length > 0 &&
+                                        <div className="flex items-center gap-1 justify-center mt-2">
+                                            {notifications.some(n => !n.read) && (
+                                                <>
+                                                    <button
+                                                        onClick={handleReadAllNotifications}
+                                                        className="text-xs text-blue-500 hover:text-blue-700 transition"
+                                                    >
+                                                        Mark All Read
+                                                    </button>
+                                                    <span className="text-gray-300">|</span>
+                                                </>
+                                            )}
+                                            <button
+                                                onClick={handleClearAllNotifications}
+                                                className="text-xs text-red-500 hover:text-red-700 transition"
+                                            >
+                                                Clear All
+                                            </button>
+                                        </div>
                                     }
                                 </div>
-                                <ul className="max-h-60 overflow-y-auto">
+                                <ul className="max-h-60 overflow-y-auto divide-y">
                                     {notifications.length > 0 ? (
                                         notifications.map((n) => (
-                                            <li key={n._id} className="px-4 py-2 hover:bg-gray-100 border-b flex justify-between items-center">
-                                                <div>
-                                                    <div className="font-medium text-sm">{n.title}</div>
+                                            <li
+                                                key={n._id}
+                                                className={`px-4 py-2 flex items-start justify-between gap-2 ${n.read ? 'bg-gray-100' : 'bg-white hover:bg-gray-50'}`}
+                                            >
+                                                <div
+                                                    className={`flex-1 ${n.link ? 'cursor-pointer' : ''}`}
+                                                    {...(n.link && {
+                                                        onClick: () => {
+                                                            navigate(n.link);
+                                                            handleReadNotification(n._id);
+                                                        },
+                                                    })}
+                                                >
+                                                    <div className="font-medium text-sm text-gray-800">{n.title}</div>
                                                     <div className="text-xs text-gray-500">{n.message}</div>
                                                 </div>
-                                                <button
-                                                    onClick={() => handleClearNotification(n._id)}
-                                                    className="text-xs text-gray-400 hover:text-gray-600"
-                                                >
-                                                    X
-                                                </button>
+                                                <div className="flex items-center gap-2 pl-2 pt-1">
+                                                    {!n.read && (
+                                                        <button
+                                                            onClick={() => handleReadNotification(n._id)}
+                                                            className="text-xs text-green-500 hover:text-green-700"
+                                                            title="Mark as read"
+                                                        >
+                                                            ✔
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        onClick={() => handleClearNotification(n._id)}
+                                                        className="text-xs text-red-500 hover:text-red-700"
+                                                        title="Clear notification"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
                                             </li>
                                         ))
                                     ) : (
@@ -402,10 +589,11 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             src={user?.profilePicture || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
                             alt="Profile"
                             onClick={() => navigate("users/user-profile")}
-                            className="w-6 h-6 md:w-10 md:h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
+                            className="w-10 h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm cursor-pointer"
                         />
                         <button className="ml-2 flex items-center bg-transparent border-none" onClick={doLogout}>
-                            <span className="drop-shadow-md">Logout</span>
+                            {/* <span className="drop-shadow-md">Logout</span> */}
+                            <img src={LogoutIcon} alt="Logout" className="" title='Logout' />
                         </button>
                     </div>
                 </header>
@@ -423,6 +611,23 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                     <button onClick={() => setIsSidebarOpen(false)} className="p-3 absolute top-2 right-1 rounded-full">
                         <ChevronLeft size={24} />
                     </button>
+                    {doctorId && clinics.length > 1 && (
+                        <div className="p-2">
+                            <select
+                                value={selectedClinicId || ''}
+                                onChange={handleClinicChange}
+                                className="w-full max-w-md mt-5 bg-white p-2 capitalize rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="" disabled className="text-gray-500 capitalize">Select a clinic</option>
+                                {clinics.map((clinic) => (
+                                    <option className="text-black capitalize" key={clinic.clinicId} value={clinic.clinicId}>
+                                        {clinic.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )
+                    }
                     <div className="flex flex-col justify-between h-full w-full py-6">
                         <div className="flex-1 overflow-y-auto">
                             {modules?.length > 0 ? (
@@ -463,7 +668,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                                             selectedMenu === menu.controllerName ||
                                                             location.pathname.startsWith(`/${menu.controllerName}`)
                                                         }
-                                                        onClick={() => handleMenuClick(menu)}
+                                                        onClick={() =>{ handleMenuClick(menu); setIsSidebarOpen(!isSidebarOpen) }}
                                                         className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out ${selectedMenu === menu.controllerName
                                                             ? "bg-gray-200 font-semibold text-black shadow-md"
                                                             : "hover:bg-gray-200 text-gray-600"

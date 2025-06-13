@@ -10,7 +10,9 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
     const useDoctorId = doctorId || idDoctor;
     const [doctor, setDoctor] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [idClinic, setClinicId] = useState(clinicId);
+    const [idClinic, setClinicId] = useState(() => {
+        return JSON.parse(localStorage.getItem('selectedClinicId')) || null;
+    });
     const [leaveReason, setLeaveReason] = useState('');
     const [leaveList, setLeaveList] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -28,10 +30,36 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
         window.scrollTo(0, 0);
     }, [useDoctorId]);
 
+    useEffect(() => {
+        if (clinics?.length && !idClinic) {
+            const stored = JSON.parse(localStorage.getItem('selectedClinicId'));
+            if (stored) setClinicId(stored);
+        }
+    }, [clinics]);
+
+    useEffect(() => {
+        const handleClinicChange = (e) => {
+            const newClinicId = e.detail;
+            setClinicId(newClinicId);
+        };
+
+        window.addEventListener('clinicIdChanged', handleClinicChange);
+
+        return () => {
+            window.removeEventListener('clinicIdChanged', handleClinicChange);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (idClinic && useDoctorId) {
+            fetchDoctorLeaves();
+        }
+    }, [idClinic, useDoctorId]);
+
     const fetchDoctorLeaves = async () => {
         try {
             setLoading(true);
-            const response = await getDoctorLeaveList(useDoctorId, idClinic);
+            const response = await getDoctorLeaveList(useDoctorId, clinicId || idClinic);
             setDoctor(response?.data.doctor);
             setLeaveList(response?.data.leaveList || []);
         } catch (error) {
@@ -89,7 +117,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
 
         try {
             setLoading(true);
-            const response = await postDoctorLeave(useDoctorId, idClinic, { leaveDate: selectedDate, reason: leaveReason });
+            const response = await postDoctorLeave(useDoctorId, clinicId || idClinic, { leaveDate: selectedDate, reason: leaveReason });
             setLeaveList((prev) => [...prev, response.data.leave]);
             toast.success('Leave posted successfully.');
             setLeaveReason('');
@@ -107,7 +135,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
         }
         try {
             setUpdating(true);
-            const result = await postConsultCancellation(useDoctorId, idClinic, { leaveDate: selectedDate, reason: leaveReason });
+            const result = await postConsultCancellation(useDoctorId, clinicId || idClinic, { leaveDate: selectedDate, reason: leaveReason });
             setLeaveList(prev => {
                 const filtered = prev.filter(item => item.doctorLeaveId !== result.data.leave.doctorLeaveId);
                 return [result.data.leave, ...filtered];
@@ -149,7 +177,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
 
         try {
             setUpdating(true);
-            const result = await updateDoctorLeave(useDoctorId, idClinic, leave, status);
+            const result = await updateDoctorLeave(useDoctorId, clinicId || idClinic, leave, status);
             fetchDoctorLeaves();
             toast.success(`Leave ${status === 'approved' ? 'approved' : 'rejected'}`);
             setSelectedLeave(null);
@@ -159,17 +187,6 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
             setUpdating(false);
         }
     };
-
-    const handleSelectClinic = (selectedClinicId) => {
-        setClinicId(selectedClinicId);
-    };
-    useEffect(() => {
-        if (idClinic && useDoctorId) {
-            fetchDoctorLeaves();
-        }
-    }, [idClinic, useDoctorId]);
-
-
 
     return (
         <div className="min-h-screen p-6 pt-8">
@@ -212,21 +229,9 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                 )}
                 {clinics && location.pathname.startsWith('/app/doctors') && (
                     <>
-                        <h2 className="text-md md:text-2xl text-center font-bold text-gray-800">Leave Management</h2>
+                        <h2 className="text-md md:text-2xl text-center font-bold text-gray-800">Leave Management </h2>
+                        <h4 className="text-md text-center font-bold text-gray-800">Selected Clinic will be shown on the sidebar.  </h4>
                         <p className="text-gray-600 text-sm text-center">You can add your leave request here.</p>
-                        <span>Select a clinic:</span>
-                        <select
-                            className="w-full px-4 py-3 mt-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
-                            value={clinicId}
-                            onChange={(e) => handleSelectClinic(e.target.value)}
-                        >
-                            <option value="">Select a clinic</option>
-                            {clinics.map((clinic) => (
-                                <option key={clinic.clinicId} value={clinic.clinicId}>
-                                    {clinic.name}
-                                </option>
-                            ))}
-                        </select>
                     </>
                 )}
                 {clinicId && location.pathname.startsWith('/app/clinics') && (

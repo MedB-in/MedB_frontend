@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const DigitBox = ({ digit }) => (
   <div className="bg-black text-white w-10 h-14 rounded-lg flex items-center justify-center text-4xl font-mono shadow-lg relative overflow-auto">
@@ -7,17 +7,22 @@ const DigitBox = ({ digit }) => (
   </div>
 );
 
-const CountdownTimer = ({ initialMinutes = 0, initialSeconds = 0, onComplete }) => {
-  const validInitialSeconds = initialSeconds % 60;
-  const additionalMinutesFromSeconds = Math.floor(initialSeconds / 60);
-  const validInitialMinutes = initialMinutes + additionalMinutesFromSeconds;
-
-  const [time, setTime] = useState({
-    minutes: validInitialMinutes,
-    seconds: validInitialSeconds,
-  });
-  const [isTimerRunning, setIsTimerRunning] = useState(true);
+const CountdownTimer = ({ initialMinutes = 0, initialSeconds = 0 }) => {
+  const [time, setTime] = useState({ minutes: 0, seconds: 0 });
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const intervalRef = useRef(null);
+
+  useEffect(() => {
+    const totalSeconds = initialMinutes * 60 + initialSeconds;
+    const normalizedMinutes = Math.floor(totalSeconds / 60);
+    const normalizedSeconds = totalSeconds % 60;
+
+    setTime({
+      minutes: normalizedMinutes,
+      seconds: normalizedSeconds,
+    });
+    setIsTimerRunning(true);
+  }, [initialMinutes, initialSeconds]);
 
   useEffect(() => {
     if (isTimerRunning && (time.minutes > 0 || time.seconds > 0)) {
@@ -30,41 +35,32 @@ const CountdownTimer = ({ initialMinutes = 0, initialSeconds = 0, onComplete }) 
           } else {
             clearInterval(intervalRef.current);
             setIsTimerRunning(false);
-            if (onComplete && typeof onComplete === 'function') {
-              onComplete();
-            }
             return { minutes: 0, seconds: 0 };
           }
         });
       }, 1000);
-    } else if (time.minutes === 0 && time.seconds === 0 && isTimerRunning) {
-      setIsTimerRunning(false);
-      if (onComplete && typeof onComplete === 'function') {
-        onComplete();
-      }
     }
 
     return () => clearInterval(intervalRef.current);
-  }, [time.minutes, time.seconds, isTimerRunning, onComplete]);
+  }, [isTimerRunning, time.minutes, time.seconds]);
 
   const formatTime = (value) => value.toString().padStart(2, '0');
-
-  const minutesTens = formatTime(time.minutes)[0] || '0';
-  const minutesOnes = formatTime(time.minutes)[1] || '0';
-  const secondsTens = formatTime(time.seconds)[0] || '0';
-  const secondsOnes = formatTime(time.seconds)[1] || '0';
+  const minutesTens = formatTime(time.minutes)[0];
+  const minutesOnes = formatTime(time.minutes)[1];
+  const secondsTens = formatTime(time.seconds)[0];
+  const secondsOnes = formatTime(time.seconds)[1];
 
   const restartTimer = () => {
     setTime({
-      minutes: validInitialMinutes,
-      seconds: validInitialSeconds,
+      minutes: initialMinutes,
+      seconds: initialSeconds,
     });
     setIsTimerRunning(true);
   };
 
   return (
     <div className="flex flex-col items-center">
-      {!isTimerRunning && (time.minutes === 0 && time.seconds === 0) && (
+      {!isTimerRunning && time.minutes === 0 && time.seconds === 0 && (
         <button
           onClick={restartTimer}
           className="mb-4 px-2 bg-[rgba(134,207,195,0.2)] text-gray-800 rounded hover:bg-blue-600"

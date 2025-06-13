@@ -21,7 +21,7 @@ const features = [
         textColor: "text-white",
     },
     {
-        title: "Doctors And Clinics Near",
+        title: "Doctors And Clinics Near You",
         description: "Discover Hospitals and Clinics Nearby with Ease Through a Quick and Simple Process.",
         image: NearbyDoctorsIcon,
         bgColor: "bg-[#D2ECEA]",

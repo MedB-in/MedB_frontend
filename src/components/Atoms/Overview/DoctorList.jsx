@@ -27,14 +27,22 @@ const DoctorsList = ({ doctors = [] }) => {
                                     {doctor.speciality} - {doctor.qualifications}
                                 </div>
                             </div>
-                            <div className="space-y-1 text-[13px] text-white text-right">
-                                <div className={`px-[17px] py-0.5 rounded-[3px] ${doctor.doctorIsActive ? "text-[#59D03B]" : "bg-[#FF1B0B]"}`}>
-                                    {doctor.doctorIsActive ? "Available" : "Not Available"}
+                            {doctor.isOnLeave ?
+                                (<div className="space-y-1 text-[13px] text-white text-right">
+                                    <div className={`px-[17px] py-0.5 rounded-[3px] bg-[#FF1B0B]`}>
+                                        On Leave
+                                    </div>
                                 </div>
-                                <div className={`px-[17px] py-0.5 rounded-[3px] ${doctor.doctorClinicIsActive ? "text-[#59D03B]" : "bg-[#FF1B0B]"}`}>
-                                    {doctor.doctorClinicIsActive ? "Consultation Available" : "Consultation Not Available"}
-                                </div>
-                            </div>
+                                ) : (
+                                    <div className="space-y-1 text-[13px] text-white text-right">
+                                        <div className={`px-[17px] py-0.5 rounded-[3px] ${doctor.doctorIsActive ? "text-[#59D03B]" : "bg-[#FF1B0B]"}`}>
+                                            {doctor.doctorIsActive ? "Available" : "Not Available"}
+                                        </div>
+                                        <div className={`px-[17px] py-0.5 rounded-[3px] ${doctor.doctorClinicIsActive ? "text-[#59D03B]" : "bg-[#FF1B0B]"}`}>
+                                            {doctor.doctorClinicIsActive ? "Consultation Available" : "Consultation Not Available"}
+                                        </div>
+                                    </div>
+                                )}
                         </div>
                     ))
                 ) : (

@@ -1,5 +1,5 @@
-import React from 'react';
 import DefaultImage from '../../../assets/images/default-doctor.png';
+import ProfileAvatar from '../ProfileAvatar';
 
 const DoctorCard = ({ doctor, onSelect, loading }) => {
     if (loading) {
@@ -20,14 +20,15 @@ const DoctorCard = ({ doctor, onSelect, loading }) => {
 
     return (
         <div
-            className="relative bg-[#c2b2f0] p-6 mt-16 h-[260px] w-[260px] rounded-xl shadow-lg transition-transform transform hover:scale-105 text-center cursor-pointer border border-gray-200"
+            className="relative bg-[#c2b2f0] p-6 mt-8 h-[260px] w-[260px] rounded-xl shadow-lg transition-transform transform hover:scale-105 text-center cursor-pointer border border-gray-200"
             onClick={() => onSelect(doctor.doctorId)}
         >
-            <img
-                src={doctor.profilePicture || DefaultImage}
-                alt={doctor.doctorName}
-                className="absolute w-24 h-24 object-cover rounded-full -top-12 left-1/2 transform -translate-x-1/2 border-4 border-white shadow-md"
-            />
+            <div
+                className="absolute rounded-full -top-12 left-1/2 transform -translate-x-1/2 border-4"
+            >
+                <ProfileAvatar imageUrl={doctor.profilePicture} name={doctor.firstName} size="w-24 h-24" />
+            </div>
+
             <div className="mt-12">
                 <h3 className="bg-white px-4 py-2 rounded-lg inline-block font-bold text-purple-900 capitalize">Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}</h3>
                 <p className="text-black capitalize mt-5 text-lg font-medium">{doctor.speciality}</p>

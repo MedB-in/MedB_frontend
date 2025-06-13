@@ -20,3 +20,11 @@ export const markNotificationRead = (id) =>
 // Delete a single notification
 export const deleteNotification = (id) =>
     axios.delete(`/api/notification/${id}`, getHeaders());
+
+// Read all notifications
+export const readAllNotifications = () =>
+    axios.patch("/api/notification/markAllRead", {}, getHeaders());
+
+//Read a single notification
+export const readNotification = (id) =>
+    axios.patch(`/api/notification/${id}`, {}, getHeaders());

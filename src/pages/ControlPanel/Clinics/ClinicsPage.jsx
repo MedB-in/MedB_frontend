@@ -196,7 +196,7 @@ const ClinicsPage = () => {
                   {clinic.isActive ? "Active" : "Inactive"}
                 </span>
                 <button
-                  className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition"
+                  className="px-3 py-2 bg-indigo-500 text-white text-sm rounded-md hover:bg-blue-600 transition"
                   onClick={(event) => handleEditClinic(event, clinic?.clinicId)}
                 >
                   Edit

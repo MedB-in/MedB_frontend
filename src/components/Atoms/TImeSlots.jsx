@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getDoctorSlots } from '../../services/publicApi';
 import { Sun, SunMoon, Moon, CloudSun } from 'lucide-react';
 import toast from 'react-hot-toast';

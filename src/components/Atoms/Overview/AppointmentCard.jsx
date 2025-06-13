@@ -9,6 +9,10 @@ const AppointmentCard = ({ appt, title }) => {
             navigate("/app/appointments/appointments-management?status=upcoming");
         } else if (title === "Today's Appointments") {
             navigate("/app/appointments/appointments-management");
+        } else if (title === "Completed Today") {
+            navigate("/app/appointments");
+        } else if (title === "Today's Visits") {
+            navigate("/app/appointments");
         }
     };
 
@@ -22,7 +26,7 @@ const AppointmentCard = ({ appt, title }) => {
             </h2>
             <p className="text-xl my-6">{title}</p>
             <button
-                className={`flex justify-end items-center pr-5 mt-auto w-full h-10 bg-emerald-300 rounded-xl cursor-default ${(title === "Today's Appointments" || title === "Upcoming Appointments")
+                className={`flex justify-end items-center pr-5 mt-auto w-full h-10 bg-emerald-300 rounded-xl cursor-default ${(title === "Today's Appointments" || title === "Upcoming Appointments" || title === "Completed Today" || title === "Today's Visits")
                     ? " hover:bg-emerald-400 transition-colors cursor-pointer"
                     : ""
                     }`}
@@ -30,7 +34,7 @@ const AppointmentCard = ({ appt, title }) => {
                 aria-label="View appointments"
                 onClick={handleClick}
             >
-                {title === "Today's Appointments" || title === "Upcoming Appointments" ? (
+                {title === "Today's Appointments" || title === "Upcoming Appointments" || title === "Completed Today" || title === "Today's Visits" ? (
                     <svg
                         width="30"
                         height="25"

@@ -1,4 +1,4 @@
-const TextAreaCard = ({ label, placeholder, value, onChange }) => {
+const TextAreaCard = ({ label, placeholder, value, onChange, disabled }) => {
     return (
         <div className="flex flex-col text-sm shadow-md rounded-xl p-3 text-gray-600">
             <label className="mb-2 text-center font-medium">{label}</label>
@@ -7,6 +7,7 @@ const TextAreaCard = ({ label, placeholder, value, onChange }) => {
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
+                disabled={disabled}
             />
         </div>
     );

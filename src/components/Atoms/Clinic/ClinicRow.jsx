@@ -15,7 +15,7 @@ const ClinicRow = ({ clinic, toggleDetails }) => {
                 ) : clinic.reviewedBy ? (
                     <span className="text-yellow-600 font-medium">Review Done</span>
                 ) : (
-                    <span className="text-gray-500 italic">Waiting for Approval</span>
+                    <span className="text-gray-500 italic">Waiting for Approval{clinic?.isReApplied ? <span className="text-red-600 font-medium"> (Re-Applied)</span> : ""}</span>
                 )}
             </td>
         </tr>

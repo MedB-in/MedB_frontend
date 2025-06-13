@@ -28,6 +28,10 @@ export const getDoctorSlots = (clinicId, doctorId, date, day) =>
 export const registerClinic = (data) =>
     axios.post("/api/public/register", data);
 
+//API to update a Clinic registration details.
+export const updateRegistration = (id, data) =>
+    axios.put(`/api/public/updateRegistration/clinic/${id}`, data);
+
 //API to register a new Doctor.
 export const registerDoctor = (data) =>
     axios.post("/api/public/doctorRegister", data);

@@ -10,7 +10,28 @@ const Overview = () => {
 
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
     const doctorId = userDetails?.doctorId;
-    const clinics = userDetails?.doctorClinics || [];
+
+    useEffect(() => {
+        const handleClinicChange = (e) => {
+            const newClinicId = e.detail;
+            setSelectedClinicId(newClinicId);
+        };
+        window.addEventListener('clinicIdChanged', handleClinicChange);
+        return () => {
+            window.removeEventListener('clinicIdChanged', handleClinicChange);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (selectedClinicId) {
+            fetchAnalytics(selectedClinicId);
+        }
+    }, [selectedClinicId]);
+
+    useEffect(() => {
+        const storedClinicId = JSON.parse(localStorage.getItem('selectedClinicId'));
+        if (storedClinicId) setSelectedClinicId(storedClinicId);
+    }, []);
 
     const fetchAnalytics = async (clinicId) => {
         try {
@@ -27,28 +48,8 @@ const Overview = () => {
         }
     }, [selectedClinicId]);
 
-    const handleClinicChange = (e) => {
-        const value = parseInt(e.target.value);
-        setSelectedClinicId(value);
-    };
-
     return (
         <div className="p-4">
-            <div className="mb-6">
-                <label className="block text-lg font-semibold capitalize mb-2">Select Clinic</label>
-                <select
-                    value={selectedClinicId || ''}
-                    onChange={handleClinicChange}
-                    className="w-full max-w-md bg-white p-3 capitalize rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    <option value="" disabled className="text-gray-500 capitalize">Select a clinic</option>
-                    {clinics.map((clinic) => (
-                        <option className="text-black capitalize" key={clinic.clinicId} value={clinic.clinicId}>
-                            {clinic.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
             {analyticsData ? (
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -67,12 +68,12 @@ const Overview = () => {
                                 {analyticsData?.bookedAppointmentsToday?.map((appt, index) => (
                                     <li
                                         key={index}
-                                        className="p-4 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-sm"
+                                        className="p-4 rounded-xl bg-gray-200 border border-gray-200  shadow-sm"
                                     >
-                                        <p className="text-lg font-medium text-gray-800 dark:text-gray-200">
+                                        <p className="text-lg font-medium text-gray-800 capitalize">
                                             {appt.firstName} {appt.middleName || ''} {appt.lastName}
                                         </p>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        <p className="text-sm text-gray-600 ">
                                             Reason: {appt.reasonForVisit || 'N/A'}
                                         </p>
                                     </li>
@@ -85,7 +86,7 @@ const Overview = () => {
                     <WeeklyBookingOverview bookingRatio={analyticsData.weeklyBookingRatio} />
                 </>
             ) : (
-                <p className="text-gray-500">Please select a clinic to view analytics.</p>
+                <p className="text-gray-500">Loading.</p>
             )}
         </div>
     );

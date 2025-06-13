@@ -3,22 +3,26 @@ import { getAppointments } from "../../../services/patient";
 import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import DoctorRemarksModal from "../../../components/Organs/Doctors/DoctorRemarksModal";
+import DoctorRemarksModal from "../../../components/Organs/Doctors/DoctorActionModal";
 import AppointmentActions from "../../../components/Organs/Appointments/AppointmentActions";
 import AppointmentCard from "../../../components/Atoms/Patient/AppointmentCard";
 import Pagination from "../../../components/Atoms/Patient/Pagination";
 import LoadingRow from "../../../components/Atoms/Patient/LoadingRow";
 import AppointmentRow from "../../../components/Atoms/Patient/AppointmentsRow";
+import { getISTDate } from "../../../utils/time";
 
 function PatientAppointmentsPage() {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const doctor = userDetails?.doctorId ?? null;
   const isDoctor = !!doctor;
+  const today = getISTDate();
 
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [selectedClinicId, setSelectedClinicId] = useState(null);
+  const [clinicIdInitialized, setClinicIdInitialized] = useState(false);
 
   const cachedSearchQuery = sessionStorage.getItem("appointment_search_query") || "";
   const [searchQuery, setSearchQuery] = useState(cachedSearchQuery);
@@ -31,6 +35,23 @@ function PatientAppointmentsPage() {
   const [selectedApptAction, setSelectedApptAction] = useState(null);
   const [actionModalOpen, setActionModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClinicChange = (e) => {
+      const newClinicId = e.detail;
+      setSelectedClinicId(newClinicId);
+    };
+    window.addEventListener('clinicIdChanged', handleClinicChange);
+    return () => {
+      window.removeEventListener('clinicIdChanged', handleClinicChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    const storedClinicId = JSON.parse(localStorage.getItem("selectedClinicId"));
+    if (storedClinicId) setSelectedClinicId(storedClinicId);
+    setClinicIdInitialized(true);
+  }, []);
 
   useEffect(() => {
     sessionStorage.setItem("appointment_search_query", searchQuery);
@@ -50,7 +71,7 @@ function PatientAppointmentsPage() {
       setLoading(true);
     }
     try {
-      const response = await getAppointments(doctor, currentPage, searchQuery);
+      const response = await getAppointments(doctor, currentPage, searchQuery, selectedClinicId);
 
       const result = {
         appointments: response.data.appointments.appointments,
@@ -71,8 +92,10 @@ function PatientAppointmentsPage() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [currentPage, searchQuery]);
+    if (clinicIdInitialized) {
+      fetchData();
+    }
+  }, [currentPage, searchQuery, selectedClinicId, clinicIdInitialized]);
 
   const generatePagination = useMemo(() => {
     if (totalPages <= 7) {
@@ -111,7 +134,7 @@ function PatientAppointmentsPage() {
     setSelectedAppt(null);
     setSelectedApptAction(null);
     setActionModalOpen(false);
-    fetchData(true);
+    fetchData();
   }, []);
 
 
@@ -122,8 +145,8 @@ function PatientAppointmentsPage() {
   };
 
   return (
-    <section className="p-4 flex flex-col items-center justify-center text-center min-h-[calc(100vh-80px)] md:mr-4 bg-[#f0f0ff] rounded-3xl">
-      <div className="w-full max-w-md flex justify-between items-center">
+    <section className="p-4 flex flex-col items-center justify-center text-center min-h-[calc(100vh-80px)] mt-5 md:mt-0 md:mr-4 bg-[#f0f0ff] rounded-3xl">
+      <div className="w-full max-w-md flex justify-between items-center mt-5">
         <input
           type="text"
           placeholder={isDoctor ? "Search by Patient name / Date" : "Search by Doctor name, clinic or date"}
@@ -166,6 +189,7 @@ function PatientAppointmentsPage() {
                       key={index}
                       appt={appt}
                       isDoctor={isDoctor}
+                      today={today}
                       handleOpenModal={handleOpenModal}
                       handleAppointmentModal={handleAppointmentModal}
                     />
@@ -189,7 +213,9 @@ function PatientAppointmentsPage() {
               <AppointmentCard
                 key={index}
                 appt={appt}
+                today={today}
                 isDoctor={isDoctor}
+                page={currentPage}
                 handleOpenModal={handleOpenModal}
                 handleAppointmentModal={handleAppointmentModal}
               />

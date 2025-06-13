@@ -1,4 +1,5 @@
 import { formatTime } from "../../../utils/format";
+import ProfileAvatar from "../../Atoms/ProfileAvatar";
 const AppointmentTable = ({ appointments, loading, handleStatus, handleToken, today }) => {
 
     return (
@@ -33,11 +34,7 @@ const AppointmentTable = ({ appointments, loading, handleStatus, handleToken, to
                                     <td className="px-4 py-3 min-w-[200px] whitespace-normal break-words">
                                         <div className="flex justify-start">
                                             <div className="flex items-center justify-start gap-4">
-                                                <img
-                                                    src={appt.doctorProfilePicture}
-                                                    alt={appt.doctorFirstName}
-                                                    className="w-12 h-12 rounded-full object-cover border border-gray-300 shadow-md"
-                                                />
+                                                <ProfileAvatar imageUrl={appt.doctorProfilePicture} name={appt.doctorFirstName} />
                                                 <div className="text-left">
                                                     <p className="text-lg font-semibold text-gray-800">
                                                         {appt.doctorFirstName} {appt.doctorMiddleName || ""} {appt.doctorLastName || ""}
@@ -55,11 +52,7 @@ const AppointmentTable = ({ appointments, loading, handleStatus, handleToken, to
                                     <td className="px-4 py-3 min-w-[200px] whitespace-normal break-words">
                                         <div className="flex justify-start">
                                             <div className="flex items-center justify-start gap-4">
-                                                <img
-                                                    src={appt.patientProfilePicture}
-                                                    alt={appt.patientFirstName}
-                                                    className="w-12 h-12 rounded-full object-cover border border-gray-300 shadow-md"
-                                                />
+                                                <ProfileAvatar imageUrl={appt.patientProfilePicture} name={appt.patientFirstName} />
                                                 <div className="text-left">
                                                     <p className="text-lg font-semibold text-gray-800">
                                                         {appt.patientFirstName} {appt.patientMiddleName || ""} {appt.patientLastName || ""}
@@ -68,6 +61,7 @@ const AppointmentTable = ({ appointments, loading, handleStatus, handleToken, to
                                                     <p className="text-sm text-gray-600">{appt.patientContactNo}</p>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </td>
                                     <td
@@ -92,9 +86,7 @@ const AppointmentTable = ({ appointments, loading, handleStatus, handleToken, to
                                         {appt.reasonForVisit || "N/A"}<br />
                                         {appt.isEmergency && " (Emergency)"}<br />
                                     </td>
-                                    {appt.appointmentStatus !== "Completed" &&
-                                        appt.appointmentStatus !== "Cancelled" &&
-                                        appt.appointmentStatus !== "Rescheduled" &&
+                                    {appt.appointmentStatus === "Scheduled" &&
                                         appt.appointmentDate.split("-").reverse().join("-") >= today ? (
                                         <td className="flex flex-col gap-2 p-2 items-center">
                                             <button
