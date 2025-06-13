@@ -157,8 +157,10 @@ const BookSlots = () => {
     };
 
     return (
-        <section className="p-8 flex flex-col min-h-[calc(100vh-80px)] mt-5 md:mt-0 bg-[#f0f0ff] rounded-3xl">
-            <BackButton />
+        <section className="p-4 flex flex-col min-h-[calc(100vh-80px)] mt-5 md:mt-0 bg-[#f0f0ff] rounded-3xl">
+            <div className="flex flex-col w-full p-5">
+                <BackButton />
+            </div>
             {doctor ? (
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 mb-6 p-5 rounded-xl shadow-sm">
                     <img
