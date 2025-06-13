@@ -35,3 +35,7 @@ export const sendOtp = (data) =>
 //API to add mobile phone number.
 export const addMobileNumber = (data) =>
     axios.post("/api/user/addMobileNumber", data, getHeaders());
+
+//API to check Session.
+export const checkSession = () =>
+    axios.get("/api/user/checkSession", getHeaders());

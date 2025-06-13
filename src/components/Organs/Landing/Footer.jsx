@@ -194,6 +194,7 @@ const Footer = () => {
                                     rel="noopener noreferrer"
                                     className="hover:underline"
                                 >
+                                    Medb connected care LLP <br />
                                     Mizone / Malabar Innovation <br />
                                     Entrepreneurship Zone,<br />
                                     Dharmasala, Kannur,<br />
