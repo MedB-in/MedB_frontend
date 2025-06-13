@@ -1,9 +1,8 @@
 import { setAuthenticated } from "./redux/slices/authSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./components/Atoms/ProtectedRoutes";
-import useAuth from "./hooks/useAuth";
 import * as PublicPages from "./pages/PublicPages/index";
 import * as Clinics from "./pages/ControlPanel/Clinics";
 import * as Appointments from "./pages/ControlPanel/Appointments";
@@ -22,15 +21,37 @@ import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ErrorPage from "./pages/404Page/ErrorPage";
 import EnquiriesPage from "./pages/ControlPanel/Enquiries/EnquiriesPage";
 import { NavigationProvider } from "./utils/Navigation";
-
+import { checkSession } from "./services/user";
 
 const App = () => {
-  const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
+  const [sessionChecked, setSessionChecked] = useState(false);
 
   useEffect(() => {
-    dispatch(setAuthenticated(isAuthenticated()));
-  }, [isAuthenticated, dispatch]);
+    const checkAuthOnStart = async () => {
+      const userDetails = localStorage.getItem("userDetails");
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (userDetails && accessToken) {
+        dispatch(setAuthenticated(true));
+        setSessionChecked(true);
+        return;
+      }
+
+      if (userDetails && !accessToken) {
+        try {
+          await checkSession();
+          dispatch(setAuthenticated(true));
+        } catch (err) {
+          console.error("Initial auth check failed", err);
+        }
+      }
+
+      setSessionChecked(true);
+    };
+
+    checkAuthOnStart();
+  }, [dispatch]);
 
   return (
     <NavigationProvider>
@@ -61,7 +82,7 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* Protected routes */}
-        <Route element={<ProtectedRoutes />}>
+        <Route element={<ProtectedRoutes sessionChecked={sessionChecked} />}>
           <Route path="/app" element={<ControlPanel />} >
             {/* Dashboard */}
             <Route index element={<Dashboard />} />
