@@ -26,8 +26,8 @@ export const bookSlot = (data) =>
     axios.post("/api/doctor/slots", data, getHeaders());
 
 //API to handle get Doctors list.
-export const getDoctorList = () =>
-    axios.get("/api/doctor/list", getHeaders());
+export const getDoctorList = (search) =>
+    axios.get(`/api/doctor/list?search=${search}`, getHeaders());
 
 //API to handle Add Doctors to Clinics.
 export const addDoctorClinic = (id, data) =>
