@@ -18,7 +18,7 @@ export const isValidEmail = (email) => {
 
 //Validate name
 export const isValidName = (name) => {
-    const nameRegex = /^[A-Za-z\s]+$/;
+    const nameRegex = /^[A-Za-z\s.'-]+$/;
     return nameRegex.test(name);
 };
 
