@@ -167,10 +167,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
       toast.error("Please enter a valid experience.");
       return;
     }
-    if (!doctorPictureFile) {
-      toast.error("Please upload a profile picture.");
-      return;
-    }
     if (doctorPictureFile) {
       formDataToSend.append("image", doctorPictureFile);
     }
