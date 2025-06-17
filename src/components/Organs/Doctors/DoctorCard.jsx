@@ -1,6 +1,5 @@
 import { Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import DefaultImage from "../../../assets/images/default-doctor.png";
 import ProfileAvatar from "../../Atoms/ProfileAvatar";
 
 const DoctorCard = ({
@@ -43,7 +42,6 @@ const DoctorCard = ({
                     </button>
                 )}
             </div>
-
             <div className="flex gap-2 mt-4">
                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${doctor.isActiveDoctor ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
                     {doctor.isActiveDoctor ? "Doctor Available" : "Doctor Not Available"}
