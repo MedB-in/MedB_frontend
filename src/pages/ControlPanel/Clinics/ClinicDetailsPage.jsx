@@ -71,10 +71,10 @@ const ClinicDetailsPage = ({ idClinic }) => {
         navigate(`/app/clinics/slots/${clinicId}/${doctorId}`);
     };
 
-    const handleSubmit = async (data) => {
+    const handleSubmit = async (data, doctorId) => {
         try {
-            if (data?.doctorId) {
-                const response = await editDoctor(data.doctorId, data);
+            if (doctorId) {
+                const response = await editDoctor(doctorId, data);
                 toast.success(response.data.message);
             } else {
                 const response = await addDoctor(data);
