@@ -283,7 +283,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
                     <li
                       key={clinic.clinicId}
                       onClick={() => {
-                        setFormData({ ...formData, clinicId: clinic.clinicId });
+                        setFormData({ ...formData, clinicId: clinic.clinicid });
                         setClinicSearch(clinic.name);
                         setClinicResults([]);
                         setShowDropdown(false);
