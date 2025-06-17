@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getEnquiries, updateEnquiryStatus } from "../../../services/controlPanel";
 import toast from "react-hot-toast";
 import Pagination from "../../../components/Atoms/Patient/Pagination";
+import { formatDate } from "../../../utils/format";
 
 const statusOptions = ["Pending", "In Progress", "Resolved", "Closed"];
 
@@ -72,6 +73,7 @@ const EnquiriesPage = () => {
                 <table className="min-w-full text-sm">
                     <thead className="bg-gray-100">
                         <tr>
+                            <th className="p-3 text-left">Date</th>
                             <th className="p-3 text-left">Name</th>
                             <th className="p-3 text-left">Email</th>
                             <th className="p-3 text-left">Phone</th>
@@ -84,6 +86,9 @@ const EnquiriesPage = () => {
                         {loading
                             ? Array.from({ length: 5 }).map((_, idx) => (
                                 <tr key={idx} className="animate-pulse border-t">
+                                    <td className="p-3">
+                                        <div className="h-4 bg-gray-200 rounded w-24" />
+                                    </td>
                                     <td className="p-3">
                                         <div className="h-4 bg-gray-200 rounded w-24" />
                                     </td>
@@ -109,17 +114,18 @@ const EnquiriesPage = () => {
                                     <tr
                                         key={enq._id}
                                         className={`border-t ${enq.status === "Pending"
-                                                ? "bg-yellow-50"
-                                                : enq.status === "In Progress"
-                                                    ? "bg-green-200"
-                                                    : enq.status === "Resolved"
-                                                        ? "bg-green-50"
-                                                        : enq.status === "Closed"
-                                                            ? "bg-gray-100"
-                                                            : ""
+                                            ? "bg-yellow-50"
+                                            : enq.status === "In Progress"
+                                                ? "bg-green-200"
+                                                : enq.status === "Resolved"
+                                                    ? "bg-green-50"
+                                                    : enq.status === "Closed"
+                                                        ? "bg-gray-100"
+                                                        : ""
                                             }`}
                                     >
-                                        <td className="p-3">{enq.name}</td>
+                                        <td className="p-3">{formatDate(enq.createdAt)}</td>
+                                        <td className="p-3 capitalize">{enq.name}</td>
                                         <td className="p-3">{enq.email}</td>
                                         <td className="p-3">{enq.phone}</td>
                                         <td className="p-3 truncate max-w-sm">{enq.message.slice(0, 40)}...</td>
@@ -169,19 +175,33 @@ const EnquiriesPage = () => {
             )}
 
             {viewing && (
-                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 w-full max-w-md relative shadow-lg">
-                        <h3 className="text-xl font-semibold mb-4">Enquiry Details</h3>
-                        <p><strong>Name:</strong> {viewing.name}</p>
-                        <p><strong>Email:</strong> {viewing.email}</p>
-                        <p><strong>Phone:</strong> {viewing.phone || "N/A"}</p>
-                        <p className="mt-2"><strong>Message:</strong><br />{viewing.message}</p>
+                <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center px-4">
+                    <div className="bg-white/20 border border-white/20 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-lg p-6 relative text-white">
                         <button
-                            className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
                             onClick={() => setViewing(null)}
+                            className="absolute top-4 right-4 text-white/70 hover:text-white transition"
+                            aria-label="Close"
                         >
-                            ✕
+                            <span className="text-2xl">&times;</span>
                         </button>
+                        <h2 className="text-2xl font-semibold mb-6 text-center">Enquiry Details</h2>
+                        <div className="space-y-4 cursor-default">
+                            <div className="capitalize">
+                                <span className="font-medium text-white/80">Name:</span> {viewing.name}
+                            </div>
+                            <div>
+                                <span className="font-medium text-white/80">Email:</span> {viewing.email}
+                            </div>
+                            <div>
+                                <span className="font-medium text-white/80">Phone:</span> {viewing.phone || "N/A"}
+                            </div>
+                            <div>
+                                <span className="font-medium block mb-1 text-white/80">Message:</span>
+                                <p className="bg-white/10 rounded-lg p-3 border border-white/10 text-sm text-white/90 whitespace-pre-wrap">
+                                    {viewing.message}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
