@@ -269,7 +269,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                 {/* Leave List */}
                 <div>
                     <div className="flex justify-between items-center mx-auto p-6">
-                        <h3 className="text-xl font-semibold">📝 Existing Leaves</h3>
+                        <h3 className="text-xl font-semibold">📝 Existing Leave Requests</h3>
                         <p
                             className="text-gray-600 text-sm cursor-pointer font-bold underline hover:no-underline"
                             onClick={fetchDoctorLeaves}
