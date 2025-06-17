@@ -6,6 +6,7 @@ import { ArrowDown } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { getActiveDoctors, getActiveClinics } from '../../../services/publicApi';
 import { useNavigate } from 'react-router-dom';
+import ProfileAvatar from '../../Atoms/ProfileAvatar';
 
 const SearchSection = () => {
     const navigate = useNavigate();
@@ -64,8 +65,22 @@ const SearchSection = () => {
     }, [results]);
 
     useEffect(() => {
-        setResults([]);
+        if (!searchQuery) {
+            setResults([]);
+        }
     }, [searchType]);
+
+    useEffect(() => {
+        const savedResults = sessionStorage.getItem('results');
+        const savedQuery = sessionStorage.getItem('searchQuery');
+        const savedSearchType = sessionStorage.getItem('searchType');
+        const savedIsSearchDone = sessionStorage.getItem('isSearchDone');
+
+        if (savedResults) setResults(JSON.parse(savedResults));
+        if (savedQuery) setSearchQuery(savedQuery);
+        if (savedSearchType) setSearchType(savedSearchType);
+        if (savedIsSearchDone) setIsSearchDone(savedIsSearchDone === 'true');
+    }, []);
 
     const handleCardClick = (item) => {
         if (searchType === 'Doctor') {
@@ -177,13 +192,11 @@ const SearchSection = () => {
                                 <div
                                     key={index}
                                     onClick={() => handleCardClick(item)}
-                                    className={`relative bg-[#c2b2f0] mt-12 p-3 ${searchType === 'Doctor' ? 'h-[320px]' : 'h-[260px]'} rounded-xl shadow-lg transition-transform transform hover:scale-105 text-center cursor-pointer border border-gray-200`}
+                                    className={`relative bg-[#c2b2f0] mt-12 p-3 ${searchType === 'Doctor' ? 'h-[220px]' : 'h-[260px]'} rounded-xl shadow-lg transition-transform transform hover:scale-105 text-center cursor-pointer border border-gray-200`}
                                 >
-                                    <img
-                                        src={item.profilepicture || item.clinicpicture}
-                                        alt={item.firstname || item.name}
-                                        className="absolute w-24 h-24 object-cover rounded-full  -top-12 left-1/2 transform -translate-x-1/2 border-4 border-gray-200 shadow-xl"
-                                    />
+                                    <div className='absolute rounded-full -top-14 left-1/2 transform -translate-x-1/2 bg-white'>
+                                        <ProfileAvatar imageUrl={item.profilepicture || item.clinicpicture} name={item.firstname || item.name} size="w-24 h-24" />
+                                    </div>
                                     <div className="mt-10">
                                         <h3 className="bg-white px-4 py-2 rounded-lg inline-block font-bold text-purple-900 capitalize">
                                             {item.firstname ? `Dr. ${item.firstname}` : item.name} {item.middlename || ''} {item.lastname || ''}
@@ -201,14 +214,15 @@ const SearchSection = () => {
                                         ) : (
                                             <p className="text-black capitalize mt-3 text-lg font-medium">{item.type || 'Clinic'}</p>
                                         )}
-
-                                        <div className="mt-4 space-y-1">
-                                            <p className="text-sm text-black">
-                                                📍 {item.address || `${item.city}, ${item.district}, ${item.state}, ${item.country}`}
-                                            </p>
-                                            <p className="text-sm text-black">📧 {item.email}</p>
-                                            <p className="text-sm text-black">📞 {item.phone || item.contact || 'Not Available'}</p>
-                                        </div>
+                                        {!item.gender && (
+                                            <div className="mt-4 space-y-1">
+                                                <p className="text-sm text-black">
+                                                    📍 {item.address || `${item.city}, ${item.district}, ${item.state}, ${item.country}`}
+                                                </p>
+                                                <p className="text-sm text-black">📧 {item.email}</p>
+                                                <p className="text-sm text-black">📞 {item.phone || item.contact || 'Not Available'}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))}

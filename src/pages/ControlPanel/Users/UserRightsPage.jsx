@@ -101,6 +101,7 @@ function UserRightsList(clinic) {
           <UserRightsSkeleton />
         ) : usersWithRights.length > 0 ? (
           <div className="overflow-x-auto rounded-2xl shadow-lg backdrop-blur-md bg-white/60 ring-1 ring-gray-200">
+            <p className="px-4 py-4 text-lg font-light text-gray-800">Users with Already Existing Rights List </p>
             <table className="min-w-full text-sm text-gray-800">
               <thead className="bg-white/70 backdrop-blur text-xs uppercase text-gray-500">
                 <tr>
@@ -127,7 +128,7 @@ function UserRightsList(clinic) {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <ProfileAvatar imageUrl={user.userProfileImage} name={user.userName} />
-                        <span className="font-semibold">{user.userName}</span>
+                        <span className="font-semibold capitalize">{user.userName}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-left">{user.userEmail}</td>

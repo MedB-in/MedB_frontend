@@ -151,16 +151,12 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
       toast.error("Last name must contain only letters.");
       return;
     }
-    if (!isValidPhone(formData.phone)) {
+    if (formData.phone && !isValidPhone(formData.phone)) {
       toast.error("Please enter a valid phone number.");
       return;
     }
     if (!isValidPincode(formData.postalCode)) {
       toast.error("Please enter a valid pincode.");
-      return;
-    }
-    if (!formData.age || !isValidAge(formData.age)) {
-      toast.error("Please enter a valid age.");
       return;
     }
     if (!formData.experience || !isValidAge(formData.experience)) {
