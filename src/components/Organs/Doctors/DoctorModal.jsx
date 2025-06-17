@@ -396,7 +396,6 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
               pattern="\d{10}"
               inputMode="numeric"
               className="w-full p-2 border rounded-md"
-              required
               title="Phone number must be 10 digits"
             />
           </div>
