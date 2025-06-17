@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { getClinicList } from "../../../services/clinics";
 import LocationSelector from "../../LocationSelector";
 import { UploadIcon } from "lucide-react";
 import Swal from "sweetalert2";
@@ -8,7 +7,7 @@ import { medicalDepartments } from "../../../lib/medicalDepartments";
 import { isValidAge, isValidName, isValidPhone, isValidPincode } from "../../../validation/validations";
 import { getActiveClinics } from "../../../services/publicApi";
 
-const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onSubmit }) => {
+const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, onSubmit }) => {
   const [loading, setLoading] = useState(false);
   const [clinicSearch, setClinicSearch] = useState("");
   const [clinicResults, setClinicResults] = useState([]);

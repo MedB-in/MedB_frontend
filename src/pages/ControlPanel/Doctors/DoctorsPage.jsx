@@ -60,7 +60,6 @@ const DoctorsPage = () => {
       await fetchDoctors();
       setIsDoctorModalOpen(false);
     } catch (error) {
-      toast.error("Error in handleSubmit:", error);
       toast.error(error.response.data.message || "Something went wrong");
     }
   };
