@@ -343,7 +343,7 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, fromClinic, onS
             </div>
             <div>
               <label className="block text-sm font-medium">Age</label>
-              <input type="number" name="age" value={formData.age} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+              <input type="number" name="age" value={formData.age} onChange={handleChange} className="w-full p-2 border rounded-md" />
             </div>
           </div>
           <div className="mb-4">
