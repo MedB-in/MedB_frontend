@@ -80,17 +80,16 @@ const Reports = () => {
                     });
 
                     return (
-                        <td key={idx} className="text-center px-4 py-2 border-r">
-                            <div className="relative w-[120px] h-[60px] mt-[5px] mx-auto">
-                                <div className="w-full h-full shadow-[0px_-2px_0px_0px_rgba(0,0,0,0.25)] absolute bg-purple-100 rounded-[5px] left-0 top-0" />
-                                <span className="font-normal text-[12px] text-black tracking-[0.75px] absolute left-[12px] top-1.5">
-                                    Total Slots
+                        <td key={idx} className="text-center px-4 py-2 border-r align-top">
+                            <div className="w-[130px] mx-auto bg-purple-100 rounded-md shadow-sm px-3 py-2 flex flex-col items-center justify-center space-y-1.5">
+                                <span className="text-[12px] font-medium text-gray-700">
+                                    Allotted Slots
                                 </span>
-                                <span className="font-bold text-[15px] text-black tracking-[0.9px] absolute left-[12px] bottom-3">
-                                    {entry ? entry.totalSlots : 0}
+                                <span className="text-[17px] font-bold text-black">
+                                    {entry?.totalSlots ?? 0}
                                 </span>
-                                <span className="font-normal text-[10px] text-[rgba(0,0,0,0.90)] tracking-[0.6px] absolute left-[12px] bottom-0">
-                                    Appointments: {entry ? entry.completedAppointments : 0}
+                                <span className="text-[11px] text-gray-600">
+                                    Completed: {entry?.completedAppointments ?? 0}
                                 </span>
                             </div>
                         </td>
