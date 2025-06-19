@@ -217,9 +217,12 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
     const handleClearNotification = async (notificationId) => {
         try {
+            const notificationToDelete = notifications.find(n => n._id === notificationId);
             await deleteNotification(notificationId);
-            setNotifications(prev => prev.filter(notification => notification._id !== notificationId));
-            setNewNotificationCount(prev => prev - 1)
+            setNotifications(prev => prev.filter(n => n._id !== notificationId));
+            if (notificationToDelete && !notificationToDelete.read) {
+                setNewNotificationCount(prev => Math.max(prev - 1, 0));
+            }
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong");
         }
@@ -252,6 +255,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
     const handleReadNotification = async (notificationId) => {
         try {
+            const notificationToDelete = notifications.find(n => n._id === notificationId);
             await readNotification(notificationId);
             setNotifications(prev =>
                 prev.map(notification =>
@@ -260,7 +264,9 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         : notification
                 )
             );
-            setNewNotificationCount(prev => prev - 1)
+            if (notificationToDelete && !notificationToDelete.read) {
+                setNewNotificationCount(prev => Math.max(prev - 1, 0));
+            }
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong");
         }
@@ -274,9 +280,9 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     return (
         <>
             <div className="lg:flex hidden">
-                {/* {user?.contactNo && mobileModal === true && (
+                {user?.contactNo === null && user?.userId != 1 && mobileModal === true && (
                     <MobileNumberModal setMobileModal={setMobileModalAction} />
-                )} */}
+                )}
                 <div className={`fixed z-30 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
                     <div className="flex justify-center items-center w-full py-6 cursor-pointer"
                         onClick={() => window.open("/", "_blank")}>
@@ -483,9 +489,9 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
             {/* Sidebar for sm screens */}
             <div className="lg:hidden">
-                {/* {user?.contactNo && mobileModal === true && (
+                {user?.contactNo === null && user?.userId != 1 && mobileModal === true && (
                     <MobileNumberModal setMobileModal={setMobileModalAction} />
-                )} */}
+                )}
                 <header className="fixed w-screen z-40 h-16 px-6 py-3 bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm shadow-md grid grid-cols-3 items-center">
                     <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 w-10 transition-all duration-300">
                         <Menu size={24} />
@@ -668,7 +674,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                                             selectedMenu === menu.controllerName ||
                                                             location.pathname.startsWith(`/${menu.controllerName}`)
                                                         }
-                                                        onClick={() =>{ handleMenuClick(menu); setIsSidebarOpen(!isSidebarOpen) }}
+                                                        onClick={() => { handleMenuClick(menu); setIsSidebarOpen(!isSidebarOpen) }}
                                                         className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ease-in-out ${selectedMenu === menu.controllerName
                                                             ? "bg-gray-200 font-semibold text-black shadow-md"
                                                             : "hover:bg-gray-200 text-gray-600"
