@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Calendar from '../../Atoms/Calender';
 import TimeSlots from '../../Atoms/TImeSlots';
 import { motion } from 'framer-motion';
@@ -6,15 +6,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { bookSlot } from '../../../services/doctors';
 import { isPastSlot } from '../../../utils/time';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
 import { setAuthenticated, setUserDetails } from "../../../redux/slices/authSlice";
 import { setUserAccess } from "../../../redux/slices/userAccessSlice";
-
 import visitReasons from '../../../lib/reasonOptions';
 import MobileNumberModal from '../MobileNumber';
 
 function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
-    const user = useState(JSON.parse(localStorage.getItem('userDetails')));
+    const user = JSON.parse(localStorage.getItem('userDetails'));
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedDay, setSelectedDay] = useState(null);
     const [selectedSlot, setSelectedSlot] = useState(null);
@@ -26,7 +24,6 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
     });
 
     const { authenticated } = useSelector(state => state.auth);
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleDateSelect = ({ date, day }) => {
@@ -39,11 +36,6 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
     };
 
     const handleSubmit = async () => {
-        const isPast = isPastSlot(selectedSlot, selectedDate);
-        if (isPast) {
-            toast.error('Selected slot is Expired. Please select another slot.');
-            return;
-        }
         if (!selectedDate || !selectedDay || !selectedSlot) {
             toast.error('Please select a date and time before submitting.');
             return;
@@ -52,7 +44,11 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
             toast.error("Please enter a reason for the visit.");
             return;
         }
-
+        const isPast = isPastSlot(selectedSlot, selectedDate);
+        if (isPast) {
+            toast.error('Selected slot is Expired. Please select another slot.');
+            return;
+        }
         if (!authenticated) {
             const loginUrl = '/login';
             const loginPopup = window.open(loginUrl, '_blank', 'width=500,height=600');
@@ -88,12 +84,6 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
 
             return;
         }
-
-        // if (user.contactNo === null && mobileModal === true) {
-        //     setMobileModal(true);
-        //     return;
-        // }
-
         setLoading(true);
         try {
             await bookSlot({ clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
@@ -106,10 +96,10 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
         }
     };
 
-    // const setMobileModalAction = () => {
-    //     setMobileModal(false);
-    //     sessionStorage.setItem('mobileModal', false);
-    // };
+    const setMobileModalAction = () => {
+        setMobileModal(false);
+        sessionStorage.setItem('mobileModal', false);
+    };
 
     return (
         <div className="fixed inset-0 z-50 p-5 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm">
@@ -137,7 +127,6 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
                             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                             className="w-full px-4 py-2 border rounded-md bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
-                        {/* Suggested reasons */}
                         {visitReasons[department?.charAt(0).toUpperCase() + department?.slice(1)]?.length > 0 && (
                             <div className="mt-4">
                                 <h4 className="text-sm font-medium text-gray-600 mb-1">Common reasons:</h4>
@@ -174,11 +163,11 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
                     ✖
                 </button>
             </main>
-            {/* {mobileModal && (
+            {user && user?.contactNo === null && user?.userId != 1 && mobileModal === true && (
                 <MobileNumberModal
                     setMobileModal={setMobileModalAction}
                 />
-            )} */}
+            )}
         </div>
     );
 }

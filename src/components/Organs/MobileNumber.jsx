@@ -105,10 +105,15 @@ const MobileNumberModal = ({ setMobileModal }) => {
                     {step === 1 ? 'Enter Your Mobile Number' : 'Enter OTP'}
                 </h2>
                 <p className="text-sm mb-4 text-gray-600">
-                    {step === 1
-                        ? 'Your mobile number is required for communication and verification purposes.'
-                        : `A 4-digit OTP has been sent to ${mobileNumber}.`}
+                    {step === 1 ? (
+                        'Your mobile number is required for communication and verification purposes.'
+                    ) : (
+                        <div className="text-sm font-semibold mb-4 text-gray-600">
+                            A 4-digit OTP has been sent to {mobileNumber}. <br /> Check WhatsApp or SMS.
+                        </div>
+                    )}
                 </p>
+
 
                 {step === 1 ? (
                     <>
