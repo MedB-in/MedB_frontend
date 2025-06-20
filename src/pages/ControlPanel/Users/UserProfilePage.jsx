@@ -6,6 +6,7 @@ import Button from "../../../components/Atoms/Login/Button";
 import { setUserDetails } from "../../../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { isValidAddress, isValidAge, isValidDesignation, isValidEmail, isValidName, isValidPhone } from "../../../validation/validations";
+import MobileNumberModal from "../../../components/Organs/MobileNumber";
 
 const UserProfilePage = () => {
     const storedUser = JSON.parse(localStorage.getItem("userDetails")) || {};
@@ -31,6 +32,7 @@ const UserProfilePage = () => {
     });
 
     const [loading, setLoading] = useState(false);
+    const [mobileModal, setMobileModal] = useState(false);
     const [imageUploading, setImageUploading] = useState(false);
     const [profilePicturePreview, setProfilePicturePreview] = useState(storedUser.profilePicture || null);
     const [lastSavedProfilePicture, setLastSavedProfilePicture] = useState(storedUser.profilePicture || null);
@@ -181,6 +183,17 @@ const UserProfilePage = () => {
             setLoading(false);
         }
     };
+    const handleMobileUpdate = () => {
+        setMobileModal(true);
+    };
+
+    const setMobileModalAction = () => {
+        setMobileModal(false);
+    };
+
+    const setMobileNumber = (value) => {
+        formData.contactNo = value;
+    };
 
     return (
         <div className="flex justify-center bg-[#f0f0ff] rounded-3xl items-center min-h-[calc(100vh-80px)] mt-5 md:mt-0 p-6">
@@ -221,9 +234,8 @@ const UserProfilePage = () => {
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                         </select>
-
                         <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required disabled />
-                        <InputField type="phone" name="contactNo" placeholder="Contact Number" value={formData.contactNo} onChange={handleChange} required />
+                        <InputField type="phone" name="contactNo" placeholder="Click on Update Contact No." value={formData.contactNo} onChange={handleChange} required disabled />
                         <InputField type="text" name="designation" placeholder="Designation" className="capitalize" value={doctor ? "Doctor" : formData.designation} onChange={handleChange} disabled={!!doctor} />
                         <InputField type="text" name="address" placeholder="Address" className="capitalize" value={formData.address} onChange={handleChange} />
                         <InputField type="text" name="city" placeholder="City" className="capitalize" value={formData.city} onChange={handleChange} />
@@ -238,7 +250,15 @@ const UserProfilePage = () => {
                         </Button>
                     </div>
                 </form>
+                <div className="flex justify-center items-center mt-2">
+                    <Button variant="secondary" onClick={handleMobileUpdate}>
+                        Update Contact No.
+                    </Button>
+                </div>
             </div>
+            {mobileModal &&
+                <MobileNumberModal setMobileModal={setMobileModalAction} setMobileNumberProfile={setMobileNumber} />
+            }
         </div>
     );
 };

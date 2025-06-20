@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import InputField from '../Atoms/Login/InputField';
 import Button from '../Atoms/Login/Button';
 
-const MobileNumberModal = ({ setMobileModal }) => {
+const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile }) => {
     const [mobileNumber, setMobileNumber] = useState('');
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({ code: '' });
@@ -44,7 +44,7 @@ const MobileNumberModal = ({ setMobileModal }) => {
             const userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
             userDetails.contactNo = mobileNumber;
             localStorage.setItem('userDetails', JSON.stringify(userDetails));
-
+            setMobileNumberProfile(mobileNumber);
             toast.success('Mobile number verified and saved.');
             setStep(1);
             setMobileNumber('');
@@ -108,9 +108,9 @@ const MobileNumberModal = ({ setMobileModal }) => {
                     {step === 1 ? (
                         'Your mobile number is required for communication and verification purposes.'
                     ) : (
-                        <div className="text-sm font-semibold mb-4 text-gray-600">
+                        <span className="text-sm font-semibold mb-4 text-gray-600">
                             A 4-digit OTP has been sent to {mobileNumber}. <br /> Check WhatsApp or SMS.
-                        </div>
+                        </span>
                     )}
                 </p>
 
