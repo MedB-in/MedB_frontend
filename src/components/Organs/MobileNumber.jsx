@@ -41,9 +41,13 @@ const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile }) => {
 
             setLoading(true);
             await addMobileNumber({ contactNo: mobileNumber, otp: formData.code });
-            const userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
-            userDetails.contactNo = mobileNumber;
-            localStorage.setItem('userDetails', JSON.stringify(userDetails));
+            try {
+                const userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
+                userDetails.contactNo = mobileNumber;
+                localStorage.setItem('userDetails', JSON.stringify(userDetails));
+            } catch (parseErr) {
+                console.warn('localStorage parse error', parseErr);
+            }
             setMobileNumberProfile(mobileNumber);
             toast.success('Mobile number verified and saved.');
             setStep(1);
@@ -51,7 +55,7 @@ const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile }) => {
             setFormData({ code: '' });
             setMobileModal(false);
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Failed to verify OTP.');
+            toast.error(error.response?.data?.message || error.message || 'Failed to verify OTP.');
         } finally {
             setLoading(false);
         }
@@ -113,7 +117,6 @@ const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile }) => {
                         </span>
                     )}
                 </p>
-
 
                 {step === 1 ? (
                     <>
