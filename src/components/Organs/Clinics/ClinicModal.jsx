@@ -102,19 +102,37 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
         [field]: value,
       },
     }));
+    setError(null);
+  };
 
-    if (field === 'isClosed') {
-      setFormData((prev) => ({
+  const handleTimeBlur = (day, field, value) => {
+    // Remove non-digit characters
+    let digits = value.replace(/\D/g, '');
+
+    if (digits.length === 1) {
+      digits = `0${digits}00`; // e.g., "9" → "0900"
+    } else if (digits.length === 2) {
+      digits = `${digits}00`;  // e.g., "10" → "1000"
+    } else if (digits.length === 3) {
+      digits = `0${digits}`;   // e.g., "930" → "0930"
+    }
+
+    if (digits.length >= 4) {
+      const hours = digits.slice(0, 2);
+      const minutes = digits.slice(2, 4);
+      const formatted = `${hours}:${minutes}`;
+
+      setTimeInputs((prev) => ({
         ...prev,
-        openingHours: {
-          ...prev.openingHours,
-          [day]: value ? "Closed" : `${timeInputs[day].startTime} ${timeInputs[day].startPeriod} - ${timeInputs[day].endTime} ${timeInputs[day].endPeriod}`,
+        [day]: {
+          ...prev[day],
+          [field]: formatted,
         },
       }));
-    } else {
+
       const updatedTimeInput = {
         ...timeInputs[day],
-        [field]: value,
+        [field]: formatted,
       };
 
       if (!updatedTimeInput.isClosed) {
@@ -122,12 +140,11 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
           ...prev,
           openingHours: {
             ...prev.openingHours,
-            [day]: `${updatedTimeInput.startTime} ${updatedTimeInput.startPeriod} - ${updatedTimeInput.endTime} ${updatedTimeInput.endPeriod}`,
+            [day]: `${updatedTimeInput.startTime || '00:00'} ${updatedTimeInput.startPeriod || 'AM'} - ${updatedTimeInput.endTime || '00:00'} ${updatedTimeInput.endPeriod || 'PM'}`,
           },
         }));
       }
     }
-    setError(null);
   };
 
   const convertTo24Hour = (time, period) => {
@@ -363,9 +380,11 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
                           type="text"
                           value={timeInputs[day]?.startTime}
                           onChange={(e) => handleTimeInputChange(day, 'startTime', e.target.value)}
+                          onBlur={(e) => handleTimeBlur(day, 'startTime', e.target.value)}
                           placeholder="09:00"
                           className="w-20 p-1 border rounded"
                         />
+
                         <select
                           value={timeInputs[day]?.startPeriod}
                           onChange={(e) => handleTimeInputChange(day, 'startPeriod', e.target.value)}
@@ -383,9 +402,11 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
                           type="text"
                           value={timeInputs[day]?.endTime}
                           onChange={(e) => handleTimeInputChange(day, 'endTime', e.target.value)}
-                          placeholder="07:00"
+                          onBlur={(e) => handleTimeBlur(day, 'endTime', e.target.value)}
+                          placeholder="09:00"
                           className="w-20 p-1 border rounded"
                         />
+
                         <select
                           value={timeInputs[day]?.endPeriod}
                           onChange={(e) => handleTimeInputChange(day, 'endPeriod', e.target.value)}
