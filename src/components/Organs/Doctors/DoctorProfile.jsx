@@ -53,7 +53,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
     const sortedEntries = Object.entries(groupedTimings).sort((a, b) => a[1][0].day - b[1][0].day);
 
     const displayAddress = [
-        clinic?.clinicAddress,
+        // clinic?.clinicAddress,
         clinic?.clinicCity !== 'null' ? clinic?.clinicCity : '',
         clinic?.clinicDistrict !== 'null' ? clinic?.clinicDistrict : '',
         clinic?.clinicState !== 'null' ? clinic?.clinicState : '',
@@ -177,25 +177,24 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                             whileInView={{ opacity: 1, y: 0 }}
                                             viewport={{ once: true, amount: 0.3 }}
                                             transition={{ duration: 0.8, ease: "easeOut" }}
-                                            className="md:flex hidden flex-col px-11 py-10 text-2xl font-semibold text-indigo-500 bg-white rounded-2xl border border-black border-opacity-50 shadow-2xl">
-                                            <h3>Contact Number</h3>
-                                            <p className="mt-5 text-xl text-black">{doctor?.phone ? ` ${doctor?.phone}` : 'Not Available'}</p>
-                                            <h3 className="mt-10">Booking Number</h3>
-                                            <p className="mt-5 text-xl text-black">{clinic?.contactNumber}</p>
-                                            <h3 className="mt-10">Consulting Time</h3>
+                                            className="md:flex hidden flex-col px-11 py-10 text-xl font-semibold text-indigo-500 bg-white rounded-2xl border border-black border-opacity-50 shadow-2xl">
+                                            <h3 >Booking Number</h3>
+                                            <p className="mt-2 text-xl text-black">{clinic?.contactNumber}</p>
+                                            <h3 className="mt-5">Consulting Time</h3>
                                             {sortedEntries.length > 0 ? (
-                                                <ul className="mt-2.5">
+                                                <ul className="mt-2">
                                                     {sortedEntries.map(([time, days], index) => (
-                                                        <li key={index} className="text-xl text-black">
-                                                            <span className='font-extralight'>{days.map(day => day.label).join(', ')}:</span> {time.replace('-', ' - ')}.
+                                                        <li key={index} className="text-black text-sm">
+                                                            <span className="font-light">{days.map(day => day.label).join(', ')}:</span>
+                                                            <span className="font-semibold ml-1">{time.replace('-', ' - ')}.</span>
                                                         </li>
                                                     ))}
                                                 </ul>
                                             ) : (
-                                                <p className="mt-2.5 text-xl text-black">No timings available</p>
+                                                <p className="mt-2 text-xl text-black">No timings available</p>
                                             )}
-                                            <h3 className="mt-10">Consultation Fee</h3>
-                                            <p className="mt-5 text-xl text-black"> {doctor?.consultationFee ? `₹ ${doctor?.consultationFee}/-` : 'Not Available'}</p>
+                                            <h3 className="mt-5">Consultation Fee</h3>
+                                            <p className="mt-2 text-xl text-black"> {doctor?.consultationFee ? `₹ ${doctor?.consultationFee}/-` : 'Not Available'}</p>
                                         </motion.div>
                                         {/* Mobile UI */}
                                         <motion.div

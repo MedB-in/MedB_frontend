@@ -187,7 +187,7 @@ const LoginPage = () => {
             <form className="space-y-6">
               <InputField
                 type="email"
-                placeholder="Email/Phone Number"
+                placeholder="Email"
                 icon={EmailIcon}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
