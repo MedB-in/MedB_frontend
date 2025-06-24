@@ -74,20 +74,18 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
     };
 
     const formatDateWithTime = (dateString) => {
-        const date = new Date(dateString);
+        const [datePart, timePart] = dateString.split('T');
+        const [year, month, day] = datePart.split('-');
+        const [hourStr, minuteStr] = timePart.split(':');
 
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-
-        let hours = date.getHours();
-        let minutes = String(date.getMinutes()).padStart(2, '0');
-        const isAM = hours < 12;
+        let hours = parseInt(hourStr, 10);
+        const minutes = minuteStr;
+        const period = hours < 12 ? 'AM' : 'PM';
 
         hours = hours % 12 || 12;
-        const period = isAM ? 'AM' : 'PM';
+
         return `${day}-${month}-${year} ${hours}:${minutes} ${period}`;
-    }
+    };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);

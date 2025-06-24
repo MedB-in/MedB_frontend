@@ -30,7 +30,7 @@ const AppointmentRow = ({ appt, isDoctor, today, handleOpenModal, handleAppointm
                 <td className="px-4 py-3 text-left rounded-l-lg">
                     <div className="flex justify-start">
                         <div className="flex items-center justify-start gap-4">
-                            <ProfileAvatar imageUrl={appt.profilePicture} name={appt.firstName} size="w-12 h-12" />
+                            <ProfileAvatar imageUrl={appt.patientDetails?.profilePicture} name={appt.patientDetails?.firstName} size="w-12 h-12" />
                             <div className="flex-1">
                                 <p className="text-lg font-semibold">
                                     {appt.patientDetails?.firstName} {appt.patientDetails?.middleName || ""} {appt.patientDetails?.lastName || ""}
@@ -51,13 +51,12 @@ const AppointmentRow = ({ appt, isDoctor, today, handleOpenModal, handleAppointm
                         <div className="flex flex-col">
                             <p className="text-lg font-semibold">{appt.clinicName}</p>
                             <p className="text-sm text-gray-600">{appt.address}</p>
-                            <p className="text-sm text-gray-600">{appt.email}</p>
+                            <p className="text-sm text-gray-600 break-words max-w-full">{appt.email}</p>
                             <p className="text-sm text-gray-600">{appt.contact}</p>
                         </div>
                     </div>
                 </div>
             </td>
-
             <td
                 className={`px-4 py-3 font-semibold text-center ${appt.appointmentStatus === "Scheduled"
                     ? "text-blue-600"
