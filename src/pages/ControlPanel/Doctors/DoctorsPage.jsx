@@ -4,6 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import DoctorModal from "../../../components/Organs/Doctors/DoctorModal";
 import Pagination from "../../../components/Atoms/Patient/Pagination";
 import Button from "../../../components/Atoms/Login/Button";
+import ProfileAvatar from "../../../components/Atoms/ProfileAvatar";
 
 const DoctorsPage = () => {
   const [doctors, setDoctors] = useState([]);
@@ -126,18 +127,7 @@ const DoctorsPage = () => {
                 className="bg-white shadow-lg rounded-lg overflow-hidden p-5 border hover:shadow-xl transition flex flex-col h-full"
               >
                 <div className="flex items-center gap-4">
-                  {doctor?.profilePicture ? (
-                    <img
-                      className="w-16 h-16 rounded-full object-cover border border-gray-300"
-                      src={doctor.profilePicture}
-                      alt={doctor.doctorName}
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-sm text-white">
-                      {doctor?.doctorName?.[0]?.toUpperCase() || "N/A"}
-                    </div>
-                  )}
+                  <ProfileAvatar imageUrl={doctor.profilePicture} name={doctor.firstName} size="w-16 h-16" />
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800">
                       Dr. {doctor.firstName} {doctor.middleName} {doctor.lastName}
