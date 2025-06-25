@@ -17,7 +17,7 @@ const ClinicRegistration = () => {
     const [clinic, setClinic] = useState(null);
     const [formData, setFormData] = useState({
         name: "",
-        location: "",
+        location: { type: "Point", coordinates: [0, 0] },
         address: "",
         clinicOverview: "",
         city: "",
@@ -44,7 +44,7 @@ const ClinicRegistration = () => {
                     setFormData({
                         name: clinicData.name || "",
                         clinicOverview: clinicData.clinicOverview || "",
-                        location: clinicData.location || "",
+                        location: clinicData.location || { type: "Point", coordinates: [0, 0] },
                         address: clinicData.address || "",
                         city: clinicData.city || "",
                         district: clinicData.district || "",
@@ -125,7 +125,7 @@ const ClinicRegistration = () => {
         setFormData({
             name: "",
             clinicOverview: "",
-            location: "",
+            location: { type: "Point", coordinates: [0, 0] },
             address: "",
             city: "",
             district: "",
