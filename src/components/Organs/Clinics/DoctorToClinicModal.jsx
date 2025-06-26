@@ -139,6 +139,7 @@ const DoctorToClinicModal = ({ isOpen, closeModal, clinicId, onDoctorAdded }) =>
                                     closeModal();
                                     resetForm();
                                 }}
+                                disabled={loading}
                             >
                                 Cancel
                             </button>

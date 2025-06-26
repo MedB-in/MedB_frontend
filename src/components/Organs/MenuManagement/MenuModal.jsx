@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 
 const MenuModal = ({ isOpen, closeModal, menuData, onSubmit, modules }) => {
     const [menuName, setMenuName] = useState("");
+    const [loading, setLoading] = useState(false);
     const [actionName, setActionName] = useState("");
     const [controllerName, setControllerName] = useState("");
     const [isActive, setIsActive] = useState(true);
@@ -25,7 +26,7 @@ const MenuModal = ({ isOpen, closeModal, menuData, onSubmit, modules }) => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-
+        setLoading(true);
         const data = {
             moduleId,
             menuId: menuData?.menuId || null,
@@ -42,6 +43,7 @@ const MenuModal = ({ isOpen, closeModal, menuData, onSubmit, modules }) => {
                 const menuNameRegex = /^[A-Za-z][A-Za-z0-9\s]{1,49}$/;
                 if (!menuNameRegex.test(data.menuName)) {
                     toast.error("Menu name must start with a letter and be 2-50 characters long (letters, numbers, spaces).");
+                    setLoading(false);
                     return;
                 }
                 if (data.menuId) {
@@ -55,10 +57,13 @@ const MenuModal = ({ isOpen, closeModal, menuData, onSubmit, modules }) => {
                 handleCancel();
             } catch (error) {
                 toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
+            } finally {
+                setLoading(false);
             }
         } else {
             toast.error("Please fill out all required fields.");
         }
+        setLoading(false);
     };
 
     const handleCancel = () => {
@@ -161,12 +166,14 @@ const MenuModal = ({ isOpen, closeModal, menuData, onSubmit, modules }) => {
                                 type="button"
                                 className="px-4 py-2 bg-gray-300 rounded-md"
                                 onClick={handleCancel}
+                                disabled={loading}
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 className="px-4 py-2 bg-indigo-500 text-white rounded-md"
+                                disabled={loading}
                             >
                                 {menuData ? "Update" : "Add Menu"}
                             </button>

@@ -12,7 +12,7 @@ const Hero = () => {
     const homeRef = useRef(null);
     const tabs = ["Doctors", "Clinic", "Lab"];
     const images = { Doctors: DoctorIcon, Clinic: ClinicIcon, Lab: LabIcon };
-    const redirects = { Doctors: "/find-doctor-clinic", Clinic: "/find-doctor-clinic", Lab: "" };
+    const redirects = { Doctors: "/find-doctor-clinic", Clinic: "/find-doctor-clinic", Lab: "/for-labs" };
 
     const [activeTab, setActiveTab] = useState("Doctors");
     const [clinicSearch, setClinicSearch] = useState("");

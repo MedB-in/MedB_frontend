@@ -51,7 +51,7 @@ const AppointmentRow = ({ appt, isDoctor, today, handleOpenModal, handleAppointm
                         <div className="flex flex-col">
                             <p className="text-lg font-semibold">{appt.clinicName}</p>
                             <p className="text-sm text-gray-600">{appt.address}</p>
-                            <p className="text-sm text-gray-600 break-words max-w-full">{appt.email}</p>
+                            <p className="text-sm text-gray-600 break-all w-full overflow-hidden">{appt.email}</p>
                             <p className="text-sm text-gray-600">{appt.contact}</p>
                         </div>
                     </div>

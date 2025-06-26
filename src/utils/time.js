@@ -2,8 +2,13 @@ import { format } from "date-fns";
 
 const getISTDate = () => {
     const now = new Date();
-    const istOffset = 5.5 * 60 * 60000;
-    const istTime = new Date(now.getTime() + istOffset);
+    console.log(now + " " + now.getTimezoneOffset() + "Server/UTC");
+
+    const localOffsetMs = now.getTimezoneOffset() * 60 * 1000;
+    const istOffsetMs = 5.5 * 60 * 60 * 1000;
+    const istTime = new Date(now.getTime() + istOffsetMs + localOffsetMs);
+    console.log(istTime + " " + istTime.getTimezoneOffset() + "converted IST");
+
     return format(istTime, "yyyy-MM-dd");
 };
 

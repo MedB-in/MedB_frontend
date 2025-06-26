@@ -230,10 +230,10 @@ function AppointmentsManagement() {
                     </div>
                 </div>
             </div>
-            <Button variant="primary" className="lg:hidden" onClick={applyFilters}>Search</Button>
+            <Button variant="primary" className="lg:hidden" onClick={applyFilters} disabled={loading}>Search</Button>
             <Button variant="secondary" className="lg:hidden" onClick={resetFilters}>Reset</Button>
             <div className="hidden lg:flex gap-2 mt-4">
-                <Button variant="primary" onClick={applyFilters}>Search</Button>
+                <Button variant="primary" onClick={applyFilters} disabled={loading}>Search</Button>
                 <Button variant="secondary" onClick={resetFilters}>Reset</Button>
             </div>
             <Button variant="primary" className="" onClick={() => navigate(`/app/appointments/book-appointment/${clinicId}`)}>

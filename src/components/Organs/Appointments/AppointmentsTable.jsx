@@ -57,7 +57,7 @@ const AppointmentTable = ({ appointments, loading, handleStatus, handleToken, to
                                                     <p className="text-lg font-semibold text-gray-800">
                                                         {appt.patientFirstName} {appt.patientMiddleName || ""} {appt.patientLastName || ""}
                                                     </p>
-                                                    <p className="text-sm text-gray-600">{appt.patientEmail}</p>
+                                                    <p className="text-sm text-gray-600 break-all w-full overflow-hidden">{appt.patientEmail}</p>
                                                     <p className="text-sm text-gray-600">{appt.patientContactNo}</p>
                                                 </div>
                                             </div>
