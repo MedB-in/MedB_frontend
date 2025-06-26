@@ -152,6 +152,7 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={handleSubmit}
+                        disabled={!selectedSlot}
                     >
                         {loading ? 'Booking...' : 'Submit'}
                     </motion.button>
@@ -159,6 +160,8 @@ function DoctorSlotModal({ onClose, doctorId, clinicId, department }) {
                 <button
                     className="absolute top-5 right-5 text-gray-400 hover:text-gray-600"
                     onClick={onClose}
+                    title="Close"
+                    disabled={loading}
                 >
                     ✖
                 </button>

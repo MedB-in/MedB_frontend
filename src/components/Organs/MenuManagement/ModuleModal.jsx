@@ -6,6 +6,7 @@ const ModuleModal = ({ isOpen, closeModal, moduleData, onSubmit }) => {
     const [moduleName, setModuleName] = useState("");
     const [moduleIcon, setModuleIcon] = useState("");
     const [sortOrder, setSortOrder] = useState("");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (moduleData) {
@@ -17,7 +18,7 @@ const ModuleModal = ({ isOpen, closeModal, moduleData, onSubmit }) => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-
+        setLoading(true);
         const data = {
             moduleId: moduleData?.moduleId || null,
             moduleName,
@@ -30,6 +31,7 @@ const ModuleModal = ({ isOpen, closeModal, moduleData, onSubmit }) => {
                 const moduleNameRegex = /^[A-Za-z][A-Za-z0-9\s]{1,49}$/;
                 if (!moduleNameRegex.test(data.moduleName)) {
                     toast.error("Module name must start with a letter and be 2-50 characters long (letters, numbers, spaces).");
+                    setLoading(false);
                     return;
                 }
 
@@ -48,10 +50,13 @@ const ModuleModal = ({ isOpen, closeModal, moduleData, onSubmit }) => {
                 closeModal();
             } catch (error) {
                 toast.error(error.response.data.message || "Something went wrong. Please try again.");
+            } finally {
+                setLoading(false);
             }
         } else {
             toast.error("Please fill out all required fields.");
         }
+        setLoading(false);
     };
 
     const handleCancel = () => {
@@ -112,12 +117,14 @@ const ModuleModal = ({ isOpen, closeModal, moduleData, onSubmit }) => {
                                 type="button"
                                 className="px-4 py-2 bg-gray-300 rounded-md"
                                 onClick={handleCancel}
+                                disabled={loading}
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 className="px-4 py-2 bg-indigo-500 text-white rounded-md"
+                                disabled={loading}
                             >
                                 {moduleData ? "Update" : "Add Module"}
                             </button>

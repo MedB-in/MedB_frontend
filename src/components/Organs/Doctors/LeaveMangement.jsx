@@ -4,12 +4,13 @@ import { useParams } from 'react-router-dom';
 import Calendar from '../../../components/Atoms/Calender';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
+import { getISTDate } from '../../../utils/time';
 
 const LeaveManagement = ({ idDoctor, clinics }) => {
     const { doctorId, clinicId } = useParams();
     const useDoctorId = doctorId || idDoctor;
     const [doctor, setDoctor] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(getISTDate());
     const [idClinic, setClinicId] = useState(() => {
         return JSON.parse(localStorage.getItem('selectedClinicId')) || null;
     });
@@ -18,7 +19,7 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
     const [loading, setLoading] = useState(false);
     const [updating, setUpdating] = useState(false);
     const [selectedLeave, setSelectedLeave] = useState(null);
-    const isPastLeave = selectedLeave && new Date(selectedLeave.leaveDate) < new Date(new Date().toDateString())
+    const isPastLeave = selectedLeave && selectedLeave.leaveDate < getISTDate()
 
     useEffect(() => {
         if (!clinics) {
@@ -301,8 +302,13 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                                                 {leave.isRejected && (
                                                     <span className="text-red-500 text-xs font-medium">❌ Rejected</span>
                                                 )}
-                                                {!leave.isApproved && !leave.isRejected && (
-                                                    <span className="text-yellow-500 text-xs font-medium">Pending</span>
+
+                                                {!leave.isApproved && !leave.isRejected && leave.leaveDate >= getISTDate() && (
+                                                    <span className="text-yellow-500 text-xs font-medium">🕓 Pending</span>
+                                                )}
+
+                                                {!leave.isApproved && !leave.isRejected && leave.leaveDate < getISTDate() && (
+                                                    <span className="text-gray-500 text-xs font-medium">⏳ Expired</span>
                                                 )}
                                             </div>
                                         </div>

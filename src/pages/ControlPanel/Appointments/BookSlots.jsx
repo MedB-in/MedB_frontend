@@ -87,11 +87,10 @@ const BookSlots = () => {
             setSearchQuery(true);
             const response = await getPatients(patientQuery);
             setPatients(response.data.patients || []);
-            if (response.data.patients.length !== 0) {
-                setSearchQuery(false);
-            }
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to fetch patient details.");
+        } finally {
+            setSearchQuery(false);
         }
     };
 
@@ -217,9 +216,9 @@ const BookSlots = () => {
                             placeholder="Enter First Name, Last Name, email or contact number"
                             className="w-full px-4 py-2 border rounded-md bg-white text-gray-800"
                         />
-                        <button onClick={handleSearchPatient} className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-purple-700">Search</button>
+                        <button onClick={handleSearchPatient} className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-purple-700" disabled={searchQuery}>Search</button>
                     </div>
-                    {patients.length > 0 ? (
+                    {!searchQuery && patients.length > 0 ? (
                         <div className="mt-5 text-black">
                             {patients.map((patient, index) => (
                                 <div
@@ -235,8 +234,9 @@ const BookSlots = () => {
                             ))}
                         </div>
                     ) : (
-                        searchQuery && patients.length === 0 && !loading && <p className="mt-2 text-gray-500">No patients found.</p>
+                        !searchQuery && patients.length === 0 && <p className="mt-2 text-gray-500">No patients found.</p>
                     )}
+                    {searchQuery && <p className="mt-2 text-gray-500">Searching for Patients...</p>}
                     <button onClick={() => setShowModal(true)} className="bg-indigo-500 text-white px-4 py-2 rounded-md mt-10 w-40 hover:bg-purple-700">
                         Add new Patient
                     </button>

@@ -16,6 +16,7 @@ const UserRightsModal = ({ clinicId, showModal, setShowModal, user }) => {
         createAllowed: false,
         deleteAllowed: false,
     });
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (showModal && !clinicId) {
@@ -60,7 +61,7 @@ const UserRightsModal = ({ clinicId, showModal, setShowModal, user }) => {
         if (!hasAtLeastOnePermission) {
             return Swal.fire("Permission Required", "Select at least one user right", "warning");
         }
-
+        setLoading(true);
         try {
             const data = {
                 userId: user?.userId,
@@ -82,6 +83,8 @@ const UserRightsModal = ({ clinicId, showModal, setShowModal, user }) => {
             setShowModal(false);
         } catch (error) {
             Swal.fire("Error", error?.response?.data?.message || "Failed to assign rights", "error");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -202,14 +205,16 @@ const UserRightsModal = ({ clinicId, showModal, setShowModal, user }) => {
                     <button
                         onClick={() => { setPermissions({ viewAllowed: false, editAllowed: false, createAllowed: false, deleteAllowed: false }), setSelectedClinic(""), setSelectedMenu(""), setShowModal(false) }}
                         className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+                        disabled={loading}
                     >
                         Cancel
                     </button>
                     <button
                         onClick={clinicId ? handleClinicSubmit : handleSubmit}
                         className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+                        disabled={loading}
                     >
-                        Assign
+                        {loading ? "Loading..." : "Submit"}
                     </button>
                 </div>
             </div>

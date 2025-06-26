@@ -87,12 +87,14 @@ const ProductMenuModal = ({ isOpen, closeModal, productId, fetchProducts }) => {
                 type="button"
                 className="px-4 py-2 bg-gray-300 rounded-md"
                 onClick={closeModal}
+                disabled={loading}
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 className="px-4 py-2 bg-indigo-500 text-white rounded-md"
+                disabled={loading}
               >
                 Add Menu
               </button>

@@ -42,7 +42,7 @@ const FloatingActionButtons = () => {
                 className="fixed right-0 top-[76dvh] md:top-[80dvh] flex items-center z-50 group"
             >
                 <a
-                    href="https://api.whatsapp.com/send/?phone=8137854445&text&type=phone_number&app_absent=0"
+                    href="https://api.whatsapp.com/send?phone=8137854445&text=Hello%2C%20I%20would%20like%20to%20inquire%20about%20*MedB*."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center bg-[#17B958] text-white rounded-l-full px-2 md:px-3 py-1 transition-all duration-300 ease-in-out cursor-pointer hover:pr-6"

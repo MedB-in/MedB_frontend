@@ -124,7 +124,7 @@ const SearchSection = () => {
                         </div>
                     </div>
                 </div>
-                <button className="absolute bottom-5 h-12 left-1/2 transform -translate-x-1/2 bg-[#6F64E7] text-white px-6 py-2 rounded-full flex items-center justify-center shadow-md" onClick={handleSearch}>
+                <button className="absolute bottom-5 h-12 left-1/2 transform -translate-x-1/2 bg-[#6F64E7] text-white px-6 py-2 rounded-full flex items-center justify-center shadow-md" onClick={handleSearch} disabled={isLoading}>
                     {isLoading ? 'Searching...' : 'Search'}
                     <img src={searchIcon} alt="Search Icon" className="w-5 h-5 ml-2" />
                 </button>
@@ -158,7 +158,7 @@ const SearchSection = () => {
                     </div>
                 </div>
                 <div className="flex lg:hidden flex-col items-center p-5 w-full">
-                    <button className="mt-4 bg-[#6F64E7] text-white px-6 py-2 rounded-full flex items-center justify-center shadow-md w-full max-w-sm" onClick={handleSearch}>
+                    <button className="mt-4 bg-[#6F64E7] text-white px-6 py-2 rounded-full flex items-center justify-center shadow-md w-full max-w-sm" onClick={handleSearch} disabled={isLoading}>
                         {isLoading ? 'Searching...' : 'Search'}
                         <img src={searchIcon} alt="Search Icon" className="w-5 h-5 ml-2" />
                     </button>

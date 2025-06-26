@@ -10,7 +10,7 @@ import facebookIcon from "../../../assets/images/facebook-logo.png";
 import linkedInIcon from "../../../assets/images/linkedin-icon.png";
 import instagramIcon from "../../../assets/images/instagram-icon.png";
 import { subscribeNewsletter, sendEnquiry } from "../../../services/publicApi";
-import { isValidEmail, isValidName, isValidPhone,  } from "../../../validation/validations";
+import { isValidEmail, isValidName, isValidPhone } from "../../../validation/validations";
 
 const Footer = () => {
 
@@ -226,6 +226,7 @@ const Footer = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={handleNewsletterSubmit}
+                            disabled={newsletterLoading}
                         >
                             {newsletterLoading ? "Subscribing..." : "Subscribe"}
                         </motion.button>
@@ -254,7 +255,7 @@ const Footer = () => {
                                 <p className="invisible text-sm">placeholder</p>
                             )}
                         </div>
-                        <button type="submit" className="w-full bg-[#6F64E7] text-white p-2 rounded-md hover:bg-[#554cd4] transition">{enquiryLoading ? "Sending..." : "Submit"}</button>
+                        <button type="submit" className="w-full bg-[#6F64E7] text-white p-2 rounded-md hover:bg-[#554cd4] transition" disabled={enquiryLoading} >{enquiryLoading ? "Sending..." : "Submit"}</button>
                     </motion.form>
                 </motion.div>
             </div>
