@@ -398,7 +398,7 @@ const ClinicSlot = () => {
           />
           <button
             className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-all duration-300"
-            onClick={handleSubmit}
+            onClick={handleSubmit} disabled={loading}
           >
             {loading ? "Saving..." : editingSlot ? "Update Slot" : "Save"}
           </button>

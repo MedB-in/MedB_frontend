@@ -110,8 +110,8 @@ const AppointmentActions = ({ appointment, onClose, fetchAppointments }) => {
                 )}
 
                 <div className="flex justify-end mt-5 gap-2">
-                    <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">Close</button>
-                    <button onClick={handleConfirm} className="px-4 py-2 bg-blue-500 text-white rounded">{loading ? "Saving..." : "Confirm"}</button>
+                    <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded" disabled={loading}>Close</button>
+                    <button onClick={handleConfirm} className="px-4 py-2 bg-blue-500 text-white rounded" disabled={loading}>{loading ? "Saving..." : "Confirm"}</button>
                 </div>
             </div>
         </div>

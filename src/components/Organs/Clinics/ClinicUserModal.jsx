@@ -91,7 +91,7 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
                     </div>
 
                     <div className="flex justify-end space-x-4 pt-2">
-                        <Button type="button" className="bg-gray-500 text-white" onClick={onClose}>Cancel</Button>
+                        <Button type="button" className="bg-gray-500 text-white" onClick={onClose} disabled={loading}>Cancel</Button>
                         <Button type="submit" className="bg-violet-600 text-white" disabled={loading}>
                             {loading ? "Adding..." : "Add User"}
                         </Button>

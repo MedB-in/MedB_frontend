@@ -73,7 +73,7 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
             toast.error("Last name must contain only letters.");
             return;
         }
-        if(!isValidAge(formData.age)) {
+        if (!isValidAge(formData.age)) {
             toast.error("Please enter a valid age.");
             return;
         }
@@ -89,7 +89,7 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
             toast.error("Please enter a valid pincode.");
             return;
         }
-        if(!isValidName(formData.country)) {
+        if (!isValidName(formData.country)) {
             toast.error("Please enter a valid country.");
             return;
         }
@@ -141,12 +141,12 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
                     <InputField type="text" name="contactNo" placeholder="Contact No*" value={formData.contactNo} onChange={handleChange} required />
                     <InputField type="text" name="address" placeholder="Address*" value={formData.address} onChange={handleChange} required />
                     <InputField type="text" name="city" placeholder="City*" value={formData.city} onChange={handleChange} required />
-                    <InputField type="text" name="district" placeholder="District*" value={formData.district} onChange={handleChange} required />
-                    <InputField type="text" name="state" placeholder="State*" value={formData.state} onChange={handleChange} required />
-                    <InputField type="text" name="country" placeholder="Country*" value={formData.country} onChange={handleChange} required />
-                    <InputField type="text" name="postalCode" placeholder="Postal Code*" value={formData.postalCode} onChange={handleChange} required />
+                    <InputField type="text" name="district" placeholder="District" value={formData.district} onChange={handleChange} />
+                    <InputField type="text" name="state" placeholder="State" value={formData.state} onChange={handleChange} />
+                    <InputField type="text" name="country" placeholder="Country" value={formData.country} onChange={handleChange} />
+                    <InputField type="text" name="postalCode" placeholder="Postal Code" value={formData.postalCode} onChange={handleChange} />
                     <div className="col-span-full flex justify-end space-x-4">
-                        <Button type="button" className="bg-gray-500 text-white" onClick={onClose}>Cancel</Button>
+                        <Button type="button" className="bg-gray-500 text-white" onClick={onClose} disabled={loading}>Cancel</Button>
                         <Button type="submit" className="bg-violet-600 text-white" disabled={loading}>
                             {loading ? (isUpdate ? "Updating..." : "Adding...") : (isUpdate ? "Update" : "Add Patient")}
                         </Button>
