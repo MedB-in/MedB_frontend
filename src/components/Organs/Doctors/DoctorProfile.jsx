@@ -3,6 +3,7 @@ import back from "../../../assets/images/circle-arrow-left-01.png";
 import days from "../../../lib/slotDays";
 import location from "../../../assets/images/location-feature.png";
 import bgOverlay from "../../../assets/images/doctor-bg-overlay.png";
+import defaultDoctor from "../../../assets/images/default-doctor.png";
 import line from "../../../assets/images/line-doctor.png";
 import DoctorSlotModal from './DoctorSlotModal';
 import { useEffect, useState } from 'react';
@@ -87,11 +88,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                 <SkeletonLoader />
             ) : (
                 <>
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
+                    <div
                         className="md:mt-8 mt-10 md:p-16 w-full md:shadow-lg md:rounded-xl ">
                         <div className="flex flex-col md:flex-row md:gap-8 ">
                             <div
@@ -106,14 +103,22 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                             </div>
                             <section className="w-full">
                                 {/* Mobile UI */}
-                                <motion.section
-                                    initial={{ opacity: 0, y: 50 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, amount: 0.3 }}
-                                    transition={{ duration: 0.8, ease: "easeOut" }}
+                                <section
                                     className="md:hidden flex flex-col items-center text-center p-4">
-                                    <div className="relative w-40 h-52 overflow-hidden drop-shadow-2xl rounded-2xl">
-                                        <img src={doctor?.profilePicture} className="object-cover w-full h-full rounded-2xl border-2 border-indigo-500" alt="Doctor" />
+                                    <div className="relative w-40 h-52 overflow-hidden drop-shadow-2xl rounded-2xl bg-indigo-100 flex items-center justify-center border-2 border-indigo-500">
+                                        {console.log(doctor.profilePicture + " profilePicture")}
+
+                                        {doctor.profilePicture ? (
+                                            <img
+                                                src={doctor.profilePicture}
+                                                className="object-cover w-full h-full rounded-2xl"
+                                                alt="Doctor"
+                                            />
+                                        ) : (
+                                            <span className="text-5xl font-semibold text-indigo-700">
+                                                {doctor?.firstName?.charAt(0)?.toUpperCase() || "D"}
+                                            </span>
+                                        )}
                                     </div>
                                     <h1 className="mt-4 font-bold text-2xl">Dr. {doctor?.firstName} {doctor?.middleName || ''} {doctor?.lastName || ''}</h1>
                                     <h2 className="mt-1 text-xl">{doctor?.speciality}</h2>
@@ -126,7 +131,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                             {displayAddress}
                                         </div>
                                     )}
-                                </motion.section>
+                                </section>
                                 {/* Desktop UI */}
                                 <section className="hidden md:flex md:w-[63%] w-full">
                                     <motion.div
@@ -138,7 +143,11 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                         <figure className="max-w-xs rounded-none">
                                             <div className="relative flex justify-center items-start px-2.5 py-3.5 rounded-2xl aspect-[0.791] drop-shadow-2xl overflow-hidden">
                                                 <img src={bgOverlay} className="absolute inset-0 size-full object-cover -translate-x-5" alt="Background overlay" />
-                                                <img src={doctor?.profilePicture} className="object-cover h-full rounded-2xl border-2 border-indigo-500 translate-x-2" alt="Doctor" />
+                                                {doctor.profilePicture ?
+                                                    <img src={doctor?.profilePicture} className="object-cover h-full w-full rounded-2xl border-2 border-indigo-500 translate-x-2" alt="Doctor" />
+                                                    :
+                                                    <img src={defaultDoctor} className="object-cover h-full w-full rounded-2xl border-2 border-indigo-500 bg-white translate-x-2" alt="Doctor" />
+                                                }
                                             </div>
                                         </figure>
                                         <motion.div
@@ -164,11 +173,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                 </section>
                             </section>
                             <section className="md:w-[37%] w-full">
-                                <motion.div
-                                    initial={{ opacity: 0, y: 50 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, amount: 0.3 }}
-                                    transition={{ duration: 0.8, ease: "easeOut" }}
+                                <div
                                     className="mt-6 md:mt-0">
                                     <div className="w-full">
                                         {/* Desktop UI */}
@@ -197,11 +202,8 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                             <p className="mt-2 text-xl text-black"> {doctor?.consultationFee ? `₹ ${doctor?.consultationFee}/-` : 'Not Available'}</p>
                                         </motion.div>
                                         {/* Mobile UI */}
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 50 }}
-                                            whileInView={{ opacity: 1, y: 0 }}
-                                            viewport={{ once: true, amount: 0.3 }}
-                                            transition={{ duration: 0.8, ease: "easeOut" }} className="flex md:hidden flex-col p-4 text-base font-medium text-indigo-500 bg-white rounded-xl border border-black border-opacity-30 shadow-md">
+                                        <div
+                                            className="flex md:hidden flex-col p-4 text-base font-medium text-indigo-500 bg-white rounded-xl border border-black border-opacity-30 shadow-md">
                                             <h3>Contact Number</h3>
                                             <p className="mt-3 text-sm text-black">{doctor?.phone ? ` ${doctor?.phone}` : 'Not Available'}</p>
 
@@ -222,15 +224,15 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                             )}
                                             <h3 className="mt-6">Consultation Fee</h3>
                                             <p className="mt-3 text-sm text-black"> {doctor?.consultationFee ? `₹ ${doctor?.consultationFee}/-` : 'Not Available'}</p>
-                                        </motion.div>
+                                        </div>
                                         <motion.button onClick={handleBookAppointment} className="hidden md:block w-full px-3 py-6 mt-9 text-base font-medium bg-indigo-500 rounded-lg text-white hover:bg-indigo-600 transition-transform" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                             Book Appointment
                                         </motion.button>
                                     </div>
-                                </motion.div>
+                                </div>
                             </section>
                         </div>
-                    </motion.div>
+                    </div>
                 </>
             )}
             <section
