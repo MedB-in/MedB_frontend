@@ -95,7 +95,7 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                         className="md:mt-8 mt-10 md:p-16 w-full md:shadow-lg md:rounded-xl ">
                         <div className="flex flex-col md:flex-row md:gap-8 ">
                             <div
-                                onClick={isVisible ? handleBookAppointment : () => { }}
+                                onClick={handleBookAppointment}
                                 className="md:hidden relative">
                                 <button
                                     className={`fixed bottom-5 left-1/2 -translate-x-1/2 w-[90%] py-4 text-base font-medium bg-indigo-500 rounded-lg text-white hover:bg-indigo-600 shadow-lg transition-all duration-700 ease-in-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
