@@ -52,7 +52,15 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+        const cleanedValue = ['contactNo', 'postalCode'].includes(name)
+            ? value.replace(/\s+/g, '')
+            : value;
+
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: cleanedValue,
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -85,11 +93,11 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
             toast.error("Please enter a valid Indian phone number.");
             return;
         }
-        if (!isValidPincode(formData.postalCode)) {
+        if (formData.postalCode && !isValidPincode(formData.postalCode)) {
             toast.error("Please enter a valid pincode.");
             return;
         }
-        if (!isValidName(formData.country)) {
+        if (formData.country && !isValidName(formData.country)) {
             toast.error("Please enter a valid country.");
             return;
         }
@@ -122,7 +130,7 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
                 <form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" onSubmit={handleSubmit}>
                     <InputField type="text" name="firstName" placeholder="First Name*" value={formData.firstName} onChange={handleChange} required />
                     <InputField type="text" name="middleName" placeholder="Middle Name" value={formData.middleName} onChange={handleChange} />
-                    <InputField type="text" name="lastName" placeholder="Last Name*" value={formData.lastName} onChange={handleChange} required />
+                    <InputField type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
                     <InputField type="number" name="age" placeholder="Age*" value={formData.age} onChange={handleChange} required />
                     <select name="gender" value={formData.gender} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg bg-white/30 backdrop-blur-md" required>
                         <option value="" disabled>Select Gender*</option>

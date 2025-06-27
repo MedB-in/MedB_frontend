@@ -1,4 +1,3 @@
-import DefaultImage from '../../../assets/images/default-doctor.png';
 import ProfileAvatar from '../ProfileAvatar';
 
 const DoctorCard = ({ doctor, onSelect, loading }) => {

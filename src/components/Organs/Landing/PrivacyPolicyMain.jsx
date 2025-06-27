@@ -126,7 +126,7 @@ const sections = [
         content: [
             "📞 <strong>+91 81378 54445</strong>",
             "📧 <strong>info@medb.co.in</strong>",
-            "🏢 Mizone / Malabar Innovation Entrepreneurship Zone,<br /> Dharmasala, Kannur, Kerala 670567",
+            "🏢 Medb connected care LLP, Mizone / Malabar Innovation Entrepreneurship Zone,<br /> Dharmasala, Kannur, Kerala 670567",
         ],
     },
 ];

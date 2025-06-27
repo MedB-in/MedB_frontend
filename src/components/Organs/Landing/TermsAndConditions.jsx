@@ -77,6 +77,7 @@ const TermsAndConditions = () => {
                     If you have any questions or concerns regarding these Terms, please contact us at:
                 </p>
                 <div className="text-sm text-gray-600">
+                    <p>Medb connected care LLP</p>
                     <p>📍 Mizone / Malabar Innovation Entrepreneurship Zone, Dharmasala, Kannur, Kerala 670567</p>
                     <p>📞 +91 8137854445</p>
                     <p>📧 info@medb.co.in</p>
