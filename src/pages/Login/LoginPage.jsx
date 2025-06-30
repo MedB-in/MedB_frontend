@@ -234,16 +234,28 @@ const LoginPage = () => {
                 disabled={loading || googleLoading}
               />
 
-              <p className="text-center text-sm text-gray-600">
-                Don't have an account?{" "}
-                <button
-                  onClick={() => navigate("/register")}
-                  type="button"
-                  className="text-violet-600 hover:text-violet-700 hover:underline"
-                >
-                  Sign Up
-                </button>
-              </p>
+              <div>
+                <p className="text-center text-sm text-gray-600">
+                  Don't have an account?{" "}
+                  <button
+                    onClick={() => navigate("/register")}
+                    type="button"
+                    className="text-violet-600 hover:text-violet-700 hover:underline"
+                  >
+                    Sign Up
+                  </button>
+                </p>
+                <p className="text-center text-xs text-gray-600">
+                  Trouble logging in?{" "}
+                  <button
+                    onClick={() => navigate("/login-troubleshooting")}
+                    type="button"
+                    className="text-violet-600 hover:text-violet-700 hover:underline"
+                  >
+                    Click Here
+                  </button>
+                </p>
+              </div>
             </form>
           </div>
         </div>
