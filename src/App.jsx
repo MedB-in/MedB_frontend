@@ -75,6 +75,8 @@ const App = () => {
 
         {/* Login page */}
         <Route path="/login" element={<LoginPage />} />
+        {/* Login troubleshoot */}
+        <Route path="/login-troubleshooting" element={<PublicPages.LoginTroubleshoot />} />
         {/* Register page */}
         <Route path="/register" element={<RegisterPage />} />
         {/* Verification page */}

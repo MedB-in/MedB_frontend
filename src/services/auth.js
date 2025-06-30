@@ -27,3 +27,7 @@ export const getCodeForgotPass = (email) =>
 //Function to reset password.
 export const resetPassword = (data) =>
   axios.post("/api/auth/resetPassword", data);
+
+//Function to resend verification email.
+export const sendVerificationEmail = (email) =>
+  axios.post(`/api/auth/sendVerificationEmail`, { email });

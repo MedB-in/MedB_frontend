@@ -11,5 +11,10 @@ import AboutUsPage from "./AboutUsPage";
 import PrivacyPolicyPage from "./PrivacyPolicyPage";
 import TermsAndConditionsPage from "./TermsAndConditionsPage";
 import ForLabsPage from "./ForLabsPage";
+import LoginTroubleshoot from "./LoginTroubleShoot";
 
-export { LandingPage, FindDoctorClinicPage, DoctorSearchPage, DoctorProfilePage, DoctorClinicPage, ForDoctorPage, ClinicRegistrationPage, DoctorRegistrationPage, ClinicRegistrationStatusPage, AboutUsPage, PrivacyPolicyPage, TermsAndConditionsPage, ForLabsPage };
+export {
+    LandingPage, FindDoctorClinicPage, DoctorSearchPage, DoctorProfilePage, DoctorClinicPage, ForDoctorPage,
+    ClinicRegistrationPage, DoctorRegistrationPage, ClinicRegistrationStatusPage, AboutUsPage, PrivacyPolicyPage,
+    TermsAndConditionsPage, ForLabsPage, LoginTroubleshoot
+};
