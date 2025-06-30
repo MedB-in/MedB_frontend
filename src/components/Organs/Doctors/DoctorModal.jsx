@@ -162,6 +162,10 @@ const DoctorModal = ({ isOpen, closeModal, doctorData, clinicId, onSubmit }) => 
       toast.error("Please enter a valid experience.");
       return;
     }
+    if (!formData.age || !isValidAge(formData.age)) {
+      toast.error("Please enter a valid age.");
+      return;
+    }
     if (doctorPictureFile) {
       formDataToSend.append("image", doctorPictureFile);
     }
