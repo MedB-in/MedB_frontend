@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 
 const AppointmentActions = ({ appointment, onClose, fetchAppointments }) => {
     const [reason, setReason] = useState("");
+    const [visitReason, setVisitReason] = useState(appointment?.reasonForVisit || "");
     const [action, setAction] = useState("cancel");
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedDay, setSelectedDay] = useState(null);
@@ -39,11 +40,11 @@ const AppointmentActions = ({ appointment, onClose, fetchAppointments }) => {
                     toast.error('Please select a date and time before submitting.');
                     return;
                 }
-                if (!reason.trim()) {
+                if (!reason.trim() && action !== "reschedule") {
                     toast.error("Please enter a reason for the visit.");
                     return;
                 }
-                await bookSlot({ appointmentId: appointment.appointmentId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
+                await bookSlot({ appointmentId: appointment.appointmentId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason: visitReason });
                 toast.success("Slot booked successfully!");
                 fetchAppointments();
                 onClose();
@@ -64,7 +65,6 @@ const AppointmentActions = ({ appointment, onClose, fetchAppointments }) => {
             <div className="bg-white p-6 max-w-2xl w-full max-h-[80vh] overflow-auto rounded-lg shadow-lg">
                 <h2 className="text-xl font-semibold mb-3">Manage Appointment</h2>
                 <p className="text-sm text-gray-600 mb-4">{appointment?.appointmentDate} at {appointment?.appointmentTime}</p>
-
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-2">Select Action</label>
                     <select
@@ -99,7 +99,7 @@ const AppointmentActions = ({ appointment, onClose, fetchAppointments }) => {
                                 <label className="block text-sm font-medium mb-2">Reason for visit:</label>
                                 <input
                                     type="text"
-                                    value={reason}
+                                    value={appointment?.reasonForVisit}
                                     onChange={(e) => setReason(e.target.value)}
                                     className="w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
                                     placeholder="Enter reason..."
