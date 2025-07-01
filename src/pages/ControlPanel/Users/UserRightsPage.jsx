@@ -38,6 +38,7 @@ function UserRightsList(clinic) {
   const fetchUsersWithRights = useCallback(async (page, query = "") => {
     setLoading(true);
     try {
+      if (query && query.length < 3) return;
       if (clinic.clinicId) {
         const response = await getClinicUserRightsList(page, clinic.clinicId, query);
         setUsersWithRights(response.data.data.userRightsList || []);
@@ -84,7 +85,7 @@ function UserRightsList(clinic) {
             setSearchQuery(e.target.value);
             fetchUsersWithRights(1, e.target.value);
           }}
-          placeholder="Search by name, email or clinic..."
+          placeholder="Search by name, email or clinic...(min. 3 characters)"
           className="px-4 py-2 w-full max-w-md border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>

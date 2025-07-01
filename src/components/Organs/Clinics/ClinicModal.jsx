@@ -95,26 +95,66 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
 
 
   const handleTimeInputChange = (day, field, value) => {
+    const updatedDay = {
+      ...timeInputs[day],
+      [field]: value,
+    };
+
+    if (field === "isClosed") {
+      if (value === true) {
+        updatedDay.startTime = "";
+        updatedDay.endTime = "";
+        updatedDay.startPeriod = "AM";
+        updatedDay.endPeriod = "PM";
+
+        setFormData((prev) => ({
+          ...prev,
+          openingHours: {
+            ...prev.openingHours,
+            [day]: "Closed",
+          },
+        }));
+      } else {
+        const { startTime = "", startPeriod = "AM", endTime = "", endPeriod = "PM" } = updatedDay;
+        setFormData((prev) => ({
+          ...prev,
+          openingHours: {
+            ...prev.openingHours,
+            [day]: `${startTime || '00:00'} ${startPeriod} - ${endTime || '00:00'} ${endPeriod}`,
+          },
+        }));
+      }
+    } else {
+      if (!updatedDay.isClosed) {
+        const { startTime = "", startPeriod = "AM", endTime = "", endPeriod = "PM" } = updatedDay;
+        setFormData((prev) => ({
+          ...prev,
+          openingHours: {
+            ...prev.openingHours,
+            [day]: `${startTime || '00:00'} ${startPeriod} - ${endTime || '00:00'} ${endPeriod}`,
+          },
+        }));
+      }
+    }
+
     setTimeInputs((prev) => ({
       ...prev,
-      [day]: {
-        ...prev[day],
-        [field]: value,
-      },
+      [day]: updatedDay,
     }));
+
     setError(null);
   };
 
+
   const handleTimeBlur = (day, field, value) => {
-    // Remove non-digit characters
     let digits = value.replace(/\D/g, '');
 
     if (digits.length === 1) {
-      digits = `0${digits}00`; // e.g., "9" → "0900"
+      digits = `0${digits}00`;
     } else if (digits.length === 2) {
-      digits = `${digits}00`;  // e.g., "10" → "1000"
+      digits = `${digits}00`;
     } else if (digits.length === 3) {
-      digits = `0${digits}`;   // e.g., "930" → "0930"
+      digits = `0${digits}`;
     }
 
     if (digits.length >= 4) {
