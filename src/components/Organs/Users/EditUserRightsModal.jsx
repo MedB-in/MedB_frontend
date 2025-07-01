@@ -11,6 +11,7 @@ const EditUserRightsModal = ({ clinicId, showModal, setShowModal, rights, setNew
         createAllowed: false,
         deleteAllowed: false,
     });
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (showModal && rights?.userId) {
@@ -24,6 +25,7 @@ const EditUserRightsModal = ({ clinicId, showModal, setShowModal, rights, setNew
     }, [showModal, rights]);
 
     const handleSubmit = async () => {
+        setLoading(true);
         const isAllUnchecked = Object.values(permissions).every((v) => v === false);
 
         if (isAllUnchecked) {
@@ -37,7 +39,10 @@ const EditUserRightsModal = ({ clinicId, showModal, setShowModal, rights, setNew
                 confirmButtonText: "Yes, remove all",
             });
 
-            if (!confirm.isConfirmed) return;
+            if (!confirm.isConfirmed) {
+                setLoading(false);
+                return;
+            }
         }
 
         try {
@@ -61,6 +66,8 @@ const EditUserRightsModal = ({ clinicId, showModal, setShowModal, rights, setNew
             setShowModal(false);
         } catch (error) {
             toast.error(error?.response?.data?.message || "Failed to update rights");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -75,6 +82,7 @@ const EditUserRightsModal = ({ clinicId, showModal, setShowModal, rights, setNew
             confirmButtonText: "Yes, remove",
         });
 
+        setLoading(true);
         if (confirm.isConfirmed) {
             try {
                 const data = {
@@ -94,6 +102,8 @@ const EditUserRightsModal = ({ clinicId, showModal, setShowModal, rights, setNew
                 setShowModal(false);
             } catch (error) {
                 toast.error(error?.response?.data?.message || "Failed to remove rights");
+            } finally {
+                setLoading(false);
             }
         }
     };
@@ -124,6 +134,7 @@ const EditUserRightsModal = ({ clinicId, showModal, setShowModal, rights, setNew
                 <div className="flex justify-between items-center pt-4">
                     <button
                         onClick={handleRemoveRights}
+                        disabled={loading}
                         className="px-3 py-2 bg-red-100 text-red-600 text-sm rounded hover:bg-red-200"
                     >
                         Remove Rights
@@ -137,9 +148,10 @@ const EditUserRightsModal = ({ clinicId, showModal, setShowModal, rights, setNew
                         </button>
                         <button
                             onClick={handleSubmit}
+                            disabled={loading}
                             className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
                         >
-                            Update
+                            {loading ? "Updating..." : "Update"}
                         </button>
                     </div>
                 </div>
