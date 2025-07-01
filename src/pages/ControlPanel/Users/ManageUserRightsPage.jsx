@@ -20,6 +20,7 @@ function UserList() {
     const fetchUsers = useCallback(async (query, page) => {
         setLoading(true);
         try {
+            if (query && query.length < 3) return;
             const response = await getUserList(query, page);
             setUsers(response.data.data.userList || []);
             setTotalPages(response.data.data.totalPages);
@@ -94,7 +95,7 @@ function UserList() {
                 <div className="mb-4 w-full max-w-md mt-5">
                     <input
                         type="text"
-                        placeholder="Search by name, email, or phone..."
+                        placeholder="Search by name, email, or phone... (min. 3 characters)"
                         value={searchQuery}
                         onChange={handleSearch}
                         className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
@@ -212,13 +213,12 @@ function UserList() {
                             ))}
                         </tbody>
                     </table>
-
-
-                ) : searchQuery ? (
+                ) : searchQuery && users.length === 0 ? (
                     <div className="text-gray-500 text-center py-10">No users found</div>
                 ) : (
                     <div className="text-gray-500 text-center py-10">{clinicId ? "" : "Search for users"}</div>
-                )}
+                )
+                }
             </div>
             {/* Pagination */}
             {totalPages > 1 && (

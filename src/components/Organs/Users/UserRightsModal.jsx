@@ -56,6 +56,9 @@ const UserRightsModal = ({ clinicId, showModal, setShowModal, user }) => {
             return Swal.fire("Required", "Select both clinic and menu", "warning");
         }
 
+        if (!selectedClinic) {
+            return Swal.fire("Required", "Select clinic", "warning");
+        }
         const hasAtLeastOnePermission = Object.values(permissions).some(val => val === true);
 
         if (!hasAtLeastOnePermission) {
@@ -92,7 +95,6 @@ const UserRightsModal = ({ clinicId, showModal, setShowModal, user }) => {
         if (!selectedMenu) {
             return Swal.fire("Required", "Select menu", "warning");
         }
-
         const hasAtLeastOnePermission = Object.values(permissions).some(val => val === true);
 
         if (!hasAtLeastOnePermission) {
