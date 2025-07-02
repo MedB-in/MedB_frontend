@@ -28,3 +28,15 @@ export const getEnquiries = (page) =>
 //API to resolve Enquiry
 export const updateEnquiryStatus = (id, status) =>
   axios.put(`/api/controlPanel/enquiry?id=${id}`, { status }, getHeaders());
+
+//API to get error logs
+export const getErrorLogsByUser = (page, date, userId, timeFrom, timeTo) =>
+  axios.get(`/api/controlPanel/errorLogs?page=${page}&date=${date}&userId=${userId}&timeFrom=${timeFrom}&timeTo=${timeTo}`, getHeaders());
+
+//API to get audit logs
+export const getAuditLogsByUser = (page, date, userId, timeFrom, timeTo) =>
+  axios.get(`/api/controlPanel/auditLogs?page=${page}&date=${date}&userId=${userId}&timeFrom=${timeFrom}&timeTo=${timeTo}`, getHeaders());
+
+//API to get email logs
+export const getEmailLogsByUser = (page, date, email, timeFrom, timeTo) =>
+  axios.get(`/api/controlPanel/emailLogs?page=${page}&date=${date}&email=${email}&timeFrom=${timeFrom}&timeTo=${timeTo}`, getHeaders());

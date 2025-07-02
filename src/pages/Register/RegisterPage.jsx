@@ -60,7 +60,6 @@ const RegisterPage = () => {
         if (!firstName || !email || !contactNo || !password || !confirmPassword) {
             return setError("All fields are required.");
         }
-
         if (!isValidName(firstName)) {
             return setError("Name can only contain alphabets.");
         }
