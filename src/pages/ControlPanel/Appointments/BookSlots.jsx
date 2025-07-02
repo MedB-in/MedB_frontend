@@ -300,7 +300,6 @@ const BookSlots = () => {
                         onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                         className="w-full px-4 py-2 border rounded-md bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
-                    {/* Suggested reasons */}
                     {visitReasons[department?.charAt(0).toUpperCase() + department?.slice(1)]?.length > 0 && (
                         <div className="mt-4">
                             <h4 className="text-sm font-medium text-gray-600 mb-1">Common reasons:</h4>

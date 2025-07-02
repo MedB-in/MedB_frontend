@@ -11,7 +11,7 @@ const Icon = ({ type }) => {
     return <img src={icons[type]} alt={type} width={17} height={17} style={{ cursor: 'pointer' }} />;
 };
 
-const Calendar = ({ onDateSelect }) => {
+const Calendar = ({ dateSelector, onDateSelect }) => {
     const [date, setDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -70,7 +70,7 @@ const Calendar = ({ onDateSelect }) => {
     const emptyDays = Array(firstDayIndex).fill(null);
     const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
-    const isPrevDisabled = date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+    const isPrevDisabled = !dateSelector && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
     const isNextDisabled = date >= maxDate;
 
     const allowedMonths = Array.from({ length: 4 }, (_, i) => new Date(today.getFullYear(), today.getMonth() + i));
@@ -112,7 +112,7 @@ const Calendar = ({ onDateSelect }) => {
                     {emptyDays.map((_, index) => <div key={`empty-${index}`} className="p-1.5" />)}
                     {daysArray.map(day => {
                         const currentDate = new Date(date.getFullYear(), date.getMonth(), day);
-                        const isDisabled = currentDate < today && currentDate.toDateString() !== today.toDateString();
+                        const isDisabled = !dateSelector && currentDate < today && currentDate.toDateString() !== today.toDateString();
                         const isSelected = selectedDate && currentDate.toDateString() === selectedDate.toDateString();
                         const isToday = currentDate.toDateString() === today.toDateString();
 
