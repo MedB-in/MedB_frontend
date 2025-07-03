@@ -82,9 +82,9 @@ const UserSearch = ({ onSelectUser }) => {
                                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer transition"
                                 >
                                     <div className="font-medium capitalize">
-                                        {user.firstName} {user.lastName}
+                                        {user.firstName} {user.lastName} <span className="text-gray-500 text-sm font-bold"> (User id: {user.userId})</span>
                                     </div>
-                                    <div className="text-sm text-gray-600">{user.email}</div>
+                                    <div className="text-sm text-gray-600">{user.email} {user.contactNo ? `, Contact No: ${user.contactNo}` : ""}</div>
                                 </li>
                             ))}
                         </ul>

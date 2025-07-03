@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import LeaveManagement from "../../../components/Organs/Doctors/LeaveMangement";
 import FeeMangement from "../../../components/Organs/Doctors/FeeManagement";
+import BackButton from "../../../components/Atoms/BackButton";
 
 const tabs = [
     { label: "Leave Management", key: "leave" },
@@ -13,6 +14,7 @@ const LeaveMangementPage = () => {
 
     return (
         <div className="p-4">
+            <BackButton />
             <div className="flex gap-4 border-b border-gray-300">
                 {tabs.map((tab) => (
                     <button

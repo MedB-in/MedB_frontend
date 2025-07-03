@@ -132,7 +132,7 @@ const UserProfilePage = () => {
             return;
         }
 
-        if (!designation || !isValidDesignation(designation)) {
+        if (designation && !isValidDesignation(designation)) {
             toast.error("Designation must start with a letter and contain only letters, dots, or spaces.");
             return;
         }

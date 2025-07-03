@@ -120,26 +120,43 @@ const ClinicSlot = () => {
   };
 
   const handleTimeChange = (e, setter) => {
-    let value = e.target.value.replace(/[^0-9]/g, "");
-    if (value.length > 4) {
-      value = value.slice(0, 4);
-    }
+    let value = e.target.value.replace(/[^0-9]/g, "").slice(0, 4);
+
     let hours = value.slice(0, 2);
     let minutes = value.slice(2, 4);
-    if (hours && (parseInt(hours) < 1 || parseInt(hours) > 12)) {
-      hours = "";
-    }
-    if (minutes && (parseInt(minutes) < 0 || parseInt(minutes) > 59)) {
-      minutes = "";
-    }
+
+    if (hours && (parseInt(hours) < 1 || parseInt(hours) > 12)) hours = "";
+    if (minutes && (parseInt(minutes) < 0 || parseInt(minutes) > 59)) minutes = "";
+
+    let formatted = "";
     if (hours && minutes) {
-      value = `${hours}:${minutes}`;
+      formatted = `${hours}:${minutes}`;
     } else if (hours) {
-      value = `${hours}`;
+      formatted = hours;
     } else if (minutes) {
-      value = `:${minutes}`;
+      formatted = `:${minutes}`;
     }
-    setter(value);
+
+    setter(formatted);
+  };
+
+  const handleTimeBlur = (value, setter) => {
+    let digits = value.replace(/\D/g, "");
+
+    if (digits.length === 1) {
+      digits = `0${digits}00`;
+    } else if (digits.length === 2) {
+      digits = `${digits}00`;
+    } else if (digits.length === 3) {
+      digits = `0${digits}`;
+    }
+
+    if (digits.length >= 4) {
+      const hours = digits.slice(0, 2);
+      const minutes = digits.slice(2, 4);
+      const formatted = `${hours}:${minutes}`;
+      setter(formatted);
+    }
   };
 
 
@@ -334,13 +351,13 @@ const ClinicSlot = () => {
                     className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
                     value={timingFrom}
                     onChange={(e) => handleTimeChange(e, setTimingFrom)}
+                    onBlur={(e) => handleTimeBlur(e.target.value, setTimingFrom)}
                     placeholder="HH:MM"
                     onFocus={() => setIsFromFocused(true)}
-                    onBlur={() => setIsFromFocused(false)}
                   />
                   {isFromFocused && (
                     <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
-                      {timingFrom.length === 0 && "Type here"}
+                      {timingFrom.length === 0}
                     </div>
                   )}
                 </div>
@@ -366,13 +383,13 @@ const ClinicSlot = () => {
                     className="w-full p-3 border rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
                     value={timingTo}
                     onChange={(e) => handleTimeChange(e, setTimingTo)}
+                    onBlur={(e) => handleTimeBlur(e.target.value, setTimingTo)}
                     placeholder="HH:MM"
                     onFocus={() => setIsToFocused(true)}
-                    onBlur={() => setIsToFocused(false)}
                   />
                   {isToFocused && (
                     <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
-                      {timingTo.length === 0 && "Type here"}
+                      {timingTo.length === 0}
                     </div>
                   )}
                 </div>

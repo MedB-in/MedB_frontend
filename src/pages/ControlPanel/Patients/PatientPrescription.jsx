@@ -9,6 +9,7 @@ import { getPrescriptionDataForPatient } from "../../../services/patient";
 
 const PatientPrescription = () => {
     const [activeTab, setActiveTab] = useState("prescriptions");
+    const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [prescriptions, setPrescriptions] = useState([]);
     const [selectedRecord, setSelectedRecord] = useState(null);
@@ -30,11 +31,14 @@ const PatientPrescription = () => {
 
     const fetchPrescriptionData = async () => {
         try {
+            setLoading(true);
             const response = await getPrescriptionDataForPatient(patientId);
             setPrescriptions(response.data.prescriptions || []);
             setHealthFiles(response.data.healthFiles || []);
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -79,7 +83,7 @@ const PatientPrescription = () => {
                             exit={{ opacity: 0, x: 30 }}
                             transition={{ duration: 0.3 }}
                         >
-                            {prescriptions.length === 0 ? (
+                            {prescriptions.length === 0 && !loading ? (
                                 <p className="text-center text-gray-500">No prescriptions available.</p>
                             ) : (
                                 <div className="grid gap-6">

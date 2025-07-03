@@ -153,6 +153,7 @@ const BookSlots = () => {
     const handleDateSelect = ({ date, day }) => {
         setSelectedDate(date);
         setSelectedDay(day);
+        setIsEmergency(false);
     };
 
     return (
