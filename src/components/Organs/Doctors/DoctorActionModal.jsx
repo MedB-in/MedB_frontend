@@ -45,7 +45,7 @@ const DoctorRemarksModal = ({ appt, onCloseHard }) => {
                             <div className="mt-auto">
                                 <button
                                     onClick={() =>
-                                        navigate(`/app/patients/prescriptions/${appt?.patientDetails?.userId}/${appt?.doctorId}/${appt?.clinicId}/${appt?.appointmentId}/${appt?.appointmentDate}`)
+                                        navigate(`/app/patients/prescriptions/${appt?.patientDetails?.userId}/${appt?.doctorId}/${appt?.clinicId}/${appt?.appointmentId}/${appt?.appointmentDate}/${appt?.appointmentStatus}`)
                                     }
                                     className="w-full bg-violet-600 text-white py-2 rounded-lg hover:bg-violet-700 transition"
                                 >

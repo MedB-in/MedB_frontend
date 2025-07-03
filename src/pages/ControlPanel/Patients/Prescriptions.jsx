@@ -9,7 +9,7 @@ import BackButton from "../../../components/Atoms/BackButton";
 // import PdfViewer from "../../../components/Organs/PDFViewer";
 
 const Prescriptions = () => {
-    const { patientId, doctorId, clinicId, appointmentId, appointmentDate } = useParams();
+    const { patientId, doctorId, clinicId, appointmentId, appointmentDate, appointmentStatus } = useParams();
 
     const [prescriptions, setPrescriptions] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -23,6 +23,13 @@ const Prescriptions = () => {
     const [imagePos, setImagePos] = useState({ x: 0, y: 0 });
     const [fileName, setFileName] = useState("");
     const [previewName, setPreviewName] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const today = new Date();
+    const todayString = today.toLocaleDateString('en-GB');
+    const formattedAppointmentDate = appointmentDate.replace(/-/g, '/');
+    const isToday = formattedAppointmentDate === todayString;
+    const isAllowed = appointmentStatus === "Scheduled";
 
     useEffect(() => {
         if (doctorId || patientId) {
@@ -31,8 +38,15 @@ const Prescriptions = () => {
     }, [doctorId, patientId]);
 
     const fetchPrescriptions = useCallback(async () => {
-        const response = await getPrescriptions(patientId, doctorId);
-        setPrescriptions(response.data.result || []);
+        try {
+            setLoading(true);
+            const response = await getPrescriptions(patientId, doctorId);
+            setPrescriptions(response.data.result || []);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong.");
+        } finally {
+            setLoading(false);
+        }
     }, [patientId, doctorId]);
 
     const handleZoom = (factor) => {
@@ -118,12 +132,16 @@ const Prescriptions = () => {
 
             <div className="flex justify-between items-center mb-6 mt-5">
                 <h2 className="text-xl font-semibold text-gray-800">Health Files / Prescriptions</h2>
-                <button
-                    onClick={() => setShowUploadModal(true)}
-                    className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
-                >
-                    <Upload className="w-4 h-4" /> Upload Prescription
-                </button>
+                {isToday && isAllowed && (
+                    <>
+                        <button
+                            onClick={() => setShowUploadModal(true)}
+                            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
+                        >
+                            <Upload className="w-4 h-4" /> Upload Prescription
+                        </button>
+                    </>
+                )}
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -167,7 +185,7 @@ const Prescriptions = () => {
                             </div>
                         );
                     })
-                ) : (
+                ) : (!loading &&
                     <div className="col-span-full text-sm text-gray-500">
                         No prescriptions uploaded yet.
                     </div>

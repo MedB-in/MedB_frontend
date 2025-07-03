@@ -21,8 +21,11 @@ const WeeklyBookingOverview = ({ bookingRatio = {} }) => {
                                 const height = count * 4;
 
                                 return (
-                                    <div key={index} className="flex flex-col items-center">
-                                        <div className="flex items-end space-x-[1px] h-[200px]">
+                                    <div key={index}
+                                        title={`${count} bookings`}
+                                        className="flex flex-col items-center cursor-default">
+                                        <div
+                                            className="flex items-end space-x-[1px] h-[200px]">
                                             <div
                                                 className="w-[20px] rounded-t-md bg-[#6F64E7] transition-all duration-300"
                                                 style={{ height: `${height}px` }}

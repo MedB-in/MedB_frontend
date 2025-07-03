@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FormInput from "../../Atoms/Login/InputField";
 import FormButton from "../../Atoms/Login/Button";
 import { registerDoctor } from "../../../services/publicApi";
+import { motion } from "framer-motion";
 import registration from "../../../assets/images/registration.png";
 import toast from "react-hot-toast";
 import LocationSelector from "../../LocationSelector";
@@ -132,6 +133,12 @@ const DoctorRegistration = () => {
                     {/* <form onSubmit={handleSubmitForm} className="space-y-8"> */}
                     <h1 className="text-3xl font-bold text-gray-900">Doctor Registration</h1>
                     <h3 className="text-lg font-semibold mb-4">Please contact us for more information.</h3>
+                    <p
+                        className={`text-blue-600 font-medium py-2 cursor-pointer`}
+                        onClick={() => window.dispatchEvent(new Event("scroll-to-contact"))}
+                    >
+                        Contact Us
+                    </p>
                     {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <FormInput
                                 type="text"

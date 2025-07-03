@@ -60,7 +60,7 @@ const FeeMangement = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!newFee || isNaN(newFee)) {
+        if (!newFee || isNaN(newFee) || !Number.isInteger(Number(newFee)) || newFee < 0) {
             Swal.fire("Invalid", "Please enter a valid fee amount", "warning");
             return;
         }
@@ -122,7 +122,7 @@ const FeeMangement = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <FormInput
-                    label="New Consultation Fee (in ₹)"
+                    placeholder={`New Consultation Fee (in ₹)`}
                     type="number"
                     value={newFee}
                     onChange={(e) => setNewFee(e.target.value)}
