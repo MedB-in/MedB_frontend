@@ -25,7 +25,11 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
     };
 
     const handleSubmit = async () => {
-        if (!status) return;
+        if (!status) {
+            toast.error("Please select a status.");
+            setLoading(false);
+            return;
+        }
         if (reason.trim() === "" && status === "Cancelled") {
             toast.error("Please enter a reason for the visit.");
             setLoading(false);
@@ -91,6 +95,9 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
     const handleClose = () => {
         setStatus('');
         setReason('');
+        setSelectedDate(null);
+        setSelectedDay(null);
+        setSelectedSlot(null);
         onClose();
     };
 

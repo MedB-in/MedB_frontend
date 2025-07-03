@@ -90,6 +90,18 @@ const SearchSection = () => {
         }
     };
 
+    const handleClear = () => {
+        setSearchQuery('');
+        setResults([]);
+        setIsSearchDone(false);
+        setSearchType('Doctor');
+        sessionStorage.removeItem('searchType');
+        sessionStorage.removeItem('searchQuery');
+        sessionStorage.removeItem('results');
+        sessionStorage.removeItem('isSearchDone');
+    };
+
+
     return (
         <>
             {/* Desktop Search UI */}
@@ -98,21 +110,29 @@ const SearchSection = () => {
                 viewport={{ once: true, amount: 0.3 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
-                className="relative hidden lg:flex flex-col items-center w-full py-5 mt-10 my-5 bg-no-repeat bg-center bg-contain"
+                className="relative hidden xl:flex flex-col items-center w-full py-5 mt-10 my-5 bg-no-repeat bg-center bg-contain"
                 style={{ backgroundImage: `url(${backgroundImage})`, height: '200px' }}
             >
-                <div className="flex justify-between mt-4 px-5 w-full md:w-1/3 relative z-10">
+                <div className="flex items-center gap-2 mt-4 px-5 w-full md:w-1/3 relative z-10">
                     <input
                         type="text"
-                        placeholder={`${searchType === 'Doctor' ? 'Enter Location/Doctor' : 'Enter Location/Clinic'}`}
-                        className="flex-1 px-3 py-2 border w-1/2 border-white rounded-lg mr-3 box-border focus:outline-none bg-white"
+                        placeholder={searchType === 'Doctor' ? 'Enter Location/Doctor' : 'Enter Location/Clinic'}
+                        className="flex-1 px-3 py-2 border border-white rounded-lg box-border focus:outline-none bg-white"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                     />
-                    <div className="relative flex-1">
+                    {searchQuery && (
+                        <button
+                            className="text-sm text-gray-600 px-3 py-2 border border-white rounded-lg box-border focus:outline-none bg-white hover:bg-gray-100"
+                            onClick={handleClear}
+                        >
+                            Clear
+                        </button>
+                    )}
+                    <div className="relative w-[140px]">
                         <select
-                            className="flex-1 px-3 py-2 border w-full border-white rounded-lg box-border focus:outline-none cursor-pointer bg-white text-black appearance-none"
+                            className="w-full px-3 py-2 border border-white rounded-lg box-border focus:outline-none cursor-pointer bg-white text-black appearance-none"
                             value={searchType}
                             onChange={(e) => setSearchType(e.target.value)}
                         >
@@ -136,7 +156,7 @@ const SearchSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="p-1">
-                <div className="flex lg:hidden flex-col items-center bg-[#6f64e75b] shadow-lg p-4 rounded-lg w-full">
+                <div className="flex xl:hidden flex-col items-center bg-[#6f64e75b] shadow-lg p-4 rounded-lg w-full">
                     <div className="flex flex-col w-full max-w-sm gap-3">
                         <input
                             type="text"
@@ -146,6 +166,14 @@ const SearchSection = () => {
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                         />
+                        {searchQuery && (
+                            <button
+                                className="text-sm text-gray-600 bg-white border border-gray-300 px-3 py-1 rounded-md hover:bg-gray-100"
+                                onClick={handleClear}
+                            >
+                                Clear
+                            </button>
+                        )}
                         <div className="relative">
                             <select className="w-full px-3 py-2 border border-white rounded-lg appearance-none bg-white focus:outline-none text-black"
                                 value={searchType}

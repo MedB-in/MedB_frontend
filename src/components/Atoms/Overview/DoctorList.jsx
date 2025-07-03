@@ -1,8 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { X } from "lucide-react";
 
 const DoctorsList = ({ doctors = [] }) => {
+    const [selectedDoctor, setSelectedDoctor] = useState(null);
 
-    const navigate = useNavigate();
+    const closeModal = () => setSelectedDoctor(null);
 
     return (
         <div className="bg-white border p-6 rounded-lg min-h-[460px] border-solid my-5 shadow-lg border-[rgba(0,0,0,0.1)]">
@@ -19,7 +21,7 @@ const DoctorsList = ({ doctors = [] }) => {
                         <div
                             key={index}
                             className="flex items-center hover:bg-slate-100 cursor-pointer justify-between p-[15px] border-b border-[rgba(0,0,0,0.1)]"
-                            onClick={() => navigate('/app/clinics/clinic-profile')}
+                            onClick={() => setSelectedDoctor(doctor)}
                         >
                             <div>
                                 <div className="text-base font-medium capitalize">Dr. {doctor.doctorName}</div>
@@ -49,6 +51,39 @@ const DoctorsList = ({ doctors = [] }) => {
                     <div className="text-center text-sm text-gray-500 mt-4">No doctors available.</div>
                 )}
             </div>
+
+            {selectedDoctor && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+                    <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
+                        <div className="flex justify-between items-start mb-4">
+                            <h3 className="text-xl font-semibold text-gray-800">
+                                Dr. {selectedDoctor?.doctorName}
+                            </h3>
+                            <button onClick={closeModal}>
+                                <X className="w-5 h-5 text-gray-600 hover:text-black" />
+                            </button>
+                        </div>
+
+                        <div className="flex gap-4">
+                            <img
+                                src={selectedDoctor?.profilePicture}
+                                alt={selectedDoctor?.doctorName}
+                                className="w-24 h-24 rounded-lg object-cover"
+                            />
+                            <div className="text-sm text-gray-700 space-y-1">
+                                <p><strong>Speciality:</strong> {selectedDoctor?.speciality}</p>
+                                <p><strong>Qualifications:</strong> {selectedDoctor?.qualifications}</p>
+                                <p><strong>Experience:</strong> {selectedDoctor?.experience} years</p>
+                                <p><strong>Gender:</strong> {selectedDoctor?.gender}</p>
+                                <p><strong>Email:</strong> {selectedDoctor?.email}</p>
+                                <p><strong>Phone:</strong> {selectedDoctor?.phone}</p>
+                                <p><strong>Registration:</strong> {selectedDoctor?.registration}</p>
+                                <p><strong>Location:</strong> {selectedDoctor?.city}, {selectedDoctor?.district}, {selectedDoctor?.state}, {selectedDoctor?.country} - {selectedDoctor?.postalCode}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

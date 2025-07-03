@@ -83,7 +83,7 @@ const MenuManagementPage = () => {
                 {error && <p className="text-red-500 text-center">{error}</p>}
                 <table className="min-w-full">
                     <tbody>
-                        {menus.map((module) => (
+                        {menus?.slice().sort((a, b) => a.moduleName.localeCompare(b.moduleName)).map((module) => (
                             <React.Fragment key={module?.moduleId}>
                                 <tr
                                     className="flex items-center justify-between cursor-pointer py-2 px-4 border-b hover:bg-gray-100 transition-colors"
