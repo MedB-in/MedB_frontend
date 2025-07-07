@@ -109,7 +109,8 @@ const App = () => {
 
             {/* Appointments */}
             <Route path="appointments">
-              <Route index element={<Appointments.PatientAppointmentsPage />} />
+              <Route index element={<DoctorsPage.DoctorAppointmentsPage />} />
+              <Route path="my-appointments" element={<Appointments.PatientAppointmentsPage />} />
               <Route path="book-appointment" element={<Appointments.BookFromClinic />} />
               <Route path="appointments-management" element={<Clinics.AppointmentsManagement />} />
               <Route path="book-appointment/:clinicId" element={<Appointments.DoctorSelection />} />

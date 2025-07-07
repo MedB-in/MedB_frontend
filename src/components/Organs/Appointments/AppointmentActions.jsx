@@ -85,7 +85,7 @@ const AppointmentActions = ({ appointment, onClose, fetchAppointments }) => {
                             rows="3"
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
-                            placeholder="Enter reason visit..."
+                            placeholder="Enter reason..."
                         />
                     </div>
                 )}
