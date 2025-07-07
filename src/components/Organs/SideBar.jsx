@@ -431,7 +431,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                                     className={`px-4 py-2 flex items-start justify-between gap-2 ${n.read ? 'bg-gray-100' : 'bg-white hover:bg-gray-50'}`}
                                                 >
                                                     <div
-                                                        className={`flex-1 ${n.link ? 'cursor-pointer' : ''}`}
+                                                        className={`flex-1 ${n.link ? 'cursor-pointer' : 'cursor-default'}`}
                                                         {...(n.link && {
                                                             onClick: () => {
                                                                 navigate(n.link);
