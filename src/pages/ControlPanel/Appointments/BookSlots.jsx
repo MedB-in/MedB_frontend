@@ -127,7 +127,7 @@ const BookSlots = () => {
             setSelectedSlot(null);
             setReason("");
             setSelectedPatient(null);
-            isClinicBooking ? navigate(`/app/appointments/appointments-management`) : navigate(`/app/appointments`);
+            isClinicBooking ? navigate(`/app/appointments/appointments-management`) : navigate(`/app/appointments/my-appointments`);
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to book slot.");
         } finally {

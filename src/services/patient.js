@@ -4,6 +4,14 @@ import axios, { uploadHeaders, getHeaders } from "./axios";
 export const getAppointments = (doctor, page, search, clinicId) =>
     axios.get(`/api/patient/appointment/${page}?search=${search}&doctor=${doctor}&clinicId=${clinicId}`, getHeaders());
 
+//API to get filtered Appointments.
+export const getFilteredAppointments = (filter) =>
+    axios.get(`/api/patient/appointment/filtered`, { params: filter }, getHeaders());
+
+//API to handle get doctor and clinic list for appointments a patient.
+export const getDoctorClinicList = () =>
+    axios.get("/api/patient/doctorAndClinicList", getHeaders());
+
 //API to add patient from clinic.
 export const addPatient = (data) =>
     axios.post("/api/patient/", data, getHeaders());
