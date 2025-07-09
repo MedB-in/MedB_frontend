@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
+import clearStorage from "./clearStorage";
 
 const environment = import.meta.env.VITE_REACT_APP_ENVIRONMENT;
 const development = import.meta.env.VITE_REACT_APP_DEVELOPMENT_URL;
@@ -46,23 +47,7 @@ const uploadHeaders = () => {
 };
 
 const sessionExpired = async () => {
-    for (let i = 0; i < sessionStorage.length; i++) {
-        const key = sessionStorage.key(i);
-        if (key && /[a-zA-Z]/.test(key)) {
-            sessionStorage.removeItem(key);
-            i--;
-        }
-    }
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && /[a-zA-Z]/.test(key)) {
-            localStorage.removeItem(key);
-            i--;
-        }
-    }
-    sessionStorage.setItem('navStack', JSON.stringify([]));
-    localStorage.clear();
-    sessionStorage.clear();
+    clearStorage();
     await Swal.fire({
         icon: 'warning',
         title: 'Session Expired !',
@@ -149,48 +134,3 @@ axiosInstance.interceptors.response.use(
 
 export default axiosInstance;
 export { uploadHeaders, getHeaders, getToken };
-
-
-
-
-
-
-
-
-
-
-
-
-// axiosInstance.interceptors.response.use(
-//     (response) => response,
-//     async (error) => {
-//         const originalRequest = error.config;
-
-//         // make sure the status code is not 401 and url isn't the login or logout url
-//         if (error.response.status !== 401 || originalRequest.url === '/api/auth/login' || originalRequest.url === '/api/auth/logout') {
-//             if (error.response.status === 403) {
-//                 const errorMessage = error.response.data?.message || 'Access denied';
-//                 toast.error(errorMessage);
-//                 return Promise.reject(error);
-//             }
-//             return Promise.reject(error);
-//         }
-
-//         if (error.response?.status === 401 && !originalRequest._retry) {
-//             originalRequest._retry = true;
-
-//             // Try to refresh token and retry the original request
-//             try {
-//                 const { data } = await axios.post(`${environment === "dev" ? development : environment === "test" ? test : production}/api/auth/refreshToken`, {}, { withCredentials: true });
-//                 localStorage.setItem('accessToken', JSON.stringify(data.accessToken));
-//                 originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
-
-//                 return axiosInstance(originalRequest);
-//             } catch (refreshError) {
-//                 await sessionExpired();
-//                 return Promise.reject(refreshError);
-//             }
-//         }
-//         return Promise.reject(error);
-//     }
-// );

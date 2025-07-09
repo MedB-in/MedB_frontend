@@ -1,6 +1,7 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
 
-const TimeRangeSelector = ({ timeFrom, timeTo, setTimeFrom, setTimeTo }) => {
+const TimeRangeSelector = ({ setTimeFrom, setTimeTo }) => {
     const [rawTimeFrom, setRawTimeFrom] = useState("09:00");
     const [rawTimeTo, setRawTimeTo] = useState("05:00");
     const [fromPeriod, setFromPeriod] = useState("AM");
@@ -9,14 +10,23 @@ const TimeRangeSelector = ({ timeFrom, timeTo, setTimeFrom, setTimeTo }) => {
     const formatTime = (value) => {
         let digits = value.replace(/\D/g, "");
 
+        if (digits.length === 0) return null;
         if (digits.length === 1) digits = `0${digits}00`;
         else if (digits.length === 2) digits = `${digits}00`;
         else if (digits.length === 3) digits = `0${digits}`;
         else digits = digits.slice(0, 4);
 
-        const hours = digits.slice(0, 2);
-        const minutes = digits.slice(2, 4);
-        return `${hours}:${minutes}`;
+        let hours = digits.slice(0, 2);
+        let minutes = digits.slice(2, 4);
+
+        let hourNum = parseInt(hours, 10);
+        let minuteNum = parseInt(minutes, 10);
+
+        if (isNaN(hourNum) || isNaN(minuteNum) || hourNum < 1 || hourNum > 12 || minuteNum < 0 || minuteNum > 59) {
+            return null;
+        }
+
+        return `${hourNum.toString().padStart(2, "0")}:${minuteNum.toString().padStart(2, "0")}`;
     };
 
     const convertTo24Hour = (time, period) => {
@@ -29,12 +39,58 @@ const TimeRangeSelector = ({ timeFrom, timeTo, setTimeFrom, setTimeTo }) => {
     const handleBlur = (type, value) => {
         const formatted = formatTime(value);
 
+        if (!formatted) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Please enter a valid time',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+
+            if (type === "from") {
+                setRawTimeFrom("01:00");
+                setTimeFrom(convertTo24Hour("01:00", fromPeriod));
+            } else {
+                setRawTimeTo("01:00");
+                setTimeTo(convertTo24Hour("01:00", toPeriod));
+            }
+            return;
+        }
+
+        const finalFrom = convertTo24Hour(type === "from" ? formatted : rawTimeFrom, type === "from" ? fromPeriod : toPeriod);
+        const finalTo = convertTo24Hour(type === "to" ? formatted : rawTimeTo, type === "to" ? toPeriod : fromPeriod);
+
+        const fromMinutes = parseInt(finalFrom.split(":")[0]) * 60 + parseInt(finalFrom.split(":")[1]);
+        const toMinutes = parseInt(finalTo.split(":")[0]) * 60 + parseInt(finalTo.split(":")[1]);
+
+        if (fromMinutes >= toMinutes) {
+            Swal.fire({
+                icon: 'error',
+                text: 'Invalid time range. "From" time must be before "To" time.',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#d33',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+
+            if (type === "from") {
+                setRawTimeFrom("01:00");
+                setTimeFrom(convertTo24Hour("01:00", fromPeriod));
+            } else {
+                setRawTimeTo("01:00");
+                setTimeTo(convertTo24Hour("01:00", toPeriod));
+            }
+            return;
+        }
+
         if (type === "from") {
             setRawTimeFrom(formatted);
-            setTimeFrom(convertTo24Hour(formatted, fromPeriod));
+            setTimeFrom(finalFrom);
         } else {
             setRawTimeTo(formatted);
-            setTimeTo(convertTo24Hour(formatted, toPeriod));
+            setTimeTo(finalTo);
         }
     };
 
