@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { doLogout } from "../services/auth";
 import { persistor } from "../redux/store";
+import clearStorage from "../services/clearStorage";
 
 function useAuth() {
     const [user, setUser] = useState(null);
@@ -18,23 +19,7 @@ function useAuth() {
     }, []);
 
     const logout = async () => {
-        for (let i = 0; i < sessionStorage.length; i++) {
-            const key = sessionStorage.key(i);
-            if (key && /[a-zA-Z]/.test(key)) {
-                sessionStorage.removeItem(key);
-                i--;
-            }
-        }
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && /[a-zA-Z]/.test(key)) {
-                localStorage.removeItem(key);
-                i--;
-            }
-        }
-        sessionStorage.setItem('navStack', JSON.stringify([]));
-        localStorage.clear();
-        sessionStorage.clear();
+        clearStorage();
         await persistor.purge();
         setUser(null);
         await doLogout().catch((error) => {

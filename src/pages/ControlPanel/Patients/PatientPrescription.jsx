@@ -96,24 +96,24 @@ const PatientPrescription = () => {
                                                 setShowModal(true);
                                             }}
                                         >
-                                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                                                <div>
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                <div className="min-w-0">
                                                     <p className="text-sm text-gray-500">Appointment Date</p>
-                                                    <p className="font-semibold text-lg text-gray-800">
+                                                    <p className="font-semibold text-lg text-gray-800 truncate">
                                                         {formatDate(file.appointmentDate)}
                                                     </p>
                                                 </div>
-                                                <div>
+                                                <div className="min-w-0">
                                                     <p className="text-sm text-gray-500">Doctor</p>
-                                                    <p className="font-medium text-gray-700 capitalize">
-                                                        {file.doctor.firstName} {file.doctor.middleName || ""} {file.doctor.lastName || ""}
+                                                    <p className="font-medium text-gray-700 capitalize truncate">
+                                                        Dr. {file.doctor.firstName} {file.doctor.middleName || ""} {file.doctor.lastName || ""}
                                                     </p>
-                                                    <span>{file.doctor.speciality}</span>
+                                                    <p className="text-sm text-gray-600 truncate">{file.doctor.speciality}</p>
                                                 </div>
-                                                <div>
+                                                <div className="min-w-0">
                                                     <p className="text-sm text-gray-500">Clinic</p>
-                                                    <p className="font-medium text-gray-700">{file.clinic.name || "N/A"}</p>
-                                                    <span>{file.clinic.address || "N/A"}</span>
+                                                    <p className="font-medium text-gray-700 truncate">{file.clinic.name || "N/A"}</p>
+                                                    <p className="text-sm text-gray-600 truncate">{file.clinic.address || "N/A"}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -129,7 +129,7 @@ const PatientPrescription = () => {
                             exit={{ opacity: 0, x: -30 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div className="grid gap-6">
                                 {healthFiles.length > 0 ? (
                                     healthFiles.map((item, index) => {
                                         const isPDF = item.fileUrl?.endsWith(".pdf");
@@ -142,24 +142,41 @@ const PatientPrescription = () => {
                                                     setZoomLevel(1);
                                                     setImagePos({ x: 0, y: 0 });
                                                 }}
-                                                className="cursor-pointer border rounded-xl bg-white p-4 hover:shadow-md transition group"
+                                                className="bg-white p-5 rounded-xl shadow hover:shadow-md transition cursor-pointer"
                                             >
-                                                <div className="flex items-center gap-3">
-                                                    {isPDF ? (
-                                                        <FileText className="text-indigo-500 w-6 h-6 group-hover:scale-110 transition" />
-                                                    ) : (
-                                                        <ImageIcon className="text-indigo-500 w-6 h-6 group-hover:scale-110 transition" />
-                                                    )}
-                                                    <div>
-                                                        <div className="text-sm text-gray-600 capitalize">{item?.fileName}</div>
-                                                        <div className="text-sm text-gray-600">Uploaded on</div>
-                                                        <div className="font-semibold text-gray-900">
-                                                            {new Date(item.createdOn).toLocaleDateString('en-GB', {
-                                                                day: '2-digit',
-                                                                month: 'short',
-                                                                year: 'numeric',
-                                                            })}
+                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                    <div className="flex items-start gap-3 min-w-0">
+                                                        <div>
+                                                            {isPDF ? (
+                                                                <FileText className="text-indigo-500 w-6 h-6 group-hover:scale-110 transition" />
+                                                            ) : (
+                                                                <ImageIcon className="text-indigo-500 w-6 h-6 group-hover:scale-110 transition" />
+                                                            )}
                                                         </div>
+                                                        <div className="min-w-0">
+                                                            <p className="text-sm text-gray-500">File Name</p>
+                                                            <p className="text-sm text-gray-700 font-semibold truncate">{item?.fileName}</p>
+                                                            <p className="text-sm text-gray-500 mt-1">Uploaded on</p>
+                                                            <p className="text-sm text-gray-800 font-medium">
+                                                                {new Date(item?.createdOn).toLocaleDateString('en-GB', {
+                                                                    day: '2-digit',
+                                                                    month: 'short',
+                                                                    year: 'numeric',
+                                                                })}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="text-sm text-gray-500">Doctor</p>
+                                                        <p className="font-medium text-gray-700 capitalize truncate">
+                                                            Dr. {item.doctor.firstName} {item.doctor.middleName || ""} {item.doctor.lastName || ""}
+                                                        </p>
+                                                        <p className="text-sm text-gray-600 truncate">{item.doctor.speciality}</p>
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="text-sm text-gray-500">Clinic</p>
+                                                        <p className="font-medium text-gray-700 truncate">{item.clinic.name || "N/A"}</p>
+                                                        <p className="text-sm text-gray-600 truncate">{item.clinic.address || "N/A"}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -168,7 +185,6 @@ const PatientPrescription = () => {
                                 ) : (
                                     <div className="col-span-full text-sm text-gray-500">No health files uploaded yet.</div>
                                 )}
-
                             </div>
                         </motion.div>
                     )}

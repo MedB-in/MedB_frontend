@@ -39,7 +39,6 @@ const testimonials = [
     },
 ];
 
-
 const Testimonials = () => {
     const scrollRef = useRef(null);
     const isDragging = useRef(false);
@@ -91,44 +90,47 @@ const Testimonials = () => {
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.6 }}
                     className="text-3xl md:text-4xl font-bold tracking-wide 
-                   bg-gradient-to-r from-[#573bff] to-[#86CFC3] 
-                   bg-clip-text text-transparent w-fit"
+                    bg-gradient-to-r from-[#573bff] to-[#86CFC3] 
+                    bg-clip-text text-transparent w-fit"
                 >
                     User Testimonials
                 </motion.h2>
             </div>
+
             <motion.div
                 ref={scrollRef}
-                className="mt-8 flex gap-6 overflow-x-auto snap-x snap-mandatory 
-                    scrollbar-hide cursor-grab active:cursor-grabbing p-4 scroll-smooth"
+                className="mt-8 overflow-hidden p-4 group"
                 onMouseDown={handleMouseDown}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
             >
-                {testimonials.map((testimonial, index) => (
-                    <div
-                        key={index}
-                        className="min-w-[80%] sm:min-w-[60%] md:min-w-[40%] lg:min-w-[30%] max-w-xs h-[480px] 
-                           bg-gradient-to-b from-[#D2ECEA] via-white to-[#6F64E7] p-6 rounded-2xl 
-                           flex flex-col justify-between items-center text-white snap-start"
-                    >
-                        <p className="text-black mt-14 md:text-lg font-light leading-relaxed">
-                            "{testimonial.text}"
-                        </p>
-                        <div className="flex flex-col items-center space-y-2">
-                            <img
-                                src={testimonial.image}
-                                alt={testimonial.name}
-                                className="w-32 h-32 rounded-full border-4 object-cover border-white"
-                            />
-                            <h3 className="text-lg font-semibold">{testimonial.name}</h3>
-                            <span className="text-sm opacity-80">{testimonial.role}</span>
+                <div className="flex gap-6 animate-marquee group-hover:[animation-play-state:paused]">
+                    {[...testimonials, ...testimonials].map((testimonial, index) => (
+                        <div
+                            key={index}
+                            className="min-w-[80%] sm:min-w-[60%] md:min-w-[40%] lg:min-w-[30%] max-w-xs h-[480px] 
+                bg-gradient-to-b from-[#D2ECEA] via-white to-[#6F64E7] p-6 rounded-2xl 
+                flex flex-col justify-between items-center text-white snap-start cursor-grab active:cursor-grabbing"
+                        >
+                            <p className="text-black mt-14 md:text-lg font-light leading-relaxed">
+                                "{testimonial.text}"
+                            </p>
+                            <div className="flex flex-col items-center space-y-2">
+                                <img
+                                    src={testimonial.image}
+                                    alt={testimonial.name}
+                                    className="w-32 h-32 rounded-full border-4 object-cover border-white"
+                                />
+                                <h3 className="text-lg font-semibold">{testimonial.name}</h3>
+                                <span className="text-sm opacity-80">{testimonial.role}</span>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </motion.div>
+
         </motion.section>
     );
 };
