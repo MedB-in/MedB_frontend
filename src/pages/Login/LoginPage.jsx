@@ -15,6 +15,7 @@ import useToken from "../../hooks/useToken";
 import { setAuthenticated, setUserDetails } from "../../redux/slices/authSlice";
 import { setUserAccess } from "../../redux/slices/userAccessSlice";
 import { doGoogleLogin, doLogin } from "../../services/auth";
+import clearStorage from "../../services/clearStorage";
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -39,7 +40,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    clearStorage();
     try {
       if (!email) {
         toast.error("Please enter your email.");
@@ -82,6 +83,7 @@ const LoginPage = () => {
 
   const handleGoogleLogin = async (googleUser) => {
     setGoogleLoading(true);
+    clearStorage();
     try {
       const { data } = await doGoogleLogin({
         email: googleUser.email,

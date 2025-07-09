@@ -125,8 +125,13 @@ const ClinicSlot = () => {
     let hours = value.slice(0, 2);
     let minutes = value.slice(2, 4);
 
-    if (hours && (parseInt(hours) < 1 || parseInt(hours) > 12)) hours = "";
-    if (minutes && (parseInt(minutes) < 0 || parseInt(minutes) > 59)) minutes = "";
+    if (hours.length === 2 && (parseInt(hours) < 1 || parseInt(hours) > 12)) {
+      hours = "";
+    }
+
+    if (minutes.length === 2 && (parseInt(minutes) < 0 || parseInt(minutes) > 59)) {
+      minutes = "";
+    }
 
     let formatted = "";
     if (hours && minutes) {

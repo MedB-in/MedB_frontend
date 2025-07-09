@@ -3,7 +3,6 @@ import { getFilteredAppointments, getDoctorClinicList } from "../../../services/
 import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import DoctorRemarksModal from "../../../components/Organs/Doctors/DoctorActionModal";
 import AppointmentActions from "../../../components/Organs/Appointments/AppointmentActions";
 import AppointmentCard from "../../../components/Atoms/Patient/AppointmentCard";
 import Pagination from "../../../components/Atoms/Patient/Pagination";
@@ -30,15 +29,14 @@ function PatientAppointmentsPage() {
   const [filters, setFilters] = useState({
     doctorId: "",
     clinicId: "",
-    startDate: today,
-    endDate: today,
+    startDate,
+    endDate,
     status: "Scheduled",
   });
 
   const [doctors, setDoctors] = useState([]);
   const [clinics, setClinics] = useState([]);
 
-  const [selectedAppt, setSelectedAppt] = useState(null);
   const [selectedApptAction, setSelectedApptAction] = useState(null);
   const [actionModalOpen, setActionModalOpen] = useState(false);
 
@@ -164,7 +162,6 @@ function PatientAppointmentsPage() {
     setCurrentPage(1);
   };
 
-  const handleOpenModal = (appt) => setSelectedAppt(appt);
 
   const handleAppointmentModal = (appt) => {
     setSelectedApptAction(appt);
@@ -172,16 +169,10 @@ function PatientAppointmentsPage() {
   };
 
   const handleClose = useCallback(() => {
-    setSelectedAppt(null);
     setSelectedApptAction(null);
     setActionModalOpen(false);
     fetchData();
   }, []);
-
-  const handleHardClose = () => {
-    setSelectedAppt(null);
-    setActionModalOpen(false);
-  };
 
   return (
     <section className="p-4 flex flex-col items-center justify-center text-center min-h-[calc(100vh-80px)] mt-5 md:mt-0 md:mr-4 bg-[#f0f0ff] rounded-3xl">
@@ -290,18 +281,18 @@ function PatientAppointmentsPage() {
               </>
             ) : (
               <>
-                {appointments.length ? (
+                {appointments.length && (
                   appointments.map((appt, index) => (
                     <AppointmentRow
                       key={index}
                       appt={appt}
                       isDoctor={false}
                       today={today}
-                      handleOpenModal={handleOpenModal}
                       handleAppointmentModal={handleAppointmentModal}
                     />
                   ))
-                ) : (
+                )}
+                {!appointments.length && !loading && (
                   <tr>
                     <td colSpan="7" className="px-4 py-3 text-center rounded-lg">
                       No appointments found
@@ -322,7 +313,6 @@ function PatientAppointmentsPage() {
                 today={today}
                 isDoctor={false}
                 page={currentPage}
-                handleOpenModal={handleOpenModal}
                 handleAppointmentModal={handleAppointmentModal}
               />
             ))
