@@ -195,26 +195,44 @@ const ClinicModal = ({ isOpen, closeModal, clinicData, onSubmit }) => {
   };
 
   const validateOpeningHours = () => {
+    const timeRegex = /^(0[1-9]|1[0-2]):[0-5][0-9]$/;
+
     for (const [day, value] of Object.entries(timeInputs)) {
       if (value?.isClosed) continue;
 
       const { startTime, startPeriod, endTime, endPeriod } = value;
+
       if (!startTime || !startPeriod || !endTime || !endPeriod) {
         setError(`Please complete opening hours for ${day}.`);
         toast.error(`Incomplete time entry for ${day}.`);
         return false;
       }
 
+      if (!timeRegex.test(startTime)) {
+        setError(`${day}: Invalid start time format.`);
+        toast.error(`${day}: Start time must be in valid hh:mm format (01–12:00–59).`);
+        return false;
+      }
+
+      if (!timeRegex.test(endTime)) {
+        setError(`${day}: Invalid end time format.`);
+        toast.error(`${day}: End time must be in valid hh:mm format (01–12:00–59).`);
+        return false;
+      }
+
       const start = convertTo24Hour(startTime, startPeriod);
       const end = convertTo24Hour(endTime, endPeriod);
+
       if (start >= end) {
         setError(`${day}: Opening time must be earlier than closing time.`);
         toast.error(`${day}: Opening time must be earlier than closing time.`);
         return false;
       }
     }
+
     return true;
   };
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
