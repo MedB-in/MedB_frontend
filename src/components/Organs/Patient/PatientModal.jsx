@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { addPatient, updatePatient } from "../../../services/patient";
 import InputField from "../../Atoms/Login/InputField";
 import Button from "../../Atoms/Login/Button";
-import { isValidAge, isValidEmail, isValidName, isValidPhone, isValidPincode } from "../../../validation/validations";
+import { isValidAddress, isValidAge, isValidEmail, isValidName, isValidPhone, isValidPincode } from "../../../validation/validations";
 
 const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, patient, isUpdate }) => {
     const [formData, setFormData] = useState({
@@ -91,6 +91,22 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
         }
         if (!isValidPhone(formData.contactNo)) {
             toast.error("Please enter a valid Indian phone number.");
+            return;
+        }
+        if (formData.address && !isValidAddress(formData.address)) {
+            toast.error("Please enter a valid address.");
+            return;
+        }
+        if (formData.city && !isValidAddress(formData.city)) {
+            toast.error("Please enter a valid city.");
+            return;
+        }
+        if (formData.district && !isValidName(formData.district)) {
+            toast.error("Please enter a valid district.");
+            return;
+        }
+        if (formData.state && !isValidName(formData.state)) {
+            toast.error("Please enter a valid state.");
             return;
         }
         if (formData.postalCode && !isValidPincode(formData.postalCode)) {
