@@ -94,7 +94,7 @@ const TestimonialSection = () => {
                     {[...testimonials, ...testimonials].map(({ quote, doctorName, credentials, image }, index) => (
                         <article
                             key={index}
-                            className="relative flex flex-col items-center bg-white rounded-3xl p-8 shadow-md min-w-[320px] max-w-[400px] snap-start cursor-grab active:cursor-grabbing"
+                            className="relative flex flex-col items-center bg-white rounded-3xl p-8 shadow-md min-w-[320px] max-w-[400px] snap-start cursor-default"
                         >
                             <QuoteImage
                                 src={topLeft}

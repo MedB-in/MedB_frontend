@@ -118,6 +118,8 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
             setLoading(true);
             const response = await postDoctorLeave(useDoctorId, clinicId || idClinic, { leaveDate: selectedDate, reason: leaveReason });
             setLeaveList((prev) => [...prev, response.data.leave]);
+            setSelectedDate(getISTDate());
+            setLeaveReason('');
             toast.success('Leave posted successfully.');
             setLeaveReason('');
         } catch (error) {
@@ -139,6 +141,8 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                 const filtered = prev.filter(item => item.doctorLeaveId !== result.data.leave.doctorLeaveId);
                 return [result.data.leave, ...filtered];
             });
+            setSelectedDate(getISTDate());
+            setLeaveReason('');
             toast.success('Leave posted successfully.');
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong");

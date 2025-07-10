@@ -189,8 +189,8 @@ const ClinicSlot = () => {
       slot.day === parsedDay && slot.doctorSlotId !== editingSlot?.doctorSlotId
     );
 
-    if (isOverlapping(timingFrom, timingTo, existingSlots, editingSlot)) {
-      setOverlappingSlots(existingSlots.filter(slot => isOverlapping(timingFrom, timingTo, [slot], editingSlot)));
+    if (isOverlapping(timingFrom24, timingTo24, existingSlots, editingSlot)) {
+      setOverlappingSlots(existingSlots.filter(slot => isOverlapping(timingFrom24, timingTo24, [slot], editingSlot)));
       setErrorMessage("Overlapping slots detected within the clinic. Please adjust the time.");
       setLoading(false);
       setTimeout(() => {

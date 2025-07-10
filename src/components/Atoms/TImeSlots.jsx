@@ -16,6 +16,7 @@ const TimeSlots = ({ clinicId, doctorId, date, day, onSlotSelect }) => {
                 setTimeSlots(response?.data?.slots || []);
             } catch (error) {
                 toast.error('Error fetching time slots:', error);
+                setTimeSlots([]);
             }
             setLoading(false);
         };

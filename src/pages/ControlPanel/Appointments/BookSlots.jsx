@@ -71,6 +71,7 @@ const BookSlots = () => {
                 setReason("");
             } catch (error) {
                 toast.error(error.response?.data?.message || "Failed to fetch available slots.");
+                setSlots([]);
             } finally {
                 setLoading(false);
             }
