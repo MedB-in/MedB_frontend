@@ -34,7 +34,7 @@ const DoctorList = ({ doctors, loading, clinicId }) => {
     };
 
     return (
-        <div className="flex gap-6 flex-wrap justify-center px-6 md:px-12 mb-10">
+        <div className="flex flex-col md:flex-wrap md:flex-row gap-6 justify-center items-stretch px-6 md:px-12 mb-10">
             <section className="w-full md:p-8 ">
                 <div className="flex items-center w-full rounded-lg bg-[#6f64e454] p-8 md:px-16 shadow-md max-md:flex-col gap-6">
                     <div className="flex-1 w-full">
@@ -54,7 +54,7 @@ const DoctorList = ({ doctors, loading, clinicId }) => {
                         <input
                             type="search"
                             placeholder="Search Doctors"
-                            className="w-full h-12 px-4 rounded-lg border border-gray-300 shadow-xl text-black"
+                            className="w-full h-12 px-4 rounded-lg shadow-xl text-black focus:outline-none focus:ring-0"
                             aria-label="Search Doctors"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
