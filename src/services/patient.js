@@ -6,7 +6,7 @@ export const getAppointments = (doctor, page, search, clinicId) =>
 
 //API to get filtered Appointments.
 export const getFilteredAppointments = (filter) =>
-    axios.get(`/api/patient/appointment/filtered`, { params: filter }, getHeaders());
+    axios.post(`/api/patient/appointment/filtered`, filter, getHeaders());
 
 //API to handle get doctor and clinic list for appointments a patient.
 export const getDoctorClinicList = () =>
