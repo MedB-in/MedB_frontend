@@ -157,6 +157,20 @@ const BookSlots = () => {
         setIsEmergency(false);
     };
 
+    const formattedSlotTime = selectedSlot
+        ? new Date(`1970-01-01T${selectedSlot}`)?.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        })
+        : null;
+
+    const buttonLabel = booking
+        ? "Booking..."
+        : formattedSlotTime
+            ? `Book Slot (${formattedSlotTime})`
+            : "Select a Slot to Book";
+
     return (
         <section className="p-4 flex flex-col min-h-[calc(100vh-80px)] mt-5 md:mt-0 bg-[#f0f0ff] rounded-3xl">
             <div className="flex flex-col w-full p-5">
@@ -330,7 +344,7 @@ const BookSlots = () => {
                         : "bg-gray-500 cursor-not-allowed"
                         }`}
                 >
-                    {booking ? "Booking..." : selectedSlot ? `Book Slot (${selectedSlot})` : "Select a Slot to Book"}
+                    {buttonLabel}
                 </button>
             </div>
 
