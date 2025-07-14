@@ -8,6 +8,10 @@ export const doLogin = (credentials) =>
 export const doGoogleLogin = (credentials) =>
   axios.post("/api/auth/googleLogin", credentials);
 
+// Function to handle OTP login.
+export const otpLogin = (mobileNumber) =>
+  axios.post("/api/auth/otpLogin", { mobileNumber });
+
 // Function to handle logout.
 export const doLogout = (credentials) =>
   axios.post('/api/auth/logout', credentials);
