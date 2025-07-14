@@ -15,7 +15,9 @@ import useToken from "../../hooks/useToken";
 import { setAuthenticated, setUserDetails } from "../../redux/slices/authSlice";
 import { setUserAccess } from "../../redux/slices/userAccessSlice";
 import { doGoogleLogin, doLogin } from "../../services/auth";
+import { otpLogin } from "../../services/auth";
 import clearStorage from "../../services/clearStorage";
+import { isValidOtp, isValidPhone } from "../../validation/validations";
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -23,6 +25,13 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingOTP, setLoadingOTP] = useState(false);
+  const [isOtpLogin, setIsOtpLogin] = useState(false);
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [resendEnabled, setResendEnabled] = useState(false);
+  const [timer, setTimer] = useState(30);
   const [googleLoading, setGoogleLoading] = useState(false);
   const { authenticated } = useSelector((state) => state.auth);
   const { setToken } = useToken();
@@ -42,15 +51,23 @@ const LoginPage = () => {
     setLoading(true);
     clearStorage();
     try {
-      if (!email) {
+      if (!email && !isOtpLogin) {
         toast.error("Please enter your email.");
         return;
       }
-      if (!password) {
+      if (!password && !isOtpLogin) {
         toast.error("Please enter your password.");
         return;
       }
-      const { data } = await doLogin({ email: email, password });
+      if (isOtpLogin && !otp) {
+        toast.error("Please enter your OTP.");
+        return;
+      }
+      if (!isValidOtp(otp)) {
+        toast.error("Please enter a valid OTP.");
+        return;
+      }
+      const { data } = await doLogin({ email: email, password, otp, mobileNumber });
       dispatch(setUserAccess(null));
       dispatch(setUserDetails(null));
       setToken(data.accessToken);
@@ -80,6 +97,35 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+
+  const handleSendOTP = async (e) => {
+    e.preventDefault();
+    if (!mobileNumber) return toast.error("Enter mobile number");
+    if (!isValidPhone(mobileNumber)) return toast.error("Enter valid mobile number");
+    try {
+      setLoadingOTP(true);
+      await otpLogin(mobileNumber);
+      toast.success("OTP sent!");
+      setOtpSent(true);
+      setResendEnabled(false);
+      setTimer(30);
+
+      const countdown = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdown);
+            setResendEnabled(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to send OTP.");
+    } finally {
+      setLoadingOTP(false);
+    }
+  }
 
   const handleGoogleLogin = async (googleUser) => {
     setGoogleLoading(true);
@@ -122,37 +168,37 @@ const LoginPage = () => {
   return (
     <>
       <Toaster />
+      {(loading || googleLoading) && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="absolute inset-0 bg-black bg-opacity-10 backdrop-blur-md flex justify-center items-center z-10"
+        >
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+            className="text-lg flex flex-col items-center font-extralight text-indigo-600"
+          >
+            <img
+              src={Logo}
+              alt="Medb Logo"
+              className="h-10 mt-5 w-auto cursor-pointer"
+            />
+            <span className="mt-2 animate-pulse">
+              {googleLoading ? "Logging in with Google..." : "Logging in..."}
+            </span>
+          </motion.p>
+        </motion.div>
+      )}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="relative flex justify-center items-center h-screen px-11 bg-white"
       >
-        {(loading || googleLoading) && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="absolute inset-0 bg-black bg-opacity-10 backdrop-blur-md flex justify-center items-center z-10"
-          >
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              className="text-lg flex flex-col items-center font-extralight text-indigo-600"
-            >
-              <img
-                src={Logo}
-                alt="Medb Logo"
-                className="h-10 mt-5 w-auto cursor-pointer"
-              />
-              <span className="mt-2 animate-pulse">
-                {googleLoading ? "Logging in with Google..." : "Logging in..."}
-              </span>
-            </motion.p>
-          </motion.div>
-        )}
         <div className="flex flex-grow gap-5">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -181,55 +227,125 @@ const LoginPage = () => {
               <h1 className="mb-2 text-2xl font-semibold text-gray-900 text-center">
                 Welcome Back!
               </h1>
-              <p className="text-sm text-gray-500 text-center">
-                Please enter your details
-              </p>
             </div>
-
-            <form className="space-y-6">
-              <InputField
-                type="email"
-                placeholder="Email"
-                icon={EmailIcon}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-
-              <div className="relative">
-                <InputField
-                  type="password"
-                  placeholder="Password"
-                  icon={PasswordIcon}
-                  value={password}
-                  toggleable={true}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-
-              <div className="flex justify-end">
-                <button
-                  onClick={() => navigate("/forgot-password")}
-                  type="button"
-                  className="flex gap-1.5 self-end text-indigo-500 text-opacity-60 text-sm"
-                >
-                  <img
-                    src={ForgotPasswordIcon}
-                    alt="Forgot Password"
-                    className="w-4 aspect-square"
-                  />
-                  Forgot Password
-                </button>
-              </div>
-
-              <Button
-                onClick={handleSubmit}
-                type="submit"
-                className="h-12 w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800"
-                disabled={loading || googleLoading}
+            <p className="text-center text-sm text-gray-600">
+              {isOtpLogin ? "Want to login using password?" : "Want to login using OTP?"}{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOtpLogin(!isOtpLogin);
+                  setOtpSent(false);
+                  setMobileNumber("");
+                  setOtp("");
+                  setEmail("");
+                  setPassword("");
+                }}
+                className="text-violet-600 hover:underline"
               >
-                {loading ? "Logging in..." : "Login"}
-              </Button>
+                Switch
+              </button>
+            </p>
+            <form className="space-y-6">
+              {isOtpLogin ? (
+                <>
+                  <InputField
+                    type="tel"
+                    placeholder="Mobile Number"
+                    icon={PasswordIcon}
+                    value={mobileNumber}
+                    disabled={otpSent}
+                    onChange={(e) => setMobileNumber(e.target.value)}
+                  />
 
+                  {!otpSent ? (
+                    <Button
+                      onClick={handleSendOTP}
+                      disabled={!mobileNumber || loadingOTP}
+                      className="h-12 w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800"
+                    >
+                      {loadingOTP ? "Sending OTP..." : "Send OTP"}
+                    </Button>
+                  ) : (
+                    <>
+                      <InputField
+                        type="text"
+                        placeholder="Enter OTP"
+                        icon={PasswordIcon}
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                      />
+
+                      <div className="flex justify-between items-center mt-2">
+                        {!resendEnabled ? (
+                          <p className="text-sm text-gray-500">
+                            Resend OTP in <span className="font-medium">{timer}s</span>
+                          </p>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={handleSendOTP}
+                            className="text-sm text-violet-600 hover:underline"
+                          >
+                            Resend OTP
+                          </button>
+                        )}
+                      </div>
+
+                      <Button
+                        onClick={handleSubmit}
+                        className="h-12 w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800 mt-2"
+                      >
+                        {loading ? "Verifying OTP..." : "Login with OTP"}
+                      </Button>
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  <InputField
+                    type="email"
+                    placeholder="Email"
+                    icon={EmailIcon}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+
+                  <div className="relative">
+                    <InputField
+                      type="password"
+                      placeholder="Password"
+                      icon={PasswordIcon}
+                      value={password}
+                      toggleable={true}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => navigate("/forgot-password")}
+                      type="button"
+                      className="flex gap-1.5 self-end text-indigo-500 text-opacity-60 text-sm"
+                    >
+                      <img
+                        src={ForgotPasswordIcon}
+                        alt="Forgot Password"
+                        className="w-4 aspect-square"
+                      />
+                      Forgot Password
+                    </button>
+                  </div>
+
+                  <Button
+                    onClick={handleSubmit}
+                    type="submit"
+                    className="h-12 w-full bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800"
+                    disabled={loading || googleLoading}
+                  >
+                    {loading ? "Logging in..." : "Login"}
+                  </Button>
+                </>
+              )}
               <GoogleLoginButton
                 clientId={clientId}
                 handleGoogleLogin={handleGoogleLogin}

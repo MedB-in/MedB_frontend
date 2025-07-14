@@ -39,3 +39,9 @@ export const isValidAddress = (address) => {
     const addressRegex = /^[A-Za-z0-9][A-Za-z0-9\s.,\-/#()]{1,98}$/;
     return addressRegex.test(address);
 };
+
+//Validate 4 digit otp
+export const isValidOtp = (otp) => {
+    const otpRegex = /^[0-9]{4}$/;
+    return otpRegex.test(otp);
+};
