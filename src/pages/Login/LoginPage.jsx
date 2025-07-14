@@ -63,7 +63,7 @@ const LoginPage = () => {
         toast.error("Please enter your OTP.");
         return;
       }
-      if (!isValidOtp(otp)) {
+      if (!isValidOtp(otp) && isOtpLogin) {
         toast.error("Please enter a valid OTP.");
         return;
       }
