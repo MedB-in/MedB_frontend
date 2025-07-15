@@ -164,6 +164,14 @@ const LoginPage = () => {
       setGoogleLoading(false);
     }
   };
+  const handleSwitch = () => {
+    setIsOtpLogin(!isOtpLogin);
+    setOtpSent(false);
+    setMobileNumber("");
+    setOtp("");
+    setEmail("");
+    setPassword("");
+  };
 
   return (
     <>
@@ -228,23 +236,6 @@ const LoginPage = () => {
                 Welcome Back!
               </h1>
             </div>
-            <p className="text-center text-sm text-gray-600">
-              {isOtpLogin ? "Want to login using password?" : "Want to login using OTP?"}{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  setIsOtpLogin(!isOtpLogin);
-                  setOtpSent(false);
-                  setMobileNumber("");
-                  setOtp("");
-                  setEmail("");
-                  setPassword("");
-                }}
-                className="text-violet-600 hover:underline"
-              >
-                Switch
-              </button>
-            </p>
             <form className="space-y-6">
               {isOtpLogin ? (
                 <>
@@ -309,23 +300,20 @@ const LoginPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
+                  <InputField
+                    type="password"
+                    placeholder="Password"
+                    icon={PasswordIcon}
+                    value={password}
+                    toggleable={true}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
 
-                  <div className="relative">
-                    <InputField
-                      type="password"
-                      placeholder="Password"
-                      icon={PasswordIcon}
-                      value={password}
-                      toggleable={true}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="flex justify-end">
+                  <div className="flex justify-end -mt-3">
                     <button
                       onClick={() => navigate("/forgot-password")}
                       type="button"
-                      className="flex gap-1.5 self-end text-indigo-500 text-opacity-60 text-sm"
+                      className="flex gap-1.5 text-indigo-500 text-opacity-60 text-sm"
                     >
                       <img
                         src={ForgotPasswordIcon}
@@ -346,14 +334,22 @@ const LoginPage = () => {
                   </Button>
                 </>
               )}
+              <div className="text-center text-sm font-extrabold text-gray-600 space-y-1">
+                <p className="text-gray-400 text-sm font-semibold mb-4">— Or —</p>
+                <button
+                  type="button"
+                  onClick={handleSwitch}
+                  className="mt-6 w-full max-w-[418px] min-h-[48px] text-sm font-medium text-indigo-500 text-opacity-70 border border-indigo-500 rounded-full hover:text-violet-700 transition-all duration-200 cursor-pointer">
+                  {isOtpLogin ? "Email login?" : "OTP login?"}{" "}Click here
+                </button>
+              </div>
               <GoogleLoginButton
                 clientId={clientId}
                 handleGoogleLogin={handleGoogleLogin}
                 disabled={loading || googleLoading}
               />
-
-              <div>
-                <p className="text-center text-sm text-gray-600">
+              <div className="text-center text-sm text-gray-600 space-y-2 pt-1">
+                <p>
                   Don't have an account?{" "}
                   <button
                     onClick={() => navigate("/register")}
@@ -363,7 +359,7 @@ const LoginPage = () => {
                     Sign Up
                   </button>
                 </p>
-                <p className="text-center text-xs text-gray-600">
+                <p className="text-xs">
                   Trouble logging in?{" "}
                   <button
                     onClick={() => navigate("/login-troubleshooting")}
