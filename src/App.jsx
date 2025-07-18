@@ -10,6 +10,7 @@ import * as Patients from "./pages/ControlPanel/Patients";
 import * as Users from "./pages/ControlPanel/Users";
 import * as DoctorsPage from "./pages/ControlPanel/Doctors";
 import AppLogs from "./pages/ControlPanel/AppLogs/AppLogs";
+import Overview from "./pages/ControlPanel/Overview";
 import Dashboard from "./pages/ControlPanel/DashBoard/DashBoardPage";
 import ControlPanel from "./pages/ControlPanel/Index";
 import MenuManagementPage from "./pages/ControlPanel/MenuManagement/MenuManagementPage";
@@ -141,6 +142,9 @@ const App = () => {
 
             {/* Products */}
             <Route path="products" element={< ProductsPage />} />
+
+            {/* Overview */}
+            <Route path="statistics" element={<Overview />} />
 
             {/* Doctors */}
             <Route path="doctors" >

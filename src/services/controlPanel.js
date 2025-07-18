@@ -1,6 +1,11 @@
 import axios from "./axios";
 import { getHeaders } from "./axios";
 
+
+//API to fetch super statistics.
+export const getSuperStatistics = () =>
+  axios.get("/api/controlPanel/superStatistics", getHeaders());
+
 //API to handle Add Module
 export const addModule = (data) =>
   axios.post("/api/controlPanel/module", data, getHeaders());

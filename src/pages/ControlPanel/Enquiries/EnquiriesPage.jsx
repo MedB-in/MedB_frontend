@@ -75,6 +75,7 @@ const EnquiriesPage = () => {
                         <tr>
                             <th className="p-3 text-left">Date</th>
                             <th className="p-3 text-left">Name</th>
+                            <th className="p-3 text-left">Role</th>
                             <th className="p-3 text-left">Email</th>
                             <th className="p-3 text-left">Phone</th>
                             <th className="p-3 text-left">Message</th>
@@ -86,6 +87,9 @@ const EnquiriesPage = () => {
                         {loading
                             ? Array.from({ length: 5 }).map((_, idx) => (
                                 <tr key={idx} className="animate-pulse border-t">
+                                    <td className="p-3">
+                                        <div className="h-4 bg-gray-200 rounded w-24" />
+                                    </td>
                                     <td className="p-3">
                                         <div className="h-4 bg-gray-200 rounded w-24" />
                                     </td>
@@ -126,6 +130,7 @@ const EnquiriesPage = () => {
                                     >
                                         <td className="p-3">{formatDate(enq.createdAt)}</td>
                                         <td className="p-3 capitalize">{enq.name}</td>
+                                        <td className="p-3">{enq.role}</td>
                                         <td className="p-3">{enq.email}</td>
                                         <td className="p-3">{enq.phone}</td>
                                         <td className="p-3 truncate max-w-sm">{enq.message.slice(0, 40)}...</td>
