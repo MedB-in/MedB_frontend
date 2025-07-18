@@ -126,7 +126,7 @@ const ModuleModal = ({ isOpen, closeModal, moduleData, onSubmit }) => {
                                 className="px-4 py-2 bg-indigo-500 text-white rounded-md"
                                 disabled={loading}
                             >
-                                {moduleData ? "Update" : "Add Module"}
+                                {moduleData ? (loading ? "Updating..." : "Update") : (loading ? "Adding..." : "Add Module")}
                             </button>
                         </div>
                     </form>
