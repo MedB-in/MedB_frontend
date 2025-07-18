@@ -96,7 +96,7 @@ const ProductMenuModal = ({ isOpen, closeModal, productId, fetchProducts }) => {
                 className="px-4 py-2 bg-indigo-500 text-white rounded-md"
                 disabled={loading}
               >
-                Add Menu
+                {loading ? "Adding..." : "Add Menu to Product"}
               </button>
             </div>
           </form>

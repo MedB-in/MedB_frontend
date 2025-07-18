@@ -175,7 +175,7 @@ const MenuModal = ({ isOpen, closeModal, menuData, onSubmit, modules }) => {
                                 className="px-4 py-2 bg-indigo-500 text-white rounded-md"
                                 disabled={loading}
                             >
-                                {menuData ? "Update" : "Add Menu"}
+                                {menuData ? (loading ? "Updating..." : "Update") : (loading ? "Adding..." : "Add Menu")}
                             </button>
                         </div>
                     </form>
