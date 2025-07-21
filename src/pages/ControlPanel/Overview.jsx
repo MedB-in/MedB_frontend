@@ -9,6 +9,7 @@ import {
     ResponsiveContainer,
     CartesianGrid,
 } from "recharts";
+import toast from "react-hot-toast";
 
 const tabs = ["daily", "weekly", "monthly"];
 
@@ -19,7 +20,11 @@ const ChartCard = ({ title, data, color }) => (
             <LineChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="label" tick={{ fontSize: 10 }} />
-                <YAxis tick={{ fontSize: 10 }} />
+                <YAxis
+                    tick={{ fontSize: 10 }}
+                    allowDecimals={false}
+                    tickFormatter={(value) => Math.round(value)}
+                />
                 <Tooltip />
                 <Line
                     type="monotone"
@@ -82,7 +87,7 @@ const SuperAdminDashboard = () => {
                 const response = await getSuperStatistics();
                 setStats(response.data || {});
             } catch (error) {
-                console.error("Error fetching statistics:", error);
+                toast.error(error?.response?.data?.message || "Something went wrong");
             } finally {
                 setLoading(false);
             }
