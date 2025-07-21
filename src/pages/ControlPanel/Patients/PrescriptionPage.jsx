@@ -96,7 +96,7 @@ const PrescriptionPage = () => {
         }
 
         if (medicinesData.length === 1 && validMeds.length === 0) {
-            Swal.fire({
+            const result = await Swal.fire({
                 title: "No medicines added?",
                 text: "This will mark the appointment as completed without any Medicine.",
                 icon: "warning",
@@ -104,44 +104,44 @@ const PrescriptionPage = () => {
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Yes, mark as completed",
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        await markAppointmentCompleted(appointmentId, { complaints, notes, diagnosis });
-                        toast.success("Appointment marked as completed");
-                        navigate('/app/appointments');
-                    } catch (error) {
-                        toast.error(error.response?.data?.message || "Something went wrong.");
-                    }
-                }
             });
+
+            if (result.isConfirmed) {
+                try {
+                    await markAppointmentCompleted(appointmentId, { complaints, notes, diagnosis });
+                    toast.success("Appointment marked as completed");
+                    navigate('/app/appointments');
+                } catch (error) {
+                    toast.error(error.response?.data?.message || "Something went wrong.");
+                }
+            }
             return;
         }
 
         if (validMeds.length > 0) {
-            try {
-                Swal.fire({
-                    title: "Save prescription?",
-                    text: "Once saved, you won't be able to edit it.",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, save it!",
-                }).then(async (result) => {
-                    if (result.isConfirmed) {
-                        await postPrescriptionData(appointmentId, {
-                            medicines: validMeds,
-                            complaints,
-                            notes,
-                            diagnosis
-                        });
-                        toast.success("Prescription saved successfully");
-                        navigate('/app/appointments');
-                    }
-                })
-            } catch (error) {
-                toast.error(error.response?.data?.message || "Something went wrong.");
+            const result = await Swal.fire({
+                title: "Save prescription?",
+                text: "Once saved, you won't be able to edit it.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, save it!",
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    await postPrescriptionData(appointmentId, {
+                        medicines: validMeds,
+                        complaints,
+                        notes,
+                        diagnosis
+                    });
+                    toast.success("Prescription saved successfully");
+                    navigate('/app/appointments');
+                } catch (error) {
+                    toast.error(error.response?.data?.message || "Something went wrong.");
+                }
             }
         }
     };

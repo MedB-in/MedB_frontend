@@ -199,7 +199,7 @@ const UserProfilePage = () => {
         <div className="flex justify-center bg-[#f0f0ff] rounded-3xl items-center min-h-[calc(100vh-80px)] mt-5 md:mt-0 p-6">
             <div className="relative bg-white shadow-lg border-2 border-[#3a6ff7] rounded-3xl w-full max-w-5xl p-8">
                 <h1 className="text-2xl font-semibold text-gray-900 text-center mb-6 capitalize">
-                    {doctor ? "Dr." : formData.gender === "Male" ? "Mr." : formData.gender === "Female" ? "Mrs./Ms." : ""} {formData.firstName} {formData.middleName ? ` ${formData.middleName}` : ''} {formData.lastName ? ` ${formData.lastName}` : ''}'s Profile
+                    {doctor ? "Dr." : storedUser.gender === "Male" ? "Mr." : storedUser.gender === "Female" ? "Mrs./Ms." : ""} {storedUser.firstName} {storedUser.middleName ? ` ${storedUser.middleName}` : ''} {storedUser.lastName ? ` ${storedUser.lastName}` : ''}'s Profile
                 </h1>
                 <form onSubmit={handleSubmit}>
                     <div className="flex flex-col items-center relative mb-6">
