@@ -47,15 +47,15 @@ const ClinicUserModal = ({ clinicId, onClose, onUserAdded }) => {
                 return;
             }
             if (!isValidName(formData.firstName.trim())) {
-                toast.error("First name must contain only letters.");
+                toast.error("First name must contain only letters or within 50 characters.");
                 return;
             }
             if (formData.middleName && !isValidName(formData.middleName.trim())) {
-                toast.error("Middle name must contain only letters.");
+                toast.error("Middle name must contain only letters or within 50 characters.");
                 return;
             }
             if (formData.lastName && !isValidName(formData.lastName.trim())) {
-                toast.error("Last name must contain only letters.");
+                toast.error("Last name must contain only letters or within 50 characters.");
                 return;
             }
             const response = await addClinicUser(clinicId, formData);
