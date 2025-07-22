@@ -53,6 +53,10 @@ export const postDoctorLeave = (doctorId, clinicId, data) =>
 export const updateDoctorLeave = (doctorId, clinicId, leaveId, status) =>
     axios.put(`/api/doctor/leave/${doctorId}/${clinicId}`, { leaveId, status }, getHeaders());
 
+//API to edit doctor leave
+export const editDoctorLeave = (leaveId, data) =>
+    axios.put(`/api/doctor/editLeave/${leaveId}`, { data }, getHeaders());
+
 //API to get doctor fee
 export const getDoctorFee = (doctorId, clinicId) =>
     axios.get(`/api/doctor/fee/${doctorId}/${clinicId}`, getHeaders());
