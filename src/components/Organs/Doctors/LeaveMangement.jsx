@@ -153,8 +153,8 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
 
         try {
             setLoading(true);
-            const response = await postDoctorLeave(useDoctorId, clinicId || idClinic, { leaveDate: selectedDate, reason: leaveReason });
-            setLeaveList((prev) => [...prev, response.data.leave]);
+            await postDoctorLeave(useDoctorId, clinicId || idClinic, { leaveDate: selectedDate, reason: leaveReason });
+            fetchDoctorLeaves();
             setSelectedDate(getISTDate());
             setLeaveReason('');
             toast.success('Leave posted successfully.');
