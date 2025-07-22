@@ -11,7 +11,7 @@ const Icon = ({ type }) => {
     return <img src={icons[type]} alt={type} width={17} height={17} style={{ cursor: 'pointer' }} />;
 };
 
-const Calendar = ({ dateSelector, onDateSelect }) => {
+const Calendar = ({ dateSelector, onDateSelect, dateSelected }) => {
     const [date, setDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -29,8 +29,11 @@ const Calendar = ({ dateSelector, onDateSelect }) => {
             if (onDateSelect && day) {
                 onDateSelect({ date: formattedDate, day: day.id });
             }
+        } else if (dateSelected) {
+            const updatedDate = new Date(dateSelected);
+            setSelectedDate(updatedDate);
         }
-    }, []);
+    }, [dateSelected]);
 
 
     useEffect(() => {

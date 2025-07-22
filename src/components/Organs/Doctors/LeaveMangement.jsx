@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { postDoctorLeave, getDoctorLeaveList, updateDoctorLeave, postConsultCancellation } from '../../../services/doctors';
+import React, { useEffect, useRef, useState } from 'react';
+import { postDoctorLeave, getDoctorLeaveList, updateDoctorLeave, postConsultCancellation, editDoctorLeave } from '../../../services/doctors';
 import { useParams } from 'react-router-dom';
 import Calendar from '../../../components/Atoms/Calender';
 import toast from 'react-hot-toast';
@@ -19,7 +19,10 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
     const [loading, setLoading] = useState(false);
     const [updating, setUpdating] = useState(false);
     const [selectedLeave, setSelectedLeave] = useState(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [editingLeaveId, setEditingLeaveId] = useState(null);
     const isPastLeave = selectedLeave && selectedLeave.leaveDate < getISTDate()
+    const topRef = useRef(null);
 
     useEffect(() => {
         if (!clinics) {
@@ -57,6 +60,43 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
         }
     }, [idClinic, useDoctorId]);
 
+    const handleEditLeave = (leave) => {
+        return (e) => {
+            e.stopPropagation();
+            setSelectedDate(leave.leaveDate);
+            setLeaveReason(leave.reason);
+            setIsEditMode(true);
+            setEditingLeaveId(leave.doctorLeaveId);
+            if (topRef.current) {
+                topRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+    };
+
+    const handleUpdateLeave = async () => {
+        if (!editingLeaveId || !selectedDate || !leaveReason) {
+            toast.error("Please fill all fields before updating.");
+            return;
+        }
+        try {
+            setUpdating(true);
+            await editDoctorLeave(editingLeaveId, {
+                leaveDate: selectedDate,
+                reason: leaveReason
+            });
+            toast.success("Leave updated successfully.");
+            setIsEditMode(false);
+            setEditingLeaveId(null);
+            setSelectedDate(getISTDate());
+            setLeaveReason('');
+            fetchDoctorLeaves();
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to update leave");
+        } finally {
+            setUpdating(false);
+        }
+    };
+
     const fetchDoctorLeaves = async () => {
         try {
             setLoading(true);
@@ -90,14 +130,11 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
-
         return `${day}-${month}-${year}`;
     }
-
 
     const handleAddLeave = async () => {
 
@@ -192,9 +229,8 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
     };
 
     return (
-        <div className="min-h-screen p-6 pt-8">
+        <div ref={topRef} className="min-h-screen p-6 pt-8">
             <div className=" mx-auto bg-white rounded-2xl shadow-lg p-8 space-y-8">
-                {/* Doctor Details */}
                 {!clinics && (
                     <>
                         {loading && !doctor ? (
@@ -242,10 +278,9 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                         <p className="text-gray-600 text-sm text-center">You can cancel <span className='font-bold capitalize'>{doctor?.firstName} {doctor?.middleName ? `${doctor?.middleName} ` : ''}{doctor?.lastName}{doctor?.firstName} {doctor?.middleName ? `${doctor?.middleName} ` : ''}{doctor?.lastName}'s</span> consultation here.</p>
                     </>
                 )}
-                {/* Calendar + Add Leave */}
                 <div className="flex flex-col items-center space-y-6 max-w-md mx-auto p-6">
                     <div className="w-full">
-                        <Calendar onDateSelect={handleDateSelect} className="rounded-lg border border-gray-300" />
+                        <Calendar onDateSelect={handleDateSelect} dateSelected={selectedDate} className="rounded-lg border border-gray-300" />
                     </div>
 
                     <div className="w-full">
@@ -258,18 +293,27 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                         />
                     </div>
                     <div className="w-full">
-                        <button
-                            className="w-full px-6 py-3 mt-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none cursor-pointer"
-                            onClick={clinics && location.pathname.startsWith('/app/doctors') ? handleAddLeave : handleCancelConsultation}
-                            disabled={updating}
-                        >
-                            {clinics && location.pathname.startsWith('/app/doctors')
-                                ? (updating ? 'Request in progress...' : 'Post Leave Request')
-                                : (updating ? 'Cancellation in progress...' : 'Cancel Consultation')}
-                        </button>
+                        {isEditMode ? (
+                            <button
+                                className="w-full px-6 py-3 mt-6 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 focus:outline-none cursor-pointer"
+                                onClick={handleUpdateLeave}
+                                disabled={updating}
+                            >
+                                {updating ? 'Updating leave...' : 'Update Leave'}
+                            </button>
+                        ) : (
+                            <button
+                                className="w-full px-6 py-3 mt-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none cursor-pointer"
+                                onClick={clinics && location.pathname.startsWith('/app/doctors') ? handleAddLeave : handleCancelConsultation}
+                                disabled={updating}
+                            >
+                                {clinics && location.pathname.startsWith('/app/doctors')
+                                    ? (updating ? 'Request in progress...' : 'Post Leave Request')
+                                    : (updating ? 'Cancellation in progress...' : 'Cancel Consultation')}
+                            </button>
+                        )}
                     </div>
                 </div>
-                {/* Leave List */}
                 <div>
                     <div className="flex justify-between items-center mx-auto p-6">
                         <h3 className="text-xl font-semibold">📝 Existing Leave Requests</h3>
@@ -315,6 +359,14 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                                                     <span className="text-gray-500 text-xs font-medium">⏳ Expired</span>
                                                 )}
                                             </div>
+                                            {clinics && !leave.isApproved && !leave.isRejected && leave.leaveDate >= getISTDate() && (
+                                                <button
+                                                    className="ml-4 text-blue-500 hover:text-blue-700"
+                                                    onClick={handleEditLeave(leave)}
+                                                >
+                                                    Update leave request
+                                                </button>
+                                            )}
                                         </div>
                                     </li>
                                 ))}
@@ -324,7 +376,6 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                     )}
                 </div>
             </div>
-            {/* Modal for Approve/Reject */}
             {selectedLeave && (
                 < div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-xl w-[90%] max-w-md shadow-lg">
@@ -365,7 +416,6 @@ const LeaveManagement = ({ idDoctor, clinics }) => {
                         )}
                     </div>
                 </div>
-
             )
             }
         </div >
