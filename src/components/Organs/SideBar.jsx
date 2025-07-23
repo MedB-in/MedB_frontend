@@ -39,6 +39,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const [selectedMenu, setSelectedMenu] = useState(null);
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
+    const [mobileNumberProfile, setMobileNumberProfile] = useState('');
     const [newNotificationCount, setNewNotificationCount] = useState(0);
     const [selectedClinicId, setSelectedClinicId] = useState(() => {
         return JSON.parse(localStorage.getItem('selectedClinicId'));
@@ -281,7 +282,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         <>
             <div className="lg:flex hidden">
                 {user?.contactNo === null && user?.userId != 1 && mobileModal === true && (
-                    <MobileNumberModal setMobileModal={setMobileModalAction} sidebar={true} />
+                    <MobileNumberModal setMobileModal={setMobileModalAction} sidebar={true} setMobileNumberProfile={setMobileNumberProfile} />
                 )}
                 <div className={`fixed z-30 h-[calc(100vh-32px)] m-4 ${isSidebarOpen ? "w-[270px]" : "w-[80px]"} bg-[#EAF4F4] transition-all duration-300 ease-in-out overflow-hidden rounded-3xl flex flex-col items-center`}>
                     <div className="flex justify-center items-center w-full py-6 cursor-pointer"
