@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import InputField from '../Atoms/Login/InputField';
 import Button from '../Atoms/Login/Button';
 
-const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile }) => {
+const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile, sidebar }) => {
     const [mobileNumber, setMobileNumber] = useState('');
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({ code: '' });
