@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import InputField from '../Atoms/Login/InputField';
 import Button from '../Atoms/Login/Button';
 
-const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile }) => {
+const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile, sidebar }) => {
     const [mobileNumber, setMobileNumber] = useState('');
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({ code: '' });
@@ -48,7 +48,8 @@ const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile }) => {
             } catch (parseErr) {
                 console.warn('localStorage parse error', parseErr);
             }
-            setMobileNumberProfile(mobileNumber);
+            if (!sidebar)
+                setMobileNumberProfile(mobileNumber);
             toast.success('Mobile number verified and saved.');
             setStep(1);
             setMobileNumber('');
