@@ -74,11 +74,11 @@ const PatientModal = ({ onClose, onPatientAdded, onPatientUpdated, clinicId, pat
             return;
         }
         if (formData.middleName && !isValidName(formData.middleName.trim())) {
-            toast.error("Middle name must contain only letters.");
+            toast.error("Middle name must contain only letters or within 50 characters.");
             return;
         }
         if (formData.lastName && !isValidName(formData.lastName.trim())) {
-            toast.error("Last name must contain only letters.");
+            toast.error("Last name must contain only letters or within 50 characters.");
             return;
         }
         if (!isValidAge(formData.age)) {
