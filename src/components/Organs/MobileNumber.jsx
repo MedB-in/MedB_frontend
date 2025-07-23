@@ -48,7 +48,8 @@ const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile, sidebar }) 
             } catch (parseErr) {
                 console.warn('localStorage parse error', parseErr);
             }
-            if (!sidebar)
+            
+            if (!sidebar || sidebar === 'false')
                 setMobileNumberProfile(mobileNumber);
             toast.success('Mobile number verified and saved.');
             setStep(1);
