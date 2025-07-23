@@ -48,7 +48,9 @@ const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile }) => {
             } catch (parseErr) {
                 console.warn('localStorage parse error', parseErr);
             }
-            setMobileNumberProfile(mobileNumber);
+
+            if (!sidebar || sidebar === 'false')
+                setMobileNumberProfile(mobileNumber);
             toast.success('Mobile number verified and saved.');
             setStep(1);
             setMobileNumber('');
@@ -122,6 +124,8 @@ const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile }) => {
                     <>
                         <InputField
                             type="tel"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
                             value={mobileNumber}
                             onChange={(e) => setMobileNumber(e.target.value.trim())}
                             placeholder="Mobile Number"
@@ -144,6 +148,8 @@ const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile }) => {
                                 <input
                                     key={index}
                                     type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     maxLength="1"
                                     ref={otpRefs.current[index]}
                                     className="w-14 h-14 text-2xl font-semibold text-center border border-gray-300 rounded-lg focus:border-violet-500 focus:outline-none"
@@ -170,6 +176,16 @@ const MobileNumberModal = ({ setMobileModal, setMobileNumberProfile }) => {
                         <Button onClick={handleVerifyOtp} disabled={loading}>
                             {loading ? 'Verifying...' : 'Verify & Submit'}
                         </Button>
+                        <button
+                            onClick={() => {
+                                setStep(1);
+                                setFormData({ code: '' });
+                                setMobileNumber('');
+                            }}
+                            className="text-sm text-blue-600 hover:underline mt-2"
+                        >
+                            Wrong number or Didn&apos;t receive OTP? Retry.
+                        </button>
                     </>
                 )}
             </div>
