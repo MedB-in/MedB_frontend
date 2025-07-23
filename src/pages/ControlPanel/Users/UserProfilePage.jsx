@@ -257,7 +257,7 @@ const UserProfilePage = () => {
                 </div>
             </div>
             {mobileModal &&
-                <MobileNumberModal setMobileModal={setMobileModalAction} setMobileNumberProfile={setMobileNumber} />
+                <MobileNumberModal setMobileModal={setMobileModalAction} setMobileNumberProfile={setMobileNumber} sidebar={false} />
             }
         </div>
     );
