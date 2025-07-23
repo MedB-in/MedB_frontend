@@ -53,7 +53,7 @@ const PrescriptionPrint = ({ selectedRecord, patientName, age, gender, printRef 
                             <ul className="list-disc list-inside text-sm text-gray-700">
                                 {selectedRecord.complaints.map((c, i) => (
                                     <li key={i}>
-                                        Problems/Issues: {c.complaint || "N/A"} — Duration: {c.duration || "N/A"}
+                                        {c.complaint || "N/A"} — Duration: {c.duration || "N/A"}
                                     </li>
                                 ))}
                             </ul>
