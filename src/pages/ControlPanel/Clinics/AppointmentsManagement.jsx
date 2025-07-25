@@ -123,6 +123,13 @@ function AppointmentsManagement() {
         setCurrentPage(1);
     };
 
+    const handleSearchKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            applyFilters();
+        }
+    };
+
     // useEffect(() => {
     //     setStartDate(today);
     //     setEndDate(today);
@@ -193,6 +200,7 @@ function AppointmentsManagement() {
                             placeholder="Search by Doctor or Patient"
                             value={searchQuery}
                             onChange={handleSearch}
+                            onKeyDown={handleSearchKeyDown}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-gray-500 focus:border-gray-600 placeholder-gray-600 text-gray-800"
                         />
                     </div>

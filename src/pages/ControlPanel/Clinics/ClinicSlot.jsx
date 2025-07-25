@@ -455,7 +455,7 @@ const ClinicSlot = () => {
           <h3 className="text-xl font-semibold text-gray-900">Scheduled Slots</h3>
           {groupedSlots.map((day, dayIndex) => (
             day.slots.length > 0 && (
-              <div key={`day-${day.id || dayIndex}`} className="mt-5 p-4 border-l-4 rounded-lg"
+              <div key={`day-${day.id || dayIndex}`} className={`mt-5 p-4 border-l-4 rounded-lg ${overlappingSlots.some(slot => slot.day === day.id) ? 'bg-red-100' : ''}`}
                 style={{ borderColor: overlappingSlots.some(slot => slot.day === day.id) ? 'red' : '#3b82f6' }}>
                 <h4 className={`font-semibold ${overlappingSlots.some(slot => slot.day === day.id) ? 'text-red-700' : 'text-blue-700'}`}>
                   {day.label}

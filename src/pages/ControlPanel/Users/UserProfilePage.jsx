@@ -214,7 +214,7 @@ const UserProfilePage = () => {
                             className="w-40 h-40 rounded-full object-cover border-2 border-gray-300"
                         />
                         <p className="text-blue-600 text-sm mt-2 cursor-pointer" onClick={() => fileInputRef.current.click()}>
-                            Update Profile Picture rtgsedgdgdgf
+                            Update Profile Picture
                         </p>
                         <input type="file" name="profilePicture" onChange={handleProfilePictureChange} ref={fileInputRef} className="hidden" />
                     </div>

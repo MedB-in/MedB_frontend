@@ -181,7 +181,7 @@ function PatientAppointmentsPage() {
       </Button>
       <div className="w-full overflow-x-auto mt-6">
         <div className="w-full p-4 rounded-xl border border-gray-200 shadow-lg">
-          <div className="flex flex-col gap-4 lg:flex-wrap lg:flex-row justify-center">
+          <div className="flex flex-col gap-4 sm:flex-wrap sm:flex-row justify-center">
             <div className="relative w-full sm:w-[250px]">
               <label className="text-sm text-gray-700 font-medium mb-1 block">Doctor</label>
               <select
@@ -192,7 +192,7 @@ function PatientAppointmentsPage() {
                 <option value="">All Doctors</option>
                 {doctors.map(doc => (
                   <option key={doc.doctorId} value={doc.doctorId}>
-                    Dr. {doc.fullName}
+                    {doc.fullName}
                   </option>
                 ))}
               </select>
