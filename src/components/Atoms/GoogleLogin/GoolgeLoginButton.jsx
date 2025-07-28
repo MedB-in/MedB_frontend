@@ -2,7 +2,7 @@ import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { toast } from 'react-hot-toast';
 import { jwtDecode } from "jwt-decode";
 
-const GoogleLoginWrapper = ({ clientId, handleGoogleLogin }) => {
+const GoogleLoginWrapper = ({ clientId, handleGoogleLogin, register = false }) => {
     return (
         <GoogleOAuthProvider clientId={clientId}>
             <div className="w-full">
@@ -23,7 +23,7 @@ const GoogleLoginWrapper = ({ clientId, handleGoogleLogin }) => {
                         size="large"
                         shape="pill"
                         type="standard"
-                        text="signin_with"
+                        text={register ? 'signup_with' : 'signin_with'}
                         logo_alignment="center"
                         className="google-login-button"
                     />

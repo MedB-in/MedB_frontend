@@ -12,6 +12,14 @@ export const doGoogleLogin = (credentials) =>
 export const otpLogin = (mobileNumber) =>
   axios.post("/api/auth/otpLogin", { mobileNumber });
 
+// Function to send OTP for mobile number verification.
+export const sendOtp = (data) =>
+  axios.post("/api/auth/sendOtp", data);
+
+// Function to verify OTP for mobile number verification.
+export const verifyOtp = (data) =>
+  axios.post("/api/auth/verifyOtp", data);
+
 // Function to handle logout.
 export const doLogout = (credentials) =>
   axios.post('/api/auth/logout', credentials);

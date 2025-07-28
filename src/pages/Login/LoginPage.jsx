@@ -18,6 +18,7 @@ import { doGoogleLogin, doLogin } from "../../services/auth";
 import { otpLogin } from "../../services/auth";
 import clearStorage from "../../services/clearStorage";
 import { isValidOtp, isValidPhone } from "../../validation/validations";
+import Swal from "sweetalert2";
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -121,11 +122,27 @@ const LoginPage = () => {
         });
       }, 1000);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to send OTP.");
+      if (err.response?.status === 404) {
+        const result = await Swal.fire({
+          icon: "error",
+          title: "User not found",
+          text: "No user is registered with this mobile number.",
+          showCancelButton: true,
+          confirmButtonText: "Go to Sign Up",
+          cancelButtonText: "Cancel",
+        });
+
+        if (result.isConfirmed) {
+          navigate("/register");
+        }
+      } else {
+        toast.error(err.response?.data?.message || "Failed to send OTP.");
+      }
+
     } finally {
       setLoadingOTP(false);
     }
-  }
+  };
 
   const handleGoogleLogin = async (googleUser) => {
     setGoogleLoading(true);
