@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { getSubscriptions } from "../../../services/subscriptions";
 import toast from "react-hot-toast";
+import Button from "../../../components/Atoms/Login/Button";
+import AddSubscriptionModal from "../../../components/Organs/UserSubscription/AddSubscriptionModal";
 
 function UserSubscription() {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -8,20 +10,22 @@ function UserSubscription() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const response = await getSubscriptions(currentPage, searchQuery);
+      setSubscriptions(response.data.subscriptions);
+      setTotalPages(response.data.totalPages);
+      setCurrentPage(response.data.currentPage);
+    } catch (error) {
+      toast.error("Error fetching subscriptions:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await getSubscriptions(currentPage, searchQuery);
-        setSubscriptions(response.data.subscriptions);
-        setTotalPages(response.data.totalPages);
-        setCurrentPage(response.data.currentPage);
-      } catch (error) {
-        toast.error("Error fetching subscriptions:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchData();
   }, [currentPage, searchQuery]);
 
@@ -45,18 +49,43 @@ function UserSubscription() {
     setCurrentPage(1);
   };
 
+  const handleAddSubscription = () => {
+    fetchData();
+  };
+
   return (
-    <section className="flex flex-col items-center justify-center  text-center bg-white">
-      {/* Search Input */}
-      <div className="mb-4 w-full max-w-md mt-5">
-        <input
-          type="text"
-          placeholder="Search by name or product..."
-          value={searchQuery}
-          onChange={handleSearch}
-          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
-        />
+    <section className="flex flex-col items-center justify-center text-center bg-white">
+      <div className="w-full flex justify-center my-6">
+        <div className="w-full max-w-md flex flex-col items-center gap-4">
+          <Button variant="primary" onClick={() => setShowModal(true)} disabled={loading}>
+            Add Subscription to User
+          </Button>
+          <input
+            type="text"
+            placeholder="Search by name, email, phone or product..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-gray-400 text-gray-800 placeholder-gray-500"
+          />
+        </div>
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold text-gray-700">Add New Subscription</h2>
+              <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-red-600">✕</button>
+            </div>
+            <AddSubscriptionModal
+              isOpen={showModal}
+              onClose={() => setShowModal(false)}
+              onAddSubscription={handleAddSubscription}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="w-full mx-auto bg-white shadow-md rounded-xl p-6">
         {loading ? (
           <div className="text-gray-600 text-lg mt-28 text-center">Loading...</div>
@@ -65,10 +94,9 @@ function UserSubscription() {
             <thead>
               <tr className="bg-gray-100 text-center">
                 <th className="px-4 py-3 border border-gray-200">No.</th>
-                <th className="px-4 py-3 border border-gray-200">Name</th>
+                <th className="px-4 py-3 border border-gray-200">User</th>
                 <th className="px-4 py-3 border border-gray-200">Product</th>
-                <th className="px-4 py-3 border border-gray-200">Start Date</th>
-                <th className="px-4 py-3 border border-gray-200">Expiry Date</th>
+                <th className="px-4 py-3 border border-gray-200">Period</th>
                 <th className="px-4 py-3 border border-gray-200">Payment</th>
                 <th className="px-4 py-3 border border-gray-200">Amount</th>
               </tr>
@@ -78,10 +106,26 @@ function UserSubscription() {
                 subscriptions.map((sub, index) => (
                   <tr key={index} className="odd:bg-white even:bg-gray-50">
                     <td className="px-4 py-3 border border-gray-200">{index + 1}</td>
-                    <td className="px-4 py-3 border border-gray-200">{sub.userName}</td>
+                    <td className="px-4 py-3 border border-gray-200">
+                      <div className="flex flex-col gap-1">
+                        <div className="font-medium text-gray-800">{sub.userName}</div>
+                        <div className="text-sm text-gray-600">{sub.email}</div>
+                        <div className="text-sm text-gray-400">{sub.contactNo ? sub.contactNo : "Contact number not found"}</div>
+                      </div>
+                    </td>
                     <td className="px-4 py-3 border border-gray-200">{sub.productName}</td>
-                    <td className="px-4 py-3 border border-gray-200">{new Date(sub.startDate).toLocaleDateString("en-GB")}</td>
-                    <td className="px-4 py-3 border border-gray-200">{new Date(sub.expiryDate).toLocaleDateString("en-GB")}</td>
+                    <td className="px-4 py-3 border border-gray-200">
+                      <div className="flex flex-col gap-1">
+                        <div>
+                          <span className="font-semibold text-gray-700">Start:</span>{' '}
+                          <span className="text-gray-800">{new Date(sub.startDate).toLocaleDateString("en-GB")}</span>
+                        </div>
+                        <div>
+                          <span className="font-semibold text-gray-700">Expires:</span>{' '}
+                          <span className="text-gray-800">{new Date(sub.expiryDate).toLocaleDateString("en-GB")}</span>
+                        </div>
+                      </div>
+                    </td>
                     <td className={`px-4 py-3 border border-gray-200 font-semibold ${sub.isPaid ? "text-green-600" : "text-red-500"}`}>
                       {sub.isPaid ? "Paid" : "Unpaid"}
                     </td>
@@ -99,7 +143,6 @@ function UserSubscription() {
           </table>
         )}
 
-        {/* Pagination */}
         <div className="mt-6 flex justify-center items-center space-x-2">
           <button
             className="px-4 py-2 bg-gray-100 hover:bg-gray-200 transition rounded-lg text-gray-700 disabled:opacity-50"
