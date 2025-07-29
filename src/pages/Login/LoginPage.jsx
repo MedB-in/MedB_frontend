@@ -94,6 +94,21 @@ const LoginPage = () => {
       toast.error(
         error.response?.data?.message || "An error occurred. Please try again."
       );
+      if (error.response?.data?.message === "Your account is not verified. Please verify your account") {
+        Swal.fire({
+          icon: "error",
+          title: "Account not verified",
+          text: "Your account is not verified. Please verify your account",
+        });
+        setIsOtpLogin(false);
+      } else if (error.response?.data?.message === "User is not active") {
+        Swal.fire({
+          icon: "error",
+          title: "Account not active",
+          text: "Your account is not active. Please contact admin.",
+        });
+        setIsOtpLogin(false);
+      }
     } finally {
       setLoading(false);
     }
