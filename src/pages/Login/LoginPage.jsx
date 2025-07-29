@@ -101,6 +101,7 @@ const LoginPage = () => {
 
   const handleSendOTP = async (e) => {
     e.preventDefault();
+    setOtp("");
     if (!mobileNumber) return toast.error("Enter mobile number");
     if (!isValidPhone(mobileNumber)) return toast.error("Enter valid mobile number");
     try {
