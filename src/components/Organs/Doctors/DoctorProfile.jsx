@@ -106,8 +106,6 @@ const DoctorProfile = ({ doctor, clinic, doctorId, clinicId, loading }) => {
                                 <section
                                     className="md:hidden flex flex-col items-center text-center p-4">
                                     <div className="relative w-40 h-52 overflow-hidden drop-shadow-2xl rounded-2xl bg-indigo-100 flex items-center justify-center border-2 border-indigo-500">
-                                        {console.log(doctor.profilePicture + " profilePicture")}
-
                                         {doctor.profilePicture ? (
                                             <img
                                                 src={doctor.profilePicture}

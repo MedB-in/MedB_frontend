@@ -87,7 +87,7 @@ const RegisterPage = () => {
         if (formData.lastName && !isValidName(formData.lastName)) {
             return toast.error("Please enter a valid last name");
         }
-        if (!email || !isValidEmail(email)) {
+        if (!formData.email || !isValidEmail(formData.email)) {
             return toast.error("Please enter a valid email address");
         }
         if (!formData.contactNo || !isValidPhone(formData.contactNo)) {
@@ -111,8 +111,6 @@ const RegisterPage = () => {
     const handleVerifyOtp = async () => {
         try {
             setOtpLoading(true);
-            console.log(formData);
-
             await verifyOtp({ contactNo: formData.contactNo, code: formData.code });
             toast.success("Phone number verified!");
             setOtpVerified(true);
@@ -222,20 +220,21 @@ const RegisterPage = () => {
                         <img src={Logo} alt="Medb Logo" className="h-10 w-auto" />
                     </div>
 
-
-                    <GoogleLoginButton
-                        clientId={clientId}
-                        handleGoogleLogin={handleGoogleLogin}
-                        disabled={loading || googleLoading}
-                        register={true}
-                    />
-                    <div className="text-center">
-                        <p className="text-sm text-gray-500 mt-1">-Or-</p>
-                    </div>
                     {!registrationSuccess && !emailSent && (
-                        <div className="text-center">
-                            <h1 className="text-xl font-semibold text-gray-900">Create an Account</h1>
-                        </div>
+                        <>
+                            <GoogleLoginButton
+                                clientId={clientId}
+                                handleGoogleLogin={handleGoogleLogin}
+                                disabled={loading || googleLoading}
+                                register={true}
+                            />
+                            <div className="text-center">
+                                <p className="text-sm text-gray-500 mt-1">-Or-</p>
+                            </div>
+                            <div className="text-center">
+                                <h1 className="text-xl font-semibold text-gray-900">Create an Account</h1>
+                            </div>
+                        </>
                     )}
 
                     <form className="space-y-4" onSubmit={handleSubmit}>
@@ -265,10 +264,14 @@ const RegisterPage = () => {
                                             disabled={otpLoading}
                                             className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-violet-600 hover:underline disabled:opacity-50"
                                         >
-                                            {otpTimer > 0 ? `Wait ${otpTimer}s` : "Send OTP"}
+                                            {otpTimer > 0 ? `Wait ${otpTimer}s` : otpLoading ? "Sending..." : "Verify Number"}
                                         </button>
                                     )}
                                 </div>
+                                {
+                                    !otpVerified &&
+                                    <p className="text-sm text-center text-gray-600">Verify your mobile number to continue</p>
+                                }
 
                                 {otpVerified && (
                                     <>
@@ -292,9 +295,9 @@ const RegisterPage = () => {
                                 <Button
                                     type="submit"
                                     className="w-full h-12 bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800"
-                                    disabled={loading}
+                                    disabled={loading || !otpVerified}
                                 >
-                                    {loading ? "Registering..." : "Register"}
+                                    {loading ? "Registering..." : !otpVerified ? "Verify Mobile Number" : "Register"}
                                 </Button>
                             </>
                         )}
