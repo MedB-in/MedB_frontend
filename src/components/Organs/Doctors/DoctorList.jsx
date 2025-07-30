@@ -13,8 +13,11 @@ const DoctorList = ({ doctors, loading, clinicId }) => {
 
     useEffect(() => {
         let results = doctors.filter((doctor) => {
-            const fullName = `${doctor.firstName} ${doctor.middleName || ""} ${doctor.lastName}`.trim();
-            return fullName.toLowerCase().includes(searchTerm.toLowerCase());
+            const fullName = `${doctor.firstName} ${doctor.middleName || ""} ${doctor.lastName}`.trim().toLowerCase();
+            const normalizedFullName = fullName.replace(/^dr[.\s]+/i, "");
+            const normalizedSearchTerm = searchTerm.toLowerCase().replace(/^dr[.\s]+/i, "");
+
+            return normalizedFullName.includes(normalizedSearchTerm);
         });
 
         if (selectedDepartment) {

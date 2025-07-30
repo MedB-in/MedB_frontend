@@ -83,21 +83,24 @@ const AddSubscriptionModal = ({ isOpen, onClose, onAddSubscription }) => {
 
         if (!confirmResult.isConfirmed) return;
 
+        const fullName = [selectedUser.firstName, selectedUser.middleName, selectedUser.lastName]
+            .filter(Boolean)
+            .join(" ");
+
         const irreversibleResult = await Swal.fire({
             title: "Are you absolutely sure?",
             html: `
-            <p>This action <strong>cannot be undone</strong>.</p>
-            <p>Type <b>" ${selectedUser.firstName} ${selectedUser.middleName ? ` ${selectedUser.middleName}` : ""} ${selectedUser.lastName ? ` ${selectedUser.lastName}` : ""} " </b> to confirm. </p>
-            <p>(case-sensitive)</p>
-            <input id="confirm-input" class="swal2-input" autocomplete="off" placeholder="Type here" />
-        `,
+                    <p>This action <strong>cannot be undone</strong>.</p>
+                    <p>Type <b>" ${fullName} " </b> to confirm. </p>
+                    <p>(case-sensitive)</p>
+                    <input id="confirm-input" class="swal2-input" autocomplete="off" placeholder="Type here" />
+                `,
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Yes, Add",
             cancelButtonText: "Cancel",
             preConfirm: () => {
                 const input = Swal.getPopup().querySelector("#confirm-input").value;
-                const fullName = `${selectedUser.firstName} ${selectedUser.middleName} ${selectedUser.lastName}`;
                 if (input.trim() !== fullName.trim()) {
                     Swal.showValidationMessage("Username does not match");
                 }
@@ -112,6 +115,7 @@ const AddSubscriptionModal = ({ isOpen, onClose, onAddSubscription }) => {
                 input.setAttribute("oncontextmenu", "return false;");
             }
         });
+
 
         if (!irreversibleResult.isConfirmed) return;
 
