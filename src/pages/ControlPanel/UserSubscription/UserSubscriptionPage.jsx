@@ -93,7 +93,7 @@ function UserSubscription() {
           <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
             <thead>
               <tr className="bg-gray-100 text-center">
-                <th className="px-4 py-3 border border-gray-200">No.</th>
+                <th className="px-4 py-3 border border-gray-200">User Id</th>
                 <th className="px-4 py-3 border border-gray-200">User</th>
                 <th className="px-4 py-3 border border-gray-200">Product</th>
                 <th className="px-4 py-3 border border-gray-200">Period</th>
@@ -105,7 +105,7 @@ function UserSubscription() {
               {subscriptions.length > 0 ? (
                 subscriptions.map((sub, index) => (
                   <tr key={index} className="odd:bg-white even:bg-gray-50">
-                    <td className="px-4 py-3 border border-gray-200">{index + 1}</td>
+                    <td className="px-4 py-3 border border-gray-200">{sub.userId}</td>
                     <td className="px-4 py-3 border border-gray-200">
                       <div className="flex flex-col gap-1">
                         <div className="font-medium text-gray-800">{sub.userName}</div>

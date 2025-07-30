@@ -17,7 +17,7 @@ const ClinicCard = ({ clinics, onClinicClick }) => {
         <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, delay: 0.5 }}
             onClick={() => onClinicClick(clinics.clinicId)}
             className="relative bg-gradient-to-br from-[#c2b2f0] to-[#a28de7] mt-10 p-6 rounded-xl shadow-lg transition-transform transform hover:scale-105 text-center cursor-pointer border border-gray-200 min-h-[400px] flex flex-col justify-between"

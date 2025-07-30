@@ -281,7 +281,7 @@ function PatientAppointmentsPage() {
               </>
             ) : (
               <>
-                {appointments.length && (
+                {appointments.length > 0 ? (
                   appointments.map((appt, index) => (
                     <AppointmentRow
                       key={index}
@@ -291,13 +291,14 @@ function PatientAppointmentsPage() {
                       handleAppointmentModal={handleAppointmentModal}
                     />
                   ))
-                )}
-                {!appointments.length && !loading && (
-                  <tr>
-                    <td colSpan="7" className="px-4 py-3 text-center rounded-lg">
-                      No appointments found
-                    </td>
-                  </tr>
+                ) : (
+                  !loading && (
+                    <tr>
+                      <td colSpan="7" className="px-4 py-3 text-center rounded-lg">
+                        No appointments found
+                      </td>
+                    </tr>
+                  )
                 )}
               </>
             )}

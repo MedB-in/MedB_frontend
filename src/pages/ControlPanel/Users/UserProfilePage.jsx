@@ -219,30 +219,30 @@ const UserProfilePage = () => {
                         <input type="file" name="profilePicture" onChange={handleProfilePictureChange} ref={fileInputRef} className="hidden" />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <InputField type="text" name="firstName" placeholder="First Name" className="capitalize" value={formData.firstName} onChange={handleChange} required />
+                        <InputField type="text" name="firstName" placeholder="First Name*" className="capitalize" value={formData.firstName} onChange={handleChange} required />
                         <InputField type="text" name="middleName" placeholder="Middle Name" className="capitalize" value={formData.middleName} onChange={handleChange} />
                         <InputField type="text" name="lastName" placeholder="Last Name" className="capitalize" value={formData.lastName} onChange={handleChange} />
-                        <InputField type="number" name="age" placeholder="Age" value={formData.age} onChange={handleChange} required /><select
+                        <InputField type="number" name="age" placeholder="Age*" value={formData.age} onChange={handleChange} required /><select
                             name="gender"
                             className="capitalize px-3 py-3.5 bg-white rounded-lg border border-solid border-zinc-300 text-black text-opacity-70"
                             value={formData.gender}
                             onChange={handleChange}
                             required
                         >
-                            <option value="" disabled>Select Gender</option>
+                            <option value="" disabled>Select Gender*</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                         </select>
-                        <InputField type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required disabled />
+                        <InputField type="email" name="email" placeholder="Email*" value={formData.email} onChange={handleChange} required disabled />
                         <InputField type="phone" name="contactNo" placeholder="Click on Update Contact No." value={formData.contactNo} onChange={handleChange} required disabled />
                         <InputField type="text" name="designation" placeholder="Designation" className="capitalize" value={doctor ? "Doctor" : formData.designation} onChange={handleChange} disabled={!!doctor} />
-                        <InputField type="text" name="address" placeholder="Address" className="capitalize" value={formData.address} onChange={handleChange} />
-                        <InputField type="text" name="city" placeholder="City" className="capitalize" value={formData.city} onChange={handleChange} />
-                        <InputField type="text" name="district" placeholder="District" className="capitalize" value={formData.district} onChange={handleChange} />
-                        <InputField type="text" name="state" placeholder="State" className="capitalize" value={formData.state} onChange={handleChange} />
-                        <InputField type="text" name="country" placeholder="Country" className="capitalize" value={formData.country} onChange={handleChange} />
-                        <InputField type="text" name="postalCode" placeholder="Postal Code" value={formData.postalCode} onChange={handleChange} />
+                        <InputField type="text" name="address" placeholder="Address*" className="capitalize" value={formData.address} onChange={handleChange} />
+                        <InputField type="text" name="city" placeholder="City*" className="capitalize" value={formData.city} onChange={handleChange} />
+                        <InputField type="text" name="district" placeholder="District*" className="capitalize" value={formData.district} onChange={handleChange} />
+                        <InputField type="text" name="state" placeholder="State*" className="capitalize" value={formData.state} onChange={handleChange} />
+                        <InputField type="text" name="country" placeholder="Country*" className="capitalize" value={formData.country} onChange={handleChange} />
+                        <InputField type="text" name="postalCode" placeholder="Postal Code*" value={formData.postalCode} onChange={handleChange} />
                     </div>
                     <div className="flex justify-center items-center mt-6">
                         <Button variant="primary" disabled={loading}>

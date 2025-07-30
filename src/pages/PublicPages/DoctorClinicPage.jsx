@@ -56,7 +56,7 @@ const DoctorClinicPage = () => {
                             <ClinicCard key={clinics.clinicId || index} clinics={clinics} onClinicClick={handleClinicClick} />
                         ))}
                     </div>
-                ) : (
+                ) : (!loading &&
                     <p className="text-center text-gray-500">No clinics available for this doctor.</p>
                 )}
             </>
