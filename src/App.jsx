@@ -29,6 +29,17 @@ const App = () => {
   const [sessionChecked, setSessionChecked] = useState(false);
 
   useEffect(() => {
+    const splash = document.getElementById('splash-screen');
+    if (splash) {
+      splash.style.opacity = '0';
+      setTimeout(() => {
+        splash.style.display = 'none';
+      }, 1000);
+    }
+  }, []);
+
+
+  useEffect(() => {
     const checkAuthOnStart = async () => {
       const userDetails = localStorage.getItem("userDetails");
       const accessToken = localStorage.getItem("accessToken");

@@ -5,18 +5,128 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/src/assets/images/medb-logo-2.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="/src/assets/images/192x192.png" />
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  
-  <title>MedB!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;600;700&display=swap"
+    rel="stylesheet" />
+
+  <title>MedB – Your Personal Healthcare Assistant</title>
+  <meta name="description"
+    content="Book appointments, manage health records and get personalized care with MedB. Trusted by 1500+ patients." />
+
+  <meta property="og:title" content="MedB – Your Personal Healthcare Assistant" />
+  <meta property="og:description"
+    content="Book appointments, manage health records, and get personalized care with MedB." />
+  <meta property="og:image"
+    content="https://res.cloudinary.com/dg7mrhggn/image/upload/v1750525315/medb/ux8klfd52f3ckprvboid.jpg" />
+  <meta property="og:url" content="https://www.medb.co.in/" />
+  <meta property="og:type" content="website" />
 </head>
 
 <body>
+  <div id="splash-screen" style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: white;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: 'Poppins', sans-serif;
+      transition: opacity 0.5s ease;
+    ">
+    <img src="/src/assets/images/512x512.png" alt="MedB Logo" style="width: 120px; height: 120px;" />
+    <h1 style="margin-top: 1rem; color: #6F64E7; font-size: 1.25rem;">Loading MedB...</h1>
+  </div>
+
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
+
+  <script>
+    window.addEventListener('load', () => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) {
+        splash.style.opacity = '0';
+        setTimeout(() => {
+          splash.style.display = 'none';
+        }, 500);
+      }
+    });
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://www.medb.co.in/#organization",
+          "name": "MedB",
+          "url": "https://www.medb.co.in/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://res.cloudinary.com/dg7mrhggn/image/upload/v1750525315/medb/ux8klfd52f3ckprvboid.jpg"
+          },
+          "description": "Your Personal Healthcare Assistant",
+          "sameAs": [
+            "https://www.facebook.com/people/MedB/61550544957867/?mibextid=ZbWKwL",
+            "https://www.instagram.com/medb_app/",
+            "https://www.linkedin.com/company/medbindia/about/"
+          ]
+        },
+        {
+          "@type": "Product",
+          "@id": "https://www.medb.co.in/#product",
+          "name": "MedB",
+          "image": "https://res.cloudinary.com/dg7mrhggn/image/upload/v1750525315/medb/ux8klfd52f3ckprvboid.jpg",
+          "description": "MedB is your personal digital healthcare assistant, offering doctor bookings, health records and personalized medical care.",
+          "brand": {
+            "@type": "Brand",
+            "name": "MedB"
+          },
+          "url": "https://www.medb.co.in/",
+          "applicationCategory": "Health & Fitness Application",
+          "operatingSystem": "Android, iOS, Web",
+          "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "INR"
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "1523"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://www.medb.co.in/#breadcrumbs",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.medb.co.in/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "App",
+              "item": "https://www.medb.co.in/app"
+            }
+          ]
+        }
+      ]
+    }
+  </script>
 </body>
 
 </html>
