@@ -10,6 +10,7 @@ const InputField = ({
   icon,
   value,
   onChange,
+  onKeyDown,
   toggleable,
   disabled,
   pattern,
@@ -86,6 +87,7 @@ const InputField = ({
           required={required}
           className={`flex-auto bg-transparent border-none outline-none ${className}`}
           onKeyDown={(e) => {
+            if (onKeyDown) onKeyDown(e);
             if (
               type === "tel" &&
               !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key) &&

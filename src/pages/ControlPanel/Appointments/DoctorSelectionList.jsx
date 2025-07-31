@@ -14,7 +14,6 @@ const DoctorSelectionList = () => {
     const [totalPages, setTotalPages] = useState(1);
     const navigate = useNavigate();
 
-
     useEffect(() => {
         const fetchDoctors = async () => {
             setLoading(true);

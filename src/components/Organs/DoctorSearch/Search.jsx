@@ -40,7 +40,9 @@ const SearchSection = () => {
 
             let response;
             if (searchType === 'Doctor') {
-                response = await getActiveDoctors(searchQuery);
+                const normalizedFullName = searchQuery.replace(/^dr[.\s]+/i, "");
+                const normalizedSearchTerm = normalizedFullName.toLowerCase().replace(/^dr[.\s]+/i, "");
+                response = await getActiveDoctors(normalizedSearchTerm);
                 setResults(response.data.doctors);
             } else {
                 response = await getActiveClinics(searchQuery);

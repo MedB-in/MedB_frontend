@@ -83,21 +83,24 @@ const AddSubscriptionModal = ({ isOpen, onClose, onAddSubscription }) => {
 
         if (!confirmResult.isConfirmed) return;
 
+        const fullName = [selectedUser.firstName, selectedUser.middleName, selectedUser.lastName]
+            .filter(Boolean)
+            .join(" ");
+
         const irreversibleResult = await Swal.fire({
             title: "Are you absolutely sure?",
             html: `
-            <p>This action <strong>cannot be undone</strong>.</p>
-            <p>Type <b>" ${selectedUser.firstName} ${selectedUser.middleName ? ` ${selectedUser.middleName}` : ""} ${selectedUser.lastName ? ` ${selectedUser.lastName}` : ""} " </b> to confirm. </p>
-            <p>(case-sensitive)</p>
-            <input id="confirm-input" class="swal2-input" autocomplete="off" placeholder="Type here" />
-        `,
+                    <p>This action <strong>cannot be undone</strong>.</p>
+                    <p>Type <b>" ${fullName} " </b> to confirm. </p>
+                    <p>(case-sensitive)</p>
+                    <input id="confirm-input" class="swal2-input" autocomplete="off" placeholder="Type here" />
+                `,
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Yes, Add",
             cancelButtonText: "Cancel",
             preConfirm: () => {
                 const input = Swal.getPopup().querySelector("#confirm-input").value;
-                const fullName = `${selectedUser.firstName} ${selectedUser.middleName} ${selectedUser.lastName}`;
                 if (input.trim() !== fullName.trim()) {
                     Swal.showValidationMessage("Username does not match");
                 }
@@ -112,6 +115,7 @@ const AddSubscriptionModal = ({ isOpen, onClose, onAddSubscription }) => {
                 input.setAttribute("oncontextmenu", "return false;");
             }
         });
+
 
         if (!irreversibleResult.isConfirmed) return;
 
@@ -147,11 +151,13 @@ const AddSubscriptionModal = ({ isOpen, onClose, onAddSubscription }) => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
             >
                 <option value="">Select a product</option>
-                {products.map((product) => (
-                    <option key={product.productId} value={product.productId}>
-                        {product.productName}
-                    </option>
-                ))}
+                {products
+                    .filter((product) => ![3, 4, 5].includes(product.productId))
+                    .map((product) => (
+                        <option key={product.productId} value={product.productId}>
+                            {product.productName}
+                        </option>
+                    ))}
             </select>
 
             <div className="flex gap-4 items-center">

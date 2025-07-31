@@ -1,7 +1,7 @@
 {
   "name": "medb-frontend",
   "private": true,
-  "version": "1.5.3",
+  "version": "1.5.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -29,6 +29,7 @@
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.8.1",
     "sweetalert2": "^11.6.13",
+    "vite-plugin-pwa": "^1.0.2",
     "yup": "^1.6.1"
   },
   "devDependencies": {

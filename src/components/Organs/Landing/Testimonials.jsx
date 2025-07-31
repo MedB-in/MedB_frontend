@@ -1,49 +1,39 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import aliceImage from "../../../assets/images/alice-testimonials.png";
-import samuelImage from "../../../assets/images/samuel-testimonials.png";
-import fahadImage from "../../../assets/images/fahad-testimonials.png";
-import rachelImage from "../../../assets/images/rachel-testimonials.png";
-import imranImage from "../../../assets/images/imran-testimonials.png";
-
-const testimonials = [
-    {
-        text: "I'm not great with tech, but MedB makes it easy. My appointments are all sorted, and now my medications are stored in one place.",
-        name: "Alice",
-        role: "Chief Accountant",
-        image: aliceImage,
-    },
-    {
-        text: "MedB transforms medical appointments, offering patients unmatched ease and convenience. It's a real game-changer for accessing healthcare.",
-        name: "Samuel",
-        role: "Accountant",
-        image: samuelImage,
-    },
-    {
-        text: "MedB has revolutionized my healthcare routine. It feels like having a personal healthcare assistant always at my fingertips.",
-        name: "Fahad",
-        role: "Sales Executive",
-        image: fahadImage,
-    },
-    {
-        text: "I travel frequently for work, so being able to book appointments with healthcare providers in different cities through MedB is extremely convenient.",
-        name: "Rachel",
-        role: "Product Manager",
-        image: rachelImage,
-    },
-    {
-        text: "The ability to quickly and easily book urgent care appointments through the app has saved me countless hours of waiting in crowded waiting rooms.",
-        name: "Imran",
-        role: "Operations Lead",
-        image: imranImage,
-    },
-];
+import testimonials from "../../../lib/userTestimonials";
 
 const Testimonials = () => {
     const scrollRef = useRef(null);
     const isDragging = useRef(false);
     const startX = useRef(0);
     const scrollLeft = useRef(0);
+    const [isManuallyScrolling, setIsManuallyScrolling] = useState(false);
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollLeft = scrollRef.current.scrollWidth / 4;
+        }
+    }, []);
+
+    useEffect(() => {
+        const container = scrollRef.current;
+        const singleWidth = container.scrollWidth / 2;
+
+        const onScroll = () => {
+            if (container.scrollLeft >= singleWidth) {
+                container.scrollLeft = container.scrollLeft - singleWidth;
+            } else if (container.scrollLeft <= 0) {
+                container.scrollLeft = container.scrollLeft + singleWidth;
+            }
+        };
+
+        const ref = scrollRef.current;
+        ref.addEventListener("scroll", onScroll);
+
+        return () => {
+            ref.removeEventListener("scroll", onScroll);
+        };
+    }, []);
 
     useEffect(() => {
         const handleMouseMove = (e) => {
@@ -57,6 +47,10 @@ const Testimonials = () => {
         const stopDragging = () => {
             isDragging.current = false;
             document.body.style.userSelect = "auto";
+
+            setTimeout(() => {
+                setIsManuallyScrolling(false);
+            }, 800);
         };
 
         window.addEventListener("mousemove", handleMouseMove);
@@ -70,6 +64,7 @@ const Testimonials = () => {
 
     const handleMouseDown = (e) => {
         isDragging.current = true;
+        setIsManuallyScrolling(true);
         startX.current = e.clientX;
         scrollLeft.current = scrollRef.current.scrollLeft;
         document.body.style.userSelect = "none";
@@ -96,17 +91,35 @@ const Testimonials = () => {
                     User Testimonials
                 </motion.h2>
             </div>
-
             <motion.div
                 ref={scrollRef}
-                className="mt-8 overflow-hidden p-4 group"
+                className="mt-8 overflow-hidden p-4 group select-none"
                 onMouseDown={handleMouseDown}
+                onTouchStart={(e) => {
+                    isDragging.current = true;
+                    startX.current = e.touches[0].clientX;
+                    scrollLeft.current = scrollRef.current.scrollLeft;
+                }}
+                onTouchMove={(e) => {
+                    if (!isDragging.current) return;
+                    const x = e.touches[0].clientX - startX.current;
+                    scrollRef.current.scrollLeft = scrollLeft.current - x;
+                }}
+                onTouchEnd={() => {
+                    isDragging.current = false;
+                    setTimeout(() => {
+                        setIsManuallyScrolling(false);
+                    }, 800);
+                }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
             >
-                <div className="flex gap-6 animate-marquee group-hover:[animation-play-state:paused]">
+                <div
+                    className={`flex gap-6 ${isManuallyScrolling ? "" : "animate-marquee group-hover:[animation-play-state:paused]"
+                        }`}
+                >
                     {[...testimonials, ...testimonials].map((testimonial, index) => (
                         <div
                             key={index}
@@ -122,6 +135,7 @@ const Testimonials = () => {
                                     src={testimonial.image}
                                     alt={testimonial.name}
                                     className="w-32 h-32 rounded-full border-4 object-cover border-white"
+                                    draggable={false}
                                 />
                                 <h3 className="text-lg font-semibold">{testimonial.name}</h3>
                                 <span className="text-sm opacity-80">{testimonial.role}</span>
@@ -130,7 +144,6 @@ const Testimonials = () => {
                     ))}
                 </div>
             </motion.div>
-
         </motion.section>
     );
 };

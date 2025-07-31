@@ -82,10 +82,7 @@ const DoctorDetails = ({ doctor }) => {
                             className="flex md:hidden flex-col self-center p-4 w-full max-w-md mt-6 border border-black border-opacity-30 rounded-xl shadow-md mx-auto"
                         >
                             <h2 className="text-xl font-semibold text-indigo-500">Overview</h2>
-                            <p className="mt-4 text-sm font-light leading-5 text-neutral-800">
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                            </p>
+                            <p className="mt-4 text-sm font-light leading-5 text-neutral-800">{doctor?.doctorOverview ? doctor?.doctorOverview : 'No overview available'}</p>
                         </section>
                     </section>
                 </div>
