@@ -15,7 +15,7 @@ const manifestForPlugin = {
     description: 'Your trusted app for booking doctors, tracking health and managing medical records.',
     icons: [
       {
-        src: '/src/assets/images/192x192(1).png',
+        src: '/src/assets/images/192x192new.png',
         type: 'image/png',
         sizes: '192x192'
       },
