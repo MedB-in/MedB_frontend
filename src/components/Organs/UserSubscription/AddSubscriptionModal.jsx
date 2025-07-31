@@ -151,11 +151,13 @@ const AddSubscriptionModal = ({ isOpen, onClose, onAddSubscription }) => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
             >
                 <option value="">Select a product</option>
-                {products.map((product) => (
-                    <option key={product.productId} value={product.productId}>
-                        {product.productName}
-                    </option>
-                ))}
+                {products
+                    .filter((product) => ![3, 4, 5].includes(product.productId))
+                    .map((product) => (
+                        <option key={product.productId} value={product.productId}>
+                            {product.productName}
+                        </option>
+                    ))}
             </select>
 
             <div className="flex gap-4 items-center">
