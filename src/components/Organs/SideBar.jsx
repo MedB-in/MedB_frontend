@@ -44,29 +44,29 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const [selectedClinicId, setSelectedClinicId] = useState(() => {
         return JSON.parse(localStorage.getItem('selectedClinicId'));
     });
-    const [isAppInstalled, setIsAppInstalled] = useState(false);
-    const isiOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    useEffect(() => {
-        const checkInstallStatus = () => {
-            const isStandalone =
-                window.matchMedia('(display-mode: standalone)').matches ||
-                window.navigator.standalone === true;
+    // const [isAppInstalled, setIsAppInstalled] = useState(false);
+    // const isiOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    // useEffect(() => {
+    //     const checkInstallStatus = () => {
+    //         const isStandalone =
+    //             window.matchMedia('(display-mode: standalone)').matches ||
+    //             window.navigator.standalone === true;
 
-            const wasInstalled = localStorage.getItem('pwaInstalled') === 'true';
+    //         const wasInstalled = localStorage.getItem('pwaInstalled') === 'true';
 
-            setIsAppInstalled(isStandalone || wasInstalled);
-        };
+    //         setIsAppInstalled(isStandalone || wasInstalled);
+    //     };
 
-        checkInstallStatus();
+    //     checkInstallStatus();
 
-        const handleAppInstalled = () => {
-            localStorage.setItem('pwaInstalled', 'true');
-            checkInstallStatus();
-        };
+    //     const handleAppInstalled = () => {
+    //         localStorage.setItem('pwaInstalled', 'true');
+    //         checkInstallStatus();
+    //     };
 
-        window.addEventListener('appinstalled', handleAppInstalled);
-        return () => window.removeEventListener('appinstalled', handleAppInstalled);
-    }, []);
+    //     window.addEventListener('appinstalled', handleAppInstalled);
+    //     return () => window.removeEventListener('appinstalled', handleAppInstalled);
+    // }, []);
 
     useEffect(() => {
         if (clinics.length > 0) {
@@ -408,11 +408,11 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         {isSidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
                     </button>
                     <div className="profile flex items-center">
-                        {!isAppInstalled && !isiOS && (
+                        {/* {!isAppInstalled && !isiOS && (
                             <div className="flex items-center mr-4 drop-shadow-md text-black hover:text-gray-700">
                                 <PWAInstallButton />
                             </div>
-                        )}
+                        )} */}
                         <div ref={notificationRef} className="relative">
                             <img
                                 src={AlertIcon}
@@ -527,11 +527,11 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 w-10 transition-all duration-300">
                             <Menu size={24} />
                         </button>
-                        {!isAppInstalled && !isiOS && (
+                        {/* {!isAppInstalled && !isiOS && (
                             <div className=" mr-4 drop-shadow-md text-black hover:text-gray-700">
                                 <PWAInstallButton />
                             </div>
-                        )}
+                        )} */}
                     </div>
                     <div className="flex justify-center">
                         <img
