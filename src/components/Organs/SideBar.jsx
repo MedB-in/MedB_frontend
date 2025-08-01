@@ -45,7 +45,7 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         return JSON.parse(localStorage.getItem('selectedClinicId'));
     });
     const [isAppInstalled, setIsAppInstalled] = useState(false);
-
+    const isiOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
     useEffect(() => {
         const checkInstallStatus = () => {
             const isStandalone =
@@ -408,10 +408,10 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         {isSidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
                     </button>
                     <div className="profile flex items-center">
-                        {!isAppInstalled && (
-                            <button className="flex items-center mr-4 drop-shadow-md text-black hover:text-gray-700">
+                        {!isAppInstalled && !isiOS && (
+                            <div className="flex items-center mr-4 drop-shadow-md text-black hover:text-gray-700">
                                 <PWAInstallButton />
-                            </button>
+                            </div>
                         )}
                         <div ref={notificationRef} className="relative">
                             <img
@@ -527,10 +527,10 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-xl bg-gray-200 hover:bg-gray-300 w-10 transition-all duration-300">
                             <Menu size={24} />
                         </button>
-                        {!isAppInstalled && (
-                            <button className=" mr-4 drop-shadow-md text-black hover:text-gray-700">
+                        {!isAppInstalled && !isiOS && (
+                            <div className=" mr-4 drop-shadow-md text-black hover:text-gray-700">
                                 <PWAInstallButton />
-                            </button>
+                            </div>
                         )}
                     </div>
                     <div className="flex justify-center">
