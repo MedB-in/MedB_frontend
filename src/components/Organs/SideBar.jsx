@@ -556,6 +556,79 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                 </span>
                             )}
                         </div>
+                        {showNotifications && (
+                            <div
+                                className="absolute right-5 mt-64  w-80 bg-white shadow-lg rounded-xl border border-gray-200 z-50 overflow-hidden"
+                            >
+                                <div className="flex justify-between items-center p-4 border-b font-semibold text-gray-700">
+                                    <span>Notifications</span>
+                                    {notifications.length > 0 &&
+                                        <div className="flex items-center gap-1 justify-center mt-2">
+                                            {notifications.some(n => !n.read) && (
+                                                <>
+                                                    <button
+                                                        onClick={handleReadAllNotifications}
+                                                        className="text-xs text-blue-500 hover:text-blue-700 transition"
+                                                    >
+                                                        Mark All Read
+                                                    </button>
+                                                    <span className="text-gray-300">|</span>
+                                                </>
+                                            )}
+                                            <button
+                                                onClick={handleClearAllNotifications}
+                                                className="text-xs text-red-500 hover:text-red-700 transition"
+                                            >
+                                                Clear All
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                                <ul className="max-h-60 overflow-y-auto divide-y">
+                                    {notifications.length > 0 ? (
+                                        notifications.map((n) => (
+                                            <li
+                                                key={n._id}
+                                                className={`px-4 py-2 flex items-start justify-between gap-2 ${n.read ? 'bg-gray-100' : 'bg-white hover:bg-gray-50'}`}
+                                            >
+                                                <div
+                                                    className={`flex-1 ${n.link ? 'cursor-pointer' : ''}`}
+                                                    {...(n.link && {
+                                                        onClick: () => {
+                                                            navigate(n.link);
+                                                            handleReadNotification(n._id);
+                                                        },
+                                                    })}
+                                                >
+                                                    <div className="font-medium text-sm text-gray-800">{n.title}</div>
+                                                    <div className="text-xs text-gray-500">{n.message}</div>
+                                                </div>
+                                                <div className="flex items-center gap-2 pl-2 pt-1">
+                                                    {!n.read && (
+                                                        <button
+                                                            onClick={() => handleReadNotification(n._id)}
+                                                            className="text-xs text-green-500 hover:text-green-700"
+                                                            title="Mark as read"
+                                                        >
+                                                            ✔
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        onClick={() => handleClearNotification(n._id)}
+                                                        className="text-xs text-red-500 hover:text-red-700"
+                                                        title="Clear notification"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li className="p-4 my-5 text-center text-gray-500">No notifications</li>
+                                    )}
+                                </ul>
+                            </div>
+                        )}
                         <img
                             src={user?.profilePicture || "https://static.vecteezy.com/system/resources/thumbnails/028/149/256/small_2x/3d-user-profile-icon-png.png"}
                             alt="Profile"
@@ -568,79 +641,6 @@ const SideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         </button>
                     </div>
                 </header>
-                {showNotifications && (
-                    <div
-                        className="absolute right-5 mt-64  w-80 bg-white shadow-lg rounded-xl border border-gray-200 z-50 overflow-hidden"
-                    >
-                        <div className="flex justify-between items-center p-4 border-b font-semibold text-gray-700">
-                            <span>Notifications</span>
-                            {notifications.length > 0 &&
-                                <div className="flex items-center gap-1 justify-center mt-2">
-                                    {notifications.some(n => !n.read) && (
-                                        <>
-                                            <button
-                                                onClick={handleReadAllNotifications}
-                                                className="text-xs text-blue-500 hover:text-blue-700 transition"
-                                            >
-                                                Mark All Read
-                                            </button>
-                                            <span className="text-gray-300">|</span>
-                                        </>
-                                    )}
-                                    <button
-                                        onClick={handleClearAllNotifications}
-                                        className="text-xs text-red-500 hover:text-red-700 transition"
-                                    >
-                                        Clear All
-                                    </button>
-                                </div>
-                            }
-                        </div>
-                        <ul className="max-h-60 overflow-y-auto divide-y">
-                            {notifications.length > 0 ? (
-                                notifications.map((n) => (
-                                    <li
-                                        key={n._id}
-                                        className={`px-4 py-2 flex items-start justify-between gap-2 ${n.read ? 'bg-gray-100' : 'bg-white hover:bg-gray-50'}`}
-                                    >
-                                        <div
-                                            className={`flex-1 ${n.link ? 'cursor-pointer' : ''}`}
-                                            {...(n.link && {
-                                                onClick: () => {
-                                                    navigate(n.link);
-                                                    handleReadNotification(n._id);
-                                                },
-                                            })}
-                                        >
-                                            <div className="font-medium text-sm text-gray-800">{n.title}</div>
-                                            <div className="text-xs text-gray-500">{n.message}</div>
-                                        </div>
-                                        <div className="flex items-center gap-2 pl-2 pt-1">
-                                            {!n.read && (
-                                                <button
-                                                    onClick={() => handleReadNotification(n._id)}
-                                                    className="text-xs text-green-500 hover:text-green-700"
-                                                    title="Mark as read"
-                                                >
-                                                    ✔
-                                                </button>
-                                            )}
-                                            <button
-                                                onClick={() => handleClearNotification(n._id)}
-                                                className="text-xs text-red-500 hover:text-red-700"
-                                                title="Clear notification"
-                                            >
-                                                ✕
-                                            </button>
-                                        </div>
-                                    </li>
-                                ))
-                            ) : (
-                                <li className="p-4 my-5 text-center text-gray-500">No notifications</li>
-                            )}
-                        </ul>
-                    </div>
-                )}
 
                 <div className={`fixed inset-0 bg-black bg-opacity-50 z-40 ${isSidebarOpen ? "block" : "hidden"}`} onClick={() => setIsSidebarOpen(false)}></div>
                 <div className={`fixed top-0 left-0 h-full w-64 bg-[#EAF4F4] shadow-lg z-50 transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300`}>
