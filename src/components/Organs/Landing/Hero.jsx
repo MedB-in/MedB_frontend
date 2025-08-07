@@ -183,13 +183,13 @@ const Hero = () => {
                 )}
             </div>
             <div className="w-full lg:w-1/2 flex flex-col items-center mt-6 lg:mt-0">
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} key={activeTab} className="p-4 sm:p-6 flex justify-center w-24 h-[250px] sm:w-32 sm:h-[300px] md:w-40 md:h-[400px]">
+                    <motion.img initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} src={images[activeTab]} alt={activeTab} className="drop-shadow-lg w-full h-full object-contain" />
+                </motion.div>
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 mb-6 w-full">
                     {tabs.map((tab) => (
                         <motion.button ref={activeTab === tab ? tabRef : null} key={tab} whileTap={{ scale: 0.95 }} onClick={() => handleTabClick(tab)} className={`px-4 sm:px-6 py-2 rounded-full transition font-medium w-full sm:w-32 md:w-44 text-xs sm:text-sm md:text-base ${activeTab === tab ? "bg-[#573bff] text-white" : "bg-[#c7e4f2] text-gray-700"}`}> {tab} </motion.button>
                     ))}
-                </motion.div>
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} key={activeTab} className="p-4 sm:p-6 flex justify-center w-24 h-[250px] sm:w-32 sm:h-[300px] md:w-40 md:h-[400px]">
-                    <motion.img initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} src={images[activeTab]} alt={activeTab} className="drop-shadow-lg w-full h-full object-contain" />
                 </motion.div>
             </div>
         </section>
