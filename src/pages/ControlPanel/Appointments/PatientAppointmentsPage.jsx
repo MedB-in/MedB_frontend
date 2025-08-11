@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { getFilteredAppointments, getDoctorClinicList } from "../../../services/patient";
 import Button from "../../../components/Atoms/Login/Button";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +26,7 @@ function PatientAppointmentsPage() {
   const [startDate, setStartDate] = useState(selectedStatus === "Scheduled" && today);
   const [endDate, setEndDate] = useState(selectedStatus === "Scheduled" && format(new Date(new Date().setMonth(new Date().getMonth() + 3)), "yyyy-MM-dd"));
   const [selectedClinic, setSelectedClinic] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
 
   const [filters, setFilters] = useState({
     doctorId: "",
@@ -181,83 +183,99 @@ function PatientAppointmentsPage() {
       </Button>
       <div className="w-full overflow-x-auto mt-6">
         <div className="w-full p-4 rounded-xl border border-gray-200 shadow-lg">
-          <div className="flex flex-col gap-4 sm:flex-wrap sm:flex-row justify-center">
-            <div className="relative w-full sm:w-[250px]">
-              <label className="text-sm text-gray-700 font-medium mb-1 block">Doctor</label>
-              <select
-                value={selectedDoctor}
-                onChange={handleDoctorChange}
-                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800 appearance-none"
-              >
-                <option value="">All Doctors</option>
-                {doctors.map(doc => (
-                  <option key={doc.doctorId} value={doc.doctorId}>
-                    {doc.fullName}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute right-3 top-[55%] -translate-y-1/2 text-gray-600">⌄</div>
-            </div>
-
-            <div className="relative w-full sm:w-[250px]">
-              <label className="text-sm text-gray-700 font-medium mb-1 block">Clinic</label>
-              <select
-                value={selectedClinic}
-                onChange={handleClinicChange}
-                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800 appearance-none"
-              >
-                <option value="">All Clinics</option>
-                {clinics.map(clinic => (
-                  <option key={clinic.clinicId} value={clinic.clinicId}>
-                    {clinic.clinicName}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute right-3 top-[55%] -translate-y-1/2 text-gray-600">⌄</div>
-            </div>
-
-            <div className="relative w-full sm:w-[250px]">
-              <label className="text-sm text-gray-700 font-medium mb-1 block">Status</label>
-              <select
-                value={selectedStatus}
-                onChange={handleStatusChange}
-                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800 appearance-none"
-              >
-                <option value="Scheduled">Scheduled</option>
-                <option value="Cancelled">Cancelled</option>
-                <option value="Completed">Completed</option>
-                <option value="Rescheduled">Rescheduled</option>
-                <option value="Expired">Expired</option>
-              </select>
-              <div className="pointer-events-none absolute right-3 top-[55%] -translate-y-1/2 text-gray-600">⌄</div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row sm:items-end gap-2 w-full sm:w-auto">
-              <div className="w-full sm:w-auto">
-                <label className="text-sm text-gray-700 font-medium mb-1 block">From</label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={handleStartDateChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800"
-                />
-              </div>
-              <div className="w-full sm:w-auto">
-                <label className="text-sm text-gray-700 font-medium mb-1 block">To</label>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={handleEndDateChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800"
-                />
-              </div>
+          <div className="flex justify-center items-center mb-4">
+            <div
+              className="px-4 py-2 bg-primary text-black rounded-lg cursor-pointer"
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              {showFilters ? "Hide Filters ▲" : "Show Search Filters ▼"}
             </div>
           </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 pt-6 justify-center lg:justify-center">
-            <Button variant="primary" onClick={applyFilters} disabled={loading}>Search</Button>
-            <Button variant="secondary" onClick={resetFilters}>Reset</Button>
-          </div>
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="flex flex-col gap-4 sm:flex-wrap sm:flex-row justify-center">
+                  <div className="relative w-full sm:w-[250px]">
+                    <label className="text-sm text-gray-700 font-medium mb-1 block">Doctor</label>
+                    <select
+                      value={selectedDoctor}
+                      onChange={handleDoctorChange}
+                      className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800 appearance-none"
+                    >
+                      <option value="">All Doctors</option>
+                      {doctors.map(doc => (
+                        <option key={doc.doctorId} value={doc.doctorId}>
+                          {doc.fullName}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute right-3 top-[55%] -translate-y-1/2 text-gray-600">⌄</div>
+                  </div>
+                  <div className="relative w-full sm:w-[250px]">
+                    <label className="text-sm text-gray-700 font-medium mb-1 block">Clinic</label>
+                    <select
+                      value={selectedClinic}
+                      onChange={handleClinicChange}
+                      className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800 appearance-none"
+                    >
+                      <option value="">All Clinics</option>
+                      {clinics.map(clinic => (
+                        <option key={clinic.clinicId} value={clinic.clinicId}>
+                          {clinic.clinicName}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute right-3 top-[55%] -translate-y-1/2 text-gray-600">⌄</div>
+                  </div>
+                  <div className="relative w-full sm:w-[250px]">
+                    <label className="text-sm text-gray-700 font-medium mb-1 block">Status</label>
+                    <select
+                      value={selectedStatus}
+                      onChange={handleStatusChange}
+                      className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800 appearance-none"
+                    >
+                      <option value="Scheduled">Scheduled</option>
+                      <option value="Cancelled">Cancelled</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Rescheduled">Rescheduled</option>
+                      <option value="Expired">Expired</option>
+                    </select>
+                    <div className="pointer-events-none absolute right-3 top-[55%] -translate-y-1/2 text-gray-600">⌄</div>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-end gap-2 w-full sm:w-auto">
+                    <div className="w-full sm:w-auto">
+                      <label className="text-sm text-gray-700 font-medium mb-1 block">From</label>
+                      <input
+                        type="date"
+                        value={startDate}
+                        onChange={handleStartDateChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800"
+                      />
+                    </div>
+                    <div className="w-full sm:w-auto">
+                      <label className="text-sm text-gray-700 font-medium mb-1 block">To</label>
+                      <input
+                        type="date"
+                        value={endDate}
+                        onChange={handleEndDateChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-gray-800"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3 pt-6 justify-center lg:justify-center">
+                  <Button variant="primary" onClick={applyFilters} disabled={loading}>Search</Button>
+                  <Button variant="secondary" onClick={resetFilters}>Reset</Button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <table className="hidden lg:table w-full table-auto border-collapse mt-5 text-sm">
