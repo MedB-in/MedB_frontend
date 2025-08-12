@@ -140,7 +140,6 @@ const AddSubscriptionModal = ({ isOpen, onClose, onAddSubscription }) => {
         }
     };
 
-
     return (
         <div className="space-y-4">
             <UserSearch onSelectUser={setSelectedUser} />

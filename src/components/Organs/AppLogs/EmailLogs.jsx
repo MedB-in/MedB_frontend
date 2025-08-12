@@ -4,6 +4,7 @@ import Pagination from "../../../components/Atoms/Patient/Pagination";
 import toast from "react-hot-toast";
 import { getEmailLogsByUser } from "../../../services/controlPanel";
 import { getISTDate } from "../../../utils/time";
+import { formatDate } from "../../../utils/format";
 
 const EmailLogs = ({ email, timeFrom, timeTo }) => {
     const [logs, setLogs] = useState([]);
@@ -66,7 +67,7 @@ const EmailLogs = ({ email, timeFrom, timeTo }) => {
                                 {log.errorMessage && (
                                     <p><strong>Error:</strong> <span className="text-red-500">{log.errorMessage}</span></p>
                                 )}
-                                <p><strong>Timestamp:</strong> {new Date(log.timestamp).toLocaleString()}</p>
+                                <p><strong>Timestamp:</strong> {formatDate(log.timestamp)}</p>
                             </div>
                         </div>
                     ))}
