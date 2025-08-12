@@ -4,6 +4,7 @@ import Pagination from "../../Atoms/Patient/Pagination";
 import toast from "react-hot-toast";
 import { getAuditLogsByUser } from "../../../services/controlPanel";
 import { getISTDate } from "../../../utils/time";
+import { formatDate } from "../../../utils/format";
 
 const JsonBlock = ({ title, data }) => (
     <details className="bg-gray-100 p-3 rounded-lg">
@@ -66,7 +67,7 @@ const AuditLogs = ({ userId, timeFrom, timeTo }) => {
                                 <p><strong>Status:</strong> {log.response?.statusCode}</p>
                                 <p><strong>IP:</strong> {log?.ipAddress}</p>
                                 <p><strong>User :</strong> {log?.userId}</p>
-                                <p><strong>Time:</strong> {new Date(log?.timestamp).toLocaleString()}</p>
+                                <p><strong>Time:</strong> {formatDate(log?.timestamp)}</p>
                                 <p><strong>Response Time:</strong> {log?.responseTime}</p>
                             </div>
 
