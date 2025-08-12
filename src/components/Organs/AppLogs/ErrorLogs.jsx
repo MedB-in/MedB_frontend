@@ -4,6 +4,7 @@ import Calendar from "../../Atoms/Calender";
 import Pagination from "../../Atoms/Patient/Pagination";
 import toast from "react-hot-toast";
 import { getISTDate } from "../../../utils/time";
+import { formatDate } from "../../../utils/format";
 
 const ErrorLogs = ({ userId, timeFrom, timeTo }) => {
     const [logs, setLogs] = useState([]);
@@ -62,7 +63,7 @@ const ErrorLogs = ({ userId, timeFrom, timeTo }) => {
                                 <p><strong>Status:</strong> {log.statusCode}</p>
                                 <p><strong>URL:</strong> {log.url}</p>
                                 <p><strong>Client IP:</strong> {log.clientIp}</p>
-                                <p><strong>Timestamp:</strong> {new Date(log.timestamp).toLocaleString()}</p>
+                                <p><strong>Timestamp:</strong> {formatDate(log.timestamp)}</p>
                                 {log.stack && (
                                     <details className="mt-2 text-gray-600 whitespace-pre-wrap">
                                         <summary className="cursor-pointer font-medium text-sm">Stack Trace</summary>

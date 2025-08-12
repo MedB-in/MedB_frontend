@@ -1,12 +1,13 @@
 {
   "name": "medb-frontend",
   "private": true,
-  "version": "1.5.5",
+  "version": "1.5.6",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "postbuild": "node scripts/generateVersion.cjs",
     "preview": "vite preview"
   },
   "dependencies": {

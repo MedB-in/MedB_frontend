@@ -59,8 +59,11 @@ const TimeRangeSelector = ({ setTimeFrom, setTimeTo }) => {
             return;
         }
 
-        const finalFrom = convertTo24Hour(type === "from" ? formatted : rawTimeFrom, type === "from" ? fromPeriod : toPeriod);
-        const finalTo = convertTo24Hour(type === "to" ? formatted : rawTimeTo, type === "to" ? toPeriod : fromPeriod);
+        const newFrom = type === "from" ? formatted : rawTimeFrom;
+        const newTo = type === "to" ? formatted : rawTimeTo;
+
+        const finalFrom = convertTo24Hour(newFrom, fromPeriod);
+        const finalTo = convertTo24Hour(newTo, toPeriod);
 
         const fromMinutes = parseInt(finalFrom.split(":")[0]) * 60 + parseInt(finalFrom.split(":")[1]);
         const toMinutes = parseInt(finalTo.split(":")[0]) * 60 + parseInt(finalTo.split(":")[1]);

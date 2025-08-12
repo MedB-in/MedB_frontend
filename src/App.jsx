@@ -23,11 +23,16 @@ import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ErrorPage from "./pages/404Page/ErrorPage";
 import EnquiriesPage from "./pages/ControlPanel/Enquiries/EnquiriesPage";
 import { checkSession } from "./services/user";
+import useVersionCheck from "./hooks/useVersionCheck";
 
 const App = () => {
   const dispatch = useDispatch();
   const [sessionChecked, setSessionChecked] = useState(false);
 
+  // Check for updates
+  useVersionCheck(60000);
+
+  // Remove splash screen
   useEffect(() => {
     const splash = document.getElementById('splash-screen');
     if (splash) {
@@ -38,18 +43,17 @@ const App = () => {
     }
   }, []);
 
-
+    
+  // Check auth on app start
   useEffect(() => {
     const checkAuthOnStart = async () => {
       const userDetails = localStorage.getItem("userDetails");
       const accessToken = localStorage.getItem("accessToken");
-
       if (userDetails && accessToken) {
         dispatch(setAuthenticated(true));
         setSessionChecked(true);
         return;
       }
-
       if (userDetails && !accessToken) {
         try {
           await checkSession();
@@ -58,10 +62,8 @@ const App = () => {
           console.error("Initial auth check failed", err);
         }
       }
-
       setSessionChecked(true);
     };
-
     checkAuthOnStart();
   }, [dispatch]);
 
