@@ -39,3 +39,7 @@ export const addMobileNumber = (data) =>
 //API to check Session.
 export const checkSession = () =>
     axios.get("/api/user/checkSession", getHeaders());
+
+//API to get messages.
+export const getMessages = (page, search) =>
+    axios.get(`/api/user/messages?page=${page}&search=${search}`, getHeaders());

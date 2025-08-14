@@ -143,6 +143,7 @@ const App = () => {
             <Route path="user-rights" element={<Users.UserRightsPage />} />
             <Route path="manage-user-rights" element={<Users.ManageUserRightsPage />} />
             <Route path="manage-user-rights/:clinicId" element={<Users.ManageUserRightsPage />} />
+            <Route path="messages" element={<Users.Messages />} />
           </Route>
 
           {/* Menu details */}
