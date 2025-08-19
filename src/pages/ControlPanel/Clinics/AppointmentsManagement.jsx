@@ -245,7 +245,7 @@ function AppointmentsManagement() {
                 <Button variant="secondary" onClick={resetFilters}>Reset</Button>
             </div>
             <Button variant="primary" className="" onClick={() => navigate(`/app/appointments/book-appointment/${clinicId}`)}>
-                Walk-In/On-request Appointment
+                Book Appointment
             </Button>
             <div className="w-full overflow-x-auto rounded-lg border border-gray-200 mt-6">
                 <AppointmentTable
