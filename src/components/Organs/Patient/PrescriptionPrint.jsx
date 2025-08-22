@@ -1,19 +1,27 @@
-const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleDateString();
-};
+import MedBLogo from "../../../assets/images/medb-logo-png.png";
+import { formatDate } from "../../../utils/format";
 
 const PrescriptionPrint = ({ selectedRecord, patientName, age, gender, printRef }) => {
     return (
         <div ref={printRef} className="print-area hidden print:block text-black p-6">
             {selectedRecord && (
-                <div className="p-6 max-w-3xl mx-auto bg-white text-gray-800 font-sans print:p-0 print:shadow-none">
+                <div className="p-6 max-w-3xl mx-auto bg-white text-gray-800 font-sans print:p-0 print:shadow-none relative">
+                    <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+                        <img
+                            src={MedBLogo}
+                            alt="Watermark"
+                            className="w-2/3 opacity-5"
+                        />
+                    </div>
                     <div className="flex justify-between mb-6 border-b pb-4">
                         <div>
                             <p>
-                                <span className="font-semibold">Patient Name:</span> {patientName || "N/A"}
+                                <span className="font-semibold">Patient Name:</span>{" "}
+                                {selectedRecord.bookFor ? selectedRecord.bookFor : patientName}
                             </p>
                             <p>
-                                <span className="font-semibold">Age/Gender:</span> {age || "N/A"} / {gender || "N/A"}
+                                <span className="font-semibold">Age/Gender:</span>{" "}
+                                {age || "____"} / {gender || "____"}
                             </p>
                         </div>
                         <div className="text-right">
@@ -96,10 +104,16 @@ const PrescriptionPrint = ({ selectedRecord, patientName, age, gender, printRef 
                         <h4 className="font-semibold text-gray-800 mb-1">Doctor's Notes/Remarks</h4>
                     </div>
 
-                    <div className="mt-20 flex items-end justify-end pr-4">
+                    <div className="mt-28 flex items-end justify-end pr-4">
                         <p className="text-sm italic text-gray-800">
-                            Dr. {selectedRecord.doctor.firstName} {selectedRecord.doctor.lastName}
+                            Dr. {selectedRecord.doctor.firstName} {selectedRecord.doctor.middleName ? `${selectedRecord.doctor.middleName} ` : ""} {selectedRecord.doctor.lastName ? `${selectedRecord.doctor.lastName}` : ""}
                         </p>
+                    </div>
+
+                    <div className="print-footer text-center text-gray-700 text-xs leading-relaxed">
+                        <img src={MedBLogo} alt="MedB Logo" className="h-4 mx-auto mb-1 opacity-90" />
+                        <p>Medb Connected Care LLP</p>
+                        <p><a href="https://www.medb.co.in/" className="text-purple-600">www.medb.co.in</a></p>
                     </div>
                 </div>
             )}

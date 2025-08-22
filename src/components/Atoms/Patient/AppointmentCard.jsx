@@ -55,10 +55,14 @@ const AppointmentCard = ({ appt, isDoctor, page, today, handleOpenModal, handleA
                         name={isDoctor ? appt.patientDetails.firstName : appt.firstName}
                     />
                     <div>
-                        <p className="text-lg font-semibold">
+                        <p className="text-lg font-semibold capitalize">
                             {isDoctor
-                                ? `${appt.patientDetails.firstName} ${appt.patientDetails.middleName || ''} ${appt.patientDetails.lastName || ''}`
-                                : `${appt.firstName} ${appt.lastName || ''}`}
+                                ? (appt.bookFor
+                                    ? appt.bookFor
+                                    : `${appt.patientDetails.firstName} ${appt.patientDetails.middleName || ''} ${appt.patientDetails.lastName || ''}`
+                                )
+                                : `${appt.firstName} ${appt.middleName || ''} ${appt.lastName || ''}`
+                            }
                         </p>
                         {!isDoctor && !isCollapsedView && (
                             <p className="text-sm text-gray-600">{appt.speciality}</p>
@@ -66,6 +70,12 @@ const AppointmentCard = ({ appt, isDoctor, page, today, handleOpenModal, handleA
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-x-1 gap-y-3 text-sm text-left">
+                    {appt.bookFor && !isDoctor &&
+                        <>
+                            <p className="font-medium text-gray-800">Booking For:</p>
+                            <p className="text-gray-700 capitalize font-bold">{appt.bookFor}</p>
+                        </>
+                    }
                     <p className="font-medium text-gray-800">📅 Date:</p>
                     <p className="text-gray-700">{appt.appointmentDate}</p>
 

@@ -1,4 +1,5 @@
 import { formatTime } from '../../../utils/format';
+import BookingName from '../Appointments/BookingName';
 import ProfileAvatar from '../ProfileAvatar';
 
 const AppointmentRow = ({ appt, isDoctor, today, handleOpenModal, handleAppointmentModal }) => {
@@ -30,19 +31,21 @@ const AppointmentRow = ({ appt, isDoctor, today, handleOpenModal, handleAppointm
                 <td className="px-4 py-3 text-left rounded-l-lg">
                     <div className="flex justify-start">
                         <div className="flex items-center justify-start gap-4">
-                            <ProfileAvatar imageUrl={appt.patientDetails?.profilePicture} name={appt.patientDetails?.firstName} size="w-12 h-12" />
-                            <div className="flex-1">
-                                <p className="text-lg font-semibold">
-                                    {appt.patientDetails?.firstName} {appt.patientDetails?.middleName || ""} {appt.patientDetails?.lastName || ""}
-                                </p>
+                            <ProfileAvatar imageUrl={appt.patientDetails?.profilePicture} name={appt.bookFor ? appt.bookFor : appt.patientDetails?.firstName} size="w-12 h-12" />
+                            <div className="flex flex-col">
+                                <div className="text-lg font-semibold">
+                                    <BookingName bookFor={appt.bookFor} patientFirstName={appt.patientDetails?.firstName} patientMiddleName={appt.patientDetails?.middleName} patientLastName={appt.patientDetails?.lastName} />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </td>
             )}
-
-            <td className="px-4 py-3 text-center">{appt.appointmentDate}</td>
-            <td className="px-4 py-3 text-center"> {formatTime(appt.appointmentTime)}</td>
+            <td className="px-4 py-3 text-center">
+                {appt.bookFor && !isDoctor && <p className="text-md">Booking for: <span className="font-semibold capitalize">{appt.bookFor}</span></p>}
+                <p className="text-md">{appt.appointmentDate}</p>
+                <p className="text-sm text-gray-600">{formatTime(appt.appointmentTime)}</p>
+            </td>
 
             <td className="px-4 py-3">
                 <div className="flex justify-start">
@@ -91,7 +94,7 @@ const AppointmentRow = ({ appt, isDoctor, today, handleOpenModal, handleAppointm
                     </button>
                 </td>
             ) : (
-                <td className="px-4 py-3 text-center">-</td>
+                <></>
             )}
         </tr>
     )
