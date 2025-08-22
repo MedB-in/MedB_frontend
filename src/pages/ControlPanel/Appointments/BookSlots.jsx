@@ -33,8 +33,11 @@ const BookSlots = () => {
     const [patientQuery, setPatientQuery] = useState("");
     const [searchQuery, setSearchQuery] = useState(false);
     const [patients, setPatients] = useState([]);
+    const [bookForSelf, setBookForSelf] = useState(true);
+    const [bookForName, setBookForName] = useState("");
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [isEmergency, setIsEmergency] = useState(false);
+    const [hasSearched, setHasSearched] = useState(false);
 
     useEffect(() => {
         if (selectedDay) {
@@ -88,6 +91,7 @@ const BookSlots = () => {
             setSearchQuery(true);
             const response = await getPatients(patientQuery);
             setPatients(response.data.patients || []);
+            setHasSearched(true);
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to fetch patient details.");
         } finally {
@@ -114,13 +118,21 @@ const BookSlots = () => {
             const formattedDate = format(selectedDate, "yyyy-MM-dd");
             const isPast = isPastSlot(selectedSlot, selectedDate);
             if (isPast) {
-                toast.error('Selected slot is Expired. Please select another slot.');
+                toast.error("Selected slot is Expired. Please select another slot.");
                 return;
             }
+            const bookForValue = bookForSelf ? null : bookForName.trim() || null;
             if (isClinicBooking) {
-                await bookFromClinic({ clinicId, doctorId, date: formattedDate, time: selectedSlot, reason, patientId: selectedPatient.userId, isEmergency });
+                await bookFromClinic({ clinicId, doctorId, date: formattedDate, time: selectedSlot, reason, patientId: selectedPatient.userId, isEmergency, bookFor: bookForValue, });
             } else {
-                await bookSlot({ clinicId, doctorId, date: formattedDate, time: selectedSlot, reason });
+                await bookSlot({
+                    clinicId,
+                    doctorId,
+                    date: formattedDate,
+                    time: selectedSlot,
+                    reason,
+                    bookFor: bookForValue,
+                });
             }
             toast.success("Slot booked successfully!");
             setSlots(prevSlots => prevSlots.map(slot => slot.time === selectedSlot ? { ...slot, booked: true } : slot));
@@ -128,6 +140,8 @@ const BookSlots = () => {
             setSelectedSlot(null);
             setReason("");
             setSelectedPatient(null);
+            setBookForSelf(true);
+            setBookForName("");
             isClinicBooking ? navigate(`/app/appointments/appointments-management`) : navigate(`/app/appointments/my-appointments`);
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to book slot.");
@@ -205,6 +219,32 @@ const BookSlots = () => {
                 <p className="text-center text-gray-500 text-lg">Loading doctor details...</p>
             )}
             <Calendar onDateSelect={handleDateSelect} />
+            {!isClinicBooking && (
+                <div className="pt-5 ml-5 flex items-center justify-center">
+                    <input
+                        type="checkbox"
+                        checked={bookForSelf}
+                        onChange={(e) => {
+                            setBookForSelf(e.target.checked);
+                            if (e.target.checked) setBookForName("");
+                        }}
+                        className="form-checkbox w-5 h-5 text-indigo-500"
+                    />
+                    <label className="ml-2 text-lg font-bold text-gray-700">Book for self</label>
+                </div>
+            )
+            }
+            {!bookForSelf && (
+                <div className="mt-2">
+                    <input
+                        type="text"
+                        placeholder="Enter the name of the family member"
+                        className="w-full px-4 py-2 border rounded-md bg-white text-gray-800 capitalize"
+                        value={bookForName}
+                        onChange={(e) => setBookForName(e.target.value)}
+                    />
+                </div>
+            )}
             {isClinicBooking && (
                 <div className="my-4 px-5">
                     <div className="mb-4 flex items-center space-x-3 p-3 rounded-md">
@@ -243,17 +283,46 @@ const BookSlots = () => {
                                     onClick={() => setSelectedPatient(patient)}
                                 >
                                     <div className="flex-1">
-                                        <p className="font-semibold text-gray-800 capitalize">{patient.firstName}{patient.middleName ? ` ${patient.middleName}` : ''} {patient.lastName ? `${patient.lastName}` : ''}</p>
-                                        <p className="text-sm text-gray-600">{patient.contactNo || "Contact Not Available"} • {patient.email}</p>
+                                        <p className="font-semibold text-gray-800 capitalize">
+                                            {patient.firstName}{patient.middleName ? ` ${patient.middleName}` : ''} {patient.lastName ? `${patient.lastName}` : ''}
+                                        </p>
+                                        <p className="text-sm text-gray-600">
+                                            {patient.contactNo || "Contact Not Available"} • {patient.email}
+                                        </p>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        !searchQuery && patients.length === 0 && <p className="mt-2 text-gray-500">No patients found.</p>
+                        !searchQuery && hasSearched && patients.length === 0 && (
+                            <p className="mt-2 text-gray-500">No patients found.</p>
+                        )
                     )}
                     {searchQuery && <p className="mt-2 text-gray-500">Searching for Patients...</p>}
-                    <button onClick={() => setShowModal(true)} className="bg-indigo-500 text-white px-4 py-2 rounded-md mt-10 w-40 hover:bg-purple-700">
+                    <div className="pt-5 ml-5">
+                        <input
+                            type="checkbox"
+                            checked={bookForSelf}
+                            onChange={(e) => {
+                                setBookForSelf(e.target.checked);
+                                if (e.target.checked) setBookForName("");
+                            }}
+                            className="form-checkbox w-5 h-5 text-indigo-500"
+                        />
+                        <label className="ml-2 text-lg font-bold text-gray-700">Book for self</label>
+                    </div>
+                    {!bookForSelf && (
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                placeholder="Enter the name to book for"
+                                className="w-full px-4 py-2 border rounded-md bg-white text-gray-800 capitalize"
+                                value={bookForName}
+                                onChange={(e) => setBookForName(e.target.value)}
+                            />
+                        </div>
+                    )}
+                    <button onClick={() => setShowModal(true)} className="bg-indigo-500 text-white px-4 py-2 rounded-md mt-5 w-40 hover:bg-purple-700">
                         Add new Patient
                     </button>
                 </div>

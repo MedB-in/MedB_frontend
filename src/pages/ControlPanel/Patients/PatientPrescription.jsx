@@ -194,6 +194,7 @@ const PatientPrescription = () => {
             {showModal && selectedRecord && (
                 <PrescriptionModal
                     selectedRecord={selectedRecord}
+                    patientName={patientName}
                     setShowModal={setShowModal}
                     handlePrint={handlePrint}
                 />

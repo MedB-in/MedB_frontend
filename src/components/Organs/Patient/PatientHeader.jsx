@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CountdownTimer from "../../Atoms/Patient/CountdownTimer";
 import HistoryIcon from "../../../assets/images/prescritpion/history-icon.svg";
+import BookingName from "../../Atoms/Appointments/BookingName";
 
 const PatientHeader = ({ timer, patient, healthFiles, isAllowed, isToday }) => {
     const [showModal, setShowModal] = useState(false);
@@ -32,8 +33,7 @@ const PatientHeader = ({ timer, patient, healthFiles, isAllowed, isToday }) => {
                                 />
                             </div>
                             <div className="text-black text-lg font-semibold text-center">
-                                Mr. {patient?.firstName} {patient?.middleName ? ` ${patient.middleName}` : ""}{" "}
-                                {patient?.lastName ? ` ${patient.lastName}` : ""}
+                                <BookingName patientFirstName={patient?.firstName} patientMiddleName={patient?.middleName} patientLastName={patient?.lastName} bookFor={patient?.bookFor} />
                             </div>
                         </div>
 

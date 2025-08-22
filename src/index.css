@@ -104,3 +104,14 @@ h3, h4, h5 {
     display: block !important;
   }
 }
+
+@media print {
+  .print-footer {
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    text-align: center;
+  }
+}

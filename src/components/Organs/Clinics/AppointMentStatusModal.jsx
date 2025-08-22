@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import Calendar from "../../Atoms/Calender";
 import TimeSlots from "../../Atoms/TImeSlots";
 import { bookSlot } from "../../../services/doctors";
+import BookingName from "../../Atoms/Appointments/BookingName";
 
 const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointment, today, clinicId, setAppointment }) => {
     const [status, setStatus] = useState('');
@@ -55,11 +56,6 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                     setLoading(false);
                     return;
                 }
-                if (!reason.trim()) {
-                    toast.error("Please enter a reason for the visit.");
-                    setLoading(false);
-                    return;
-                }
                 const result = await Swal.fire({
                     title: "Reschedule Appointment",
                     text: `Are you sure you want to reschedule the appointment?`,
@@ -70,8 +66,10 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                 });
                 if (!result.isConfirmed) return;
 
-                await bookSlot({ appointmentId: appointment.appointmentId, patientId: appointment.userId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason });
+                await bookSlot({ appointmentId: appointment.appointmentId, patientId: appointment.userId, bookFor: appointment.bookFor, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason: appointment.reasonForVisit });
                 setAppointment();
+                setStatus('');
+                setReason('');
                 toast.success("Slot booked successfully!");
                 onClose();
             } else {
@@ -109,7 +107,7 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                 <h2 className="text-xl text-black font-semibold mb-4">Update Status</h2>
 
                 <p className="mb-1 text-sm text-black">
-                    Appointment for <span className="font-medium">{appointment?.patientFirstName} {appointment?.patientLastName}</span>
+                    Appointment for: <span className="font-medium"><BookingName bookFor={appointment?.bookFor} patientFirstName={appointment?.patientFirstName} patientMiddleName={appointment?.patientMiddleName} patientLastName={appointment?.patientLastName} /> </span>
                 </p>
                 <p className="text-sm text-black">Date: {appointment?.appointmentDate}</p>
                 <p className="text-sm text-black mb-4">Time: {appointment?.appointmentTime}</p>
@@ -155,7 +153,7 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                                 <input
                                     rows="3"
                                     type="text"
-                                    value={reason}
+                                    value={appointment?.reasonForVisit}
                                     onChange={(e) => setReason(e.target.value)}
                                     className="w-full p-2 border rounded-md text-black focus:ring-2 focus:ring-indigo-500"
                                     placeholder="Enter reason for visit..."
@@ -164,7 +162,6 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                         )}
                     </div>
                 )}
-
 
                 <div className="flex justify-end mt-5 gap-2">
                     <button onClick={handleClose} className="px-4 py-2 bg-gray-300 text-red-400 hover:bg-gray-600 hover:text-white rounded" disabled={loading}>Close</button>
