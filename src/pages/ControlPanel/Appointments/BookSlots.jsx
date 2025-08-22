@@ -33,7 +33,7 @@ const BookSlots = () => {
     const [patientQuery, setPatientQuery] = useState("");
     const [searchQuery, setSearchQuery] = useState(false);
     const [patients, setPatients] = useState([]);
-    const [bookForSelf, setBookForSelf] = useState(true);
+    const [bookForFamily, setbookForFamily] = useState(false);
     const [bookForName, setBookForName] = useState("");
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [isEmergency, setIsEmergency] = useState(false);
@@ -121,7 +121,7 @@ const BookSlots = () => {
                 toast.error("Selected slot is Expired. Please select another slot.");
                 return;
             }
-            const bookForValue = bookForSelf ? null : bookForName.trim() || null;
+            const bookForValue = bookForFamily ? null : bookForName.trim() || null;
             if (isClinicBooking) {
                 await bookFromClinic({ clinicId, doctorId, date: formattedDate, time: selectedSlot, reason, patientId: selectedPatient.userId, isEmergency, bookFor: bookForValue, });
             } else {
@@ -140,7 +140,7 @@ const BookSlots = () => {
             setSelectedSlot(null);
             setReason("");
             setSelectedPatient(null);
-            setBookForSelf(true);
+            setbookForFamily(false);
             setBookForName("");
             isClinicBooking ? navigate(`/app/appointments/appointments-management`) : navigate(`/app/appointments/my-appointments`);
         } catch (error) {
@@ -223,18 +223,18 @@ const BookSlots = () => {
                 <div className="pt-5 ml-5 flex items-center justify-center">
                     <input
                         type="checkbox"
-                        checked={bookForSelf}
+                        checked={bookForFamily}
                         onChange={(e) => {
-                            setBookForSelf(e.target.checked);
+                            setbookForFamily(e.target.checked);
                             if (e.target.checked) setBookForName("");
                         }}
                         className="form-checkbox w-5 h-5 text-indigo-500"
                     />
-                    <label className="ml-2 text-lg font-bold text-gray-700">Book for self</label>
+                    <label className="ml-2 text-lg font-bold text-gray-700">Book for Family Member</label>
                 </div>
             )
             }
-            {!bookForSelf && (
+            {bookForFamily && !isClinicBooking && (
                 <div className="mt-2">
                     <input
                         type="text"
@@ -302,16 +302,16 @@ const BookSlots = () => {
                     <div className="pt-5 ml-5">
                         <input
                             type="checkbox"
-                            checked={bookForSelf}
+                            checked={bookForFamily}
                             onChange={(e) => {
-                                setBookForSelf(e.target.checked);
+                                setbookForFamily(e.target.checked);
                                 if (e.target.checked) setBookForName("");
                             }}
                             className="form-checkbox w-5 h-5 text-indigo-500"
                         />
-                        <label className="ml-2 text-lg font-bold text-gray-700">Book for self</label>
+                        <label className="ml-2 text-lg font-bold text-gray-700">Book for Family Member</label>
                     </div>
-                    {!bookForSelf && (
+                    {bookForFamily && (
                         <div className="mt-2">
                             <input
                                 type="text"
