@@ -121,7 +121,7 @@ const BookSlots = () => {
                 toast.error("Selected slot is Expired. Please select another slot.");
                 return;
             }
-            const bookForValue = bookForFamily ? null : bookForName.trim() || null;
+            const bookForValue = !bookForFamily ? null : bookForName.trim() || null;
             if (isClinicBooking) {
                 await bookFromClinic({ clinicId, doctorId, date: formattedDate, time: selectedSlot, reason, patientId: selectedPatient.userId, isEmergency, bookFor: bookForValue, });
             } else {
