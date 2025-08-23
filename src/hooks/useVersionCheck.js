@@ -16,11 +16,16 @@ export default function useVersionCheck(interval = 60000, reloadTries = 3, reloa
                         retries++;
                         localStorage.setItem("reload_retries", retries);
                         console.log(`Reload attempt ${retries}`);
-                        setTimeout(() => window.location.reload(), reloadGap);
+
+                        setTimeout(() => {
+                            window.location.href =
+                                window.location.pathname + `?v=${Date.now()}`;
+                        }, reloadGap);
                     } else {
                         localStorage.removeItem("reload_retries");
                         if (window.confirm("A new version is available. Reload now?")) {
-                            window.location.reload();
+                            window.location.href =
+                                window.location.pathname + `?v=${Date.now()}`;
                         }
                     }
                 } else {
