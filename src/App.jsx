@@ -24,13 +24,20 @@ import ErrorPage from "./pages/404Page/ErrorPage";
 import EnquiriesPage from "./pages/ControlPanel/Enquiries/EnquiriesPage";
 import { checkSession } from "./services/user";
 import useVersionCheck from "./hooks/useVersionCheck";
+import usePWAUpdater from "./hooks/usePWAUpdater";
 
 const App = () => {
   const dispatch = useDispatch();
   const [sessionChecked, setSessionChecked] = useState(false);
+  const { needRefresh, updateServiceWorker } = usePWAUpdater();
 
   // Check for updates
   useVersionCheck(60000);
+  useEffect(() => {
+    if (needRefresh) {
+      updateServiceWorker(true);
+    }
+  }, [needRefresh, updateServiceWorker]);
 
   // Remove splash screen
   useEffect(() => {
@@ -43,7 +50,7 @@ const App = () => {
     }
   }, []);
 
-    
+
   // Check auth on app start
   useEffect(() => {
     const checkAuthOnStart = async () => {
