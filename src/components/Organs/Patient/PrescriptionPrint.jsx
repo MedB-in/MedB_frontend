@@ -21,7 +21,15 @@ const PrescriptionPrint = ({ selectedRecord, patientName, age, gender, printRef 
                             </p>
                             <p>
                                 <span className="font-semibold">Age/Gender:</span>{" "}
-                                {age || "____"} / {gender || "____"}
+                                {selectedRecord.bookFor ? (
+                                    <>
+                                        <span>____</span> / <span>____</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>{age || "____"}</span> / <span>{gender || "____"}</span>
+                                    </>
+                                )}
                             </p>
                         </div>
                         <div className="text-right">

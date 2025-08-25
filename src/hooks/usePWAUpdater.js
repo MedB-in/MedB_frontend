@@ -6,14 +6,14 @@ export default function usePWAUpdater() {
         updateServiceWorker,
     } = useRegisterSW({
         onRegisteredSW(swUrl, r) {
-            console.log("✅ Service worker registered:");
+            // console.log("✅ Service worker registered");
         },
         onNeedRefresh() {
             console.log("⚡ New service worker available!");
             updateServiceWorker(true);
         },
         onOfflineReady() {
-            console.log("📴 App ready to work offline");
+            // console.log("📴 App ready to work offline");
         },
     });
 
