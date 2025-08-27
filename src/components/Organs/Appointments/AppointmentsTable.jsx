@@ -1,4 +1,5 @@
 import { formatTime } from "../../../utils/format";
+import BookingName from "../../Atoms/Appointments/BookingName";
 import ProfileAvatar from "../../Atoms/ProfileAvatar";
 const AppointmentTable = ({ appointments, loading, handleStatus, handleToken, today }) => {
 
@@ -54,9 +55,12 @@ const AppointmentTable = ({ appointments, loading, handleStatus, handleToken, to
                                             <div className="flex items-center justify-start gap-4">
                                                 <ProfileAvatar imageUrl={appt.patientProfilePicture} name={appt.patientFirstName} />
                                                 <div className="text-left">
-                                                    <p className="text-lg font-semibold text-gray-800">
-                                                        {appt.patientFirstName} {appt.patientMiddleName || ""} {appt.patientLastName || ""}
-                                                    </p>
+                                                    <BookingName
+                                                        bookFor={appt.bookFor}
+                                                        patientFirstName={appt.patientFirstName}
+                                                        patientMiddleName={appt.patientMiddleName}
+                                                        patientLastName={appt.patientLastName}
+                                                    />
                                                     <p className="text-sm text-gray-600 break-all w-full overflow-hidden">{appt.patientEmail}</p>
                                                     <p className="text-sm text-gray-600">{appt.patientContactNo}</p>
                                                 </div>

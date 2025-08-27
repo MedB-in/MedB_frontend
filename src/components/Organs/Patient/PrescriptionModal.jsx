@@ -1,4 +1,4 @@
-const PrescriptionModal = ({ selectedRecord, setShowModal, handlePrint }) => {
+const PrescriptionModal = ({ selectedRecord, patientName, setShowModal, handlePrint }) => {
     if (!selectedRecord) return null;
 
     return (
@@ -12,6 +12,10 @@ const PrescriptionModal = ({ selectedRecord, setShowModal, handlePrint }) => {
                 </button>
                 <h2 className="text-2xl font-semibold mb-6 text-center">Prescription Details</h2>
 
+                <div className="mb-4">
+                    <p className="text-sm text-gray-500">Appointment For</p>
+                    <p className="font-semibold">{selectedRecord.bookFor ? selectedRecord.bookFor : patientName}</p>
+                </div>
                 <div className="mb-4">
                     <p className="text-sm text-gray-500">Appointment ID</p>
                     <p className="font-semibold">{selectedRecord.appointmentId}</p>

@@ -166,8 +166,7 @@ function DoctorAppointmentsPage() {
             <tr className="bg-[#e0e0ff] text-center">
               {!isDoctor ? <th className="px-4 py-3">Doctor</th> :
                 <th className="px-4 py-3">Patient</th>}
-              <th className="px-4 py-3">Appointment Date</th>
-              <th className="px-4 py-3">Appointment Time</th>
+              <th className="px-4 py-3">Appointment</th>
               <th className="px-4 py-3">Clinic</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Reason</th>

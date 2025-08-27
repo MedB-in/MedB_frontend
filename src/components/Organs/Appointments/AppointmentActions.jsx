@@ -44,7 +44,7 @@ const AppointmentActions = ({ appointment, onClose, fetchAppointments }) => {
                     toast.error("Please enter a reason for the visit.");
                     return;
                 }
-                await bookSlot({ appointmentId: appointment.appointmentId, clinicId, doctorId, date: selectedDate, time: selectedSlot, reason: visitReason });
+                await bookSlot({ appointmentId: appointment.appointmentId, clinicId, doctorId, date: selectedDate, time: selectedSlot, bookFor: appointment.bookFor, reason: visitReason });
                 toast.success("Slot booked successfully!");
                 fetchAppointments();
                 onClose();
