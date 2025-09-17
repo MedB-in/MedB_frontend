@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import BackButton from "../../../components/Atoms/BackButton";
 
 const BookFromClinic = () => {
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const patientId = userDetails?.patientId;
   const [clinics, setClinics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -50,7 +52,7 @@ const BookFromClinic = () => {
   };
 
   const handleClinicSelect = (clinicId) => {
-    navigate(`/app/appointments/book-appointment/${clinicId}`);
+    navigate(`/app/appointments/book-appointment/${patientId}/${clinicId}`);
   };
 
   return (

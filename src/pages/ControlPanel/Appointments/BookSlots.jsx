@@ -14,9 +14,8 @@ import Calendar from "../../../components/Atoms/Calender";
 import days from "../../../lib/slotDays";
 
 const BookSlots = () => {
-    const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-    const clinic = userDetails?.clinicId;
-    const isClinicBooking = !!clinic;
+    const { patientId } = useParams();
+    const isClinicBooking = !patientId;
     const navigate = useNavigate();
     const today = getISTDate();
 
