@@ -55,7 +55,7 @@ const PatientHeader = ({ timer, patient, healthFiles, isAllowed, isToday }) => {
                     </div>
 
                     <div className="flex flex-col justify-center gap-6 items-end min-w-[250px]">
-                        <div className="flex items-center gap-4 cursor-pointer" onClick={() => setShowModal(true)}>
+                        <div className="flex items-center gap-4">
                             <div className="flex flex-col items-center gap-4">
                                 {isToday && isAllowed && (
                                     <CountdownTimer initialMinutes={timer} initialSeconds={0} />
@@ -68,7 +68,7 @@ const PatientHeader = ({ timer, patient, healthFiles, isAllowed, isToday }) => {
                                 Previous
                                 <br />
                                 History
-                                <div className="bg-white shadow-md p-2 rounded-md w-[66px] h-[66px] flex items-center justify-center">
+                                <div className="bg-white shadow-md p-2 rounded-md w-[66px] h-[66px] flex items-center justify-center cursor-pointer" onClick={() => setShowModal(true)}>
                                     <img src={HistoryIcon} alt="Data Icon" className="w-[54px] object-contain" />
                                 </div>
                             </div>

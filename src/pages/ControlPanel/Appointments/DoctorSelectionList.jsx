@@ -7,6 +7,7 @@ import BackButton from "../../../components/Atoms/BackButton";
 
 const DoctorSelectionList = () => {
     const { clinicId } = useParams();
+    const { patientId } = useParams();
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
@@ -49,7 +50,11 @@ const DoctorSelectionList = () => {
     };
 
     const onSelect = (doctorId) => {
-        navigate(`/app/appointments/book-slots/${clinicId}/${doctorId}`);
+        if (patientId) {
+            navigate(`/app/appointments/book-slots/${patientId}/${clinicId}/${doctorId}`);
+        }
+        else
+            navigate(`/app/appointments/book-slots/${clinicId}/${doctorId}`);
     };
 
     return (

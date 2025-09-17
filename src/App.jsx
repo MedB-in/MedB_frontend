@@ -133,7 +133,9 @@ const App = () => {
             <Route path="book-appointment" element={<Appointments.BookFromClinic />} />
             <Route path="appointments-management" element={<Clinics.AppointmentsManagement />} />
             <Route path="book-appointment/:clinicId" element={<Appointments.DoctorSelection />} />
+            <Route path="book-appointment/:patientId/:clinicId" element={<Appointments.DoctorSelection />} />
             <Route path="book-slots/:clinicId/:doctorId" element={<Appointments.BookSlots />} />
+            <Route path="book-slots/:patientId/:clinicId/:doctorId" element={<Appointments.BookSlots />} />
           </Route>
 
           {/* Patients */}
