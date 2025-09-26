@@ -23,8 +23,8 @@ const PrescriptionPage = () => {
 
     const navigate = useNavigate();
 
-    const [diagnosis, setDiagnosis] = useState("");
-    const [notes, setNotes] = useState("");
+    const [diagnosis, setDiagnosis] = useState(null);
+    const [notes, setNotes] = useState(null);
     const [slotGap, setSlotGap] = useState(0);
     const [healthFiles, setHealthFiles] = useState([]);
     const [patient, setPatient] = useState("");

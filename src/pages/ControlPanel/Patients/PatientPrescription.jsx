@@ -56,7 +56,7 @@ const PatientPrescription = () => {
 
     return (
         <div className="min-h-screen px-4 py-8 bg-[#f0f0ff] rounded-3xl mt-5 md:mt-0">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
                 <h1 className="text-3xl font-bold text-center mb-6">My Records</h1>
 
                 <div className="flex justify-center mb-6">
@@ -90,31 +90,35 @@ const PatientPrescription = () => {
                                     {prescriptions.map((file) => (
                                         <div
                                             key={file.appointmentId}
-                                            className="bg-white p-5 rounded-xl shadow hover:shadow-md transition cursor-pointer"
+                                            className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-6 cursor-pointer"
                                             onClick={() => {
                                                 setSelectedRecord(file);
                                                 setShowModal(true);
                                             }}
                                         >
-                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                <div className="min-w-0">
-                                                    <p className="text-sm text-gray-500">Appointment Date</p>
-                                                    <p className="font-semibold text-lg text-gray-800 truncate">
-                                                        {formatDate(file.appointmentDate)}
-                                                    </p>
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                <div className="flex flex-col gap-1">
+                                                    <span className="text-xs text-gray-400 uppercase tracking-wide">Appointment Date</span>
+                                                    <span className="font-semibold text-gray-900">{formatDate(file.appointmentDate)}</span>
+
+                                                    <span className="text-xs text-gray-400 uppercase tracking-wide mt-2">For</span>
+                                                    <span className="font-medium text-gray-800 capitalize">{file.bookFor || patientName}</span>
                                                 </div>
-                                                <div className="min-w-0">
-                                                    <p className="text-sm text-gray-500">Doctor</p>
-                                                    <p className="font-medium text-gray-700 capitalize truncate">
+                                                <div className="flex flex-col gap-1">
+                                                    <span className="text-xs text-gray-400 uppercase tracking-wide">Doctor</span>
+                                                    <span className="font-semibold text-gray-900 truncate">
                                                         Dr. {file.doctor.firstName} {file.doctor.middleName || ""} {file.doctor.lastName || ""}
-                                                    </p>
-                                                    <p className="text-sm text-gray-600 truncate">{file.doctor.speciality}</p>
+                                                    </span>
+                                                    <span className="text-sm text-gray-600 truncate">{file.doctor.speciality}</span>
                                                 </div>
-                                                <div className="min-w-0">
-                                                    <p className="text-sm text-gray-500">Clinic</p>
-                                                    <p className="font-medium text-gray-700 truncate">{file.clinic.name || "N/A"}</p>
-                                                    <p className="text-sm text-gray-600 truncate">{file.clinic.address || "N/A"}</p>
+                                                <div className="flex flex-col gap-1">
+                                                    <span className="text-xs text-gray-400 uppercase tracking-wide">Clinic</span>
+                                                    <span className="font-semibold text-gray-900 truncate">{file.clinic.name || "N/A"}</span>
+                                                    <span className="text-sm text-gray-600 truncate">{file.clinic.address || "N/A"}</span>
                                                 </div>
+                                            </div>
+                                            <div className="border-t border-gray-100 mt-4 pt-4">
+                                                <span className="text-xs text-gray-400">Appointment ID: {file.appointmentId}</span>
                                             </div>
                                         </div>
                                     ))}

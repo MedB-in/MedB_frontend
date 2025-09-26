@@ -155,7 +155,7 @@ const AppointmentStatusModal = ({ appointment, isOpen, onClose, updateAppointmen
                                     type="text"
                                     value={appointment?.reasonForVisit}
                                     onChange={(e) => setReason(e.target.value)}
-                                    className="w-full p-2 border rounded-md text-black focus:ring-2 focus:ring-indigo-500"
+                                    className="w-full p-2 border rounded-md text-black focus:ring-2 focus:ring-indigo-500 capitalize"
                                     placeholder="Enter reason for visit..."
                                 />
                             </div>

@@ -40,7 +40,7 @@ const PatientHeader = ({ timer, patient, healthFiles, isAllowed, isToday }) => {
                         <div className="flex flex-col justify-center gap-4 flex-1 min-w-[280px]">
                             <div className="bg-[rgba(134,207,195,0.2)] rounded-xl p-4 grid grid-cols-2 gap-y-3 text-sm text-black">
                                 <div className="font-normal">Address</div>
-                                <div className="font-medium">
+                                <div className="font-medium capitalize">
                                     : {patient?.address}, {patient?.city}, {patient?.district}, {patient?.state},{" "}
                                     {patient?.country}
                                 </div>
@@ -88,7 +88,7 @@ const PatientHeader = ({ timer, patient, healthFiles, isAllowed, isToday }) => {
                         >
                             &times;
                         </button>
-                        <h2 className="text-2xl font-semibold mb-6 text-center">Health History</h2>
+                        <h2 className="text-2xl font-semibold mb-6 text-center">Prescription History</h2>
 
                         {!healthFiles || healthFiles.length === 0 ? (
                             <p className="text-center text-gray-500">No health history records available.</p>
@@ -98,11 +98,14 @@ const PatientHeader = ({ timer, patient, healthFiles, isAllowed, isToday }) => {
                                     key={file.appointmentId}
                                     className="border border-gray-200 rounded-lg p-4 mb-6 shadow-sm hover:shadow-md transition-shadow"
                                 >
+                                    <div className="font-semibold text-lg">
+                                        Clinic: {file.clinicName}
+                                    </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <div className="font-semibold text-lg">
                                             Appointment Date: {formatDate(file.appointmentDate)}
                                         </div>
-                                        <div className="text-sm text-gray-600">ID: {file.appointmentId}</div>
+                                        <div className="text-sm text-gray-600">Appointment ID: {file.appointmentId}</div>
                                     </div>
 
                                     <div className="mb-2">
