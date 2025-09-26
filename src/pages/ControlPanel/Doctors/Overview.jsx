@@ -71,7 +71,10 @@ const Overview = () => {
                                         className="p-4 rounded-xl bg-gray-200 border border-gray-200  shadow-sm"
                                     >
                                         <p className="text-lg font-medium text-gray-800 capitalize">
-                                            {appt.firstName} {appt.middleName || ''} {appt.lastName}
+                                            {appt.bookFor
+                                                ? appt.bookFor
+                                                : `${appt.firstName} ${appt.middleName || ''} ${appt.lastName}`.trim()
+                                            }
                                         </p>
                                         <p className="text-sm text-gray-600 ">
                                             Reason: {appt.reasonForVisit || 'N/A'}

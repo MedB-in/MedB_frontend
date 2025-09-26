@@ -119,14 +119,15 @@ const Complaints = ({ complaints, setComplaints }) => {
                     </div>
                 ))}
             </div>
-
-            <button
-                className="flex items-center gap-1 text-sm text-[#6F64E7] font-medium px-6 mt-4"
-                onClick={addComplaint}
-            >
-                <img src={AddIcon} className="w-4 h-4" alt="Add icon" />
-                <span>Add</span>
-            </button>
+            <div>
+                <button
+                    className="flex items-center gap-1 text-sm text-[#6F64E7] font-medium px-6 mt-4"
+                    onClick={addComplaint}
+                >
+                    <img src={AddIcon} className="w-4 h-4" alt="Add icon" />
+                    <span>Add</span>
+                </button>
+            </div>
         </div>
     );
 };
